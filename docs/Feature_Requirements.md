@@ -37,3 +37,29 @@ Features
     - Forms
     - Talk sign up link (goes to Google Doc)
     
+
+Timeline
+--------
+
+- Critical(January Hard Deadline need to have working)
+    - User
+        - Email(s)
+        - Github Profile link
+        - Image (Gravatar)
+        - Projects
+        - Mentor
+    - Projects
+        - Commits
+        - Blog
+        - Authors
+    - RCOS Health
+        - Projects with update times
+    - Feed
+        - Commits
+        - Blog
+- Desired (January Deadline)
+    - Sponsor Us Page
+    - Talk Sign Up Request
+- Future(ideas and things desired but not required.)
+    - Project Tags Finder
+    - Issue integration
