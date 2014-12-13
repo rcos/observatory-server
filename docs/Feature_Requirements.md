@@ -60,6 +60,9 @@ Timeline
 - Desired (January Deadline)
     - Sponsor Us Page
     - Talk Sign Up Request
+    - Project Proposal System
+    - Past Developers/Projects
 - Future(ideas and things desired but not required.)
     - Project Tags Finder
     - Issue integration
+    - Stars, Forks, Total commits

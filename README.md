@@ -5,3 +5,8 @@ A project tracking dashboard for Rensselaer Center for Open Source. A ground up 
 
 Working to replace a system with these [features](docs/Legacy_Features.md).
 See our [planned feature set.](docs/Feature_Requirements.md) 
+
+Features
+--------
+
+Observatory is a powerful dashboard tracking open source projects and contributors that are built through Rensselaer Center for Open Source. the current implemenation can be seen in action at [rcos.rpi.edu](http://rcos.rpi.edu). We are a highly active community of open source developers that attend school at Rensselaer.
