@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Observatory 3.0 Blog</title>
+		<description>Utilities, progress tracking and task management for the Rensselaer Center for Open Source website.</description>
+		<link>http://rcos.github.com/Observatory3</link>
+		
+			<item>
+				<title>Introducing the Observatory3 Blog</title>
+				<description>&lt;p&gt;Finals are just about over, so we're ready to begin work on Observatory3! To get us started, I've created a blog so we can document our progress and release milestones.&lt;/p&gt;
+
+&lt;p&gt;Stay tuned for more!&lt;/p&gt;
+</description>
+				<published>2012-01-18 00:00:00 -0500</published>
+				<link>http://rcos.github.com/Observatory3/blog/2012/01/18/introducing-the-observatory3-blog/</link>
+			</item>
+		
+	</channel>
+</rss>
