@@ -49,14 +49,14 @@ Timeline
         - Projects
         - Mentor
     - Projects
-        - Commits
-        - Blog
+        - Commit Tracking
+        - Blog System
         - Authors
     - RCOS Health
-        - Projects with update times
+        - Projects with update times (automated emailing)
     - Feed
-        - Commits
-        - Blog
+        - Recent RCOS Commits
+        - Recent Blog Posts
 - Desired (January Deadline)
     - Sponsor Us Page
     - Talk Sign Up Request
