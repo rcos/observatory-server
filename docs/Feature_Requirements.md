@@ -66,3 +66,11 @@ Timeline
     - Project Tags Finder
     - Issue integration
     - Stars, Forks, Total commits
+
+Code Goals
+----------
+
+- Easy to maintain, bug fix and add components
+- Easy Deployment 
+- Test coverage
+- Easy to understand (comments, code style guide)
