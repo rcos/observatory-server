@@ -21,6 +21,13 @@ var all = {
   // Server port
   port: process.env.PORT || 9000,
 
+  // Github API Info
+  // Client ID
+  githubClientId: process.env.GITHUBCLIENTID || '',
+
+  // Client Secret
+  githubClientSecret: process.env.GITHUBCLIENTSECRET || '',
+
   // Should we populate the DB with sample data?
   seedDB: false,
 
