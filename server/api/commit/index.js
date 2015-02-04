@@ -8,6 +8,5 @@ var router = express.Router();
 router.get('/', controller.index);
 router.get('/:id', controller.show);
 router.get('/project/:projectId', controller.showProjectCommits);
-router.delete('/:id', controller.destroy);
 
 module.exports = router;
