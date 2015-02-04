@@ -8,7 +8,8 @@ var user = new User({
   provider: 'local',
   name: 'Fake User',
   email: 'test@test.com',
-  password: 'password'
+  password: 'password',
+  avatar: 'http://www.gravatar.com/avatar/00000000000000000000000000000000'
 });
 
 describe('User Model', function() {

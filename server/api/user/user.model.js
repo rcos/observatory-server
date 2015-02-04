@@ -13,7 +13,8 @@ var UserSchema = new Schema({
   },
   hashedPassword: String,
   provider: String,
-  salt: String
+  salt: String,
+  avatar: { type: String, default: 'http://www.gravatar.com/avatar/00000000000000000000000000000000'}
 });
 
 /**
@@ -36,7 +37,8 @@ UserSchema
   .get(function() {
     return {
       'name': this.name,
-      'role': this.role
+      'role': this.role,
+      'avatar': this.avatar
     };
   });
 
