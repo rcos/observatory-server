@@ -12,10 +12,11 @@ var ProjectSchema = new Schema({
   websiteUrl: String,
   githubUsername: String,
   githubProjectName: String,
+  lastChecked: {type: Date},
   authors: [String],
   photos: [String],
   mentor: String,
-  active: Boolean
+  active: {type: Boolean, default: true}
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);

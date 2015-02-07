@@ -7,6 +7,7 @@
 
 var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
+var Project = require('../api/project/project.model');
 
 Thing.find({}).remove(function() {
   Thing.create({
@@ -46,4 +47,16 @@ User.find({}).remove(function() {
       console.log('finished populating users');
     }
   );
+});
+
+Project.find({}).remove(function(){
+  Project.create({
+    name: 'Observatory',
+    description: 'Open source project tracking.',
+    repositoryType: 'github',
+    githubUsername: 'RCOS',
+    githubProjectName: 'Observatory3',
+  }, function() {
+    console.log('finished populating projects')
+  })
 });

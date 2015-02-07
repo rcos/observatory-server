@@ -5,13 +5,16 @@ var mongoose = require('mongoose'),
 
 var CommitSchema = new Schema({
   url: String,
-  projectId: String,
+  sha: {
+    type: String, 
+    unique: true
+  },
   author: {
-    email: {type: String, lowercase: true}, 
-    name: {type: String},
-    date: { type: Date}
+    login: {type: String, lowercase: true},
+    id: {type: Number} 
   },
   message: String,
+  date: Date,
 });
 
 module.exports = mongoose.model('Commit', CommitSchema);

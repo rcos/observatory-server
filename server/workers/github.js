@@ -1,6 +1,7 @@
 'use strict';
 
-var https = require('https'); 
+var https = require('https');
+var mongoose = require('mongoose');
 
 var client_id = process.env.GITHUBCLIENTID;
 var client_secret = process.env.GITHUBCLIENTSECRET;
@@ -16,7 +17,6 @@ exports.getRepository = function(userName, repositoryName){
     }
 
     https.get(options , function(res){
-        // console.log(res);
         res.on('data', function(d) {
             process.stdout.write(d);
         });
@@ -25,12 +25,15 @@ exports.getRepository = function(userName, repositoryName){
     });
 };
 
-exports.getRepositoryCommits = function(userName, repositoryName, lastChecked){
+exports.getRepositoryCommits = function(project, callback){
+    var userName = project.githubUsername;
+    var repositoryName = project.githubProjectName;
 
-    if (!lastChecked) {
+    if (!project.lastChecked) {
         var path = "/repos/" + userName + "/" + repositoryName + "/commits?client_id=" +
             client_id + "&client_secret="+ client_secret;
     } else{
+        var lastChecked = project.lastChecked.toISOString();
         var path = "/repos/" + userName + "/" + repositoryName + "/commits?client_id=" +
             client_id + "&client_secret="+ client_secret + "&since=" + lastChecked;
     }
@@ -49,18 +52,20 @@ exports.getRepositoryCommits = function(userName, repositoryName, lastChecked){
         });
         res.on('end', function() {
             var data = JSON.parse(body);
-            console.log(data.length);
-
+            console.log(data.length + " new commits found");
             // If data has a length element defined return data
             if (data.length){
-                return data
+                project.lastChecked = Date.now;
+                callback(data);
             // otherwise return an empty array of commits
             } else{
-                return [];
+                project.lastChecked = Date.now;
+                project.save();
+                callback([]);
             }
         });
     }).on('error', function(e) {
       console.error(e);
-      return [];
+      callback([]);
     });
 };
