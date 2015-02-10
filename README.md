@@ -16,6 +16,7 @@ Installation
 
 Once the project is cloned you need npm and Mongo DB. You can then run 
 ```
+npm install -g generator-angular-fullstack
 npm install
 bower install
 grunt server
