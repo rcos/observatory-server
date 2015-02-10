@@ -15,10 +15,10 @@ Installation
 ------------
 
 Once the project is cloned you need npm and Mongo DB. You can then run 
-'
+```
 npm install
 bower install
 grunt server
-'
+```
 
 This should give you a fully functioning dev server.
