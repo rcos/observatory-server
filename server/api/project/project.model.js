@@ -10,7 +10,7 @@ var ProjectSchema = new Schema({
   repositoryType: {type: String, default: 'github'},
   repositoryUrl: String,
   websiteUrl: String,
-  githubUsername: String,
+  githubUsername: {type: String, index: true},
   githubProjectName: String,
   lastChecked: {type: Date},
   authors: [String],

@@ -15,7 +15,7 @@ var UserSchema = new Schema({
   provider: String,
   salt: String,
 
-  githubLogin: {type: String, lowercase: true},
+  githubLogin: {type: String, lowercase: true, index: true},
   githubProfile: {type: String},
   
   avatar: { type: String, default: 'http://www.gravatar.com/avatar/00000000000000000000000000000000'}

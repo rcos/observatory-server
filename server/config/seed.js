@@ -43,6 +43,14 @@ User.find({}).remove(function() {
     name: 'Admin',
     email: 'admin@admin.com',
     password: 'admin'
+  },
+  {
+    provider: 'local',
+    role: 'admin',
+    name: 'Aaron',
+    email: 'aaron@admin.com',
+    password: 'admin',
+    githubLogin: 'agundy'
   }, function() {
       console.log('finished populating users');
     }
