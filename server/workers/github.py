@@ -15,11 +15,12 @@ headers = {'content-type': 'application/json'}
 client = MongoClient(MONGO_URL)
 db = client['observatory3-dev']
 
-def getCommits(userName, repositoryName,since=None):
+def getCommits(userName, repositoryName, since=None):
     if since:
         # Add the last checked date to the parameters if it is available.
         PAYLOAD['since'] = since
-
+    else:
+        PAYLOAD['since'] = None
     # form the initial API URL
     path = HOST + '/repos/%s/%s/commits'%(userName, repositoryName)
     Commits = db.commits
@@ -29,6 +30,7 @@ def getCommits(userName, repositoryName,since=None):
     while True:
         r = requests.get(path, params=PAYLOAD, headers=headers)
         commitsData = r.json()
+        
         for com in commitsData:
             commit = {}
             commit['url'] = com['url']
@@ -57,8 +59,8 @@ def getCommits(userName, repositoryName,since=None):
         except:
             break
 
-    print "Found %d new commit(s) for project %s %s" %(
-            len(commits), userName, repositoryName)
+    print "Found %d new commit(s) for project %s %s since %s"%(
+            len(commits), userName, repositoryName, str(since))
     return commits
 
 
