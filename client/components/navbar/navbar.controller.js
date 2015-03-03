@@ -5,6 +5,9 @@ angular.module('observatory3App')
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
+    },{
+      'title': 'Projects',
+      'link': '/projects'
     }];
 
     $scope.isCollapsed = true;

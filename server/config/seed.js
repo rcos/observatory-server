@@ -53,6 +53,7 @@ Project.find({}).remove(function(){
   Project.create({
     name: 'Observatory',
     description: 'Open source project tracking.',
+    repositoryUrl: 'https://github.com/rcos/Observatory3',
     repositoryType: 'github',
     githubUsername: 'RCOS',
     githubProjectName: 'Observatory3',
