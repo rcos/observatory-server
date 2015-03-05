@@ -1,0 +1,69 @@
+html {
+    font-family: "Puritan", 'Helvetica Neue', Helvetica, Arial, "Bitstream Vera Sans", sans-serif;
+    font-size: 10pt;
+}
+
+.extra-content {
+    background-color: #eee;
+    clear: both;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Kreon", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+}
+
+.extra-content h2 {
+    float: left;
+    clear: both;
+    padding: 0px;
+    margin: 0px 0px 10px 0px;
+    line-height: 30px;
+}
+
+.extra-content h2 a, {
+    color: inherit;
+    text-decoration: none;
+}
+
+.extra-content h2 a:hover {
+    color: black;
+}
+
+h2 {
+    font-size: 14pt;
+}
+
+.project-info {
+    font-family: "Kreon", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0px;
+    font-size: 14px;
+    float: right;
+    list-style: none;
+    line-height: 30px;
+    font-weight: bold;
+}
+
+.project-info li {
+    margin-left: 10px;
+    float: left;
+}
+
+.project-info a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.project-info a:hover {
+    color: grey;
+}
+
+.clear {
+    clear: both;
+}
