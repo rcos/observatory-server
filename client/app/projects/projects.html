@@ -2,9 +2,21 @@
 
 <div class="container">
 
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addProject">
+    <div id="header">
+    <h1> {{ past ? "Past" : "Current" }} RCOS Projects</h1>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProject">
         Add a Project
     </button>
+    <button type="button" class="btn btn-primary" ng-click="getCurrentProjects()" ng-show="past">
+        Show Current Projects
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="getPastProjects()" ng-show="!past">
+        Show Past Projects
+    </button>
+    </div>
+
+    <br/><br/>
 
     <div class="modal fade" id="addProject" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -19,9 +31,10 @@
                         <input type="url" ng-model="projectToAdd.websiteUrl" class="form-control" placeholder="Your project's homepage" title="Website" required=""/><br/>
                         <input type="url" ng-model="projectToAdd.repositoryUrl" class="form-control" placeholder="URL for your project's repository" title="Repository" required=""/><br/>
                         <textarea ng-model="projectToAdd.description" class="form-control" placeholder="Describe your project" title="Description" required=""></textarea><br/>
+                        Active? <input type="checkbox" ng-model="projectToAdd.active" /> <br/><br/>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <input type="submit" ng-click="addProjectForm.$valid && submit(addProjectForm)" class="btn btn-primary" value="Add" />
+                            <input type="submit" ng-click="addProjectForm.$valid && submit(addProjectForm)" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>

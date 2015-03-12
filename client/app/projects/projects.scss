@@ -75,3 +75,13 @@ h2 {
 .css-form .ng-valid.ng-touched {
     border-color: #78FA89;
 }
+
+#header button {
+    float: right;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+
+#header h1 {
+    float: left;
+}

@@ -4,9 +4,17 @@ var _ = require('lodash');
 var Project = require('./project.model');
 var User = require('../user/user.model');
 
-// Get list of projects
+// Get list of current projects
 exports.index = function(req, res) {
   Project.find({active:true},function (err, projects) {
+    if(err) { return handleError(res, err); }
+    return res.json(200, projects);
+  });
+};
+
+// Get list of past projects
+exports.indexOld = function(req, res) {
+  Project.find({active:false},function (err, projects) {
     if(err) { return handleError(res, err); }
     return res.json(200, projects);
   });

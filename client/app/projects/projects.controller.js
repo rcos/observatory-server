@@ -3,12 +3,21 @@
 angular.module('observatory3App')
 .controller('ProjectsCtrl', function ($scope, $http) {
     $scope.projects = [];
+    $scope.projectToAdd = {active: true};
 
-    $http.get('/api/projects').success(function(projects) {
-        $scope.projects = projects;
-    });
+    $scope.getCurrentProjects = function() {
+        $http.get('/api/projects').success(function(projects) {
+            $scope.projects = projects;
+        });
+        $scope.past = false;
+    };
 
-    $scope.projectToAdd = {};
+    $scope.getPastProjects = function() {
+        $http.get('/api/projects/past').success(function(projects) {
+            $scope.projects = projects;
+        });
+        $scope.past = true;
+    };
 
     $scope.submit = function(form) {
         $('#addProject').modal('hide');
@@ -20,10 +29,10 @@ angular.module('observatory3App')
         // and results in the modal disappearing but the overlay staying if not used
         setTimeout(function() {
             $http.post('/api/projects', $scope.projectToAdd);
-            $scope.projectToAdd = {};
-            $http.get('/api/projects').success(function(projects) {
-                $scope.projects = projects;
-            });
+            $scope.projectToAdd = {active: true};
+            $scope.past ? $scope.getPastProjects() : $scope.getCurrentProjects();
         }, 200);
     }
+
+    $scope.getCurrentProjects(); // update the webpage when connecting the controller
 });
