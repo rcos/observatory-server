@@ -23,12 +23,42 @@ exports.index = function(req, res) {
 };
 
 /**
- * Get list of users with stats
+ * Get list of users with stats including last commits 
+ * in previous 2 weeks
  */
 exports.stats = function(req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
+  User.find({active: true}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
-    res.json(200, users);
+    
+    var twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate()-14);
+
+    var count = users.length;
+    var data = [];
+
+    for (var i = 0; i < users.length; i++){
+      (function(user){
+        var user = users[i];
+
+        Commit
+        .find()
+        .where('userId').equals(String(user._id))
+        .where('date').gt(twoWeeks)
+        .exec(function(err, commits){
+            if (err) return res.send(500, err);
+            var userInfo = {}
+            userInfo.user = user;
+            userInfo.commitCount = commits.length;
+            data.push(userInfo);
+
+            count--;
+            if (count === 0){
+              res.json(200, data);
+            }
+
+        });
+      })(users[i]);
+    };
   });
 };
 

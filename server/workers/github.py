@@ -1,6 +1,7 @@
 import requests
 import os
 from datetime import datetime
+import dateutil.parser
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -41,7 +42,7 @@ def getCommits(userName, repositoryName, since=None):
             if com['author']:
                 commit['author']['login'] = com['author']['login']
                 commit['author']['id'] = com['author']['id']
-            commit['date'] = com['commit']['committer']['date']
+            commit['date'] = dateutil.parser.parse(com['commit']['committer']['date'])
             user = db.users.find_one({'githubLogin': commit['author']['login']})
 
             if user:
