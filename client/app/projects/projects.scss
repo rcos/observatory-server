@@ -68,10 +68,10 @@ h2 {
     clear: both;
 }
 
-.addForm.ng-invalid.ng-touched {
+.css-form .ng-invalid.ng-touched {
     border-color: #FA787E;
 }
 
-.addForm.ng-valid.ng-touched {
+.css-form .ng-valid.ng-touched {
     border-color: #78FA89;
 }

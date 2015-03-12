@@ -13,26 +13,16 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="addProjectLabel">Add a Project</h4>
                 </div>
-                <div class="modal-body">
-                    <form name="addProjectForm" ng-controller="addCtrl" ng-submit="addProjectForm.$valid && submit()" novalidate>
-                        <fieldset class="form-group">
-                            <input ng-model="project.name" class="form-control addForm" placeholder="Name of the project" title="Name" required/>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <input ng-model="project.websiteUrl" class="form-control addForm" placeholder="Your project's homepage" title="Website" required/>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <input ng-model="project.repositoryUrl" class="form-control addForm" placeholder="URL for your project's repository" title="Repository" required/>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <textarea ng-model="project.description" class="form-control addForm" placeholder="Describe your project" title="Description" required></textarea>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <input type="submit" class="btn btn-primary" value="Add" />
-                            </div>
-                        </fieldset>
+                <div class="modal-body" >
+                    <form novalidate name="addProjectForm" class="css-form">
+                        <input ng-model="projectToAdd.name" class="form-control addForm" placeholder="Name of the project" title="Name" required=""/><br/>
+                        <input type="url" ng-model="projectToAdd.websiteUrl" class="form-control" placeholder="Your project's homepage" title="Website" required=""/><br/>
+                        <input type="url" ng-model="projectToAdd.repositoryUrl" class="form-control" placeholder="URL for your project's repository" title="Repository" required=""/><br/>
+                        <textarea ng-model="projectToAdd.description" class="form-control" placeholder="Describe your project" title="Description" required=""></textarea><br/>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" ng-click="addProjectForm.$valid && submit(addProjectForm)" class="btn btn-primary" value="Add" />
+                        </div>
                     </form>
                 </div>
             </div>
@@ -40,7 +30,7 @@
     </div>
 
     <div ng-repeat="project in projects">
-        <div class="extra-content" ng-show="{{ project.active }}">
+        <div class="extra-content" >
             <h2 id="name"> {{ project.name }} </h2>
             <ul class="project-info">
                 <li><a href="{{ project.websiteUrl }}">Website</a></li>
