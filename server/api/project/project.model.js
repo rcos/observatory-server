@@ -9,7 +9,7 @@ var ProjectSchema = new Schema({
   // Where is the project hosted? Github, Google Code, etc.
   repositoryType: {type: String, default: 'github'},
   repositoryUrl: String,
-  websiteUrls: [String],
+  websiteUrl: String,
   githubUsername: String,
   githubProjectName: String,
   lastChecked: {type: Date},

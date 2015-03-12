@@ -67,3 +67,11 @@ h2 {
 .clear {
     clear: both;
 }
+
+.addForm.ng-invalid.ng-touched {
+    border-color: #FA787E;
+}
+
+.addForm.ng-valid.ng-touched {
+    border-color: #78FA89;
+}

@@ -1,11 +1,49 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
+
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addProject">
+        Add a Project
+    </button>
+
+    <div class="modal fade" id="addProject" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addProjectLabel">Add a Project</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="addProjectForm" ng-controller="addCtrl" ng-submit="addProjectForm.$valid && submit()" novalidate>
+                        <fieldset class="form-group">
+                            <input ng-model="project.name" class="form-control addForm" placeholder="Name of the project" title="Name" required/>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <input ng-model="project.websiteUrl" class="form-control addForm" placeholder="Your project's homepage" title="Website" required/>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <input ng-model="project.repositoryUrl" class="form-control addForm" placeholder="URL for your project's repository" title="Repository" required/>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <textarea ng-model="project.description" class="form-control addForm" placeholder="Describe your project" title="Description" required></textarea>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="Add" />
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div ng-repeat="project in projects">
         <div class="extra-content" ng-show="{{ project.active }}">
             <h2 id="name"> {{ project.name }} </h2>
             <ul class="project-info">
-                <li><a href="{{ project.websiteUrls[0] }}">Website</a></li>
+                <li><a href="{{ project.websiteUrl }}">Website</a></li>
                 <li><a href="{{ project.blogUrl }}">Blog</a></li>
                 <li><a href="{{ project.repositoryUrl }}">Repostory</a></li>
             </ul>
