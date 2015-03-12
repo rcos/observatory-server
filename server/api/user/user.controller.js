@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./user.model');
+var Commit = require('../commit/commit.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -18,6 +19,28 @@ exports.index = function(req, res) {
   User.find({}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
     res.json(200, users);
+  });
+};
+
+/**
+ * Get list of users with stats
+ */
+exports.stats = function(req, res) {
+  User.find({}, '-salt -hashedPassword', function (err, users) {
+    if(err) return res.send(500, err);
+    res.json(200, users);
+  });
+};
+
+/**
+ * Get a list of all the recent RCOS commits for a user 
+ */
+exports.commits = function(req, res) {
+  var userId = String(req.params.id);
+
+  Commit.find({ userId: userId}, function(err, commits){
+    if (err) return res.send(500, err);
+    res.json(200, commits);
   });
 };
 

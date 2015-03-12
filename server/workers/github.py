@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 MONGO_URL = 'mongodb://localhost/'
 
@@ -41,8 +42,14 @@ def getCommits(userName, repositoryName, since=None):
                 commit['author']['login'] = com['author']['login']
                 commit['author']['id'] = com['author']['id']
             commit['date'] = com['commit']['committer']['date']
-                
-            if not Commits.find({'sha': commit['sha']}):
+            user = db.users.find_one({'githubLogin': commit['author']['login']})
+
+            if user:
+                userId = user['_id']
+                print ObjectId(user['_id'])
+                commit['userId'] = str(ObjectId(user['_id']))
+
+            if not len(list(Commits.find({'sha': commit['sha']}))):
                 Commits.insert(commit, {'upsert':True})
             commits.append(commit)
         try:

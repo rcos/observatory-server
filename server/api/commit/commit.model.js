@@ -14,6 +14,7 @@ var CommitSchema = new Schema({
     login: {type: String, lowercase: true},
     id: {type: Number} 
   },
+  branch: String,
   message: String,
   date: Date,
 });
