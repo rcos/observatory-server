@@ -1,1 +1,19 @@
 
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+    <div class="row">
+        <h3>RCOS Users</h3>
+        <br>
+    </div>
+    <div class="row">
+        <div ng-repeat="user in users" class="col-md-1 text-center">
+            <div class="row">
+                <img src="{{ user.user.avatar }}">
+            </div>
+            <div class="row">
+                {{ user.user.name }}
+            </div>
+        </div>  
+    </div>
+</div>

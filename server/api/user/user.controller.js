@@ -27,7 +27,8 @@ exports.index = function(req, res) {
  * in previous 2 weeks
  */
 exports.stats = function(req, res) {
-  User.find({active: true}, '-salt -hashedPassword', function (err, users) {
+  // Only return users who are active and have a github login
+  User.find({active: true, githubLogin: {$exists: true}}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
     
     var twoWeeks = new Date();
@@ -37,27 +38,28 @@ exports.stats = function(req, res) {
     var data = [];
 
     for (var i = 0; i < users.length; i++){
-      (function(user){
-        var user = users[i];
+        (function(user){
+          var user = users[i];
 
-        Commit
-        .find()
-        .where('userId').equals(String(user._id))
-        .where('date').gt(twoWeeks)
-        .exec(function(err, commits){
-            if (err) return res.send(500, err);
-            var userInfo = {}
-            userInfo.user = user;
-            userInfo.commitCount = commits.length;
-            data.push(userInfo);
+          Commit
+          .find()
+          .where('userId').equals(String(user._id))
+          .where('date').gt(twoWeeks)
+          .exec(function(err, commits){
+              if (err) return res.send(500, err);
+              var userInfo = {};
+              userInfo = JSON.parse(JSON.stringify(user));
+              userInfo.attendance = 0;
+              userInfo.commits = commits;
+              data.push(userInfo);
 
-            count--;
-            if (count === 0){
-              res.json(200, data);
-            }
+              count--;
+              if (count === 0){
+                res.json(200, data);
+              }
 
-        });
-      })(users[i]);
+          });
+        })(users[i]);
     };
   });
 };
