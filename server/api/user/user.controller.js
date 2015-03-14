@@ -175,6 +175,22 @@ exports.authCallback = function(req, res, next) {
 };
 
 /**
+ * Mark attendance for specified user
+ */
+exports.attendance = function(req,res){
+    var userId = req.params.id;
+    var result = User.update({
+        _id: userId
+    },{
+        $push: {
+            attendance: new Date()
+        }
+    }, function(err){
+        res.send({"success":(err !== 0)});
+    });
+};
+
+/**
 * Get gravatar url
 *
 * @return {String}
