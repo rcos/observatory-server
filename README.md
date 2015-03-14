@@ -1,10 +1,12 @@
 Observatory3
 ============
 
+[![Build Status](https://travis-ci.org/rcos/Observatory3.svg?branch=master)](https://travis-ci.org/rcos/Observatory3)
+
 A project tracking dashboard for Rensselaer Center for Open Source. A ground up rewrite.
 
 Working to replace a system with these [features](docs/Legacy_Features.md).
-See our [planned feature set.](docs/Feature_Requirements.md) 
+See our [planned feature set.](docs/Feature_Requirements.md)
 
 Features
 --------
@@ -14,11 +16,18 @@ Observatory is a powerful dashboard tracking open source projects and contributo
 Installation
 ------------
 
-Once the project is cloned you need npm and Mongo DB. You can then run 
-'
+Once the project is cloned you need nodejs (nodejs-legacy for debian-based distributions), npm, ruby, and Mongo DB. You can then run
+```
+npm install -g grunt-cli grunt bower
 npm install
+# if you have errors running the above, run the following line:
+sudo $USER chown -R ~/.npm
 bower install
-grunt server
-'
+sudo gem install sass
+sudo service mongodb start # or equivalent if not on an ubuntu-based distribution
+# if mongodb fails to start, run the following line and retry:
+sudo mkdir -p /data/db
+grunt serve
+```
 
 This should give you a fully functioning dev server.
