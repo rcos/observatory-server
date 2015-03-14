@@ -137,6 +137,23 @@ exports.changePassword = function(req, res, next) {
 };
 
 /**
+ * Deactivates a user
+ */
+exports.deactivate = function(req, res, next) {
+  var userId = String(req.params.id);
+
+  User.findOne({ '_id': userId}, function(err, user){
+    if (err) return res.send(500, err);
+    
+    user.active = false;
+    user.save(function(err){
+    if (err) return res.send(500, err);
+      res.json(200, {success: true});
+    })
+  });
+};
+
+/**
  * Get my info
  */
 exports.me = function(req, res, next) {
