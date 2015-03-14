@@ -19,7 +19,9 @@ Once the project is cloned you need npm and Mongo DB. You can then run
 npm install -g generator-angular-fullstack
 npm install
 bower install
-grunt server
+grunt serve
 ```
 
-This should give you a fully functioning dev server.
+Grunt will run the server and make the project available at [http://localhost:9000](http://localhost:9000). 
+
+Want to develop with us? Check out the generator we use at [here](https://github.com/DaftMonk/generator-angular-fullstack). 
