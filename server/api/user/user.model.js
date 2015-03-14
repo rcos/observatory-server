@@ -7,6 +7,7 @@ var crypto = require('crypto');
 var UserSchema = new Schema({
   name: String,
   email: { type: String, lowercase: true },
+  active: {type: Boolean, default: true},
   role: {
     type: String,
     default: 'user'
@@ -15,7 +16,7 @@ var UserSchema = new Schema({
   provider: String,
   salt: String,
 
-  githubLogin: {type: String, lowercase: true},
+  githubLogin: {type: String, lowercase: true, index: true},
   githubProfile: {type: String},
   
   avatar: { type: String, default: 'http://www.gravatar.com/avatar/00000000000000000000000000000000'}

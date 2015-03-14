@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./user.model');
+var Commit = require('../commit/commit.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -18,6 +19,60 @@ exports.index = function(req, res) {
   User.find({}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
     res.json(200, users);
+  });
+};
+
+/**
+ * Get list of users with stats including last commits 
+ * in previous 2 weeks
+ */
+exports.stats = function(req, res) {
+  // Only return users who are active and have a github login
+  User.find({active: true, githubLogin: {$exists: true}}, '-salt -hashedPassword', function (err, users) {
+    if(err) return res.send(500, err);
+    
+    var twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate()-14);
+
+    var count = users.length;
+    var data = [];
+
+    for (var i = 0; i < users.length; i++){
+        (function(user){
+          var user = users[i];
+
+          Commit
+          .find()
+          .where('userId').equals(String(user._id))
+          .where('date').gt(twoWeeks)
+          .exec(function(err, commits){
+              if (err) return res.send(500, err);
+              var userInfo = {};
+              userInfo = JSON.parse(JSON.stringify(user));
+              userInfo.attendance = 0;
+              userInfo.commits = commits;
+              data.push(userInfo);
+
+              count--;
+              if (count === 0){
+                res.json(200, data);
+              }
+
+          });
+        })(users[i]);
+    };
+  });
+};
+
+/**
+ * Get a list of all the recent RCOS commits for a user 
+ */
+exports.commits = function(req, res) {
+  var userId = String(req.params.id);
+
+  Commit.find({ userId: userId}, function(err, commits){
+    if (err) return res.send(500, err);
+    res.json(200, commits);
   });
 };
 
@@ -78,6 +133,23 @@ exports.changePassword = function(req, res, next) {
     } else {
       res.send(403);
     }
+  });
+};
+
+/**
+ * Deactivates a user
+ */
+exports.deactivate = function(req, res, next) {
+  var userId = String(req.params.id);
+
+  User.findOne({ '_id': userId}, function(err, user){
+    if (err) return res.send(500, err);
+    
+    user.active = false;
+    user.save(function(err){
+    if (err) return res.send(500, err);
+      res.json(200, {success: true});
+    })
   });
 };
 

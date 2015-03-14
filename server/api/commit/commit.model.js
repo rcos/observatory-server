@@ -9,10 +9,12 @@ var CommitSchema = new Schema({
     type: String, 
     unique: true
   },
+  userId: { type: String, index: true},
   author: {
     login: {type: String, lowercase: true},
     id: {type: Number} 
   },
+  branch: String,
   message: String,
   date: Date,
 });

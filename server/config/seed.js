@@ -5,9 +5,12 @@
 
 'use strict';
 
+var spawn = require("child_process").spawn;
+
 var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
 var Project = require('../api/project/project.model');
+var Commit = require('../api/commit/commit.model');
 
 Thing.find({}).remove(function() {
   Thing.create({
@@ -43,6 +46,14 @@ User.find({}).remove(function() {
     name: 'Admin',
     email: 'admin@admin.com',
     password: 'admin'
+  },
+  {
+    provider: 'local',
+    role: 'admin',
+    name: 'Aaron',
+    email: 'aaron@admin.com',
+    password: 'admin',
+    githubLogin: 'agundy'
   }, function() {
       console.log('finished populating users');
     }
@@ -60,4 +71,9 @@ Project.find({}).remove(function(){
   }, function() {
     console.log('finished populating projects')
   })
+});
+
+Commit.find({}).remove(function(){
+  console.log('Refreshing Commits');
+  var process = spawn('python', ['server/workers/github.py'])
 });

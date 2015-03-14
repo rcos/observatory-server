@@ -14,4 +14,17 @@ angular.module('observatory3App')
         }
       });
     };
+
+    $scope.deactivate = function(userId){
+      $http.put('/api/users/' + userId + '/deactivate').success(function(message){
+        console.log(message);
+        if (message.success){
+          angular.forEach($scope.users, function(u, i) {
+            if (u._id === userId) {
+              $scope.users.splice(i, 1);
+            }
+          });
+        }
+      });
+    }
   });
