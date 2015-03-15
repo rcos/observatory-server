@@ -53,7 +53,10 @@ User.find({}).remove(function() {
     name: 'Aaron',
     email: 'aaron@admin.com',
     password: 'admin',
-    githubLogin: 'agundy'
+    github:{
+      login: 'agundy'
+    }
+
   }, function() {
       console.log('finished populating users');
     }
@@ -71,9 +74,4 @@ Project.find({}).remove(function(){
   }, function() {
     console.log('finished populating projects')
   })
-});
-
-Commit.find({}).remove(function(){
-  console.log('Refreshing Commits');
-  var process = spawn('python', ['server/workers/github.py'])
 });
