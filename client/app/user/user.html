@@ -7,12 +7,16 @@
         <br>
     </div>
     <div class="row">
-        <div ng-repeat="user in users" class="col-md-1 text-center">
+        <div ng-repeat="user in users" class="col-md-1 col-sm-2 text-center">
             <div class="row">
-                <img class="profile-img" src="{{ user.avatar }}">
+                <a href="/users/{{ user._id}}/profile" title="">
+                    <img class="profile-img" src="{{ user.avatar }}">
+                </a>
             </div>
             <div class="row">
-                {{ user.name }}
+                <a href="/users/{{ user._id}}/profile" title="">
+                    {{ user.name }}
+                </a>
             </div>
         </div>  
     </div>
