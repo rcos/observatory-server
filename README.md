@@ -23,6 +23,7 @@ npm install
 # if you have errors running the above, run the following line:
 sudo $USER chown -R ~/.npm
 bower install
+<<<<<<< HEAD
 sudo gem install sass
 sudo service mongodb start # or equivalent if not on an ubuntu-based distribution
 # if mongodb fails to start, run the following line and retry:
@@ -30,4 +31,6 @@ sudo mkdir -p /data/db
 grunt serve
 ```
 
-This should give you a fully functioning dev server.
+Grunt will run the server and make the project available at [http://localhost:9000](http://localhost:9000). 
+
+Want to develop with us? Check out the generator we use at [here](https://github.com/DaftMonk/generator-angular-fullstack). 
