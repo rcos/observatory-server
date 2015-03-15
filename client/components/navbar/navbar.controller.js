@@ -8,6 +8,9 @@ angular.module('observatory3App')
     },{
       'title': 'Projects',
       'link': '/projects'
+    },{
+      'title': 'Users',
+      'link': '/users'
     }];
 
     $scope.isCollapsed = true;

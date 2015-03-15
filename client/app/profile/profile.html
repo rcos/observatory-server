@@ -1,0 +1,60 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class='container'>
+    <div class='row'>
+        <div class='col-md-3 profile-sidebar'>
+            <img width='75%' src='{{user.avatar}}'/>
+            <span id='semester-count'>{{user.semesters}}</span>
+            <div class='sidebar-text name'>
+                {{user.name}}
+            </div>
+            <div class='sidebar-text title'>
+                {{user.role}}
+            </div>
+            <div class='sidebar-text box'>
+                <a href='http://github.com/{{user.githubProfile}}'>Github</a>
+                <br/>
+                {{user.email}}
+            </div>
+        </div>
+        <div class='col-md-6'>
+            <div class='tech-boxes'>
+                <div ng-repeat='tech in user.tech'>{{tech}}</div>
+            </div>
+            <div class='content-box'>
+                <div class='content-title'>Bio</div>
+                {{user.bio}}
+            </div>
+            <div class='content-box' ng-repeat='project in user.projects'>
+                <div class='project row'>
+                    <div class='col-xs-3' style='text-align:center;'>
+                        <img width='80%' src='{{project.avatar}}'/>
+                    </div>
+                    <div class='col-xs-9'>
+                        <div class='title'> {{project.name}} </div>
+                        <div class='description'>{{project.description}}</div>
+                        <div class='tech-boxes'>
+                            <div ng-repeat='tech in project.tect'>{{tech}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='col-md-3'>
+            <div class='content-box'>
+                <div class='content-title'>
+                    Attendance <span class='attendance-score'>{{user.attendanceScore}}% +{{user.attendanceBonus}}%</span>
+                </div>
+                <div id='attendance-box-container'>
+                    <div ng-repeat='day in user.attendance' class='good'></div>
+                </div>
+            </div>
+            <div class='content-box'>
+                <div class='content-title'>Commits</div>
+                <div ng-repeat='commit in user.commits' class='commit'>
+                    <a href='{{commit.link}}'>{{commit.message}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

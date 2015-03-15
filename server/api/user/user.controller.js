@@ -23,14 +23,14 @@ exports.index = function(req, res) {
 };
 
 /**
- * Get list of users with stats including last commits 
+ * Get list of users with stats including last commits
  * in previous 2 weeks
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
-    
+
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
 
@@ -65,7 +65,7 @@ exports.stats = function(req, res) {
 };
 
 /**
- * Get a list of all the recent RCOS commits for a user 
+ * Get a list of all the recent RCOS commits for a user
  */
 exports.commits = function(req, res) {
   var userId = String(req.params.id);
@@ -145,7 +145,7 @@ exports.deactivate = function(req, res, next) {
 
   User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
-    
+
     user.active = false;
     user.save(function(err){
     if (err) return res.send(500, err);
