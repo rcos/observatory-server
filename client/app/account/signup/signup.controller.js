@@ -12,6 +12,9 @@ angular.module('observatory3App')
         Auth.createUser({
           name: $scope.user.name,
           email: $scope.user.email,
+          github: {
+            login: $scope.user.githubLogin
+          },
           password: $scope.user.password
         })
         .then( function() {
