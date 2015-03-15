@@ -78,7 +78,7 @@ UserSchema
       }],//TODO pull projects
       'tech':['Javascript','Python','Web Applications','C++'],
       'bio': "Android, Web and Desktop Application development. Talk to me if you want to know more about NodeJS, Atom-Shell, Atom.io, Bootstrap or any other modern web technologies.",
-      'githubProfile': this.githubProfile
+      'githubProfile': this.github.login
     };
   });
 
