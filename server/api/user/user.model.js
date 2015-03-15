@@ -54,7 +54,31 @@ UserSchema
     return {
       'name': this.name,
       'role': this.role,
-      'avatar': this.avatar
+      'avatar': this.avatar,
+      'email': this.email,
+      'semesters': 4,
+      'attendance': [],//TODO pull attendance
+      "attendanceScore": 83,
+      "attendanceBonus": 12,
+      'commits': [{
+          "message":"Issue Created",
+          "link": "#"
+      },{
+          "message":"Pull Request",
+          "link":"#"
+      },{
+          "message":"Commit",
+          "link":"#"
+      }], //TODO pull commits
+      'projects':[{
+          'name': 'Sia UI',
+          'avatar':'https://avatars1.githubusercontent.com/u/7471422?v=3&s=200',
+          'description': 'Front end user interface for Sia decentralized storage network utilitzing atom-shell, other stuff and things.',
+          'tech':['NodeJS','Javascript','Atom Shell','HTML']
+      }],//TODO pull projects
+      'tech':['Javascript','Python','Web Applications','C++'],
+      'bio': "Android, Web and Desktop Application development. Talk to me if you want to know more about NodeJS, Atom-Shell, Atom.io, Bootstrap or any other modern web technologies.",
+      'githubProfile': this.githubProfile
     };
   });
 
