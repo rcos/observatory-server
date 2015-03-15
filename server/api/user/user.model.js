@@ -16,10 +16,19 @@ var UserSchema = new Schema({
   provider: String,
   salt: String,
 
-  githubLogin: {type: String, lowercase: true, index: true},
   attendance: [Date],
 
-  githubProfile: {type: String},
+  github: {
+    events: [{
+      type: String,
+      action: String,
+      message: String,
+      url: String,
+      date: Date
+    }],
+    login: {type: String, lowercase: true},
+    profile: String,
+  },
 
   avatar: { type: String, default: 'http://www.gravatar.com/avatar/00000000000000000000000000000000'}
 });

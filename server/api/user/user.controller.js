@@ -28,7 +28,7 @@ exports.index = function(req, res) {
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, githubLogin: {$exists: true}}, '-salt -hashedPassword', function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
     
     var twoWeeks = new Date();
@@ -141,6 +141,7 @@ exports.changePassword = function(req, res, next) {
  */
 exports.deactivate = function(req, res, next) {
   var userId = String(req.params.id);
+
 
   User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
