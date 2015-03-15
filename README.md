@@ -23,7 +23,6 @@ npm install
 # if you have errors running the above, run the following line:
 sudo $USER chown -R ~/.npm
 bower install
-<<<<<<< HEAD
 sudo gem install sass
 sudo service mongodb start # or equivalent if not on an ubuntu-based distribution
 # if mongodb fails to start, run the following line and retry:
