@@ -26,5 +26,15 @@ angular.module('observatory3App')
           });
         }
       });
+    };
+
+    $scope.sortorder = 'name';
+
+    $scope.setSortOrder = function(field){
+      if (field === $scope.sortorder){
+        $scope.sortorder = '-' + field;
+      } else{
+        $scope.sortorder = field;
+      }
     }
   });
