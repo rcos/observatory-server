@@ -85,84 +85,139 @@ def getUserEvents(user):
     eventData = r.json()
 
     for event in eventData:
-        if event['type'] == 'PushEvent':
-            # User pushed code
-            for com in event['payload']['commits']:
-                commit = {}
+        print event
+        try:
+            if event['type'] == 'PushEvent':
+                # User pushed code
+                for com in event['payload']['commits']:
+                    commit = {}
 
-                dbCommit = db.commits.find_one({'sha': com['sha']})
+                    dbCommit = db.commits.find_one({'sha': com['sha']})
 
-                if not dbCommit:
-                    # Ensure commit isn't already in our database before making a new one
-                    r = requests.get(com['url'], params=PAYLOAD, headers=headers)
-                    data =  r.json()
-                    if 'message' in data:
-                        # Message means that there was an error finding the commit
-                        pass
-                    else:
-                        githubCommit = parseCommit(data)
-                        commit['sha'] = githubCommit['sha']
-                        commit['message'] = githubCommit['message']
-                        commit['author'] = {}
-                        commit['author']['login'] = githubCommit['author']['login']
-                        commit['author']['id'] = githubCommit['author']['id']
+                    if not dbCommit:
+                        # Ensure commit isn't already in our database before making a new one
+                        r = requests.get(com['url'], params=PAYLOAD, headers=headers)
+                        data =  r.json()
+                        if 'message' in data:
+                            # Message means that there was an error finding the commit
+                            pass
+                        else:
+                            githubCommit = parseCommit(data)
 
-                        Commits.insert(commit,{'upsert':True})
-        elif event['type'] == 'IssueCommentEvent':
-            # User commented on an issue
-            newEvent = {}
-            newEvent['type'] = 'IssueCommentEvent'
-            newEvent['action'] = event['payload']['action']
-            newEvent['message'] = event['payload']['comment']['body']
-            newEvent['url'] = event['payload']['comment']['html_url']
-            newEvent['date'] = dateutil.parser.parse(event['payload']['comment']['created_at'])
-            
-            events.append(newEvent)
-        elif event['type'] == 'PullRequestEvent':
-            # Events that are pull requests
-            newEvent = {}
-            newEvent['type'] = 'PullRequestEvent'
-            newEvent['action'] = event['payload']['action']
-            newEvent['message'] = event['payload']['pull_request']['title']
-            newEvent['url'] = event['payload']['pull_request']['_links']['html']['href']
-            # Changes behavior based on whether the pull request was opened or closed
-            if newEvent['action'] == 'closed':
-                newEvent['date'] = dateutil.parser.parse(event['payload']['pull_request']['closed_at'])
-            elif newEvent['action'] == 'opened':
-                newEvent['date'] = dateutil.parser.parse(event['payload']['pull_request']['created_at'])
-                        
-            events.append(newEvent)
-        elif event['type'] == 'IssuesEvent':
-            # IssuesEvent processing
-            newEvent = {}
-            newEvent['type'] = 'PullRequestEvent'
-            newEvent['action'] = event['payload']['action']
-            newEvent['message'] = event['payload']['issue']['body']
-            newEvent['url'] = event['payload']['issue']['html_url']
-            # Changes behavior based on whether the issue was opened or closed
-            if newEvent['action'] == 'closed':
-                newEvent['date'] = dateutil.parser.parse(event['payload']['issue']['closed_at'])
-            elif newEvent['action'] == 'opened':
-                newEvent['date'] = dateutil.parser.parse(event['payload']['issue']['created_at'])
-                        
-            events.append(newEvent)
-        elif event['type'] == 'CreateEvent':
-            # CreateEvent ignored
-            pass
-        elif event['type'] == 'WatchEvent':
-            # WatchEvent ignored
-            pass
-        elif event['type'] == 'ForkEvent':
-            # ForkEvent ignored
-            pass
-        elif event['type'] == 'CommitCommentEvent':
-            # CommitCommentEvent ignored
-            pass
-        else:
-            print event['type']
+                            Commits.insert(githubCommit,{'upsert':True})
+            elif event['type'] == 'IssueCommentEvent':
+                # User commented on an issue
+                newEvent = {}
+                newEvent['type'] = 'IssueCommentEvent'
+                newEvent['action'] = event['payload']['action']
+                newEvent['message'] = event['payload']['comment']['body']
+                newEvent['url'] = event['payload']['comment']['html_url']
+                newEvent['date'] = dateutil.parser.parse(event['payload']['comment']['created_at'])
+                
+                events.append(newEvent)
+            elif event['type'] == 'PullRequestEvent':
+                # Events that are pull requests
+                newEvent = {}
+                newEvent['type'] = 'PullRequestEvent'
+                newEvent['action'] = event['payload']['action']
+                newEvent['message'] = event['payload']['pull_request']['title']
+                newEvent['url'] = event['payload']['pull_request']['_links']['html']['href']
+                # Changes behavior based on whether the pull request was opened or closed
+                if newEvent['action'] == 'closed':
+                    newEvent['date'] = dateutil.parser.parse(event['payload']['pull_request']['closed_at'])
+                elif newEvent['action'] == 'opened':
+                    newEvent['date'] = dateutil.parser.parse(event['payload']['pull_request']['created_at'])
+                            
+                events.append(newEvent)
+            elif event['type'] == 'IssuesEvent':
+                # IssuesEvent processing
+                newEvent = {}
+                newEvent['type'] = 'PullRequestEvent'
+                newEvent['action'] = event['payload']['action']
+                newEvent['message'] = event['payload']['issue']['body']
+                newEvent['url'] = event['payload']['issue']['html_url']
+                # Changes behavior based on whether the issue was opened or closed
+                if newEvent['action'] == 'closed':
+                    newEvent['date'] = dateutil.parser.parse(event['payload']['issue']['closed_at'])
+                elif newEvent['action'] == 'opened':
+                    newEvent['date'] = dateutil.parser.parse(event['payload']['issue']['created_at'])
+                            
+                events.append(newEvent)
+            elif event['type'] == 'CreateEvent':
+                # CreateEvent ignored
+                pass
+            elif event['type'] == 'WatchEvent':
+                # WatchEvent ignored
+                pass
+            elif event['type'] == 'ForkEvent':
+                # ForkEvent ignored
+                pass
+            elif event['type'] == 'CommitCommentEvent':
+                # CommitCommentEvent ignored
+                pass
+            else:
+                print event['type']
 
+        except:
+            pass
     for event in events:
         db.users.update({'_id': user['_id']}, {'$addToSet':{'github.events': event}}, multi=False)
+
+def createUser(name, username):
+    user = {
+        'name': name,
+        'active': True,
+        'github': {
+            'events': [],
+            'login': username,
+            }
+        }
+    Users = db.users
+    user_id = db.users.insert(user)
+    print user_id
+    return user_id
+
+def getProjectCollaborators(owner, projectName):
+    path = HOST + '/repos/%s/%s/commits'%(owner, projectName)
+
+    users = {} 
+    count = 0
+    while True:
+        r = requests.get(path, params=PAYLOAD, headers=headers)
+        commitsData = r.json()
+        
+        for comData in commitsData:
+            count += 1
+            if comData['author']:
+                    
+                login =  comData['author']['login']
+                name = comData['commit']['author']['name']
+                users[login] = name
+                # name = comData['commit']['author']
+                # login = ''
+                # if comData and 'committer' in comData.keys() and 'login' in comData['committer'].keys():
+                #     login = comData['committer']['login']
+                # print login, name
+                # users.append((name, login))
+        try:
+            links = r.headers['link']
+            links = links.split(',')
+            for link in links:
+                link = link.split(';')
+                if 'next' in link[1]:
+                    newPath = link[0][1:len(link[0])-1]
+            if newPath == path:
+                break
+            else:
+                path = newPath
+        except:
+            break
+    users = [(users[key], key) for key in users.keys()]
+    print list(users)
+    print len(list(users))
+    for name, username in users:
+        print name + ',' + username
+    print count
 
 def getUserGravatar(user):
     path = HOST + '/users/%s'%(user['github']['login'])

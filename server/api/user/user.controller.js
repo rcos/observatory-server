@@ -43,7 +43,7 @@ exports.stats = function(req, res) {
 
           Commit
           .find()
-          .where('userId').equals(String(user._id))
+          .where('author.login').equals(String(user.github.login))
           .where('date').gt(twoWeeks)
           .exec(function(err, commits){
               if (err) return res.send(500, err);
