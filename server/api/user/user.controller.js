@@ -27,13 +27,12 @@ exports.index = function(req, res) {
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var data = [];
     for (var i = 0; i < users.length; i++){
       data.push(users[i].stats);
     }
-    console.log(data);
     res.json(200, data);
   });
 };

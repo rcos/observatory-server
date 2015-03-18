@@ -71,19 +71,35 @@ UserSchema
     // return 'http://www.gravatar.com/avatar/00000000000000000000000000000000';
 });
 
+UserSchema
+  .virtual('commitsList')
+  .get(function(){
+      var twoWeeks = new Date();
+      twoWeeks.setDate(twoWeeks.getDate()-14);
+      Commit
+      .find()
+      .where('author.login').equals(String(this.github.login))
+      .where('date').gt(twoWeeks)
+      .exec(function(err, commits){
+          if (err) return res.send(500, err);
+          // console.log(commits);
+          return commits;
+      });
+});
 
 // Public profile information
 UserSchema
   .virtual('profile')
   .get(function() {
     return {
+      '_id':this._id.toString('binary'),
       'name': this.name,
       'role': this.role,
       'avatar': this.avatar,
       'email': this.email,
       'semesters': 4,
       'attendance': [],//TODO pull attendance
-      "attendanceScore": 83,
+      "attendanceScore": 88,
       "attendanceBonus": 12,
       'commits': [{
           "message":"Issue Created",
@@ -107,60 +123,38 @@ UserSchema
     };
   });
 
-  UserSchema
-    .virtual('commits')
-    .get(function(){
-        var twoWeeks = new Date();
-        twoWeeks.setDate(twoWeeks.getDate()-14);
-        Commit
-        .find()
-        .where('author.login').equals(String(this.github.login))
-        .where('date').gt(twoWeeks)
-        .exec(function(err, commits){
-            if (err) return res.send(500, err);
-            return commits;
-        });
+// User list information
+UserSchema
+  .virtual('stats')
+  .get(function() {
+    var data = this.toObject();
+    data.avatar = this.avatar;
+    data.attendance = 0;
+    data.commits = [{
+        "message":"Issue Created",
+        "link": "#"
+    },{
+        "message":"Pull Request",
+        "link":"#"
+    },{
+        "message":"Commit",
+        "link":"#"
+    }];
+    return data;
   });
 
-
-  // User list information
-  UserSchema
-    .virtual('stats')
-    .get(function() {
-      return {
-        'name': this.name,
-        'role': this.role,
-        'avatar': this.avatar,
-        'email': this.email,
-        'semesters': 4,
-        'attendance': [],//TODO pull attendance
-        "attendanceScore": 83,
-        "attendanceBonus": 12,
-        'commits': this.commits,
-        'projects':[{
-            'name': 'Sia UI',
-            'avatar':'https://avatars1.githubusercontent.com/u/7471422?v=3&s=200',
-            'description': 'Front end user interface for Sia decentralized storage network utilitzing atom-shell, other stuff and things.',
-            'tech':['NodeJS','Javascript','Atom Shell','HTML']
-        }],//TODO pull projects
-        'tech':['Javascript','Python','Web Applications','C++'],
-        'bio': "Android, Web and Desktop Application development. Talk to me if you want to know more about NodeJS, Atom-Shell, Atom.io, Bootstrap or any other modern web technologies.",
-        'githubProfile': this.github.login
-      };
-    });
-
-    // User list information
-    UserSchema
-      .virtual('listInfo')
-      .get(function() {
-        return {
-          'name': this.name,
-          'role': this.role,
-          'avatar': this.avatar,
-          'githubProfile': this.github.login,
-          '_id':this._id.toString('binary')
-        };
-      });
+// User list information
+UserSchema
+  .virtual('listInfo')
+  .get(function() {
+    return {
+      '_id':this._id.toString('binary'),
+      'name': this.name,
+      'role': this.role,
+      'avatar': this.avatar,
+      'githubProfile': this.github.login,
+    };
+  });
 
 // Non-sensitive info we'll be putting in the token
 UserSchema
