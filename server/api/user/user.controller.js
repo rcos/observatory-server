@@ -38,6 +38,21 @@ exports.stats = function(req, res) {
 };
 
 /**
+ * Get list of all users
+ */
+exports.allStats = function(req, res) {
+  // Only return users who are active and have a github login
+  User.find({'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
+    if(err) return res.send(500, err);
+    var data = [];
+    for (var i = 0; i < users.length; i++){
+      data.push(users[i].stats);
+    }
+    res.json(200, data);
+  });
+};
+
+/**
  * Get list of users
  */
 exports.list = function(req, res) {
@@ -137,6 +152,24 @@ exports.deactivate = function(req, res, next) {
     if (err) return res.send(500, err);
 
     user.active = false;
+    user.save(function(err){
+    if (err) return res.send(500, err);
+      res.json(200, {success: true});
+    })
+  });
+};
+
+/**
+ * Activates a user
+ */
+exports.activate = function(req, res, next) {
+  var userId = String(req.params.id);
+
+
+  User.findOne({ '_id': userId}, function(err, user){
+    if (err) return res.send(500, err);
+
+    user.active = true;
     user.save(function(err){
     if (err) return res.send(500, err);
       res.json(200, {success: true});
