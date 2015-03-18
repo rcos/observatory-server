@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
+var md5 = require('MD5');
 
 var UserSchema = new Schema({
   name: String,
@@ -16,6 +17,8 @@ var UserSchema = new Schema({
   provider: String,
   salt: String,
 
+  // field for what user is currently enrolled as (pay, credit, experience)
+  rcosStyle: String,
   attendance: [Date],
 
   github: {
@@ -28,9 +31,8 @@ var UserSchema = new Schema({
     }],
     login: {type: String, lowercase: true},
     profile: String,
-  },
+  }
 
-  avatar: { type: String, default: 'http://www.gravatar.com/avatar/00000000000000000000000000000000'}
 });
 
 /**
@@ -46,6 +48,28 @@ UserSchema
   .get(function() {
     return this._password;
   });
+
+/**
+* Get gravatar url
+*
+* @return {String}
+* @api public
+*/
+var makeAvatar = function(email) {
+  if (email){
+    return 'http://www.gravatar.com/avatar/'+md5(email.trim().toLowerCase());
+  }
+  return  'http://www.gravatar.com/avatar/00000000000000000000000000000000';
+
+};
+
+UserSchema
+  .virtual('avatar')
+  .get(function(){
+    return makeAvatar(this.email) ;
+    // return 'http://www.gravatar.com/avatar/00000000000000000000000000000000';
+});
+
 
 // Public profile information
 UserSchema

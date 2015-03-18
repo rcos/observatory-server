@@ -28,12 +28,17 @@ angular.module('observatory3App')
         // use setTimeout because hiding the modal takes longer than the post request
         // and results in the modal disappearing but the overlay staying if not used
         setTimeout(function() {
-            $scope.projectToAdd.repositoryUrl = "https://github.com/" + $scope.projectToAdd.githubUsername + "/" + $scope.projectToAdd.githubProjectName;
+            $scope.projectToAdd.repositoryUrl = 'https://github.com/' + $scope.projectToAdd.githubUsername + '/' + $scope.projectToAdd.githubProjectName;
             $http.post('/api/projects', $scope.projectToAdd);
             $scope.projectToAdd = {active: true};
-            $scope.past ? $scope.getPastProjects() : $scope.getCurrentProjects();
+            if ($scope.past){
+              $scope.getPastProjects();
+            }
+            else{
+              $scope.getCurrentProjects();
+            }
         }, 200);
-    }
+    };
 
     $scope.getCurrentProjects(); // update the webpage when connecting the controller
 });

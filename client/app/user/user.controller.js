@@ -6,5 +6,5 @@ angular.module('observatory3App')
 
     $http.get('/api/users/stats').success(function(users){
         $scope.users = users;
-    })
+    });
   });
