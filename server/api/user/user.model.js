@@ -16,6 +16,8 @@ var UserSchema = new Schema({
   provider: String,
   salt: String,
 
+  // field for what user is currently enrolled as (pay, credit, experience)
+  rcosStyle: String,
   attendance: [Date],
 
   github: {
