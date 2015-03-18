@@ -130,6 +130,8 @@ UserSchema
     var data = this.toObject();
     data.avatar = this.avatar;
     data.attendance = 0;
+    delete data.hashedPassword ;
+    delete data.salt ;
     data.commits = [{
         "message":"Issue Created",
         "link": "#"
