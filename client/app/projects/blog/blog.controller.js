@@ -21,7 +21,6 @@ angular.module('observatory3App')
         $scope.postToAdd = {};
         $http.get('/api/posts/'+ $stateParams.username + '/' + $stateParams.project).success(function(posts){
             $scope.posts = posts;
-            $scope.project = $stateParams.project;
         });
     }
 
