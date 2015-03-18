@@ -39,8 +39,6 @@ exports.stats = function(req, res) {
 
     for (var i = 0; i < users.length; i++){
         (function(user){
-          var user = users[i];
-
           Commit
           .find()
           .where('author.login').equals(String(user.github.login))
