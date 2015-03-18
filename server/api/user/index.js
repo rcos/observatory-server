@@ -8,6 +8,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.get('/',  controller.list);
+router.get('/past', controller.past);
 router.get('/stats', auth.hasRole('admin'), controller.stats);
 router.get('/allstats', auth.hasRole('admin'), controller.allStats);
 router.get('/:id/commits', controller.commits);

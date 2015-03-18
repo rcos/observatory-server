@@ -11,17 +11,6 @@ var validationError = function(res, err) {
 };
 
 /**
- * Get list of users
- * restriction: 'admin'
- */
-exports.index = function(req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
-    if(err) return res.send(500, err);
-    res.json(200, users);
-  });
-};
-
-/**
  * Get list of users with stats including last commits
  * in previous 2 weeks
  */
@@ -53,20 +42,33 @@ exports.allStats = function(req, res) {
 };
 
 /**
- * Get list of users
+ * Get list of active users
  */
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
     var data = [];
-    console.log("users: "+users.length);
 
     for (var i = 0; i < users.length; i++){
       data.push(users[i].listInfo);
     }
-    console.log(data);
     res.json(200, data);
+  });
+};
+
+/**
+ * Get list of all past users
+ */
+exports.past = function(req, res) {
+  User.find({active: false}, '-salt -hashedPassword', function (err, users) {
+    if(err) return res.send(500, err);
+      var data = [];
+
+      for (var i = 0; i < users.length; i++){
+        data.push(users[i].listInfo);
+      }
+      res.json(200, data);
   });
 };
 
