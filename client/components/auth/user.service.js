@@ -17,6 +17,13 @@ angular.module('observatory3App')
         params: {
           id:'me'
         }
+      },
+      stats: {
+        method: 'GET',
+        params: {
+          controller:'stats'
+        },
+        isArray:true
       }
 	  });
   });
