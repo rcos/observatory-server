@@ -48,8 +48,8 @@ exports.update = function(req, res) {
     var userId = req.user._id;
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
-      
-      if (project.authors.indexOf(userId) >= 0 || user.role == 'mentor' || user.role == 'admin'){
+
+      if (project.authors.indexOf(userId) >= 0 || user.role === 'mentor' || user.role === 'admin'){
         var updated = _.merge(project, req.body);
         updated.save(function (err) {
           if (err) { return handleError(res, err); }
