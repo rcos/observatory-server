@@ -1,7 +1,6 @@
 'use strict';
 
 var User = require('./user.model');
-var Commit = require('../commit/commit.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
@@ -30,35 +29,30 @@ exports.stats = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
-
-    var twoWeeks = new Date();
-    twoWeeks.setDate(twoWeeks.getDate()-14);
-
-    var count = users.length;
     var data = [];
-    function findCommits(user){
-      Commit
-      .find()
-      .where('author.login').equals(String(user.github.login))
-      .where('date').gt(twoWeeks)
-      .exec(function(err, commits){
-          if (err) return res.send(500, err);
-          var userInfo = {};
-          userInfo = JSON.parse(JSON.stringify(user));
-          userInfo.attendance = 0;
-          userInfo.commits = commits;
-          data.push(userInfo);
-
-          count--;
-          if (count === 0){
-            res.json(200, data);
-          }
-
-      });
-    }
     for (var i = 0; i < users.length; i++){
-      findCommits(users[i]);
+      data.push(users[i].stats);
     }
+    console.log(data);
+    res.json(200, data);
+  });
+};
+
+/**
+ * Get list of users
+ */
+exports.list = function(req, res) {
+  // Only return users who are active and have a github login
+  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
+    if(err) return res.send(500, err);
+    var data = [];
+    console.log("users: "+users.length);
+
+    for (var i = 0; i < users.length; i++){
+      data.push(users[i].listInfo);
+    }
+    console.log(data);
+    res.json(200, data);
   });
 };
 
