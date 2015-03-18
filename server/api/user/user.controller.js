@@ -36,31 +36,29 @@ exports.stats = function(req, res) {
 
     var count = users.length;
     var data = [];
+    function findCommits(user){
+      Commit
+      .find()
+      .where('author.login').equals(String(user.github.login))
+      .where('date').gt(twoWeeks)
+      .exec(function(err, commits){
+          if (err) return res.send(500, err);
+          var userInfo = {};
+          userInfo = JSON.parse(JSON.stringify(user));
+          userInfo.attendance = 0;
+          userInfo.commits = commits;
+          data.push(userInfo);
 
+          count--;
+          if (count === 0){
+            res.json(200, data);
+          }
+
+      });
+    }
     for (var i = 0; i < users.length; i++){
-        (function(user){
-          var user = users[i];
-
-          Commit
-          .find()
-          .where('author.login').equals(String(user.github.login))
-          .where('date').gt(twoWeeks)
-          .exec(function(err, commits){
-              if (err) return res.send(500, err);
-              var userInfo = {};
-              userInfo = JSON.parse(JSON.stringify(user));
-              userInfo.attendance = 0;
-              userInfo.commits = commits;
-              data.push(userInfo);
-
-              count--;
-              if (count === 0){
-                res.json(200, data);
-              }
-
-          });
-        })(users[i]);
-    };
+      findCommits(users[i]);
+    }
   });
 };
 

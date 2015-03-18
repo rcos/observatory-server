@@ -36,5 +36,5 @@ angular.module('observatory3App')
       } else{
         $scope.sortorder = field;
       }
-    }
+    };
   });
