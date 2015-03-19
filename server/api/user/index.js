@@ -9,10 +9,10 @@ var router = express.Router();
 
 router.get('/',  controller.list);
 router.get('/past', controller.past);
-router.get('/stats',  controller.stats);
-router.get('/allstats',  controller.allStats);
+router.get('/stats', auth.hasRole('admin'), controller.stats);
+router.get('/allstats', auth.hasRole('admin'), controller.allStats);
 router.get('/:id/commits', controller.commits);
-router.delete('/:id',  controller.destroy);
+router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/deactivate', auth.isAuthenticated(), controller.deactivate);
