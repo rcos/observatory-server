@@ -30,12 +30,35 @@ exports.stats = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
     if(err) return res.send(500, err);
+    var twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate()-14);
     var data = [];
-    for (var i = 0; i < users.length; i++){
-      data.push(users[i].stats);
+    var count = users.length;
+
+    var getCommits = function(user){
+      Commit.find()
+            .where('author.login').equals(String(user.github.login))
+            .where('date').gt(twoWeeks)
+            .exec(function(err, commits){
+                var commitList = [];
+                commits.forEach(function (c){
+                    commitList.push(c.toObject());
+                  }
+                )
+                user.commits = commitList ;
+                count--;
+                data.push(user);
+                if (count === 0){
+                  res.json(200, data);
+                }
+            });
     }
-    res.json(200, data);
-  });
+
+    for (var i = 0; i < users.length; i++){
+      var u = users[i].stats;
+      getCommits(u);
+      }
+    });
 };
 
 /**
@@ -57,18 +80,13 @@ exports.allStats = function(req, res) {
             .where('author.login').equals(String(user.github.login))
             .where('date').gt(twoWeeks)
             .exec(function(err, commits){
-                // if (err) {
-                //   return err;
-                // }
                 var commitList = [];
                 commits.forEach(function (c){
                     commitList.push(c.toObject());
                   }
                 )
-                // console.log(commitList);
                 user.commits = commitList ;
                 count--;
-                console.log(user);
                 data.push(user);
                 if (count === 0){
                   res.json(200, data);
