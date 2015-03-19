@@ -29,6 +29,14 @@ def parseCommit(commitData):
         commit['author']['login'] = commitData['author']['login']
         commit['author']['id'] = commitData['author']['id']
     commit['date'] = dateutil.parser.parse(commitData['commit']['committer']['date'])
+    
+    projectUrl = commitData['html_url']
+    projectUrl = projectUrl.split('/')
+    print projectUrl
+    commit['github'] = {}
+    commit['github']['userName'] = projectUrl[4]
+    commit['github']['projectName'] = projectUrl[5]
+
     user = db.users.find_one({'github.login': commit['author']['login']})
 
     if user:
@@ -219,17 +227,8 @@ def getProjectCollaborators(owner, projectName):
         print name + ',' + username
     print count
 
-def getUserGravatar(user):
-    path = HOST + '/users/%s'%(user['github']['login'])
-    events = []
-    r = requests.get(path, params=PAYLOAD, headers=headers)
-    userData = r.json()
-    avatar_url =  userData['avatar_url']
-    db.users.update({'_id': user['_id']}, {'$set': {'avatar': avatar_url}})
-
 def updateUser(user):
     getUserEvents(user)
-    getUserGravatar(user)
 
 if __name__ == '__main__':
     users = db.users.find({'github.login': {'$exists': True}})

@@ -11,6 +11,10 @@ var CommitSchema = new Schema({
     index: true,
   },
   userId: { type: String, index: true},
+  github: {
+    userName: String,
+    projectName: String,
+  },
   author: {
     login: {type: String, lowercase: true},
     id: {type: Number} 

@@ -6,5 +6,4 @@ angular.module('observatory3App')
         $scope.project = project;
     });
 
-
 });
