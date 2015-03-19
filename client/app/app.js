@@ -4,8 +4,7 @@ angular.module('observatory3App', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ui.router',
-  'ui.select'
+  'ui.router'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
