@@ -84,7 +84,9 @@ exports.showUserCommits = function(req, res) {
           if(!commits) { return res.send(404); }
             var commitList = [];
             commits.forEach(function (c){
-                commitList.push(c.toObject());
+                var commitObj = c.toObject();
+                commitObj.link = "#";
+                commitList.push(commitObj);
               }
             )
             return res.json(commitList);
