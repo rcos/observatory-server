@@ -49,14 +49,17 @@ exports.update = function(req, res) {
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
 
+      var authorLength = project.authors.length;
       if (project.authors.indexOf(userId) >= 0 || user.role === 'mentor' || user.role === 'admin'){
         var updated = _.merge(project, req.body);
-        updated.save(function (err) {
-          if (err) { return handleError(res, err); }
-          return res.json(200, project);
-        });
+        if(req.body.authors.length > authorLength) {
+            updated.markModified("authors");
+            updated.save(function (err) {
+                if (err) { return handleError(res, err); }
+                return res.json(200, project);
+            });
+        } 
       }
-      return handleError(res, err);
     });
   });
 };

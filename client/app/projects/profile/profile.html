@@ -7,4 +7,15 @@
 
     <a href="{{project.websiteUrl}}" title="">Website</a>
     <a href="{{project.repositoryUrl}}" title="">Repository</a>
+
+    <ui-select multiple ng-model="project.authors" theme="bootstrap" style="width: 300px;">
+        <ui-select-match placeholder="Select users to add">{{$item.name}}</ui-select-match>
+        <ui-select-choices repeat="user._id as user in users | filter:$select.search">
+            {{ user.name }}
+        </ui-select-choices>
+    </ui-select>
+
+    <button type="button" class="btn btn-primary" ng-click="submit()">
+        Add users
+    </button>
 </div>
