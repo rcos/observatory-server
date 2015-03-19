@@ -84,20 +84,33 @@ exports.allStats = function(req, res) {
 };
 
 /**
- * Get list of users
+ * Get list of active users
  */
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
     var data = [];
-    console.log("users: "+users.length);
 
     for (var i = 0; i < users.length; i++){
       data.push(users[i].listInfo);
     }
-    console.log(data);
     res.json(200, data);
+  });
+};
+
+/**
+ * Get list of all past users
+ */
+exports.past = function(req, res) {
+  User.find({active: false}, '-salt -hashedPassword', function (err, users) {
+    if(err) return res.send(500, err);
+      var data = [];
+
+      for (var i = 0; i < users.length; i++){
+        data.push(users[i].listInfo);
+      }
+      res.json(200, data);
   });
 };
 
@@ -135,7 +148,7 @@ exports.show = function (req, res, next) {
 
   User.findById(userId, function (err, user) {
     if (err) return next(err);
-    if (!user) return res.send(401);
+    if (!user) return res.send(404);
     res.json(user.profile);
   });
 };

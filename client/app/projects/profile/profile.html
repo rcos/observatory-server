@@ -2,9 +2,40 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-    <h2>{{ project.name }}</h2>
-    <p>{{project.description}}</p>
-
-    <a href="{{project.websiteUrl}}" title="">Website</a>
-    <a href="{{project.repositoryUrl}}" title="">Repository</a>
+    <div class="row">
+        <h1>{{ project.name }}</h1>
+    </div>
+    <div class="row text-right">
+        <div class="col-sm-10 col-sm-offset-1">
+            <a class="btn btn-success" href="#" title="">Join Project</a>
+            <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
+            <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-7 project-image">
+            <img src="http://rcos.rpi.edu/site-media/screenshots/207.png" class="img-responsive" alt="">
+        </div>
+        <div class="col-sm-4">
+        <div class="contributors">
+            
+            <div class="row">
+                <h4>Contributors</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=128px" class="img-responsive" alt="">
+                </div>
+                <div class="col-md-8">
+                    <a href="" title="" class="contributor-name">
+                        Aaron Gunderson
+                    </a>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="col-sm-7 description">
+            <p>{{project.description}}</p>
+        </div>
+    </div>
 </div>
