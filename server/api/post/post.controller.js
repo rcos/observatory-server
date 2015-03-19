@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Post = require('./post.model');
 var User = require('../user/user.model');
+var Project = require('../project/project.model');
 
 // Get list of posts
 exports.index = function(req, res) {
@@ -24,12 +25,16 @@ exports.show = function(req, res) {
 // Creates a new post in the DB.
 exports.create = function(req, res) {
   req.body.author = { id: req.user._id, name: req.user.name };
-  if(!req.body.author.name) {
-    req.body.author.name = req.user.github.login;
-  }
-  Post.create(req.body, function(err, post) {
+
+  // Only someone who is part of the project can write a blog post
+  Project.findOne({'githubProjectName': req.body.project }, function (err, project) {
     if(err) { return handleError(res, err); }
-    return res.json(201, post);
+    if (project.authors.indexOf(req.user._id) != -1) {
+      Post.create(req.body, function(err, post) {
+        if(err) { return handleError(res, err); }
+        return res.json(201, post);
+      });
+    }
   });
 };
 
