@@ -4,6 +4,7 @@ var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var Commit = require('../commit/commit.model');
 
 
 var validationError = function(res, err) {
@@ -11,8 +12,19 @@ var validationError = function(res, err) {
 };
 
 /**
+ * Get list of users
+ */
+exports.index = function(req, res) {
+  User.find({}, '-salt -hashedPassword', function (err, users) {
+    if(err) return res.send(500, err);
+    res.json(200, users);
+  });
+};
+
+/**
  * Get list of users with stats including last commits
  * in previous 2 weeks
+ * restriction: 'admin'
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
@@ -27,18 +39,48 @@ exports.stats = function(req, res) {
 };
 
 /**
- * Get list of all users
+* Get list of all users with stats including last commits
+* in previous 2 weeks including inactive
+* restriction: 'admin'
  */
 exports.allStats = function(req, res) {
   // Only return users who are active and have a github login
   User.find({'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
     if(err) return res.send(500, err);
+    var twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate()-14);
     var data = [];
-    for (var i = 0; i < users.length; i++){
-      data.push(users[i].stats);
+    var count = users.length;
+
+    var getCommits = function(user){
+      Commit.find()
+            .where('author.login').equals(String(user.github.login))
+            .where('date').gt(twoWeeks)
+            .exec(function(err, commits){
+                // if (err) {
+                //   return err;
+                // }
+                var commitList = [];
+                commits.forEach(function (c){
+                    commitList.push(c.toObject());
+                  }
+                )
+                // console.log(commitList);
+                user.commits = commitList ;
+                count--;
+                console.log(user);
+                data.push(user);
+                if (count === 0){
+                  res.json(200, data);
+                }
+            });
     }
-    res.json(200, data);
-  });
+
+    for (var i = 0; i < users.length; i++){
+      var u = users[i].stats;
+      getCommits(u);
+      }
+    });
 };
 
 /**
