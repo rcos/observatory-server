@@ -71,26 +71,12 @@ UserSchema
     // return 'http://www.gravatar.com/avatar/00000000000000000000000000000000';
 });
 
-UserSchema
-  .virtual('commitsList')
-  .get(function(){
-      var twoWeeks = new Date();
-      twoWeeks.setDate(twoWeeks.getDate()-14);
-      Commit
-      .find()
-      .where('author.login').equals(String(this.github.login))
-      .where('date').gt(twoWeeks)
-      .exec(function(err, commits){
-          if (err) return res.send(500, err);
-          // console.log(commits);
-          return commits;
-      });
-});
-
 // Public profile information
 UserSchema
   .virtual('profile')
   .get(function() {
+    var twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate()-14);
     return {
       '_id':this._id.toString('binary'),
       'name': this.name,
@@ -101,16 +87,7 @@ UserSchema
       'attendance': [],//TODO pull attendance
       "attendanceScore": 88,
       "attendanceBonus": 12,
-      'commits': [{
-          "message":"Issue Created",
-          "link": "#"
-      },{
-          "message":"Pull Request",
-          "link":"#"
-      },{
-          "message":"Commit",
-          "link":"#"
-      }], //TODO pull commits
+      'commits':commits, //TODO pull commits
       'projects':[{
           'name': 'Sia UI',
           'avatar':'https://avatars1.githubusercontent.com/u/7471422?v=3&s=200',
@@ -132,18 +109,8 @@ UserSchema
     data.attendance = 0;
     delete data.hashedPassword ;
     delete data.salt ;
-    data.commits = [{
-        "message":"Issue Created",
-        "link": "#"
-    },{
-        "message":"Pull Request",
-        "link":"#"
-    },{
-        "message":"Commit",
-        "link":"#"
-    }];
-    return data;
-  });
+  return data;
+});
 
 // User list information
 UserSchema
