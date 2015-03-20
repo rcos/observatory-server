@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 var PostSchema = new Schema({
   title: String,
   content: String,
-  project: String,
+  projectId: String,
   author: {
     name: String,
     id: Object

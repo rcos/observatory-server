@@ -16,7 +16,7 @@ angular.module('observatory3App')
             form.$setUntouched();
         }
         $scope.postToAdd.date = Date.now();
-        $scope.postToAdd.project = $stateParams.project;
+        $scope.postToAdd.projectId = $scope.project._id;
         $http.post('/api/posts', $scope.postToAdd);
         $scope.postToAdd = {};
         $http.get('/api/posts/'+ $stateParams.username + '/' + $stateParams.project).success(function(posts){
