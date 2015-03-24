@@ -2,6 +2,7 @@ import requests
 import os
 from datetime import datetime
 import dateutil.parser
+import re
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -32,13 +33,17 @@ def parseCommit(commitData):
     
     projectUrl = commitData['html_url']
     projectUrl = projectUrl.split('/')
-    print projectUrl
-    commit['github'] = {}
-    commit['github']['userName'] = projectUrl[4]
-    commit['github']['projectName'] = projectUrl[5]
+
+    username = projectUrl[3]
+    projectName = projectUrl[4]
+    print username, projectName
+    project = db.projects.find_one({'githubUsername': re.compile(username, re.IGNORECASE), 'githubProjectName': re.compile(projectName, re.IGNORECASE)})
+    if project:
+        commit['projectId'] = str(project['_id'])
+    else:
+        commit['projectId'] = ''
 
     user = db.users.find_one({'github.login': commit['author']['login']})
-
     if user:
         userId = user['_id']
         commit['userId'] = str(ObjectId(user['_id']))
@@ -93,7 +98,6 @@ def getUserEvents(user):
     eventData = r.json()
 
     for event in eventData:
-        print event
         try:
             if event['type'] == 'PushEvent':
                 # User pushed code
