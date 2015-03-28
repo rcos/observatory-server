@@ -30,6 +30,16 @@ angular.module('observatory3App')
           });
       };
 
+      $scope.addTech = function(){
+          // TODO make api call
+          $scope.user.tech.push($scope.insertTechContent);
+          $scope.insertTechContent = "";
+      };
+
+      $scope.removeTech = function(tech){
+          $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
+      };
+
   })
   .directive("bio", function(){
 
