@@ -80,17 +80,28 @@ exports.allStats = function(req, res) {
             .where('author.login').equals(String(user.github.login))
             .where('date').gt(twoWeeks)
             .exec(function(err, commits){
-                var commitList = [];
-                commits.forEach(function (c){
-                    commitList.push(c.toObject());
-                  }
-                )
-                user.commits = commitList ;
-                count--;
-                data.push(user);
-                if (count === 0){
-                  res.json(200, data);
+                if(err){
+                    user.commits = [] ;
+                    count--;
+                    data.push(user);
+                    if (count === 0){
+                      res.json(200, data);
+                    }
                 }
+                else{
+                    var commitList = [];
+                    commits.forEach(function (c){
+                        commitList.push(c.toObject());
+                      }
+                    )
+                    user.commits = commitList ;
+                    count--;
+                    data.push(user);
+                    if (count === 0){
+                      res.json(200, data);
+                    }
+                }
+
             });
     }
 
