@@ -1,7 +1,7 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-    <h2>{{ project.name }}</h2>
+    <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
 
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#post" aria-expanded="false" aria-controls="post">
         Add a post
@@ -23,7 +23,7 @@
             <div id="content">{{ post.content }}</div>
             <div class="bottom-bar">
                 <div class="bottom-bar-left">
-                    <a href="users/{{ post.author.id }}/profile"> {{ post.author.name }}</a>
+                    <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
                 </div>
                 <div class="bottom-bar-right">
                     {{ post.date | date:'MMM dd yyyy HH:mm:ss' }}
