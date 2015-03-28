@@ -88,7 +88,6 @@ UserSchema
       'attendance': [],//TODO pull attendance
       "attendanceScore": 88,
       "attendanceBonus": 12,
-      'commits':[], //TODO pull commits
       'projects':[{
           'name': 'Sia UI',
           'avatar':'https://avatars1.githubusercontent.com/u/7471422?v=3&s=200',
