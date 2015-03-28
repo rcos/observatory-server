@@ -6,7 +6,6 @@ angular.module('observatory3App')
           $scope.user = user;
           $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
               $scope.user.commits = commits;
-              console.log(commits);
           });
       });
 
