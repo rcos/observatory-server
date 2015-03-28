@@ -7,3 +7,5 @@ before_script:
   - gem install sass
   - bower install
 services: mongodb
+#enable container builds
+sudo: false
