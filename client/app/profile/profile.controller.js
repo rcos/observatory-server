@@ -20,7 +20,7 @@ angular.module('observatory3App')
       };
 
       $scope.saveBio = function(){
-          console.log($scope.user.bio);
+          $scope.edittingBio = false;
           $http.put("/api/users/" + $stateParams.id + "/bio", {
               "bio": $scope.user.bio
           }).success(function(){
@@ -37,19 +37,22 @@ angular.module('observatory3App')
 
           function updateEditable(){
               if (scope.edittingBio){
-                  $(element).attr("contenteditable","true");
+                  $(element).find("div").hide();
+                  $(element).find("textarea").show();
               }else{
-                  $(element).attr("contenteditable","false");
+                  $(element).find("div").show();
+                  $(element).find("textarea").hide();
               }
           }
 
           scope.$watch("edittingBio", updateEditable);
 
           $(element).keyup(function(){
+              if (!scope.edittingBio) return;
               // Wait a bit for the character to be placed in the div
               setTimeout(function(){
                   // update the value of user.bio
-                  scope.user.bio = $($(element)[0].innerHTML.replace(/<br>/g,"\n")).text();
+                  scope.user.bio = $(element).find("textarea").val();
               },100);
           });
 
@@ -57,7 +60,8 @@ angular.module('observatory3App')
 
       return {
           restrict:'E',
-          template: "<div style='white-space:pre;'>{{user.bio}}</div>",
+          template: "<div style='white-space:pre;'>{{user.bio}}</div> \
+                     <textarea>{{user.bio}}</textarea>",
           link:link
       }
   });
