@@ -22,8 +22,16 @@
                 <div ng-repeat='tech in user.tech'>{{tech}}</div>
             </div>
             <div class='content-box'>
-                <div class='content-title'>Bio</div>
-                {{user.bio}}
+                <div ng-show='isuser' class='content-title row'>
+                    <div class='col-xs-6'>Bio</div>
+                    <div class='col-xs-6 text-right'>
+                        <div class="btn-group" style='margin-bottom:8px'>
+                            <button type="button" class='btn btn-default btn-sm' ng-click='editBio()'>Edit</button>
+                            <button type="button" class='btn btn-default btn-sm' ng-click='saveBio()'>Save</button>
+                        </div>
+                    </div>
+                </div>
+                <bio></bio>
             </div>
             <div class='content-box' ng-repeat='project in user.projects'>
                 <div class='project row'>
@@ -41,7 +49,7 @@
             </div>
         </div>
         <div class='col-md-3'>
-            <div class='content-box'>
+            <div ng-hide='!isuser' class='content-box'>
                 <div class='content-title'>
                     Attendance <span class='attendance-score'>{{user.attendanceScore}}% +{{user.attendanceBonus}}%</span>
                 </div>
@@ -51,8 +59,8 @@
             </div>
             <div class='content-box'>
                 <div class='content-title'>Commits</div>
-                <div ng-repeat='commit in user.commits' class='commit'>
-                    <a href='{{commit.link}}'>{{commit.message}}</a>
+                <div ng-repeat='event in user.github.events' class='commit'>
+                    <a href='{{event.url}}'>{{event.message}}</a>
                 </div>
             </div>
         </div>

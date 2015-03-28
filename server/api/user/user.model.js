@@ -17,10 +17,14 @@ var UserSchema = new Schema({
   hashedPassword: String,
   provider: String,
   salt: String,
+  tech: [String],
+  bio:String,
+  attendance: [Date],
+  semesterCount: Number,
+
 
   // field for what user is currently enrolled as (pay, credit, experience)
   rcosStyle: String,
-  attendance: [Date],
 
   github: {
     events: [{
@@ -84,8 +88,8 @@ UserSchema
       'role': this.role,
       'avatar': this.avatar,
       'email': this.email,
-      'semesters': 4,
-      'attendance': [],//TODO pull attendance
+      'semesters': this.semesterCount,
+      'attendance': this.attendance,
       "attendanceScore": 88,
       "attendanceBonus": 12,
       'projects':[{
@@ -94,8 +98,8 @@ UserSchema
           'description': 'Front end user interface for Sia decentralized storage network utilitzing atom-shell, other stuff and things.',
           'tech':['NodeJS','Javascript','Atom Shell','HTML']
       }],//TODO pull projects
-      'tech':['Javascript','Python','Web Applications','C++'],
-      'bio': "Android, Web and Desktop Application development. Talk to me if you want to know more about NodeJS, Atom-Shell, Atom.io, Bootstrap or any other modern web technologies.",
+      'tech': this.tech,
+      'bio': this.bio,
       'githubProfile': this.github.login
     };
   });

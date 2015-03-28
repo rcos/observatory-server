@@ -215,6 +215,22 @@ exports.changePassword = function(req, res, next) {
 };
 
 /**
+ * Changes a user's bio
+ */
+exports.changeBio = function(req,res){
+    var userId = req.user._id;
+    var newBio = String(req.body.bio);
+
+    User.findById(userId, function(err,user){
+        user.bio = newBio;
+        user.save(function(err){
+            if (err) return validationError(res,err);
+            res.send(200);
+        })
+    });
+};
+
+/**
  * Deactivates a user
  */
 exports.deactivate = function(req, res, next) {

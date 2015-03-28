@@ -20,5 +20,6 @@ router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
 router.get("/:id/attendance", controller.attendance);
+router.put('/:id/bio', auth.isAuthenticated(), controller.changeBio);
 
 module.exports = router;
