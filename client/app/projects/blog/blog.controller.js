@@ -2,12 +2,14 @@
 
 angular.module('observatory3App')
 .controller('ProjectsBlogCtrl', function ($scope, $http, $stateParams) {
-    $http.get('/api/posts/'+ $stateParams.username + '/' + $stateParams.project).success(function(posts){
-        $scope.posts = posts;
-        $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
-            $scope.project = project;
-        });
-    });
+    $scope.load = function() {
+      $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
+          $scope.project = project;
+          $http.get('/api/posts/project/'+$scope.project._id).success(function(posts){
+              $scope.posts = posts;
+          });
+      });
+    }
 
     $scope.submit = function(form) {
         $('#post').collapse('hide');
@@ -19,10 +21,10 @@ angular.module('observatory3App')
         $scope.postToAdd.projectId = $scope.project._id;
         $http.post('/api/posts', $scope.postToAdd);
         $scope.postToAdd = {};
-        $http.get('/api/posts/'+ $stateParams.username + '/' + $stateParams.project).success(function(posts){
-            $scope.posts = posts;
-        });
+        $scope.load();
     }
 
-    
+    $scope.load();
+
+
 });
