@@ -32,7 +32,7 @@ exports.stats = function(req, res) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
-    var data = [];
+    var userInfo = [];
     var count = users.length;
 
     var getCommits = function(user){
@@ -47,9 +47,9 @@ exports.stats = function(req, res) {
                 )
                 user.commits = commitList ;
                 count--;
-                data.push(user);
+                userInfo.push(user);
                 if (count === 0){
-                  res.json(200, data);
+                  res.json(200, userInfo);
                 }
             });
     }
@@ -72,7 +72,7 @@ exports.allStats = function(req, res) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
-    var data = [];
+    var userInfo = [];
     var count = users.length;
 
     var getCommits = function(user){
@@ -83,9 +83,9 @@ exports.allStats = function(req, res) {
                 if(err){
                     user.commits = [] ;
                     count--;
-                    data.push(user);
+                    userInfo.push(user);
                     if (count === 0){
-                      res.json(200, data);
+                      res.json(200, userInfo);
                     }
                 }
                 else{
@@ -96,9 +96,9 @@ exports.allStats = function(req, res) {
                     )
                     user.commits = commitList ;
                     count--;
-                    data.push(user);
+                    userInfo.push(user);
                     if (count === 0){
-                      res.json(200, data);
+                      res.json(200, userInfo);
                     }
                 }
 
@@ -119,12 +119,12 @@ exports.list = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
-    var data = [];
+    var userInfo = [];
 
     for (var i = 0; i < users.length; i++){
-      data.push(users[i].listInfo);
+      userInfo.push(users[i].listInfo);
     }
-    res.json(200, data);
+    res.json(200, userInfo);
   });
 };
 
@@ -134,12 +134,12 @@ exports.list = function(req, res) {
 exports.past = function(req, res) {
   User.find({active: false}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
-      var data = [];
+      var userInfo = [];
 
       for (var i = 0; i < users.length; i++){
-        data.push(users[i].listInfo);
+        userInfo.push(users[i].listInfo);
       }
-      res.json(200, data);
+      res.json(200, userInfo);
   });
 };
 
