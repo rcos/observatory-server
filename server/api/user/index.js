@@ -21,5 +21,7 @@ router.get('/:id', controller.show);
 router.post('/', controller.create);
 router.get("/:id/attendance", controller.attendance);
 router.put('/:id/bio', auth.isAuthenticated(), controller.changeBio);
+router.put("/:id/addTech",auth.isAuthenticated(), controller.addTech);
+router.put("/:id/removeTech",auth.isAuthenticated(), controller.removeTech);
 
 module.exports = router;

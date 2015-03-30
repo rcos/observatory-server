@@ -31,13 +31,24 @@ angular.module('observatory3App')
       };
 
       $scope.addTech = function(){
-          // TODO make api call
-          $scope.user.tech.push($scope.insertTechContent);
-          $scope.insertTechContent = "";
+          $http.put("/api/users/" + $stateParams.id + "/addTech", {
+              "tech": $scope.insertTechContent
+          }).success(function(){
+              $scope.user.tech.push($scope.insertTechContent);
+              $scope.insertTechContent = "";
+          }).error(function(){
+              alert("Could not add tech!");
+          });
       };
 
       $scope.removeTech = function(tech){
-          $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
+          $http.put("/api/users/" + $stateParams.id + "/removeTech", {
+              "tech": tech
+          }).success(function(){
+              $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
+          }).error(function(){
+              alert("Could not add tech!");
+          });
       };
 
   })

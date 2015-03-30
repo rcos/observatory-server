@@ -12,7 +12,7 @@ angular.module('observatory3App')
     $scope.currentView = 'Active Developers'
 
     $scope.numberOfPages=function(){
-        return Math.ceil($scope.users.length/$scope.pageSize);                
+        return Math.ceil($scope.users.length/$scope.pageSize);
     }
 
     $scope.increment = function(){
