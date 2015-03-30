@@ -46,7 +46,6 @@ exports.create = function(req, res) {
 
     // Only someone who is part of the project can write a blog post
     User.findById(req.user._id, function(err, user) {
-      console.log("user",user);
       if (err) { return handleError(res, err); }
 
       if ((project.authors && project.authors.indexOf(req.user._id) != -1) || user.role == 'mentor' || user.role == 'admin'){
