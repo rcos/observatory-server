@@ -1,0 +1,130 @@
+html {
+    font-family: "Puritan", 'Helvetica Neue', Helvetica, Arial, "Bitstream Vera Sans", sans-serif;
+    font-size: 10pt;
+}
+
+.extra-content {
+    background-color: #eee;
+    clear: both;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Kreon", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+}
+
+.extra-content h2 {
+    float: left;
+    clear: both;
+    padding: 0px;
+    margin: 0px 0px 10px 0px;
+    line-height: 30px;
+}
+
+.extra-content h2 a, {
+    color: inherit;
+    text-decoration: none;
+}
+
+.extra-content h2 a:hover {
+    color: black;
+}
+
+h2 {
+    font-size: 14pt;
+}
+
+.project-info {
+    font-family: "Kreon", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0px;
+    font-size: 14px;
+    float: right;
+    list-style: none;
+    line-height: 30px;
+    font-weight: bold;
+}
+
+.project-info li {
+    margin-left: 10px;
+    float: left;
+}
+
+.project-info a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.project-info a:hover {
+    color: grey;
+}
+
+.clear {
+    clear: both;
+}
+
+.css-form .ng-invalid.ng-touched {
+    border-color: #FA787E;
+}
+
+.css-form .ng-valid.ng-touched {
+    border-color: #78FA89;
+}
+
+#header button {
+    float: right;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+
+#header h1 {
+    float: left;
+}
+
+.bottom-bar {
+    color: black;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: -20px;
+    bottom: 0px;
+    left: 0px;
+    background: #ddd;
+    border-top: 1px solid #ddd;
+    height: 22px;
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-bottomright: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.bottom-bar-left, .bottom-bar-right {
+    position: absolute;
+    line-height: 22px;
+}
+
+.bottom-bar-left {
+    left: 20px;
+}
+
+.bottom-bar-right {
+    right: 20px;
+}
+
+.bottom-bar a {
+    color: #444;
+    text-decoration: none;
+}
+
+.bottom-bar a:hover {
+    color: black;
+}

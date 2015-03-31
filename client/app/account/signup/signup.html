@@ -37,6 +37,12 @@
           </p>
         </div>
 
+        <div class="form-group">
+          <label>Github User Name</label>
+          <input name="email" class="form-control" ng-model="user.githubLogin"
+                 required>
+        </div>
+
         <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted,
                                             'has-error': form.password.$invalid && submitted }">
           <label>Password</label>

@@ -5,10 +5,12 @@
 
 'use strict';
 
+var spawn = require("child_process").spawn;
+
 var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
 var Project = require('../api/project/project.model');
-var About = require('../api/about/about.model');
+var Commit = require('../api/commit/commit.model');
 
 Thing.find({}).remove(function() {
   Thing.create({
@@ -47,6 +49,17 @@ User.find({}).remove(function() {
     name: 'Admin',
     email: 'admin@admin.com',
     password: 'admin'
+  },
+  {
+    provider: 'local',
+    role: 'admin',
+    name: 'Aaron',
+    email: 'aaron@admin.com',
+    password: 'admin',
+    github:{
+      login: 'agundy'
+    }
+
   }, function() {
       console.log('finished populating users');
     }
@@ -57,6 +70,7 @@ Project.find({}).remove(function(){
   Project.create({
     name: 'Observatory',
     description: 'Open source project tracking.',
+    repositoryUrl: 'https://github.com/rcos/Observatory3',
     repositoryType: 'github',
     githubUsername: 'RCOS',
     githubProjectName: 'Observatory3',
@@ -64,22 +78,3 @@ Project.find({}).remove(function(){
     console.log('finished populating projects')
   })
 });
-
-//The about seed is commented out because using the database to insert the
-//statements into the homepage is not working right now. 
-/*About.find({}).remove(function() {
-  About.create({
-    name : 'Mission Statement',
-    info : 'Mission'
-  }, {
-    name : 'Description',
-    info : 'Descriptions'
-  }, {
-    name : 'Benefits of Being an RCOS Member',
-    info : 'Benefits'
-  },  {
-    name : 'Details',
-    info : 'Details'
- 
-  });
-});*/

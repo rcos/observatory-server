@@ -1,10 +1,12 @@
 Observatory3
 ============
 
+[![Build Status](https://travis-ci.org/rcos/Observatory3.svg?branch=master)](https://travis-ci.org/rcos/Observatory3)
+
 A project tracking dashboard for Rensselaer Center for Open Source. A ground up rewrite.
 
 Working to replace a system with these [features](docs/Legacy_Features.md).
-See our [planned feature set.](docs/Feature_Requirements.md) 
+See our [planned feature set.](docs/Feature_Requirements.md)
 
 Features
 --------
@@ -28,4 +30,6 @@ sudo mkdir -p /data/db
 grunt serve
 ```
 
-This should give you a fully functioning dev server.
+Grunt will run the server and make the project available at [http://localhost:9000](http://localhost:9000). 
+
+Want to develop with us? Check out the generator we use at [here](https://github.com/DaftMonk/generator-angular-fullstack). 

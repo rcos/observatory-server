@@ -4,7 +4,7 @@ var _ = require('lodash');
 var Project = require('./project.model');
 var User = require('../user/user.model');
 
-// Get list of projects
+// Get list of current projects
 exports.index = function(req, res) {
   Project.find({active:true},function (err, projects) {
     if(err) { return handleError(res, err); }
@@ -12,9 +12,17 @@ exports.index = function(req, res) {
   });
 };
 
+// Get list of past projects
+exports.indexOld = function(req, res) {
+  Project.find({active:false},function (err, projects) {
+    if(err) { return handleError(res, err); }
+    return res.json(200, projects);
+  });
+};
+
 // Get a single project
 exports.show = function(req, res) {
-  Project.findById(req.params.id, function (err, project) {
+  Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
     if(err) { return handleError(res, err); }
     if(!project) { return res.send(404); }
     return res.json(project);
@@ -40,8 +48,8 @@ exports.update = function(req, res) {
     var userId = req.user._id;
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
-      
-      if (project.authors.indexOf(userId) >= 0 || user.role == 'mentor' || user.role == 'admin'){
+
+      if (project.authors.indexOf(userId) >= 0 || user.role === 'mentor' || user.role === 'admin'){
         var updated = _.merge(project, req.body);
         updated.save(function (err) {
           if (err) { return handleError(res, err); }

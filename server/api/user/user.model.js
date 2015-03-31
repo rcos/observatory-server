@@ -3,10 +3,13 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
+var md5 = require('MD5');
+var Commit = require('../commit/commit.model');
 
 var UserSchema = new Schema({
   name: String,
   email: { type: String, lowercase: true },
+  active: {type: Boolean, default: true},
   role: {
     type: String,
     default: 'user'
@@ -15,10 +18,22 @@ var UserSchema = new Schema({
   provider: String,
   salt: String,
 
-  githubLogin: {type: String, lowercase: true},
-  githubProfile: {type: String},
-  
-  avatar: { type: String, default: 'http://www.gravatar.com/avatar/00000000000000000000000000000000'}
+  // field for what user is currently enrolled as (pay, credit, experience)
+  rcosStyle: String,
+  attendance: [Date],
+
+  github: {
+    events: [{
+      type: String,
+      action: String,
+      message: String,
+      url: String,
+      date: Date
+    }],
+    login: {type: String, lowercase: true},
+    profile: String,
+  }
+
 });
 
 /**
@@ -35,14 +50,78 @@ UserSchema
     return this._password;
   });
 
+/**
+* Get gravatar url
+*
+* @return {String}
+* @api public
+*/
+var makeAvatar = function(email) {
+  if (email){
+    return 'http://www.gravatar.com/avatar/'+md5(email.trim().toLowerCase());
+  }
+  return  'http://www.gravatar.com/avatar/00000000000000000000000000000000';
+
+};
+
+UserSchema
+  .virtual('avatar')
+  .get(function(){
+    return makeAvatar(this.email) ;
+    // return 'http://www.gravatar.com/avatar/00000000000000000000000000000000';
+});
+
+
 // Public profile information
 UserSchema
   .virtual('profile')
   .get(function() {
+    var twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate()-14);
     return {
+      '_id':this._id.toString('binary'),
       'name': this.name,
       'role': this.role,
-      'avatar': this.avatar
+      'avatar': this.avatar,
+      'email': this.email,
+      'semesters': 4,
+      'attendance': [],//TODO pull attendance
+      "attendanceScore": 88,
+      "attendanceBonus": 12,
+      'projects':[{
+          'name': 'Sia UI',
+          'avatar':'https://avatars1.githubusercontent.com/u/7471422?v=3&s=200',
+          'description': 'Front end user interface for Sia decentralized storage network utilitzing atom-shell, other stuff and things.',
+          'tech':['NodeJS','Javascript','Atom Shell','HTML']
+      }],//TODO pull projects
+      'tech':['Javascript','Python','Web Applications','C++'],
+      'bio': "Android, Web and Desktop Application development. Talk to me if you want to know more about NodeJS, Atom-Shell, Atom.io, Bootstrap or any other modern web technologies.",
+      'githubProfile': this.github.login
+    };
+  });
+
+// User list information
+UserSchema
+  .virtual('stats')
+  .get(function() {
+    var data = this.toObject();
+    data.avatar = this.avatar;
+    data.attendance = 0;
+    delete data.hashedPassword ;
+    delete data.salt ;
+  return data;
+});
+
+// User list information
+UserSchema
+  .virtual('listInfo')
+  .get(function() {
+    return {
+      '_id':this._id.toString('binary'),
+      'name': this.name,
+      'role': this.role,
+      'avatar': this.avatar,
+      'githubProfile': this.github.login,
     };
   });
 
