@@ -2,14 +2,16 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-    <div class="row">
-        <h1>{{ project.name }}</h1>
-    </div>
     <div class="row text-right">
-        <div class="col-sm-10 col-sm-offset-1">
+        <div class="col-sm-3">
+          <h1>{{ project.name }}</h1>
+        </div>
+        <div class="col-sm-9 header-buttons">
             <a class="btn btn-success" href="#" title="">Join Project</a>
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
             <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
+            <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
+
         </div>
     </div>
     <div class="row">
@@ -18,7 +20,6 @@
         </div>
         <div class="col-sm-4">
         <div class="contributors">
-            
             <div class="row">
                 <h4>Contributors</h4>
             </div>

@@ -85,3 +85,46 @@ h2 {
 #header h1 {
     float: left;
 }
+
+.bottom-bar {
+    color: black;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: -20px;
+    bottom: 0px;
+    left: 0px;
+    background: #ddd;
+    border-top: 1px solid #ddd;
+    height: 22px;
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-bottomright: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.bottom-bar-left, .bottom-bar-right {
+    position: absolute;
+    line-height: 22px;
+}
+
+.bottom-bar-left {
+    left: 20px;
+}
+
+.bottom-bar-right {
+    right: 20px;
+}
+
+.bottom-bar a {
+    color: #444;
+    text-decoration: none;
+}
+
+.bottom-bar a:hover {
+    color: black;
+}
