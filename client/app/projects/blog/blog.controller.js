@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsBlogCtrl', function ($scope, $http, $stateParams) {
+.controller('ProjectsBlogCtrl', function ($scope, $http, Auth, $stateParams) {
     $scope.load = function() {
       $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
           $scope.project = project;
@@ -23,6 +23,7 @@ angular.module('observatory3App')
         $scope.postToAdd = {};
         $scope.load();
     }
+    $scope.isLoggedIn = Auth.isLoggedIn;
 
     $scope.load();
 
