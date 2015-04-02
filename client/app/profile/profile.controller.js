@@ -68,15 +68,6 @@ angular.module('observatory3App')
 
           scope.$watch("edittingBio", updateEditable);
 
-          $(element).keyup(function(){
-              if (!scope.edittingBio) return;
-              // Wait a bit for the character to be placed in the div
-              setTimeout(function(){
-                  // update the value of user.bio
-                  scope.user.bio = $(element).find("textarea").val();
-              },100);
-          });
-
       }
 
       return {
