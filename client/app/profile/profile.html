@@ -4,7 +4,7 @@
     <div class='row'>
         <div class='col-md-3 profile-sidebar'>
             <img width='75%' src='{{user.avatar}}?s=1024px'/>
-            <span id='semester-count'>{{user.semesters}}</span>
+            <span id='semester-count' ng-show="user.semesters">{{user.semesters}}</span>
             <div class='sidebar-text name'>
                 {{user.name}}
             </div>
@@ -19,11 +19,26 @@
         </div>
         <div class='col-md-6'>
             <div class='tech-boxes'>
-                <div ng-repeat='tech in user.tech'>{{tech}}</div>
+                <div ng-repeat="tech in user.tech track by $index">
+                    {{tech}}
+                    <button ng-show='isuser' class='btn btn-default btn-xs' ng-click='removeTech(tech)'>x</button>
+                </div>
+                <div ng-show='isuser'>
+                    <input ng-enter="addTech()" ng-model="insertTechContent" size='4' type='text'/>
+                    <button ng-click="addTech()" class='btn btn-default btn-xs'>+</button>
+                </div>
             </div>
             <div class='content-box'>
-                <div class='content-title'>Bio</div>
-                {{user.bio}}
+                <div ng-show='isuser' class='content-title row'>
+                    <div class='col-xs-6'>Bio</div>
+                    <div class='col-xs-6 text-right'>
+                        <div class="btn-group" style='margin-bottom:8px'>
+                            <button type="button" class='btn btn-default btn-sm' ng-click='editBio()'>Edit</button>
+                            <button type="button" class='btn btn-default btn-sm' ng-click='saveBio()'>Save</button>
+                        </div>
+                    </div>
+                </div>
+                <bio></bio>
             </div>
             <div class='content-box' ng-repeat='project in user.projects'>
                 <div class='project row'>
@@ -34,14 +49,14 @@
                         <div class='title'> {{project.name}} </div>
                         <div class='description'>{{project.description}}</div>
                         <div class='tech-boxes'>
-                            <div ng-repeat='tech in project.tect'>{{tech}}</div>
+                            <div ng-repeat='tech in project.tech'>{{tech}}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class='col-md-3'>
-            <div class='content-box'>
+            <div ng-hide='!isuser' class='content-box'>
                 <div class='content-title'>
                     Attendance <span class='attendance-score'>{{user.attendanceScore}}% +{{user.attendanceBonus}}%</span>
                 </div>
@@ -51,8 +66,8 @@
             </div>
             <div class='content-box'>
                 <div class='content-title'>Commits</div>
-                <div ng-repeat='commit in user.commits' class='commit'>
-                    <a href='{{commit.link}}'>{{commit.message}}</a>
+                <div ng-repeat='event in user.github.events' class='commit'>
+                    <a href='{{event.url}}'>{{event.message}}</a>
                 </div>
             </div>
         </div>
