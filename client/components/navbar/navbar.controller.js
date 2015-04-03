@@ -4,11 +4,11 @@ angular.module('observatory3App')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
       'title': 'Home',
-      'link': '/'
-    },{
-      'title': 'Projects',
-      'link': '/projects'
-    },{
+      'link': '/login'
+    // },{
+    //   'title': 'Projects',
+    //   'link': '/projects'
+    // },{
       'title': 'Users',
       'link': '/users'
     }];
