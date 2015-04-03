@@ -60,10 +60,17 @@
         <div class='col-md-3'>
             <div ng-hide='!isuser' class='content-box'>
                 <div class='content-title'>
-                    Attendance <span class='attendance-score'>{{user.attendanceScore}}% +{{user.attendanceBonus}}%</span>
+                    Attendance <!-- <span class='attendance-score'>{{user.attendanceScore}}% +{{user.attendanceBonus}}%</span>-->
                 </div>
-                <div id='attendance-box-container'>
+                <!-- <div id='attendance-box-container'>
                     <div ng-repeat='day in user.attendance' class='good'></div>
+                </div> -->
+                <div ng-repeat="day in user.attendance">
+                    {{day.toString()}}
+                </div>
+                <div ng-show='isuser'>
+                    <input ng-enter="markAttendance(attendanceCode)" ng-model="attendanceCode" size='4' type='text'/>
+                    <button ng-click="markAttendance(attendanceCode)" class='btn btn-default btn-xs'>Submit Attendance</button>
                 </div>
             </div>
             <div class='content-box'>

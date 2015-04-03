@@ -19,9 +19,10 @@ router.put('/:id/deactivate', auth.isAuthenticated(), controller.deactivate);
 router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
-router.get("/:id/attendance", controller.attendance);
+router.put("/:id/attendance", controller.attendance);
 router.put('/:id/bio', auth.isAuthenticated(), controller.changeBio);
 router.put("/:id/addTech",auth.isAuthenticated(), controller.addTech);
 router.put("/:id/removeTech",auth.isAuthenticated(), controller.removeTech);
+router.put("/setAttendance", auth.hasRole('admin'), controller.setAttendance);
 
 module.exports = router;

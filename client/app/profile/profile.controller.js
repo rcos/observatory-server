@@ -6,12 +6,14 @@ angular.module('observatory3App')
       var loggedInUser = Auth.getCurrentUser();
       $scope.isuser = loggedInUser._id == $stateParams.id;
 
-      $http.get('/api/users/' + $stateParams.id).success(function(user){
-          $scope.user = user;
-          $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
-              $scope.user.commits = commits;
+      function updateUser(){
+          $http.get('/api/users/' + $stateParams.id).success(function(user){
+              $scope.user = user;
+              $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
+                  $scope.user.commits = commits;
+              });
           });
-      });
+      }
 
       $scope.edittingBio = false;
 
@@ -51,6 +53,18 @@ angular.module('observatory3App')
           });
       };
 
+      $scope.markAttendance = function(code){
+          $http.put("/api/users/" + $stateParams.id + "/attendance", {
+              "code": code
+          }).success(function(){
+              alert("Attendance added!");
+              updateUser();
+          }).error(function(){
+              alert("Invalid Attendance Code!");
+          });
+      };
+
+      updateUser();
   })
   .directive("bio", function(){
 
