@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Project = require('./project.model');
 var User = require('../user/user.model');
+var mongoose = require('mongoose');
 
 // Get list of current projects
 exports.index = function(req, res) {
@@ -28,6 +29,19 @@ exports.show = function(req, res) {
     return res.json(project);
   });
 };
+
+// router.get('/author/:id', controller.showByAuthor);
+// Get list of author's projects
+exports.showByAuthor = function(req, res) {
+
+  Project.find({'authors':req.params.id},function (err, projects) {
+    if(err) { return handleError(res, err); }
+
+    return res.json(200, projects);
+  });
+};
+
+
 
 // Creates a new project in the DB.
 exports.create = function(req, res) {

@@ -275,6 +275,8 @@ exports.changeBio = function(req,res){
 
     User.findById(userId, function(err,user){
         user.bio = newBio;
+        if (err) return res.send(500, err);
+
         user.save(function(err){
             if (err) return validationError(res,err);
             res.send(200);

@@ -93,12 +93,6 @@ UserSchema
       'attendance': this.attendance,
       "attendanceScore": 88,
       "attendanceBonus": 12,
-      'projects':[{
-          'name': 'Sia UI',
-          'avatar':'https://avatars1.githubusercontent.com/u/7471422?v=3&s=200',
-          'description': 'Front end user interface for Sia decentralized storage network utilitzing atom-shell, other stuff and things.',
-          'tech':['NodeJS','Javascript','Atom Shell','HTML']
-      }],//TODO pull projects
       'tech': this.tech,
       'bio': this.bio,
       'githubProfile': this.github.login,
@@ -231,7 +225,6 @@ var validatePresenceOf = function(value) {
 UserSchema
   .pre('save', function(next) {
     if (!this.isNew) return next();
-
     if (!validatePresenceOf(this.hashedPassword))
       next(new Error('Invalid password'));
     else
