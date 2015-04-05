@@ -6,7 +6,7 @@ angular.module('observatory3App')
       var loggedInUser = Auth.getCurrentUser();
       $scope.isuser = loggedInUser._id == $stateParams.id;
 
-      $http.get('/api/users/' + $stateParams.id).success(function(user){
+      $http.get('/api/users/profile/' + $stateParams.userUrl).success(function(user){
           $scope.user = user;
           $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
               $scope.user.commits = commits;

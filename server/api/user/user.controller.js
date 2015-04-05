@@ -5,6 +5,7 @@ var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var Commit = require('../commit/commit.model');
+var mongoose = require('mongoose');
 
 
 var validationError = function(res, err) {
@@ -162,6 +163,8 @@ exports.create = function (req, res, next) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
+  newUser.url = newUser.url || newUser.github.login  ;
+
   newUser.save(function(err, user) {
     if (err) return validationError(res, err);
     var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
@@ -181,6 +184,47 @@ exports.show = function (req, res, next) {
     res.json(user.profile);
   });
 };
+
+
+/**
+ * Get a single user by unique url
+ */
+exports.showByUrl = function (req, res, next) {
+  var userURL = req.params.url;
+  User.findOne({'url':userURL}, function (err, user) {
+
+    if (err) return next(err);
+    if (!user){
+      User.findById(mongoose.Types.ObjectId(userURL), function (err, userById) {
+        if (err) return next(err);
+        if (!userById) return res.send(404);
+        res.json(userById.profile);
+      });
+    }
+    else{
+      res.json(user.profile);
+
+    }
+  });
+};
+
+
+/**
+ * Changes a user's url
+ */
+exports.changeUrl = function(req,res){
+    var userId = req.user._id;
+    var newUrl = String(req.body.url);
+
+    User.findById(userId, function(err,user){
+        user.url = newUrl;
+        user.save(function(err){
+            if (err) return validationError(res,err);
+            res.send(200);
+        })
+    });
+};
+
 
 /**
  * Deletes a user

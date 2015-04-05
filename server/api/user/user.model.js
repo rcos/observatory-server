@@ -36,7 +36,8 @@ var UserSchema = new Schema({
     }],
     login: {type: String, lowercase: true},
     profile: String,
-  }
+  },
+  url : String
 
 });
 
@@ -100,7 +101,8 @@ UserSchema
       }],//TODO pull projects
       'tech': this.tech,
       'bio': this.bio,
-      'githubProfile': this.github.login
+      'githubProfile': this.github.login,
+      'url':this.url || this._id.toString('binary'),
     };
   });
 
@@ -126,6 +128,8 @@ UserSchema
       'role': this.role,
       'avatar': this.avatar,
       'githubProfile': this.github.login,
+      'url':this.url || this._id.toString('binary'),
+
     };
   });
 

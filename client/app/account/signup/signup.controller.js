@@ -13,7 +13,8 @@ angular.module('observatory3App')
           name: $scope.user.name,
           email: $scope.user.email,
           github: {
-            login: $scope.user.githubLogin
+            login: $scope.user.githubLogin,
+            profile: $scope.user.githubLogin
           },
           password: $scope.user.password
         })
