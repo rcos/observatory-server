@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class='col-md-6'>
-            <div class='tech-boxes'>
+            <div class='tech-boxes' ng-show='isuser || user.tech.size()'>
                 <div ng-repeat="tech in user.tech track by $index">
                     {{tech}}
                     <button ng-show='isuser' class='btn btn-default btn-xs' ng-click='removeTech(tech)'>x</button>
