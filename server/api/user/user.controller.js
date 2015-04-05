@@ -6,6 +6,7 @@ var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var Commit = require('../commit/commit.model');
 var mongoose = require('mongoose');
+var request = require('request');
 
 
 var validationError = function(res, err) {
@@ -164,12 +165,19 @@ exports.create = function (req, res, next) {
   newUser.provider = 'local';
   newUser.role = 'user';
   newUser.url = newUser.url || newUser.github.login  ;
+  request('https://github.com/'+newUser.github.login, function (error, response, body) { //TODO Switch to github api
+    if (!error && response.statusCode == 200) {
+      newUser.save(function(err, user) {
+        if (err) return validationError(res, err);
+        var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+        res.json({ token: token });
+      });
+    }
+    else{
+      return validationError(res, "Invalid Github Username");
+    }
+  })
 
-  newUser.save(function(err, user) {
-    if (err) return validationError(res, err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-    res.json({ token: token });
-  });
 };
 
 /**
