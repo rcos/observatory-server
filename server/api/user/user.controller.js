@@ -281,7 +281,7 @@ exports.deactivate = function(req, res, next) {
   var userId = String(req.params.id);
 
 
-  User.findOne({ '_id': userId}, function(err, user){
+  User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
 
     user.active = false;
@@ -299,7 +299,7 @@ exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
 
 
-  User.findOne({ '_id': userId}, function(err, user){
+  User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
 
     user.active = true;
@@ -315,9 +315,7 @@ exports.activate = function(req, res, next) {
  */
 exports.me = function(req, res, next) {
   var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
+  User.findById(userId, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);

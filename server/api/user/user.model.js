@@ -176,6 +176,51 @@ UserSchema
     });
 }, 'The specified email address is already in use.');
 
+// Validate empty url
+UserSchema
+  .path('url')
+  .validate(function(url) {
+    return url.length;
+  }, 'User URL cannot be blank');
+
+// Validate url is not taken
+UserSchema
+  .path('url')
+  .validate(function(value, respond) {
+    var self = this;
+    this.constructor.findOne({url: value}, function(err, user) {
+      if(err) throw err;
+      if(user) {
+        if(self.id === user.id) return respond(true);
+        return respond(false);
+      }
+      respond(true);
+    });
+}, 'The specified url address is already in use.');
+
+// Validate empty github.login
+UserSchema
+  .path('github.login')
+  .validate(function(val) {
+    return val.length;
+  }, 'github login cannot be blank');
+
+// Validate github.login is not taken
+UserSchema
+  .path('github.login')
+  .validate(function(value, respond) {
+    var self = this;
+    this.constructor.findOne({'github.login': value}, function(err, user) {
+      if(err) throw err;
+      if(user) {
+        if(self.id === user.id) return respond(true);
+        return respond(false);
+      }
+      respond(true);
+    });
+}, 'The specified github login address is already in use.');
+
+
 var validatePresenceOf = function(value) {
   return value && value.length;
 };
