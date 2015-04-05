@@ -31,6 +31,7 @@ angular.module('observatory3App')
       };
 
       $scope.addTech = function(){
+        if($scope.insertTechContent){
           $http.put("/api/users/" + $stateParams.id + "/addTech", {
               "tech": $scope.insertTechContent
           }).success(function(){
@@ -39,6 +40,7 @@ angular.module('observatory3App')
           }).error(function(){
               alert("Could not add tech!");
           });
+        }
       };
 
       $scope.removeTech = function(tech){
