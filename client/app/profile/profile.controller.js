@@ -56,26 +56,9 @@ angular.module('observatory3App')
   })
   .directive("bio", function(){
 
-      function link(scope, element, attrs){
-
-          function updateEditable(){
-              if (scope.edittingBio){
-                  $(element).find("div").hide();
-                  $(element).find("textarea").show();
-              }else{
-                  $(element).find("div").show();
-                  $(element).find("textarea").hide();
-              }
-          }
-
-          scope.$watch("edittingBio", updateEditable);
-
-      }
-
       return {
           restrict:'E',
-          template: "<div style='white-space:pre;'>{{user.bio}}</div> \
-                     <textarea>{{user.bio}}</textarea>",
-          link:link
+          template: "<div ng-show='!edittingBio' style='white-space:pre;'>{{user.bio}}</div> \
+                     <textarea ng-show='edittingBio' ng-model='user.bio' ></textarea>"
       }
   });
