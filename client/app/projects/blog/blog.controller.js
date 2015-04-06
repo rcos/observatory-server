@@ -2,12 +2,31 @@
 
 angular.module('observatory3App')
 .controller('ProjectsBlogCtrl', function ($scope, $http, Auth, $stateParams) {
+    $scope.isAuthor = false;
+    $scope.isLoggedIn = Auth.isLoggedIn;
+    $scope.isAdmin = Auth.isAdmin;
+    $scope.getCurrentUser = Auth.getCurrentUser;
+
+
     $scope.load = function() {
       $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
           $scope.project = project;
           $http.get('/api/posts/project/'+$scope.project._id).success(function(posts){
               $scope.posts = posts;
           });
+
+          if ($scope.isLoggedIn()){
+            if($scope.project.authors.indexOf($scope.getCurrentUser()._id) != -1){
+              $scope.isAuthor = true;
+            }
+            else if( $scope.isAdmin()){
+              $scope.isAuthor = true;
+            }
+            else if($scope.getCurrentUser().role.toLowerCase() == "mentor"){
+              $scope.isAuthor = true;
+            }
+          }
+
       });
     }
 
@@ -23,7 +42,6 @@ angular.module('observatory3App')
         $scope.postToAdd = {};
         $scope.load();
     }
-    $scope.isLoggedIn = Auth.isLoggedIn;
 
     $scope.load();
 
