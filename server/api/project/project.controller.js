@@ -75,6 +75,30 @@ exports.update = function(req, res) {
   });
 };
 
+// Adds an author to an existing project
+exports.addAuthor = function(req, res) {
+  if(req.body._id) { delete req.body._id; }
+  Project.findById(req.params.id, function (err, project) {
+    if (err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+
+    // Only mentors and project owners can update a project
+    var userId = req.user._id;
+    User.findById(userId, function(err, user) {
+      if (err) { return handleError(res, err); }
+
+      if (project.authors.indexOf(userId) >= 0 || user.role === 'mentor' || user.role === 'admin'){
+        var updated = _.merge(project, req.body);
+        updated.save(function (err) {
+          if (err) { return handleError(res, err); }
+          return res.json(200, project);
+        });
+      }
+      return handleError(res, err);
+    });
+  });
+};
+
 // Deletes a project from the DB.
 exports.destroy = function(req, res) {
   Project.findById(req.params.id, function (err, project) {

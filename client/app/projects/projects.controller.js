@@ -20,24 +20,29 @@ angular.module('observatory3App')
     };
 
     $scope.submit = function(form) {
-        $('#addProject').modal('hide');
-        if(form) {
-            form.$setPristine();
-            form.$setUntouched();
-        }
-        // use setTimeout because hiding the modal takes longer than the post request
-        // and results in the modal disappearing but the overlay staying if not used
-        setTimeout(function() {
+        // // use setTimeout because hiding the modal takes longer than the post request
+        // // and results in the modal disappearing but the overlay staying if not used
+        // setTimeout(function() {
             $scope.projectToAdd.repositoryUrl = 'https://github.com/' + $scope.projectToAdd.githubUsername + '/' + $scope.projectToAdd.githubProjectName;
-            $http.post('/api/projects', $scope.projectToAdd);
+            $http.post('/api/projects', $scope.projectToAdd).success(function(){
+              $('#addProject').modal('hide');
+              if(form) {
+                  form.$setPristine();
+                  form.$setUntouched();
+              }
+              if ($scope.past){
+                $scope.getPastProjects();
+              }
+              else{
+                $scope.getCurrentProjects();
+              }
+            }).error(function(){
+              alert("Could not add project!");
+
+            });;
             $scope.projectToAdd = {active: true};
-            if ($scope.past){
-              $scope.getPastProjects();
-            }
-            else{
-              $scope.getCurrentProjects();
-            }
-        }, 200);
+
+        // }, 200);
     };
 
     $scope.getCurrentProjects(); // update the webpage when connecting the controller
