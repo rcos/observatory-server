@@ -21,7 +21,8 @@ var UserSchema = new Schema({
   bio:String,
   attendance: [Date],
   semesterCount: Number,
-
+  rin: Number,
+  rcsId: String,
 
   // field for what user is currently enrolled as (pay, credit, experience)
   rcosStyle: String,
