@@ -1,30 +1,32 @@
+// .container{
+//     padding-left: 20px;
+//     padding-right: 20px;
+//
+// }
+@mixin background-border {
+  background-color: #eee;
+  padding: 20px;
+  // margin-top: 20px;
+  margin-bottom: 20px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
 .project-image{
-    background-color: #eee;
-    clear: both;
-    padding: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    position: relative;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+  @include background-border;
+  // clear: both;
+  // position: relative;
+
 }
 
 .contributors{
-    background-color: #eee;
-    margin-top: 20px;
-    padding: 20px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+  @include background-border;
+  padding-top: 5px;
+
 }
 
 .description{
-    background-color: #eee;
-    padding: 20px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+  @include background-border;
 }
 
 .contributor-name{
