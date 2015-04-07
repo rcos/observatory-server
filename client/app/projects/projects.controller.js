@@ -23,7 +23,7 @@ angular.module('observatory3App')
     $scope.submit = function(form) {
         // // use setTimeout because hiding the modal takes longer than the post request
         // // and results in the modal disappearing but the overlay staying if not used
-        // setTimeout(function() {
+        setTimeout(function() {
             $scope.projectToAdd.repositoryUrl = 'https://github.com/' + $scope.projectToAdd.githubUsername + '/' + $scope.projectToAdd.githubProjectName;
             $scope.projectToAdd.authors = [$scope.currentUser._id];
             console.log([$scope.currentUser._id]);
@@ -39,9 +39,6 @@ angular.module('observatory3App')
               else{
                 $scope.getCurrentProjects();
               }
-            }).then(function() {
-              // Account created, redirect to project
-              $location.path('/projects/'+$scope.projectToAdd.githubUsername+ '/' + $scope.projectToAdd.githubProjectName+'/profile');
             }).error(function(){
               alert("Could not add project!");
 
@@ -49,7 +46,7 @@ angular.module('observatory3App')
 
             $scope.projectToAdd = {active: true};
 
-        // }, 200);
+        }, 200);
     };
 
     $scope.getCurrentProjects(); // update the webpage when connecting the controller

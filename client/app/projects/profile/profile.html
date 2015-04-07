@@ -16,8 +16,8 @@
     </div>
     <div class="row">
         <div class="col-sm-7 project-image">
-            <img src="http://rcos.rpi.edu/site-media/screenshots/207.png"  class="img-responsive" alt="">
-            <!-- <img src="  {{project.photos[0]}}"  class="img-responsive" alt=""> -->
+            <!-- <img src="http://rcos.rpi.edu/site-media/screenshots/207.png"  class="img-responsive" alt=""> -->
+            <img src="  {{project.photos[0]}}"  class="img-responsive" alt="">
 
         </div>
         <div class="col-sm-4">
@@ -27,11 +27,11 @@
             </div>
             <div ng-repeat='user in project.authors' class="row">
                 <div class="col-md-3">
-                    <img src="{{user.avatar}}" class="img-responsive" alt="">
+                    <img href="/users/{{user.url}}/profile" src="{{user.avatar}}" class="img-responsive" alt="">
                 </div>
                 <div class="col-md-8">
-                    <a href="" title="" class="contributor-name">
-                      {{user.name}}"
+                    <a href="/users/{{user.url}}/profile" title="" class="contributor-name">
+                      {{user.name}}
                     </a>
                 </div>
             </div>

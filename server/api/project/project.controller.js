@@ -32,7 +32,9 @@ exports.showProject = function(req, res) {
 
 // Get a single project
 exports.show = function(req, res) {
-  Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
+  Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project })
+  .populate('authors')
+  .exec(function (err, project) {
     if(err) { return handleError(res, err); }
     if(!project) { return res.send(404); }
     return res.json(project);

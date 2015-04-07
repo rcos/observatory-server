@@ -21,6 +21,8 @@ var UserSchema = new Schema({
   bio:String,
   attendance: [Date],
   semesterCount: Number,
+  avatar: String,
+
 
 
   // field for what user is currently enrolled as (pay, credit, experience)
@@ -35,7 +37,7 @@ var UserSchema = new Schema({
       date: Date
     }],
     login: {type: String, lowercase: true},
-    profile: String 
+    profile: String
   },
   url : String
 
@@ -50,6 +52,7 @@ UserSchema
     this._password = password;
     this.salt = this.makeSalt();
     this.hashedPassword = this.encryptPassword(password);
+    this.avatar = makeAvatar(this.email);
   })
   .get(function() {
     return this._password;
@@ -69,14 +72,6 @@ var makeAvatar = function(email) {
 
 };
 
-UserSchema
-  .virtual('avatar')
-  .get(function(){
-    return makeAvatar(this.email) ;
-    // return 'http://www.gravatar.com/avatar/00000000000000000000000000000000';
-});
-
-
 // Public profile information
 UserSchema
   .virtual('profile')
@@ -87,7 +82,7 @@ UserSchema
       '_id':this._id.toString('binary'),
       'name': this.name,
       'role': this.role,
-      'avatar': this.avatar,
+      'avatar': this.avatar || makeAvatar(this.email),
       'email': this.email,
       'semesters': this.semesterCount,
       'attendance': this.attendance,
