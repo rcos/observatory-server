@@ -39,7 +39,6 @@ exports.show = function(req, res) {
   });
 };
 
-<<<<<<< HEAD
 // router.get('/author/:id', controller.showByAuthor);
 // Get list of author's projects
 exports.showByAuthor = function(req, res) {

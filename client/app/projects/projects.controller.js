@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, Auth, $http) {
+.controller('ProjectsCtrl', function ($scope, Auth, $http,  $location) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true};
-    $scope.currentUser = Auth.getCurrentUser;
+    $scope.currentUser = Auth.getCurrentUser();
 
     $scope.getCurrentProjects = function() {
         $http.get('/api/projects').success(function(projects) {
@@ -25,7 +25,8 @@ angular.module('observatory3App')
         // // and results in the modal disappearing but the overlay staying if not used
         // setTimeout(function() {
             $scope.projectToAdd.repositoryUrl = 'https://github.com/' + $scope.projectToAdd.githubUsername + '/' + $scope.projectToAdd.githubProjectName;
-            $scope.projectToAdd.author = [$scope.currentUser._id];
+            $scope.projectToAdd.authors = [$scope.currentUser._id];
+            console.log([$scope.currentUser._id]);
             $http.post('/api/projects', $scope.projectToAdd).success(function(){
               $('#addProject').modal('hide');
               if(form) {
@@ -38,10 +39,14 @@ angular.module('observatory3App')
               else{
                 $scope.getCurrentProjects();
               }
+            }).then(function() {
+              // Account created, redirect to project
+              $location.path('/projects/'+$scope.projectToAdd.githubUsername+ '/' + $scope.projectToAdd.githubProjectName+'/profile');
             }).error(function(){
               alert("Could not add project!");
 
-            });;
+            });
+
             $scope.projectToAdd = {active: true};
 
         // }, 200);

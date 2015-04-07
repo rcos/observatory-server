@@ -40,7 +40,6 @@ angular.module('observatory3App')
       $scope.addTech = function(){
         if($scope.insertTechContent){
           $http.put("/api/users/" + $stateParams.id + "/addTech", {
-          $http.put("/api/users/" + $scope.user._id + "/addTech", {
               "tech": $scope.insertTechContent
           }).success(function(){
               $scope.user.tech.push($scope.insertTechContent);
