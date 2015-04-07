@@ -2,14 +2,15 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-    <div class="row">
-        <h1>{{ project.name }}</h1>
-    </div>
     <div class="row text-right">
-        <div class="col-sm-10 col-sm-offset-1">
-            <a class="btn btn-success btn-small" href="#" title="">Join Project</a>
-            <a class="btn btn-info btn-small" href="{{ project.websiteUrl }}" title="">Website</a>
-            <a class="btn btn-info btn-small" href="{{ project.repositoryUrl }}" title="">Repository</a>
+        <div class="col-sm-3">
+          <h1>{{ project.name }}</h1>
+        </div>
+        <div class="col-sm-9 header-buttons">
+            <a class="btn btn-success" href="#" title="">Join Project</a>
+            <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
+            <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
+            <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
         </div>
     </div>
     <div class="row">
@@ -24,29 +25,29 @@
                     <h4>Contributors</h4>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
-                        <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=128px" class="img-responsive" alt="">
+                        <div class="col-md-3">
+                            <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=128px" class="img-responsive" alt="">
+                        </div>
+                        <div class="col-md-8">
+                            <a href="" title="" class="contributor-name">
+                                Aaron Gunderson
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-md-8">
-                        <a href="" title="" class="contributor-name">
-                            Aaron Gunderson
-                        </a>
+                <div class="contributors">
+                    <div class="row">
+                        <h4> {{commits.length}} Commits</h4>
                     </div>
+                    <div ng-repeat="commit in commits | limitTo: 10" class="row">
+                        <div class="col-md-12">
+                            <a href="" title="" class="contributor-name">
+                                {{ commit.author.login }}
+                            </a>
+                            {{ commit.message }}
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
-            <div class="contributors">
-                <div class="row">
-                    <h4> {{commits.length}} Commits</h4>
-                </div>
-                <div ng-repeat="commit in commits | limitTo: 10" class="row">
-                    <div class="col-md-12">
-                        <a href="" title="" class="contributor-name">
-                            {{ commit.author.login }}
-                        </a>
-                        {{ commit.message }}
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

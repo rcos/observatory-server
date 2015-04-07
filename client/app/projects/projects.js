@@ -12,5 +12,10 @@ angular.module('observatory3App')
         url: '/projects/:username/:project/profile',
         templateUrl: 'app/projects/profile/profile.html',
         controller: 'ProjectsProfileCtrl'
+      })
+      .state('projectsblog', {
+        url: '/projects/:username/:project/blog',
+        templateUrl: 'app/projects/blog/blog.html',
+        controller: 'ProjectsBlogCtrl'
       });
   });

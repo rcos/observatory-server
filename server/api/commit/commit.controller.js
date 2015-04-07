@@ -67,6 +67,33 @@ exports.showProjectCommits = function(req, res) {
   });
 };
 
+// Get a list of a user Commits
+exports.showUserCommits = function(req, res) {
+  var prevDays = new Date();
+  if (req.params.timeperiod){
+    prevDays.setDate(prevDays.getDate()-Number(req.params.timeperiod));
+  }
+  else{
+    prevDays.setDate(prevDays.getDate()-14);
+  }
+
+  Commit.find()
+        .where('author.login').equals(String(req.params.githubProfile))
+        .where('date').gt(prevDays)
+        .exec(function(err, commits){
+          if(err) { return handleError(res, err); }
+          if(!commits) { return res.json([]); }
+            var commitList = [];
+            commits.forEach(function (c){
+                var commitObj = c.toObject();
+                commitObj.link = "#";
+                commitList.push(commitObj);
+              });
+            return res.json(commitList);
+        });
+};
+
+
 function handleError(res, err) {
   return res.send(500, err);
 }

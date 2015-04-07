@@ -1,0 +1,36 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+    <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
+
+    <button ng-show="isAuthor" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#post" aria-expanded="false" aria-controls="post">
+        Add a post
+    </button>
+    <br/><br/>
+    <div class="collapse" id="post">
+        <form novalidate name="addPostForm" class="css-form">
+            <input ng-model="postToAdd.title" class="form-control addForm" placeholder="Title" required=""/><br/>
+            <textarea ng-model="postToAdd.content" class="form-control" placeholder="Content" required=""></textarea><br/>
+            <input type="submit" ng-click="addPostForm.$valid && submit(addPostForm)" class="btn btn-primary" value="Post"/>
+        </form>
+        <br/><br/>
+    </div>
+
+    <div ng-repeat="post in posts | orderBy:'-date'">
+        <div class="extra-content" >
+            <h2 id="title">{{ post.title }}</h2>
+            <div class="clear"></div>
+            <div id="content">{{ post.content }}</div>
+            <div class="bottom-bar">
+                <div class="bottom-bar-left">
+                    <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
+                </div>
+                <div class="bottom-bar-right">
+                    {{ post.date | date:'MMM dd yyyy HH:mm:ss' }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

@@ -11,9 +11,8 @@
             <td ng-click="setSortOrder('github.login')">Github</td>
             <td ng-click="setSortOrder('attendence')">Attendence</td>
             <td ng-click="setSortOrder('-commits.length')">Commits</td>
-            <td ng-click="setSortOrder('active')">Toggle</td>
+            <td ng-click="setSortOrder('active')">Active</td>
         </tr>
-
       </thead>
       <tbody>
           <tr ng-repeat="user in users | orderBy:sortorder">

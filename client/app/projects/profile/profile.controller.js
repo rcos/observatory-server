@@ -8,5 +8,4 @@ angular.module('observatory3App')
             $scope.commits = commits;
         });
     });
-
 });

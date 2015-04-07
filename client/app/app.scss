@@ -2,6 +2,7 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 $fa-font-path: "/bower_components/font-awesome/fonts";
 
 @import 'bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
+@import 'codemirror/lib/codemirror.css';
 @import 'font-awesome/scss/font-awesome';
 
 /**
@@ -21,6 +22,7 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
 @import 'admin/admin.scss';
 @import 'main/main.scss';
 @import 'profile/profile.scss';
+@import 'projects/blog/blog.scss';
 @import 'projects/profile/profile.scss';
 @import 'projects/projects.scss';
 @import 'user/user.scss';

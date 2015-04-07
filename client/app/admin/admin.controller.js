@@ -18,7 +18,6 @@ angular.module('observatory3App')
 
     $scope.deactivate = function(user){
       $http.put('/api/users/' + user._id + '/deactivate').success(function(message){
-        console.log(message);
         if (message.success){
           angular.forEach($scope.users, function(u, i) {
             if (u._id === user._id) {
@@ -35,7 +34,6 @@ angular.module('observatory3App')
         endpoint = '/activate'
       }
       $http.put('/api/users/' + user._id + endpoint).success(function(message){
-        console.log(message);
         if (message.success){
           angular.forEach($scope.users, function(u, i) {
             if (u._id === user._id) {

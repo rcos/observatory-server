@@ -4,6 +4,7 @@ var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var Commit = require('../commit/commit.model');
 
 
 var validationError = function(res, err) {
@@ -12,7 +13,6 @@ var validationError = function(res, err) {
 
 /**
  * Get list of users
- * restriction: 'admin'
  */
 exports.index = function(req, res) {
   User.find({}, '-salt -hashedPassword', function (err, users) {
@@ -24,49 +24,122 @@ exports.index = function(req, res) {
 /**
  * Get list of users with stats including last commits
  * in previous 2 weeks
+ * restriction: 'admin'
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
     if(err) return res.send(500, err);
-    var data = [];
-    for (var i = 0; i < users.length; i++){
-      data.push(users[i].stats);
+    var twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate()-14);
+    var userInfo = [];
+    var count = users.length;
+
+    var getCommits = function(user){
+      Commit.find()
+            .where('author.login').equals(String(user.github.login))
+            .where('date').gt(twoWeeks)
+            .exec(function(err, commits){
+                var commitList = [];
+                commits.forEach(function (c){
+                    commitList.push(c.toObject());
+                  }
+                )
+                user.commits = commitList ;
+                count--;
+                userInfo.push(user);
+                if (count === 0){
+                  res.json(200, userInfo);
+                }
+            });
     }
-    res.json(200, data);
-  });
+
+    for (var i = 0; i < users.length; i++){
+      var u = users[i].stats;
+      getCommits(u);
+      }
+    });
 };
 
 /**
- * Get list of all users
+* Get list of all users with stats including last commits
+* in previous 2 weeks including inactive
+* restriction: 'admin'
  */
 exports.allStats = function(req, res) {
   // Only return users who are active and have a github login
   User.find({'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
     if(err) return res.send(500, err);
-    var data = [];
-    for (var i = 0; i < users.length; i++){
-      data.push(users[i].stats);
+    var twoWeeks = new Date();
+    twoWeeks.setDate(twoWeeks.getDate()-14);
+    var userInfo = [];
+    var count = users.length;
+
+    var getCommits = function(user){
+      Commit.find()
+            .where('author.login').equals(String(user.github.login))
+            .where('date').gt(twoWeeks)
+            .exec(function(err, commits){
+                if(err){
+                    user.commits = [] ;
+                    count--;
+                    userInfo.push(user);
+                    if (count === 0){
+                      res.json(200, userInfo);
+                    }
+                }
+                else{
+                    var commitList = [];
+                    commits.forEach(function (c){
+                        commitList.push(c.toObject());
+                      }
+                    )
+                    user.commits = commitList ;
+                    count--;
+                    userInfo.push(user);
+                    if (count === 0){
+                      res.json(200, userInfo);
+                    }
+                }
+
+            });
     }
-    res.json(200, data);
-  });
+
+    for (var i = 0; i < users.length; i++){
+      var u = users[i].stats;
+      getCommits(u);
+      }
+    });
 };
 
 /**
- * Get list of users
+ * Get list of active users
  */
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.send(500, err);
-    var data = [];
-    console.log("users: "+users.length);
+    var userInfo = [];
 
     for (var i = 0; i < users.length; i++){
-      data.push(users[i].listInfo);
+      userInfo.push(users[i].listInfo);
     }
-    console.log(data);
-    res.json(200, data);
+    res.json(200, userInfo);
+  });
+};
+
+/**
+ * Get list of all past users
+ */
+exports.past = function(req, res) {
+  User.find({active: false}, '-salt -hashedPassword', function (err, users) {
+    if(err) return res.send(500, err);
+      var userInfo = [];
+
+      for (var i = 0; i < users.length; i++){
+        userInfo.push(users[i].listInfo);
+      }
+      res.json(200, userInfo);
   });
 };
 
@@ -142,6 +215,22 @@ exports.changePassword = function(req, res, next) {
 };
 
 /**
+ * Changes a user's bio
+ */
+exports.changeBio = function(req,res){
+    var userId = req.user._id;
+    var newBio = String(req.body.bio);
+
+    User.findById(userId, function(err,user){
+        user.bio = newBio;
+        user.save(function(err){
+            if (err) return validationError(res,err);
+            res.send(200);
+        })
+    });
+};
+
+/**
  * Deactivates a user
  */
 exports.deactivate = function(req, res, next) {
@@ -211,5 +300,45 @@ exports.attendance = function(req,res){
         }
     }, function(err){
         res.send({"success":(err !== 0)});
+    });
+};
+
+/**
+ * Add an item to the tech array for a user
+ */
+exports.addTech = function(req,res){
+    var userId = req.params.id;
+    var newTech = req.body.tech;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (!user.tech) user.tech = [];
+            user.tech.push(newTech);
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
+    });
+};
+
+/**
+ * Remove an item from the tech array for a user
+ */
+exports.removeTech = function(req,res){
+    var userId = req.params.id;
+    var tech = req.body.tech;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (!user.tech) user.tech = [];
+            user.tech.splice(user.tech.indexOf(tech), 1);
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
     });
 };
