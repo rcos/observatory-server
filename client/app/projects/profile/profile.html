@@ -16,20 +16,22 @@
     </div>
     <div class="row">
         <div class="col-sm-7 project-image">
-            <img src="http://rcos.rpi.edu/site-media/screenshots/207.png" class="img-responsive" alt="">
+            <img src="http://rcos.rpi.edu/site-media/screenshots/207.png"  class="img-responsive" alt="">
+            <!-- <img src="  {{project.photos[0]}}"  class="img-responsive" alt=""> -->
+
         </div>
         <div class="col-sm-4">
         <div class="contributors">
             <div class="row">
                 <h4>Contributors</h4>
             </div>
-            <div class="row">
+            <div ng-repeat='user in project.authors' class="row">
                 <div class="col-md-3">
-                    <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=128px" class="img-responsive" alt="">
+                    <img src="{{user.avatar}}" class="img-responsive" alt="">
                 </div>
                 <div class="col-md-8">
                     <a href="" title="" class="contributor-name">
-                        Aaron Gunderson
+                      {{user.name}}"
                     </a>
                 </div>
             </div>
