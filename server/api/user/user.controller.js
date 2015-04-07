@@ -215,6 +215,22 @@ exports.changePassword = function(req, res, next) {
 };
 
 /**
+ * Changes a user's bio
+ */
+exports.changeBio = function(req,res){
+    var userId = req.user._id;
+    var newBio = String(req.body.bio);
+
+    User.findById(userId, function(err,user){
+        user.bio = newBio;
+        user.save(function(err){
+            if (err) return validationError(res,err);
+            res.send(200);
+        })
+    });
+};
+
+/**
  * Deactivates a user
  */
 exports.deactivate = function(req, res, next) {
@@ -284,5 +300,45 @@ exports.attendance = function(req,res){
         }
     }, function(err){
         res.send({"success":(err !== 0)});
+    });
+};
+
+/**
+ * Add an item to the tech array for a user
+ */
+exports.addTech = function(req,res){
+    var userId = req.params.id;
+    var newTech = req.body.tech;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (!user.tech) user.tech = [];
+            user.tech.push(newTech);
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
+    });
+};
+
+/**
+ * Remove an item from the tech array for a user
+ */
+exports.removeTech = function(req,res){
+    var userId = req.params.id;
+    var tech = req.body.tech;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (!user.tech) user.tech = [];
+            user.tech.splice(user.tech.indexOf(tech), 1);
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
     });
 };
