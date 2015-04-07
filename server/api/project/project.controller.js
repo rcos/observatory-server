@@ -21,6 +21,15 @@ exports.indexOld = function(req, res) {
   });
 };
 
+// Get a single project by id
+exports.showProject = function(req, res) {
+  Project.findById(req.params.projectId, function (err, project) {
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    return res.json(project);
+  });
+};
+
 // Get a single project
 exports.show = function(req, res) {
   Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
@@ -30,6 +39,7 @@ exports.show = function(req, res) {
   });
 };
 
+<<<<<<< HEAD
 // router.get('/author/:id', controller.showByAuthor);
 // Get list of author's projects
 exports.showByAuthor = function(req, res) {
@@ -40,7 +50,6 @@ exports.showByAuthor = function(req, res) {
     return res.json(200, projects);
   });
 };
-
 
 
 // Creates a new project in the DB.
