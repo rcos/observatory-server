@@ -165,7 +165,8 @@ exports.create = function (req, res, next) {
   newUser.provider = 'local';
   newUser.role = 'user';
   newUser.url = newUser.url || newUser.github.login  ;
-  request('https://github.com/'+newUser.github.login, function (error, response, body) { //TODO Switch to github api
+  newUser.github.profile_url = 'https://github.com/'+newUser.github.login
+  request(newUser.github.profile_url, function (error, response, body) { //TODO Switch to github api
     if (!error && response.statusCode == 200) {
       newUser.save(function(err, user) {
         if (err) return validationError(res, err);

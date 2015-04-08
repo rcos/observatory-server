@@ -37,7 +37,7 @@ var UserSchema = new Schema({
       date: Date
     }],
     login: {type: String, lowercase: true},
-    profile: String
+    profile_url: String
   },
   url : String
 
