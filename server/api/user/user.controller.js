@@ -5,6 +5,8 @@ var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var Commit = require('../commit/commit.model');
+var mongoose = require('mongoose');
+var request = require('request');
 
 
 var validationError = function(res, err) {
@@ -162,11 +164,21 @@ exports.create = function (req, res, next) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
-  newUser.save(function(err, user) {
-    if (err) return validationError(res, err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-    res.json({ token: token });
-  });
+  newUser.url = newUser.url || newUser.github.login  ;
+  newUser.github.profile_url = 'https://github.com/'+newUser.github.login
+  request(newUser.github.profile_url, function (error, response, body) { //TODO Switch to github api
+    if (!error && response.statusCode == 200) {
+      newUser.save(function(err, user) {
+        if (err) return validationError(res, err);
+        var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+        res.json({ token: token });
+      });
+    }
+    else{
+      return validationError(res, "Invalid Github Username");
+    }
+  })
+
 };
 
 /**
@@ -181,6 +193,47 @@ exports.show = function (req, res, next) {
     res.json(user.profile);
   });
 };
+
+
+/**
+ * Get a single user by unique url
+ */
+exports.showByUrl = function (req, res, next) {
+  var userURL = req.params.url;
+  User.findOne({'url':userURL}, function (err, user) {
+
+    if (err) return next(err);
+    if (!user){
+      User.findById(mongoose.Types.ObjectId(userURL), function (err, userById) {
+        if (err) return next(err);
+        if (!userById) return res.send(404);
+        res.json(userById.profile);
+      });
+    }
+    else{
+      res.json(user.profile);
+
+    }
+  });
+};
+
+
+/**
+ * Changes a user's url
+ */
+exports.changeUrl = function(req,res){
+    var userId = req.user._id;
+    var newUrl = String(req.body.url);
+
+    User.findById(userId, function(err,user){
+        user.url = newUrl;
+        user.save(function(err){
+            if (err) return validationError(res,err);
+            res.send(200);
+        })
+    });
+};
+
 
 /**
  * Deletes a user
@@ -223,6 +276,8 @@ exports.changeBio = function(req,res){
 
     User.findById(userId, function(err,user){
         user.bio = newBio;
+        if (err) return res.send(500, err);
+
         user.save(function(err){
             if (err) return validationError(res,err);
             res.send(200);
@@ -237,7 +292,7 @@ exports.deactivate = function(req, res, next) {
   var userId = String(req.params.id);
 
 
-  User.findOne({ '_id': userId}, function(err, user){
+  User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
 
     user.active = false;
@@ -255,7 +310,7 @@ exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
 
 
-  User.findOne({ '_id': userId}, function(err, user){
+  User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
 
     user.active = true;
@@ -271,9 +326,7 @@ exports.activate = function(req, res, next) {
  */
 exports.me = function(req, res, next) {
   var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
+  User.findById(userId, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);

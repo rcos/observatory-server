@@ -21,7 +21,8 @@
     "passport-local": "~0.1.6",
     "composable-middleware": "^0.3.0",
     "connect-mongo": "^0.4.1",
-    "MD5": ">=1.2.1"
+    "MD5": ">=1.2.1",
+    "request":"~2.55.0"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
