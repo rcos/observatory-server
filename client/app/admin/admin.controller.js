@@ -5,8 +5,8 @@ angular.module('observatory3App')
 
     if (Auth.isLoggedIn()){
       var loggedInUser = Auth.getCurrentUser();
-      $http.get('/api/users/' + loggedInUser._id).success(function(user){
-          if(!(user.role==="admin")){
+
+          if(!(loggedInUser.role==="admin")){
             $location.path('/');
           }
           else{
@@ -15,7 +15,6 @@ angular.module('observatory3App')
             $scope.users = [];
             $scope.users = User.allstats();
           }
-      });
     }
     else{
       $location.path('/');
