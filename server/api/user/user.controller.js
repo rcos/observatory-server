@@ -236,7 +236,6 @@ exports.changeBio = function(req,res){
 exports.deactivate = function(req, res, next) {
   var userId = String(req.params.id);
 
-
   User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
 
@@ -253,7 +252,6 @@ exports.deactivate = function(req, res, next) {
  */
 exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
-
 
   User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
