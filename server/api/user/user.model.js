@@ -49,7 +49,6 @@ UserSchema
     this._password = password;
     this.salt = this.makeSalt();
     this.hashedPassword = this.encryptPassword(password);
-    this.avatar = makeAvatar(this.email);
   })
   .get(function() {
     return this._password;
@@ -191,6 +190,8 @@ var validatePresenceOf = function(value) {
  */
 UserSchema
   .pre('save', function(next) {
+    this.avatar = makeAvatar(this.email);
+
     if (!this.isNew) return next();
     if (!validatePresenceOf(this.hashedPassword))
       next(new Error('Invalid password'));
