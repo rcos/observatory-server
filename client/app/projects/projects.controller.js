@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, Auth, $http,  $location) {
+.controller('ProjectsCtrl', function ($scope, Auth, $http) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true};
     $scope.currentUser = Auth.getCurrentUser();

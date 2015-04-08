@@ -164,7 +164,6 @@ exports.create = function (req, res, next) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
-  newUser.url = newUser.url || newUser.github.login  ;
   newUser.github.profile_url = 'https://github.com/'+newUser.github.login
   request(newUser.github.profile_url, function (error, response, body) { //TODO Switch to github api
     if (!error && response.statusCode == 200) {
@@ -196,44 +195,26 @@ exports.show = function (req, res, next) {
 
 
 /**
- * Get a single user by unique url
+ * Get a single user by github name or id
  */
-exports.showByUrl = function (req, res, next) {
-  var userURL = req.params.url;
-  User.findOne({'url':userURL}, function (err, user) {
+exports.showByName = function (req, res, next) {
+  var param = req.params.url;
+  User.findOne({'github.login':param}, function (err, userByName) {
 
     if (err) return next(err);
-    if (!user){
-      User.findById(mongoose.Types.ObjectId(userURL), function (err, userById) {
+    if (!userByName){
+      User.findById(mongoose.Types.ObjectId(param), function (err, userById) {
         if (err) return next(err);
         if (!userById) return res.send(404);
         res.json(userById.profile);
       });
     }
     else{
-      res.json(user.profile);
+      res.json(userByName.profile);
 
     }
   });
 };
-
-
-/**
- * Changes a user's url
- */
-exports.changeUrl = function(req,res){
-    var userId = req.user._id;
-    var newUrl = String(req.body.url);
-
-    User.findById(userId, function(err,user){
-        user.url = newUrl;
-        user.save(function(err){
-            if (err) return validationError(res,err);
-            res.send(200);
-        })
-    });
-};
-
 
 /**
  * Deletes a user

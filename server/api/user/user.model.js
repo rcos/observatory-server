@@ -33,14 +33,11 @@ var UserSchema = new Schema({
       type: String,
       action: String,
       message: String,
-      url: String,
       date: Date
     }],
     login: {type: String, lowercase: true},
     profile_url: String
-  },
-  url : String
-
+  }
 });
 
 /**
@@ -90,9 +87,8 @@ UserSchema
       "attendanceBonus": 12,
       'tech': this.tech,
       'bio': this.bio,
-      'githubProfile': this.github.login,
-      'url':this.url || this._id.toString('binary'),
-    };
+      'githubProfile': this.github.login
+      };
   });
 
 // User list information
@@ -116,9 +112,7 @@ UserSchema
       'name': this.name,
       'role': this.role,
       'avatar': this.avatar,
-      'githubProfile': this.github.login,
-      'url':this.url || this._id.toString('binary'),
-
+      'githubProfile': this.github.login
     };
   });
 
@@ -164,28 +158,6 @@ UserSchema
       respond(true);
     });
 }, 'The specified email address is already in use.');
-
-// Validate empty url
-UserSchema
-  .path('url')
-  .validate(function(url) {
-    return url.length;
-  }, 'User URL cannot be blank');
-
-// Validate url is not taken
-UserSchema
-  .path('url')
-  .validate(function(value, respond) {
-    var self = this;
-    this.constructor.findOne({url: value}, function(err, user) {
-      if(err) throw err;
-      if(user) {
-        if(self.id === user.id) return respond(true);
-        return respond(false);
-      }
-      respond(true);
-    });
-}, 'The specified url address is already in use.');
 
 // Validate empty github.login
 UserSchema
