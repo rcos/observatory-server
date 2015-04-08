@@ -198,16 +198,23 @@ exports.show = function (req, res, next) {
  * Get a single user by github name or id
  */
 exports.showByName = function (req, res, next) {
-  var param = req.params.url;
+  var param = req.params.url.toLowerCase();
   User.findOne({'github.login':param}, function (err, userByName) {
 
     if (err) return next(err);
     if (!userByName){
-      User.findById(mongoose.Types.ObjectId(param), function (err, userById) {
-        if (err) return next(err);
-        if (!userById) return res.send(404);
-        res.json(userById.profile);
-      });
+      try{
+        var id = mongoose.Types.ObjectId(param);
+        User.findById(mongoose.Types.ObjectId(param), function (err, userById) {
+          if (err) return next(err);
+          if (!userById) return res.send(404);
+          res.json(userById.profile);
+        });
+      }
+      catch(tryErr){
+        return res.send(404);
+      }
+
     }
     else{
       res.json(userByName.profile);
