@@ -7,7 +7,8 @@
           <h1>{{ project.name }}</h1>
         </div>
         <div class="col-sm-5 header-buttons text-right">
-            <a class="btn btn-success" href="#" title="">Join Project</a>
+            <a ng-show="!isAuthor" class="btn btn-success" href="#" title="">Join Project</a>
+            <a ng-show="isAuthor" class="btn btn-warning" href="#" title="">Leave Project</a>
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
             <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
             <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
