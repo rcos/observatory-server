@@ -191,7 +191,6 @@ var validatePresenceOf = function(value) {
 UserSchema
   .pre('save', function(next) {
     this.avatar = makeAvatar(this.email);
-
     if (!this.isNew) return next();
     if (!validatePresenceOf(this.hashedPassword))
       next(new Error('Invalid password'));
