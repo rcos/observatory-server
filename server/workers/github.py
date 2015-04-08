@@ -2,6 +2,7 @@ import requests
 import os
 from datetime import datetime
 import dateutil.parser
+import re
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -29,8 +30,20 @@ def parseCommit(commitData):
         commit['author']['login'] = commitData['author']['login']
         commit['author']['id'] = commitData['author']['id']
     commit['date'] = dateutil.parser.parse(commitData['commit']['committer']['date'])
-    user = db.users.find_one({'github.login': commit['author']['login']})
+    
+    projectUrl = commitData['html_url']
+    projectUrl = projectUrl.split('/')
 
+    username = projectUrl[3]
+    projectName = projectUrl[4]
+    print username, projectName
+    project = db.projects.find_one({'githubUsername': re.compile(username, re.IGNORECASE), 'githubProjectName': re.compile(projectName, re.IGNORECASE)})
+    if project:
+        commit['projectId'] = str(project['_id'])
+    else:
+        commit['projectId'] = ''
+
+    user = db.users.find_one({'github.login': commit['author']['login']})
     if user:
         userId = user['_id']
         commit['userId'] = str(ObjectId(user['_id']))
@@ -85,7 +98,6 @@ def getUserEvents(user):
     eventData = r.json()
 
     for event in eventData:
-        print event
         try:
             if event['type'] == 'PushEvent':
                 # User pushed code
@@ -219,17 +231,8 @@ def getProjectCollaborators(owner, projectName):
         print name + ',' + username
     print count
 
-def getUserGravatar(user):
-    path = HOST + '/users/%s'%(user['github']['login'])
-    events = []
-    r = requests.get(path, params=PAYLOAD, headers=headers)
-    userData = r.json()
-    avatar_url =  userData['avatar_url']
-    db.users.update({'_id': user['_id']}, {'$set': {'avatar': avatar_url}})
-
 def updateUser(user):
     getUserEvents(user)
-    getUserGravatar(user)
 
 if __name__ == '__main__':
     users = db.users.find({'github.login': {'$exists': True}})
