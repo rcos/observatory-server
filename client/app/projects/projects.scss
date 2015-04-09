@@ -68,14 +68,6 @@ h2 {
     clear: both;
 }
 
-.css-form .ng-invalid.ng-touched {
-    border-color: #FA787E;
-}
-
-.css-form .ng-valid.ng-touched {
-    border-color: #78FA89;
-}
-
 #header button {
     float: right;
     margin-left: 10px;
@@ -127,4 +119,23 @@ h2 {
 
 .bottom-bar a:hover {
     color: black;
+}
+
+#repositoryUrl {
+    width: 78%;
+    display: inline;
+    margin-bottom: 15px;
+}
+
+#getInfo {
+    width: 20%;
+    float: right;
+}
+
+#active {
+    width: auto;
+    display: inline;
+    position: absolute;
+    margin-left: 10px;
+    margin-top: -7px;
 }

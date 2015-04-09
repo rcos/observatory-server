@@ -26,16 +26,75 @@
                     <h4 class="modal-title" id="addProjectLabel">Add a Project</h4>
                 </div>
                 <div class="modal-body" >
-                    <form novalidate name="addProjectForm" class="css-form">
-                        <input ng-model="projectToAdd.name" class="form-control addForm" placeholder="Name of the project" title="Name" required=""/><br/>
-                        <input type="url" ng-model="projectToAdd.websiteUrl" class="form-control" placeholder="Your project's homepage" title="Website" required=""/><br/>
-                        <input ng-model="projectToAdd.githubUsername" class="form-control addForm" placeholder="Project owner's github username" title="Username" required=""/><br/>
-                        <input ng-model="projectToAdd.githubProjectName" class="form-control addForm" placeholder="Github project name" title="Project" required=""/><br/>
-                        <textarea ng-model="projectToAdd.description" class="form-control" placeholder="Describe your project" title="Description" required=""></textarea><br/>
-                        Active? <input type="checkbox" ng-model="projectToAdd.active" /> <br/><br/>
+                    <label>Your project's github URL</label>
+                    <form ng-submit="getInfo()">
+                        <input id="repositoryUrl" ng-model="projectToAdd.repositoryUrl" class="form-control" />
+                        <button id="getInfo" type="submit" class="btn btn-default" >Auto-Complete</button>
+                    </form>
+
+                    <form class="form" name="addProjectForm" ng-submit="submit(addProjectForm)" novalidate>
+
+                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.name.$valid && submitted,
+                        'has-error': addProjectForm.name.$invalid && submitted }">
+                            <label>Name of the project</label>
+
+                            <input type="text" name="name" class="form-control" ng-model="projectToAdd.name" required/>
+                            <p class="help-block" ng-show="addProjectForm.name.$error.required && submitted">
+                            A name is required
+                            </p>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.websiteUrl.$valid && submitted,
+                        'has-error': addProjectForm.websiteUrl.$invalid && submitted }">
+                            <label>Your project's homepage</label>
+
+                            <input type="url" name="websiteUrl" class="form-control" ng-model="projectToAdd.websiteUrl" required />
+                            <p class="help-block" ng-show="addProjectForm.websiteUrl.$error.url && submitted">
+                            Doesn't look like a valid url.
+                            </p>
+                            <p class="help-block" ng-show="addProjectForm.websiteUrl.$error.required && submitted">
+                            Project homepage is required
+                            </p>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
+                        'has-error': addProjectForm.githubUsername.$invalid && submitted }">
+                            <label>Project owner's github username</label>
+
+                            <input type="text" name="githubUsername" class="form-control" ng-model="projectToAdd.githubUsername" required/>
+                            <p class="help-block" ng-show="addProjectForm.githubUsername.$error.required && submitted">
+                            The project owner's github username is required
+                            </p>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
+                        'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
+                            <label>Github project name</label>
+
+                            <input type="text" name="githubProjectName" class="form-control" ng-model="projectToAdd.githubProjectName" required/>
+                            <p class="help-block" ng-show="addProjectForm.githubProjectName.$error.required && submitted">
+                            The project's github name is required
+                            </p>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.description.$valid && submitted,
+                        'has-error': addProjectForm.description.$invalid && submitted }">
+                            <label>Describe your project</label>
+
+                            <textarea name="description" class="form-control" ng-model="projectToAdd.description" required></textarea>
+                            <p class="help-block" ng-show="addProjectForm.description.$error.required && submitted">
+                            The project's description is required
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Is this project active?</label>
+                            <input id="active" type="checkbox" class="form-control" ng-model="projectToAdd.active">
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <input type="submit" ng-click="addProjectForm.$valid && submit(addProjectForm)" class="btn btn-primary" />
+                            <input type="submit" class="btn btn-primary" />
                         </div>
                     </form>
                 </div>
