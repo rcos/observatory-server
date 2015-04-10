@@ -339,18 +339,37 @@ exports.authCallback = function(req, res, next) {
  */
 exports.attendance = function(req,res){
     var userId = req.params.id;
-    var result = User.update({
-        _id: userId
-    },{
-        $push: {
-            attendance: new Date()
-        }
-    }, function(err, user){
-        if (err) return res.send(500, err);
-        if (!user){return UserNotFoundError(res);}
+    var userCode = req.body.code;
 
-        res.send({"success":(err !== 0)});
-    });
+    if (!userCode || userCode.toUpperCase() != process.env.RCOSDAYCODE.toUpperCase()){
+
+        res.send(500, "Day Code Incorrect!");
+
+    }else{
+
+        var result = User.update({
+            _id: userId
+        },{
+            $push: {
+                attendance: new Date()
+            }
+        }, function(err){
+            if (err) return res.send(500, err);
+            if (!user){return UserNotFoundError(res);}
+
+            res.send({"success":(err !== 0)});
+
+        });
+    }
+};
+
+/**
+ * Set the attendance day code
+ */
+exports.setAttendance = function(req,res){
+     var userCode = req.body.code;
+     process.env.RCOSDAYCODE = userCode;
+     res.send(204);
 };
 
 /**

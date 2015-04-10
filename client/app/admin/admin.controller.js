@@ -55,6 +55,7 @@ angular.module('observatory3App')
           });
           }
     });
+
   }
 
     $scope.sortorder = 'name';
@@ -65,5 +66,15 @@ angular.module('observatory3App')
       } else{
         $scope.sortorder = field;
       }
+    };
+
+    $scope.setAttendance = function(attendanceCode){
+        $http.put("/api/users/setAttendance", {
+            "code": attendanceCode
+        }).success(function(){
+            alert("yea");
+        }).error(function(){
+            alert("Error in setting");
+        });
     };
   });

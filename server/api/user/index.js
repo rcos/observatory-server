@@ -24,5 +24,7 @@ router.get("/:id/attendance", auth.canEdit(), controller.attendance);
 router.put('/:id/bio', auth.canEdit(), controller.changeBio);
 router.put("/:id/addTech", auth.canEdit(), controller.addTech);
 router.put("/:id/removeTech", auth.canEdit(), controller.removeTech);
+router.put("/setAttendance", auth.hasRole('admin'), controller.setAttendance);
+
 
 module.exports = router;

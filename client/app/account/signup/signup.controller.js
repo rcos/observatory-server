@@ -15,7 +15,10 @@ angular.module('observatory3App')
           github: {
             login: $scope.user.githubLogin,
           },
-          password: $scope.user.password
+          rin: parseInt($scope.user.rin),
+          rcsId: $scope.user.rcs,
+          semesterCount: parseInt($scope.user.semesters),
+          password: $scope.user.password,
         })
         .then( function() {
           // Account created, redirect to home
@@ -23,6 +26,7 @@ angular.module('observatory3App')
         })
         .catch( function(err) {
           err = err.data;
+          console.log(err);
           $scope.errors = {};
 
           // Update validity of form fields that match the mongoose errors
