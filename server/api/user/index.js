@@ -20,7 +20,7 @@ router.put('/:id/deactivate', auth.isAuthenticated(), controller.deactivate);
 router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
-router.get("/:id/attendance", auth.canEdit(), controller.attendance);
+router.put("/:id/attendance", auth.canEdit(), controller.attendance);
 router.put('/:id/bio', auth.canEdit(), controller.changeBio);
 router.put("/:id/addTech", auth.canEdit(), controller.addTech);
 router.put("/:id/removeTech", auth.canEdit(), controller.removeTech);

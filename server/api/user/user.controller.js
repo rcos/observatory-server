@@ -340,8 +340,14 @@ exports.authCallback = function(req, res, next) {
 exports.attendance = function(req,res){
     var userId = req.params.id;
     var userCode = req.body.code;
+    console.log("userCode",userCode);
+    console.log("process.env.RCOSDAYCODE",process.env.RCOSDAYCODE);
+    if (! process.env.RCOSDAYCODE){
 
-    if (!userCode || userCode.toUpperCase() != process.env.RCOSDAYCODE.toUpperCase()){
+        res.send(500, "No day code yet!");
+
+    }
+    else if (!userCode || userCode.toUpperCase() != process.env.RCOSDAYCODE.toUpperCase()){
 
         res.send(500, "Day Code Incorrect!");
 
@@ -355,8 +361,6 @@ exports.attendance = function(req,res){
             }
         }, function(err){
             if (err) return res.send(500, err);
-            if (!user){return UserNotFoundError(res);}
-
             res.send({"success":(err !== 0)});
 
         });
@@ -368,7 +372,11 @@ exports.attendance = function(req,res){
  */
 exports.setAttendance = function(req,res){
      var userCode = req.body.code;
+
      process.env.RCOSDAYCODE = userCode;
+
+     console.log("process.env.RCOSDAYCODE",process.env.RCOSDAYCODE);
+
      res.send(204);
 };
 

@@ -22,11 +22,14 @@ angular.module('observatory3App')
             if(status === 404 && data === "User not found"){
                 $location.path('/users');
             }
+            if(status === 500){
+                $location.path('/users');
+            }
         });
     }
 
     $scope.edittingBio = false;
-    
+
     $scope.editBio = function(){
         $scope.edittingBio = !$scope.edittingBio;
     };
@@ -69,12 +72,12 @@ angular.module('observatory3App')
     };
 
     $scope.markAttendance = function(code){
-        $http.put("/api/users/" + $stateParams.id + "/attendance", {
+        $http.put("/api/users/" +  $scope.user._id + "/attendance", {
             "code": code
         }).success(function(){
             alert("Attendance added!");
             updateUser();
-        }).error(function(){
+        }).error(function(data){
             alert("Invalid Attendance Code!");
         });
     };
