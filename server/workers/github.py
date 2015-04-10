@@ -36,11 +36,14 @@ def parseCommit(commitData):
 
     username = projectUrl[3]
     projectName = projectUrl[4]
-    print username, projectName
+    print username, projectName,
     project = db.projects.find_one({'githubUsername': re.compile(username, re.IGNORECASE), 'githubProjectName': re.compile(projectName, re.IGNORECASE)})
     if project:
         commit['projectId'] = str(project['_id'])
+        print  str(project['_id'])
+
     else:
+        print
         commit['projectId'] = ''
 
     user = db.users.find_one({'github.login': commit['author']['login']})

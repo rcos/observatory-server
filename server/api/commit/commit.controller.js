@@ -58,7 +58,7 @@ exports.destroy = function(req, res) {
 // Show a list of a projects Commits
 // Get a single commit
 exports.showProjectCommits = function(req, res) {
-  Commit.find({projectId: req.params.projectId})
+  Commit.find({'projectId': req.params.projectId.toString()})
   .sort('-date')
   .exec(function (err, commits) {
     if(err) { return handleError(res, err); }
