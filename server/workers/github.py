@@ -11,7 +11,7 @@ MONGO_URL = 'mongodb://localhost/'
 
 HOST = 'https://api.github.com'
 PAYLOAD = {'client_id': os.environ['GITHUBCLIENTID'],
-    'client_secret': os.environ['GITHUBCLIENTSECRET'], 
+    'client_secret': os.environ['GITHUBCLIENTSECRET'],
     'per_page': 100}
 headers = {'content-type': 'application/json'}
 
@@ -30,7 +30,7 @@ def parseCommit(commitData):
         commit['author']['login'] = commitData['author']['login']
         commit['author']['id'] = commitData['author']['id']
     commit['date'] = dateutil.parser.parse(commitData['commit']['committer']['date'])
-    
+
     projectUrl = commitData['html_url']
     projectUrl = projectUrl.split('/')
 
@@ -65,7 +65,7 @@ def getCommits(userName, repositoryName, since=None):
     while True:
         r = requests.get(path, params=PAYLOAD, headers=headers)
         commitsData = r.json()
-        
+
         for com in commitsData:
             commit = parseCommit(com)
 
@@ -125,7 +125,7 @@ def getUserEvents(user):
                 newEvent['message'] = event['payload']['comment']['body']
                 newEvent['url'] = event['payload']['comment']['html_url']
                 newEvent['date'] = dateutil.parser.parse(event['payload']['comment']['created_at'])
-                
+
                 events.append(newEvent)
             elif event['type'] == 'PullRequestEvent':
                 # Events that are pull requests
@@ -139,7 +139,7 @@ def getUserEvents(user):
                     newEvent['date'] = dateutil.parser.parse(event['payload']['pull_request']['closed_at'])
                 elif newEvent['action'] == 'opened':
                     newEvent['date'] = dateutil.parser.parse(event['payload']['pull_request']['created_at'])
-                            
+
                 events.append(newEvent)
             elif event['type'] == 'IssuesEvent':
                 # IssuesEvent processing
@@ -153,7 +153,7 @@ def getUserEvents(user):
                     newEvent['date'] = dateutil.parser.parse(event['payload']['issue']['closed_at'])
                 elif newEvent['action'] == 'opened':
                     newEvent['date'] = dateutil.parser.parse(event['payload']['issue']['created_at'])
-                            
+
                 events.append(newEvent)
             elif event['type'] == 'CreateEvent':
                 # CreateEvent ignored
@@ -192,16 +192,16 @@ def createUser(name, username):
 def getProjectCollaborators(owner, projectName):
     path = HOST + '/repos/%s/%s/commits'%(owner, projectName)
 
-    users = {} 
+    users = {}
     count = 0
     while True:
         r = requests.get(path, params=PAYLOAD, headers=headers)
         commitsData = r.json()
-        
+
         for comData in commitsData:
             count += 1
             if comData['author']:
-                    
+
                 login =  comData['author']['login']
                 name = comData['commit']['author']['name']
                 users[login] = name
@@ -242,9 +242,9 @@ if __name__ == '__main__':
 
     for project in db.projects.find({}):
         if project['repositoryType'] == 'github':
-            userName = project['githubUsername'] 
+            userName = project['githubUsername']
             projectName = project['githubProjectName']
-            
+
             if 'lastChecked' in project:
                 since = project['lastChecked']
                 getCommits(userName, projectName, since)

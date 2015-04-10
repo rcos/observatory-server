@@ -66,8 +66,9 @@
             </div>
             <div class='content-box'>
                 <div class='content-title'>Commits</div>
-                <div ng-repeat='event in user.github.events' class='commit'>
-                    <a href='{{event.url}}'>{{event.message}}</a>
+                <div ng-repeat='commit in user.commits' class='commit'>
+                    <a href='{{commit.url}}'>{{commit.message}}</a>
+                    {{commit}}
                 </div>
             </div>
         </div>

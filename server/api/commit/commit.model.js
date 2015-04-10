@@ -6,15 +6,15 @@ var mongoose = require('mongoose'),
 var CommitSchema = new Schema({
   url: String,
   sha: {
-    type: String, 
-    unique: true, 
+    type: String,
+    unique: true,
     index: true,
   },
-  userId: { type: String, index: true},
-  projectId: {type: String, index: true},
+  userId: {type : Schema.Types.ObjectId, ref: 'User', index: true},
+  projectId: {type : Schema.Types.ObjectId, ref: 'Project', index: true},
   author: {
     login: {type: String, lowercase: true},
-    id: {type: Number} 
+    id: {type : Schema.Types.ObjectId, ref: 'User'},
   },
   branch: String,
   message: String,
