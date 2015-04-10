@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class='col-md-6'>
-            <div class='tech-boxes'>
+            <div class='tech-boxes' ng-show='isuser || user.tech.size()'>
                 <div ng-repeat="tech in user.tech track by $index">
                     {{tech}}
                     <button ng-show='isuser' class='btn btn-default btn-xs' ng-click='removeTech(tech)'>x</button>
@@ -66,8 +66,8 @@
             </div>
             <div class='content-box'>
                 <div class='content-title'>Commits</div>
-                <div ng-repeat='event in user.github.events' class='commit'>
-                    <a href='{{event.url}}'>{{event.message}}</a>
+                <div ng-repeat='commit in user.commits' class='commit'>
+                    <a href='{{commit.url}}'>{{commit.message}}</a>
                 </div>
             </div>
         </div>

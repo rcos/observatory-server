@@ -10,7 +10,7 @@ angular.module('observatory3App')
     $scope.pageSize = 48;
 
     $scope.currentView = 'Active Developers'
-
+    
     $scope.numberOfPages=function(){
         return Math.ceil($scope.users.length/$scope.pageSize);
     }
@@ -40,7 +40,7 @@ angular.module('observatory3App')
     })
   .filter('startFrom', function() {
     return function(input, start) {
-        start = +start; //parse to int
+        start =+ start; //parse to int
         return input.slice(start);
     }
 });

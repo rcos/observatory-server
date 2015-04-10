@@ -5,6 +5,8 @@ var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var Commit = require('../commit/commit.model');
+var mongoose = require('mongoose');
+var request = require('request');
 
 
 var validationError = function(res, err) {
@@ -162,11 +164,20 @@ exports.create = function (req, res, next) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
-  newUser.save(function(err, user) {
-    if (err) return validationError(res, err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-    res.json({ token: token });
-  });
+  newUser.github.profile_url = 'https://github.com/'+newUser.github.login
+  request(newUser.github.profile_url, function (error, response, body) { //TODO Switch to github api
+    if (!error && response.statusCode == 200) {
+      newUser.save(function(err, user) {
+        if (err) return validationError(res, err);
+        var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+        res.json({ token: token });
+      });
+    }
+    else{
+      return validationError(res, "Invalid Github Username");
+    }
+  })
+
 };
 
 /**
@@ -177,8 +188,38 @@ exports.show = function (req, res, next) {
 
   User.findById(userId, function (err, user) {
     if (err) return next(err);
-    if (!user) return res.send(404);
+    if (!user){ return UserNotFoundError(res);}
     res.json(user.profile);
+  });
+};
+
+
+/**
+ * Get a single user by github name or id
+ */
+exports.showByName = function (req, res, next) {
+  var param = req.params.url.toLowerCase();
+  User.findOne({'github.login':param}, function (err, userByName) {
+
+    if (err) return next(err);
+    if (!userByName){
+      try{
+        var id = mongoose.Types.ObjectId(param);
+        User.findById(mongoose.Types.ObjectId(param), function (err, userById) {
+          if (err) return next(err);
+          if (!userById){ return UserNotFoundError(res);}
+          res.json(userById.profile);
+        });
+      }
+      catch(tryErr){
+        return UserNotFoundError(res);
+      }
+
+    }
+    else{
+      res.json(userByName.profile);
+
+    }
   });
 };
 
@@ -189,6 +230,7 @@ exports.show = function (req, res, next) {
 exports.destroy = function(req, res) {
   User.findByIdAndRemove(req.params.id, function(err, user) {
     if(err) return res.send(500, err);
+    if(!user) {return UserNotFoundError(res);}
     return res.send(204);
   });
 };
@@ -202,6 +244,8 @@ exports.changePassword = function(req, res, next) {
   var newPass = String(req.body.newPassword);
 
   User.findById(userId, function (err, user) {
+    if (err) return res.send(500, err);
+    if (!user){return UserNotFoundError(res);}
     if(user.authenticate(oldPass)) {
       user.password = newPass;
       user.save(function(err) {
@@ -222,7 +266,11 @@ exports.changeBio = function(req,res){
     var newBio = String(req.body.bio);
 
     User.findById(userId, function(err,user){
+        if (err) return res.send(500, err);
+        if (!user){return UserNotFoundError(res);}
         user.bio = newBio;
+        if (err) return res.send(500, err);
+
         user.save(function(err){
             if (err) return validationError(res,err);
             res.send(200);
@@ -236,8 +284,9 @@ exports.changeBio = function(req,res){
 exports.deactivate = function(req, res, next) {
   var userId = String(req.params.id);
 
-  User.findOne({ '_id': userId}, function(err, user){
+  User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
+    if (!user){return UserNotFoundError(res);}
 
     user.active = false;
     user.save(function(err){
@@ -253,8 +302,10 @@ exports.deactivate = function(req, res, next) {
 exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
 
-  User.findOne({ '_id': userId}, function(err, user){
+
+  User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
+    if (!user){return UserNotFoundError(res);}
 
     user.active = true;
     user.save(function(err){
@@ -269,11 +320,9 @@ exports.activate = function(req, res, next) {
  */
 exports.me = function(req, res, next) {
   var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
+  User.findById(userId, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
-    if (!user) return res.json(401);
+    if (!user){return UserNotFoundError(res);}
     res.json(user);
   });
 };
@@ -296,7 +345,10 @@ exports.attendance = function(req,res){
         $push: {
             attendance: new Date()
         }
-    }, function(err){
+    }, function(err, user){
+        if (err) return res.send(500, err);
+        if (!user){return UserNotFoundError(res);}
+
         res.send({"success":(err !== 0)});
     });
 };
@@ -308,9 +360,10 @@ exports.addTech = function(req,res){
     var userId = req.params.id;
     var newTech = req.body.tech;
     User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
+        if (err){ res.send(500, err);}
+        else if (!user){return UserNotFoundError(res);}
+
+        else{
             if (!user.tech) user.tech = [];
             user.tech.push(newTech);
             user.save(function(err) {
@@ -328,9 +381,9 @@ exports.removeTech = function(req,res){
     var userId = req.params.id;
     var tech = req.body.tech;
     User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
+        if (err){ res.send(500, err);}
+        else if (!user){return UserNotFoundError(res);}
+        else{
             if (!user.tech) user.tech = [];
             user.tech.splice(user.tech.indexOf(tech), 1);
             user.save(function(err) {
@@ -340,3 +393,6 @@ exports.removeTech = function(req,res){
         }
     });
 };
+function UserNotFoundError(res) {
+  return res.status(404).send("User not found");
+}

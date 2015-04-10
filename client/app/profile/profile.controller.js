@@ -1,17 +1,27 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth) {
+  .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth, $location) {
 
       var loggedInUser = Auth.getCurrentUser();
-      $scope.isuser = loggedInUser._id == $stateParams.id;
 
-      $http.get('/api/users/' + $stateParams.id).success(function(user){
+      $http.get('/api/users/profile/' + $stateParams.userUrl).success(function(user){
           $scope.user = user;
           $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
               $scope.user.commits = commits;
           });
-      });
+          $http.get('/api/projects/author/' + user._id).success(function(projects){
+              $scope.user.projects = projects;
+          });
+
+          $scope.isuser = loggedInUser._id == user._id;
+      })
+      .error(function(data, status, headers, config){
+           // Redirect bad user names
+           if(status === 404 && data === "User not found"){
+               $location.path('/users');
+           }
+       });
 
       $scope.edittingBio = false;
 
@@ -21,11 +31,14 @@ angular.module('observatory3App')
 
       $scope.saveBio = function(){
           $scope.edittingBio = false;
-          $http.put("/api/users/" + $stateParams.id + "/bio", {
+          $http.put("/api/users/" + $scope.user._id + "/bio", {
               "bio": $scope.user.bio
           }).success(function(){
               alert("Bio updated!");
-          }).error(function(){
+              $http.get('/api/users/profile/' + $stateParams.userUrl).success(function(user){
+                  $scope.user.bio = user.bio;
+                });
+          }).error(function(err){
               alert("Could not update bio!");
           });
       };
@@ -44,12 +57,12 @@ angular.module('observatory3App')
       };
 
       $scope.removeTech = function(tech){
-          $http.put("/api/users/" + $stateParams.id + "/removeTech", {
+          $http.put("/api/users/" + $scope.user._id + "/removeTech", {
               "tech": tech
           }).success(function(){
               $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
           }).error(function(){
-              alert("Could not add tech!");
+              alert("Could not remove tech!");
           });
       };
 

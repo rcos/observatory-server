@@ -13,9 +13,9 @@ var ProjectSchema = new Schema({
   githubUsername: {type: String, index: true},
   githubProjectName: {type: String, index: true},
   lastChecked: {type: Date},
-  authors: [String],
+  authors: [{type : Schema.Types.ObjectId, ref: 'User'}],
   photos: [String],
-  mentor: String,
+  mentor: {type : Schema.Types.ObjectId, ref: 'User'},
   active: {type: Boolean, default: true}
 });
 
