@@ -6,26 +6,51 @@ angular.module('observatory3App')
 
     function updateUser(){
         var loggedInUser = Auth.getCurrentUser();
-        $http.get('/api/users/profile/' + $stateParams.userUrl).success(function(user){
-            $scope.user = user;
-            $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
-                $scope.user.commits = commits;
-            });
-            $http.get('/api/projects/author/' + user._id).success(function(projects){
-                $scope.user.projects = projects;
-            });
+        if (loggedInUser.github.login == $stateParams.userUrl){
+            $http.get('/api/users/me').success(function(user){
+                $scope.user = user;
+                $http.get('/api/commits/user/' + user.github.login).success(function(commits){
+                    $scope.user.commits = commits;
+                });
+                $http.get('/api/projects/author/' + user._id).success(function(projects){
+                    $scope.user.projects = projects;
+                });
 
-            $scope.isuser = loggedInUser._id == user._id;
-        })
-        .error(function(data, status, headers, config){
-            // Redirect bad user names
-            if(status === 404 && data === "User not found"){
-                $location.path('/users');
-            }
-            if(status === 500){
-                $location.path('/users');
-            }
-        });
+                $scope.isuser = loggedInUser._id == user._id;
+            })
+            .error(function(data, status, headers, config){
+                // Redirect bad user names
+                if(status === 404 && data === "User not found"){
+                    $location.path('/users');
+                }
+                if(status === 500){
+                    $location.path('/users');
+                }
+            });
+        }
+        else{
+            $http.get('/api/users/profile/' + $stateParams.userUrl).success(function(user){
+                $scope.user = user;
+                $http.get('/api/commits/user/' + user.github.login).success(function(commits){
+                    $scope.user.commits = commits;
+                });
+                $http.get('/api/projects/author/' + user._id).success(function(projects){
+                    $scope.user.projects = projects;
+                });
+
+                $scope.isuser = loggedInUser._id == user._id;
+            })
+            .error(function(data, status, headers, config){
+                // Redirect bad user names
+                if(status === 404 && data === "User not found"){
+                    $location.path('/users');
+                }
+                if(status === 500){
+                    $location.path('/users');
+                }
+            });
+        }
+
     }
 
     $scope.edittingBio = false;

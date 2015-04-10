@@ -33,7 +33,7 @@ exports.showProject = function(req, res) {
 // Get a single project
 exports.show = function(req, res) {
   Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project })
-  .populate('authors')
+  .populate('authors', '-hashedPassword -salt -github.events -attendance -tech')
   .exec(function (err, project) {
     if(err) { return handleError(res, err); }
     if(!project) { return ProjectNotFoundError(res); }

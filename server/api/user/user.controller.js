@@ -17,7 +17,7 @@ var validationError = function(res, err) {
  * Get list of users
  */
 exports.index = function(req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
+  User.find({},'-hashedPassword -salt -github.events -attendance -tech', function (err, users) {
     if(err) return res.send(500, err);
     res.json(200, users);
   });
@@ -30,7 +30,7 @@ exports.index = function(req, res) {
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-hashedPassword -salt -github.events -attendance' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
@@ -70,7 +70,7 @@ exports.stats = function(req, res) {
  */
 exports.allStats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
+  User.find({'github.login': {$exists: true}}, '-hashedPassword -salt -github.events -attendance' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
@@ -119,7 +119,7 @@ exports.allStats = function(req, res) {
  */
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-hashedPassword -salt -attendance -tech', function (err, users) {
     if(err) return res.send(500, err);
     var userInfo = [];
 
@@ -134,7 +134,7 @@ exports.list = function(req, res) {
  * Get list of all past users
  */
 exports.past = function(req, res) {
-  User.find({active: false}, '-salt -hashedPassword', function (err, users) {
+  User.find({active: false}, '-hashedPassword -salt -github.events -attendance -tech', function (err, users) {
     if(err) return res.send(500, err);
       var userInfo = [];
 
@@ -186,7 +186,7 @@ exports.create = function (req, res, next) {
 exports.show = function (req, res, next) {
   var userId = req.params.id;
 
-  User.findById(userId, function (err, user) {
+  User.findById(userId, '-hashedPassword -salt -attendance', function (err, user) {
     if (err) return next(err);
     if (!user){ return UserNotFoundError(res);}
     res.json(user.profile);
@@ -199,7 +199,7 @@ exports.show = function (req, res, next) {
  */
 exports.showByName = function (req, res, next) {
   var param = req.params.url.toLowerCase();
-  User.findOne({'github.login':param}, function (err, userByName) {
+  User.findOne({'github.login':param}, '-hashedPassword -salt -github.events -tech', function (err, userByName) {
 
     if (err) return next(err);
     if (!userByName){
@@ -323,7 +323,7 @@ exports.me = function(req, res, next) {
   User.findById(userId, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user){return UserNotFoundError(res);}
-    res.json(user);
+    res.json(user.info);
   });
 };
 

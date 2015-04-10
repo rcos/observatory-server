@@ -78,29 +78,63 @@ UserSchema
     return {
       '_id':this._id.toString('binary'),
       'name': this.name,
+      'email': this.email,
+      'active': this.active,
       'role': this.role,
       'avatar': this.avatar || makeAvatar(this.email),
-      'email': this.email,
-      'semesters': this.semesterCount,
-      'attendance': this.attendance,
-      "attendanceScore": 88,
-      "attendanceBonus": 12,
+      'semesterCount': this.semesterCount,
       'tech': this.tech,
       'bio': this.bio,
-      'githubProfile': this.github.login
+      'github': {
+          login: this.github.login,
+          profile_url: this.github.profile_url,
+          events: this.github.events
+      }
       };
   });
+
+  // Public profile information
+  UserSchema
+    .virtual('info')
+    .get(function() {
+      var twoWeeks = new Date();
+      twoWeeks.setDate(twoWeeks.getDate()-14);
+      return {
+        '_id':this._id.toString('binary'),
+        'name': this.name,
+        'email': this.email,
+        'active': this.active,
+        'role': this.role,
+        'avatar': this.avatar || makeAvatar(this.email),
+        'semesterCount': this.semesterCount,
+        'tech': this.tech,
+        'bio': this.bio,
+        'github': {
+            login: this.github.login,
+            profile_url: this.github.profile_url,
+            events: this.github.events
+        },
+        'attendance': this.attendance,
+
+        };
+    });
 
 // User list information
 UserSchema
   .virtual('stats')
   .get(function() {
-    var data = this.toObject();
-    data.avatar = this.avatar;
-    data.attendance = 0;
-    delete data.hashedPassword ;
-    delete data.salt ;
-  return data;
+      return {
+        '_id':this._id.toString('binary'),
+        'name': this.name,
+        'role': this.role,
+        'avatar': this.avatar || makeAvatar(this.email),
+        'semesterCount': this.semesterCount,
+        'tech': this.tech,
+        'github': {
+            login: this.github.login,
+            profile_url: this.github.profile_url
+        }
+    }
 });
 
 // User list information
@@ -111,8 +145,13 @@ UserSchema
       '_id':this._id.toString('binary'),
       'name': this.name,
       'role': this.role,
-      'avatar': this.avatar,
-      'githubProfile': this.github.login
+      'avatar': this.avatar || makeAvatar(this.email),
+      'semesterCount': this.semesterCount,
+      'tech': this.tech,
+      'github': {
+          login: this.github.login,
+          profile_url: this.github.profile_url
+      }
     };
   });
 

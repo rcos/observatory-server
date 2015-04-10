@@ -4,7 +4,7 @@
     <div class='row'>
         <div class='col-md-3 profile-sidebar'>
             <img width='75%' src='{{user.avatar}}?s=1024px'/>
-            <span id='semester-count' ng-show="user.semesters">{{user.semesters}}</span>
+            <span id='semester-count' ng-show="user.semesterCount">{{user.semesterCount}}</span>
             <div class='sidebar-text name'>
                 {{user.name}}
             </div>
@@ -12,7 +12,7 @@
                 {{user.role}}
             </div>
             <div class='sidebar-text box'>
-                <a href='http://github.com/{{user.githubProfile}}'>Github</a>
+                <a href='http://github.com/{{user.github.login}}'>Github</a>
                 <br/>
                 {{user.email}}
             </div>

@@ -17,7 +17,7 @@ angular.module('observatory3App')
           },
           rin: parseInt($scope.user.rin),
           rcsId: $scope.user.rcs,
-          semesterCount: parseInt($scope.user.semesters),
+          semesterCount: parseInt($scope.user.semesterCount),
           password: $scope.user.password,
         })
         .then( function() {
