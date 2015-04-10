@@ -26,16 +26,17 @@ angular.module('observatory3App')
             $scope.projectToAdd.githubUsername = splitUrl[splitUrl.length - 2];
             $scope.projectToAdd.githubProjectName = $scope.projectToAdd.name = splitUrl[splitUrl.length - 1];
             $http.get('https://api.github.com/repos/' + $scope.projectToAdd.githubUsername + "/" + $scope.projectToAdd.githubProjectName,{headers: {'content-type': 'application/json'}, Authorization: {"Authorization" : null}})
-            .success(function(data, status, headers, config) {
-                $scope.projectToAdd.websiteURL = data.homepage;
-                $scope.projectToAdd.description = data.description;
+            .success(function(response, status) {
+                console.log(response);
+                if (status !== 200){
+                    console.log("Bad URL!");
+                }
+                else{
+                    $scope.projectToAdd.websiteURL = response.homepage;
+                    $scope.projectToAdd.description = response.description;
+                }
 
 
-            })
-            .error(function(data, status, headers, config){
-                console.log("Bad URL!");
-
-                // github.repositoryUrl.$setValidity("valid", false);
             });
         }
     }
