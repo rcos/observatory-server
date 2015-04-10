@@ -34,9 +34,6 @@ angular.module('observatory3App', [
           $cookieStore.remove('token');
           return $q.reject(response);
         }
-        else if(response.status === 404){
-          $location.path('/');
-        }
         else {
           return $q.reject(response);
         }

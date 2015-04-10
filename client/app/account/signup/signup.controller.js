@@ -19,7 +19,6 @@ angular.module('observatory3App')
         })
         .then( function() {
           // Account created, redirect to home
-          console.log("/users/"+$scope.user.githubLogin+"/profile");
           $location.path("/users/"+$scope.user.githubLogin+"/profile");
         })
         .catch( function(err) {

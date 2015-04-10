@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth) {
+  .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth, $location) {
 
       var loggedInUser = Auth.getCurrentUser();
 
@@ -15,7 +15,13 @@ angular.module('observatory3App')
           });
 
           $scope.isuser = loggedInUser._id == user._id;
-      });
+      })
+      .error(function(data, status, headers, config){
+           // Redirect bad user names
+           if(status === 404 && data === "User not found"){
+               $location.path('/users');
+           }
+       });
 
       $scope.edittingBio = false;
 

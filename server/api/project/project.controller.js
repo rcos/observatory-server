@@ -36,7 +36,7 @@ exports.show = function(req, res) {
   .populate('authors')
   .exec(function (err, project) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return ProjectNotFoundError(res); }
     return res.json(project);
   });
 };
@@ -47,7 +47,6 @@ exports.showByAuthor = function(req, res) {
 
   Project.find({'authors':req.params.id},function (err, projects) {
     if(err) { return handleError(res, err); }
-
     return res.json(200, projects);
   });
 };
@@ -66,7 +65,7 @@ exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Project.findById(req.params.id, function (err, project) {
     if (err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return ProjectNotFoundError(res); }
 
     // Only mentors and project owners can update a project
     var userId = req.user._id;
@@ -90,7 +89,7 @@ exports.addAuthor = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Project.findById(req.params.id, function (err, project) {
     if (err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return ProjectNotFoundError(res); }
 
     // Only mentors and project owners can update a project
     var userId = req.user._id;
@@ -113,7 +112,7 @@ exports.addAuthor = function(req, res) {
 exports.destroy = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return ProjectNotFoundError(res); }
     project.remove(function(err) {
       if(err) { return handleError(res, err); }
       return res.send(204);
@@ -123,4 +122,7 @@ exports.destroy = function(req, res) {
 
 function handleError(res, err) {
   return res.send(500, err);
+}
+function ProjectNotFoundError(res) {
+  return res.status(404).send("Project not found");
 }

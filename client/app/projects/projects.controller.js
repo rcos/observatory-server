@@ -27,8 +27,6 @@ angular.module('observatory3App')
             $scope.projectToAdd.githubProjectName = $scope.projectToAdd.name = splitUrl[splitUrl.length - 1];
             $http.get('https://api.github.com/repos/' + $scope.projectToAdd.githubUsername + "/" + $scope.projectToAdd.githubProjectName,{headers: {'content-type': 'application/json'}, Authorization: {"Authorization" : null}})
             .success(function(data, status, headers, config) {
-                console.log("Success",status,data);
-                console.log(data, status, headers, config);
                 $scope.projectToAdd.websiteURL = data.homepage;
                 $scope.projectToAdd.description = data.description;
 
@@ -36,7 +34,6 @@ angular.module('observatory3App')
             })
             .error(function(data, status, headers, config){
                 console.log("Bad URL!");
-                console.log(data, status, headers, config);
 
                 // github.repositoryUrl.$setValidity("valid", false);
             });
@@ -52,10 +49,7 @@ angular.module('observatory3App')
             // and results in the modal disappearing but the overlay staying if not used
             setTimeout(function() {
                 $scope.submitted = false;
-
-                // $scope.projectToAdd.repositoryUrl = 'https://github.com/' + $scope.projectToAdd.githubUsername + '/' + $scope.projectToAdd.githubProjectName;
-                // $scope.projectToAdd.authors = [$scope.currentUser._id];
-                // console.log([$scope.currentUser._id]);
+                $scope.projectToAdd.authors = [$scope.currentUser._id];
                 $http.post('/api/projects', $scope.projectToAdd).success(function(){
                   $('#addProject').modal('hide');
                   if(form) {

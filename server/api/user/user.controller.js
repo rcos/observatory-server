@@ -188,7 +188,7 @@ exports.show = function (req, res, next) {
 
   User.findById(userId, function (err, user) {
     if (err) return next(err);
-    if (!user) return res.send(404);
+    if (!user){ return UserNotFoundError(res);}
     res.json(user.profile);
   });
 };
@@ -207,12 +207,12 @@ exports.showByName = function (req, res, next) {
         var id = mongoose.Types.ObjectId(param);
         User.findById(mongoose.Types.ObjectId(param), function (err, userById) {
           if (err) return next(err);
-          if (!userById) return res.send(404);
+          if (!userById){ return UserNotFoundError(res);}
           res.json(userById.profile);
         });
       }
       catch(tryErr){
-        return res.send(404);
+        return UserNotFoundError(res);
       }
 
     }
@@ -230,6 +230,7 @@ exports.showByName = function (req, res, next) {
 exports.destroy = function(req, res) {
   User.findByIdAndRemove(req.params.id, function(err, user) {
     if(err) return res.send(500, err);
+    if(!user) {return UserNotFoundError(res);}
     return res.send(204);
   });
 };
@@ -243,6 +244,8 @@ exports.changePassword = function(req, res, next) {
   var newPass = String(req.body.newPassword);
 
   User.findById(userId, function (err, user) {
+    if (err) return res.send(500, err);
+    if (!user){return UserNotFoundError(res);}
     if(user.authenticate(oldPass)) {
       user.password = newPass;
       user.save(function(err) {
@@ -263,6 +266,8 @@ exports.changeBio = function(req,res){
     var newBio = String(req.body.bio);
 
     User.findById(userId, function(err,user){
+        if (err) return res.send(500, err);
+        if (!user){return UserNotFoundError(res);}
         user.bio = newBio;
         if (err) return res.send(500, err);
 
@@ -281,6 +286,7 @@ exports.deactivate = function(req, res, next) {
 
   User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
+    if (!user){return UserNotFoundError(res);}
 
     user.active = false;
     user.save(function(err){
@@ -299,6 +305,7 @@ exports.activate = function(req, res, next) {
 
   User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
+    if (!user){return UserNotFoundError(res);}
 
     user.active = true;
     user.save(function(err){
@@ -315,7 +322,7 @@ exports.me = function(req, res, next) {
   var userId = req.user._id;
   User.findById(userId, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
-    if (!user) return res.json(401);
+    if (!user){return UserNotFoundError(res);}
     res.json(user);
   });
 };
@@ -338,7 +345,10 @@ exports.attendance = function(req,res){
         $push: {
             attendance: new Date()
         }
-    }, function(err){
+    }, function(err, user){
+        if (err) return res.send(500, err);
+        if (!user){return UserNotFoundError(res);}
+
         res.send({"success":(err !== 0)});
     });
 };
@@ -350,9 +360,10 @@ exports.addTech = function(req,res){
     var userId = req.params.id;
     var newTech = req.body.tech;
     User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
+        if (err){ res.send(500, err);}
+        else if (!user){return UserNotFoundError(res);}
+
+        else{
             if (!user.tech) user.tech = [];
             user.tech.push(newTech);
             user.save(function(err) {
@@ -370,9 +381,9 @@ exports.removeTech = function(req,res){
     var userId = req.params.id;
     var tech = req.body.tech;
     User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
+        if (err){ res.send(500, err);}
+        else if (!user){return UserNotFoundError(res);}
+        else{
             if (!user.tech) user.tech = [];
             user.tech.splice(user.tech.indexOf(tech), 1);
             user.save(function(err) {
@@ -382,3 +393,6 @@ exports.removeTech = function(req,res){
         }
     });
 };
+function UserNotFoundError(res) {
+  return res.status(404).send("User not found");
+}
