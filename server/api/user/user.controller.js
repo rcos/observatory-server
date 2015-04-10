@@ -124,7 +124,7 @@ exports.list = function(req, res) {
     var userInfo = [];
 
     for (var i = 0; i < users.length; i++){
-      userInfo.push(users[i].listInfo);
+      userInfo.push(users[i].stats);
     }
     res.json(200, userInfo);
   });
@@ -139,7 +139,7 @@ exports.past = function(req, res) {
       var userInfo = [];
 
       for (var i = 0; i < users.length; i++){
-        userInfo.push(users[i].listInfo);
+        userInfo.push(users[i].stats);
       }
       res.json(200, userInfo);
   });

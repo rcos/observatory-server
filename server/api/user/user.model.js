@@ -132,28 +132,11 @@ UserSchema
         'tech': this.tech,
         'github': {
             login: this.github.login,
-            profile_url: this.github.profile_url
+            profile_url: this.github.profile_url,
+            events: this.github.events
         }
     }
 });
-
-// User list information
-UserSchema
-  .virtual('listInfo')
-  .get(function() {
-    return {
-      '_id':this._id.toString('binary'),
-      'name': this.name,
-      'role': this.role,
-      'avatar': this.avatar || makeAvatar(this.email),
-      'semesterCount': this.semesterCount,
-      'tech': this.tech,
-      'github': {
-          login: this.github.login,
-          profile_url: this.github.profile_url
-      }
-    };
-  });
 
 // Non-sensitive info we'll be putting in the token
 UserSchema

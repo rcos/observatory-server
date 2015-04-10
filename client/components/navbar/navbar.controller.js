@@ -1,16 +1,16 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('NavbarCtrl', function ($scope, $location, Auth) {
+.controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/login'
-      },{
+        'title': 'Home',
+        'link': '/'
+    },{
         'title': 'Projects',
         'link': '/projects'
-      },{
-      'title': 'Users',
-      'link': '/users'
+    },{
+        'title': 'Users',
+        'link': '/users'
     }];
 
     $scope.isCollapsed = true;
@@ -19,11 +19,11 @@ angular.module('observatory3App')
     $scope.getCurrentUser = Auth.getCurrentUser;
 
     $scope.logout = function() {
-      Auth.logout();
-      $location.path('/login');
+        Auth.logout();
+        $location.path('/login');
     };
 
     $scope.isActive = function(route) {
-      return route === $location.path();
+        return route === $location.path();
     };
-  });
+});
