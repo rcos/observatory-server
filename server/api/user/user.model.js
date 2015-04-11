@@ -21,6 +21,8 @@ var UserSchema = new Schema({
   bio:String,
   attendance: [Date],
   semesterCount: Number,
+  avatar: String,
+
   rin: Number,
   rcsId: String,
 
@@ -32,13 +34,11 @@ var UserSchema = new Schema({
       type: String,
       action: String,
       message: String,
-      url: String,
       date: Date
     }],
     login: {type: String, lowercase: true},
-    profile: String,
+    profile_url: String
   }
-
 });
 
 /**
@@ -69,14 +69,6 @@ var makeAvatar = function(email) {
 
 };
 
-UserSchema
-  .virtual('avatar')
-  .get(function(){
-    return makeAvatar(this.email) ;
-    // return 'http://www.gravatar.com/avatar/00000000000000000000000000000000';
-});
-
-
 // Public profile information
 UserSchema
   .virtual('profile')
@@ -86,49 +78,86 @@ UserSchema
     return {
       '_id':this._id.toString('binary'),
       'name': this.name,
-      'role': this.role,
-      'avatar': this.avatar,
       'email': this.email,
-      'semesters': this.semesterCount,
-      'attendance': this.attendance,
-      "attendanceScore": 88,
-      "attendanceBonus": 12,
-      'projects':[{
-          'name': 'Sia UI',
-          'avatar':'https://avatars1.githubusercontent.com/u/7471422?v=3&s=200',
-          'description': 'Front end user interface for Sia decentralized storage network utilitzing atom-shell, other stuff and things.',
-          'tech':['NodeJS','Javascript','Atom Shell','HTML']
-      }],//TODO pull projects
+      'active': this.active,
+      'role': this.role,
+      'avatar': this.avatar || makeAvatar(this.email),
+      'semesterCount': this.semesterCount,
       'tech': this.tech,
       'bio': this.bio,
-      'githubProfile': this.github.login
-    };
+      'github': {
+          'login': this.github.login,
+          'profile_url': this.github.profile_url,
+          'events': this.github.events
+      }
+      };
   });
+
+  // Public profile information
+  UserSchema
+    .virtual('info')
+    .get(function() {
+      var twoWeeks = new Date();
+      twoWeeks.setDate(twoWeeks.getDate()-14);
+      return {
+        '_id':this._id.toString('binary'),
+        'name': this.name,
+        'email': this.email,
+        'active': this.active,
+        'role': this.role,
+        'avatar': this.avatar || makeAvatar(this.email),
+        'semesterCount': this.semesterCount,
+        'tech': this.tech,
+        'bio': this.bio,
+        'github': {
+            'login': this.github.login,
+            'profile_url': this.github.profile_url,
+            'events': this.github.events
+        },
+        'attendance': this.attendance,
+
+        };
+    });
 
 // User list information
 UserSchema
   .virtual('stats')
   .get(function() {
-    var data = this.toObject();
-    data.avatar = this.avatar;
-    data.attendance = 0;
-    delete data.hashedPassword ;
-    delete data.salt ;
-  return data;
+      return {
+        '_id':this._id.toString('binary'),
+        'name': this.name,
+        'role': this.role,
+        'avatar': this.avatar || makeAvatar(this.email),
+        'semesterCount': this.semesterCount,
+        'tech': this.tech,
+        'github': {
+            'login': this.github.login,
+            'profile_url': this.github.profile_url,
+            'events': this.github.events
+        }
+    }
 });
 
 // User list information
 UserSchema
-  .virtual('listInfo')
+  .virtual('adminStats')
   .get(function() {
-    return {
-      '_id':this._id.toString('binary'),
-      'name': this.name,
-      'role': this.role,
-      'avatar': this.avatar,
-      'githubProfile': this.github.login,
-    };
-  });
+      return {
+        '_id':this._id.toString('binary'),
+        'name': this.name,
+        'email': this.email,
+        'active': this.active,
+        'role': this.role,
+        'semesterCount': this.semesterCount,
+        'github': {
+            'login': this.github.login,
+            'profile_url': this.github.profile_url,
+            'events': this.github.events
+        },
+        'attendance': this.attendance
+    }
+});
+
 
 // Non-sensitive info we'll be putting in the token
 UserSchema
@@ -173,6 +202,29 @@ UserSchema
     });
 }, 'The specified email address is already in use.');
 
+// Validate empty github.login
+UserSchema
+  .path('github.login')
+  .validate(function(val) {
+    return val.length;
+  }, 'github login cannot be blank');
+
+// Validate github.login is not taken
+UserSchema
+  .path('github.login')
+  .validate(function(value, respond) {
+    var self = this;
+    this.constructor.findOne({'github.login': value}, function(err, user) {
+      if(err) throw err;
+      if(user) {
+        if(self.id === user.id) return respond(true);
+        return respond(false);
+      }
+      respond(true);
+    });
+}, 'The specified github login address is already in use.');
+
+
 var validatePresenceOf = function(value) {
   return value && value.length;
 };
@@ -182,8 +234,8 @@ var validatePresenceOf = function(value) {
  */
 UserSchema
   .pre('save', function(next) {
+    this.avatar = makeAvatar(this.email);
     if (!this.isNew) return next();
-
     if (!validatePresenceOf(this.hashedPassword))
       next(new Error('Invalid password'));
     else

@@ -14,15 +14,17 @@ router.get('/allstats', auth.hasRole('admin'), controller.allStats);
 router.get('/:id/commits', controller.commits);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/me', auth.isAuthenticated(), controller.me);
+router.get('/profile/:url', controller.showByName);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/deactivate', auth.isAuthenticated(), controller.deactivate);
 router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
-router.put("/:id/attendance", controller.attendance);
-router.put('/:id/bio', auth.isAuthenticated(), controller.changeBio);
-router.put("/:id/addTech",auth.isAuthenticated(), controller.addTech);
-router.put("/:id/removeTech",auth.isAuthenticated(), controller.removeTech);
+router.put("/:id/attendance", auth.canEdit(), controller.attendance);
+router.put('/:id/bio', auth.canEdit(), controller.changeBio);
+router.put("/:id/addTech", auth.canEdit(), controller.addTech);
+router.put("/:id/removeTech", auth.canEdit(), controller.removeTech);
 router.put("/setAttendance", auth.hasRole('admin'), controller.setAttendance);
+
 
 module.exports = router;

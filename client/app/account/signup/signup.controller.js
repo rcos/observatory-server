@@ -13,16 +13,16 @@ angular.module('observatory3App')
           name: $scope.user.name,
           email: $scope.user.email,
           github: {
-            login: $scope.user.githubLogin
+            login: $scope.user.githubLogin,
           },
           rin: parseInt($scope.user.rin),
           rcsId: $scope.user.rcs,
-          semesterCount: parseInt($scope.user.semesters),
+          semesterCount: parseInt($scope.user.semesterCount),
           password: $scope.user.password,
         })
         .then( function() {
           // Account created, redirect to home
-          $location.path('/');
+          $location.path("/users/"+$scope.user.githubLogin+"/profile");
         })
         .catch( function(err) {
           err = err.data;

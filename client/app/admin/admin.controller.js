@@ -1,11 +1,24 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('AdminCtrl', function ($scope, $http, Auth, User) {
+  .controller('AdminCtrl', function ($scope, $http, Auth, User, $location) {
 
-    // Use the User $resource to fetch all users
-    $scope.users = [];
-    $scope.users = User.allstats();
+    if (Auth.isLoggedIn()){
+      var loggedInUser = Auth.getCurrentUser();
+
+          if(!(loggedInUser.role==="admin")){
+            $location.path('/');
+          }
+          else{
+            // Use the User $resource to fetch all users
+
+            $scope.users = [];
+            $scope.users = User.allstats();
+          }
+    }
+    else{
+      $location.path('/');
+    }
 
     $scope.delete = function(user) {
       User.remove({ id: user._id });

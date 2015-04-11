@@ -27,7 +27,7 @@ exports.index = function(req, res) {
 exports.show = function(req, res) {
 
   Post.findById(req.params.id)
-  .populate('author')
+  .populate('author', '-role -hashedPassword -provider -salt -attendance -rin -rcsId -github.events')
   .exec(function (err, post) {
     if(err) { return handleError(res, err); }
     if(!post) { return res.send(404); }

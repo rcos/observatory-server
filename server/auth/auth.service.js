@@ -54,6 +54,22 @@ function hasRole(roleRequired) {
 }
 
 /**
+ * Checks if the user is editing themself or the user is an admin
+ */
+function canEdit() {
+  return compose()
+    .use(isAuthenticated())
+    .use(function meetsRequirements(req, res, next) {
+      if (req.user._id.toString() === req.params.id.toString() || req.user.role === 'admin'){
+        next();
+      }
+      else {
+        res.send(403);
+      }
+    });
+}
+
+/**
  * Returns a jwt token signed by the app secret
  */
 function signToken(id) {
@@ -72,5 +88,6 @@ function setTokenCookie(req, res) {
 
 exports.isAuthenticated = isAuthenticated;
 exports.hasRole = hasRole;
+exports.canEdit = canEdit;
 exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;

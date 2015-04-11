@@ -4,7 +4,8 @@ angular.module('observatory3App', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ui.router'
+  'ui.router',
+  'ui.bootstrap'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -18,6 +19,9 @@ angular.module('observatory3App', [
     return {
       // Add authorization token to headers
       request: function (config) {
+        if(config.url.indexOf("api.github.com") != -1){
+            return config;
+        }
         config.headers = config.headers || {};
         if ($cookieStore.get('token')) {
           config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
@@ -27,14 +31,14 @@ angular.module('observatory3App', [
 
       // Intercept 401s and redirect you to login
       responseError: function(response) {
+        if(response.config.url.indexOf("api.github.com") != -1){
+            return;
+        }
         if(response.status === 401) {
           $location.path('/login');
           // remove any stale tokens
           $cookieStore.remove('token');
           return $q.reject(response);
-        }
-        else if(response.status === 404){
-          $location.path('/');
         }
         else {
           return $q.reject(response);

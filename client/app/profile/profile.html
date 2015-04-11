@@ -4,7 +4,7 @@
     <div class='row'>
         <div class='col-md-3 profile-sidebar'>
             <img width='75%' src='{{user.avatar}}?s=1024px'/>
-            <span id='semester-count' ng-show="user.semesters">{{user.semesters}}</span>
+            <span id='semester-count' ng-show="user.semesterCount">{{user.semesterCount}}</span>
             <div class='sidebar-text name'>
                 {{user.name}}
             </div>
@@ -12,13 +12,13 @@
                 {{user.role}}
             </div>
             <div class='sidebar-text box'>
-                <a href='http://github.com/{{user.githubProfile}}'>Github</a>
+                <a href='http://github.com/{{user.github.login}}'>Github</a>
                 <br/>
                 {{user.email}}
             </div>
         </div>
         <div class='col-md-6'>
-            <div class='tech-boxes'>
+            <div class='tech-boxes' ng-show='isuser || user.tech.size()'>
                 <div ng-repeat="tech in user.tech track by $index">
                     {{tech}}
                     <button ng-show='isuser' class='btn btn-default btn-xs' ng-click='removeTech(tech)'>x</button>
@@ -28,10 +28,10 @@
                     <button ng-click="addTech()" class='btn btn-default btn-xs'>+</button>
                 </div>
             </div>
-            <div class='content-box'>
-                <div ng-show='isuser' class='content-title row'>
+            <div ng-show='isuser || user.bio' class='content-box'>
+                <div class='content-title row'>
                     <div class='col-xs-6'>Bio</div>
-                    <div class='col-xs-6 text-right'>
+                    <div ng-show='isuser' class='col-xs-6 text-right'>
                         <div class="btn-group" style='margin-bottom:8px'>
                             <button type="button" class='btn btn-default btn-sm' ng-click='editBio()'>Edit</button>
                             <button type="button" class='btn btn-default btn-sm' ng-click='saveBio()'>Save</button>
@@ -40,14 +40,10 @@
                 </div>
                 <bio></bio>
             </div>
-            <!--
             <div class='content-box' ng-repeat='project in user.projects'>
                 <div class='project row'>
-                    <div class='col-xs-3' style='text-align:center;'>
-                        <img width='80%' src='{{project.avatar}}'/>
-                    </div>
-                    <div class='col-xs-9'>
-                        <div class='title'> {{project.name}} </div>
+                    <div class='col-xs-12 text-left'>
+                        <a href='/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile' class='title'> {{project.name}} </a>
                         <div class='description'>{{project.description}}</div>
                         <div class='tech-boxes'>
                             <div ng-repeat='tech in project.tech'>{{tech}}</div>
@@ -55,7 +51,6 @@
                     </div>
                 </div>
             </div>
-            -->
         </div>
         <div class='col-md-3'>
             <div ng-hide='!isuser' class='content-box'>
@@ -74,9 +69,14 @@
                 </div>
             </div>
             <div class='content-box'>
-                <div class='content-title'>Commits</div>
-                <div ng-repeat='event in user.github.events' class='commit'>
-                    <a href='{{event.url}}'>{{event.message}}</a>
+                <div class='content-title'>Commits &nbsp;
+                    <a class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></a>
+                    {{ currentPage + 1 }} of {{ numberOfPages() }}
+                <a class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></a></div>
+
+                <div ng-repeat='commit in user.commits  | startFrom:currentPage*pageSize | limitTo:pageSize' class='commit'>
+                    <a class='commit-name' href='/projects/{{commit.githubUsername}}/{{commit.githubProjectName}}/profile'>{{commit.githubProjectName}}:</a>
+                    <a class='commit-message'href='{{commit.url}}'>{{commit.message}}</a>
                 </div>
             </div>
         </div>
