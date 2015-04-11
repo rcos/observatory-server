@@ -118,3 +118,53 @@ bio textarea{
     width:100%;
     height:300px;
 }
+
+a.commit-name{
+    color: #333333;
+}
+a.commit-name:active{
+    color: #333333;
+    text-decoration: none;
+}
+a.commit-name:focus{
+    color: #333333;
+}
+a.commit-name:visited{
+    color: #333333;
+    text-decoration: none;
+}
+
+a.commit-message{
+    color: #777;
+}
+a.commit-message:active{
+    color: #777;
+    text-decoration: none;
+}
+a.commit-message:focus{
+    color: #333333;
+}
+a.commit-message:visited{
+    color: #777;
+    text-decoration: none;
+}
+a.glyphicon{
+    color: #333333;
+    text-decoration: none;
+}
+a.glyphicon:active{
+    color: #333333;
+    text-decoration: none;
+}
+a.glyphicon:focus{
+    color: #333333;
+    text-decoration: none;
+}
+a.glyphicon:visited{
+    color: #333333;
+    text-decoration: none;
+}
+a.glyphicon:hover{
+    color: #2a6496;
+    text-decoration: none;
+}

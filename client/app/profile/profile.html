@@ -40,14 +40,10 @@
                 </div>
                 <bio></bio>
             </div>
-            <!--
             <div class='content-box' ng-repeat='project in user.projects'>
                 <div class='project row'>
-                    <div class='col-xs-3' style='text-align:center;'>
-                        <img width='80%' src='{{project.avatar}}'/>
-                    </div>
-                    <div class='col-xs-9'>
-                        <div class='title'> {{project.name}} </div>
+                    <div class='col-xs-12 text-left'>
+                        <a href='/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile' class='title'> {{project.name}} </a>
                         <div class='description'>{{project.description}}</div>
                         <div class='tech-boxes'>
                             <div ng-repeat='tech in project.tech'>{{tech}}</div>
@@ -55,7 +51,6 @@
                     </div>
                 </div>
             </div>
-            -->
         </div>
         <div class='col-md-3'>
             <div ng-hide='!isuser' class='content-box'>
@@ -74,9 +69,14 @@
                 </div>
             </div>
             <div class='content-box'>
-                <div class='content-title'>Commits</div>
-                <div ng-repeat='commit in user.commits' class='commit'>
-                    <a href='{{commit.url}}'>{{commit.message}}</a>
+                <div class='content-title'>Commits &nbsp;
+                    <a class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></a>
+                    {{ currentPage + 1 }} of {{ numberOfPages() }}
+                <a class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></a></div>
+
+                <div ng-repeat='commit in user.commits  | startFrom:currentPage*pageSize | limitTo:pageSize' class='commit'>
+                    <a class='commit-name' href='/projects/{{commit.githubUsername}}/{{commit.githubProjectName}}/profile'>{{commit.githubProjectName}}:</a>
+                    <a class='commit-message'href='{{commit.url}}'>{{commit.message}}</a>
                 </div>
             </div>
         </div>

@@ -2,18 +2,19 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-    <div class="row">
-        <h3>RCOS Users</h3>
-        <br>
+    <div class="row text-right">
+        <div class="text-left col-md-3">
+            <h3 >RCOS Developers</h3>
+        </div>
     </div>
     <div class="row text-right">
-        <div class="text-left">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></span>
+        <div class="text-left col-md-2 arrows">
+            <a class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></a>
                 {{ currentPage + 1 }} of {{ numberOfPages() }}
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></span>
+            <a class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></a>
         </div>
         <!-- Single button -->
-        <div class="btn-group">
+        <div class="col-md-2 btn-group col-md-offset-5">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             {{currentView}} <span class="caret"></span>
           </button>

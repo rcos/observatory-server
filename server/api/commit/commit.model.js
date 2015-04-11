@@ -12,6 +12,8 @@ var CommitSchema = new Schema({
   },
   userId: {type : String, ref: 'User', index: true},
   projectId: {type : String, ref: 'Project', index: true},
+  projectName: {type : String},
+
   author: {
     login: {type: String, lowercase: true, index: true},
     id: {type : Schema.Types.ObjectId, ref: 'User', index: true},

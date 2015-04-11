@@ -2,13 +2,10 @@
 
 angular.module('observatory3App')
 .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth, $location) {
-
-
     function updateUser(){
         var loggedInUser = Auth.getCurrentUser();
-        if (loggedInUser.github.login == $stateParams.userUrl){
+        if (Auth.isLoggedIn() && loggedInUser.github.login == $stateParams.userUrl){
             $http.get('/api/users/me').success(function(user){
-                $scope.user = user;
                 $http.get('/api/commits/user/' + user.github.login).success(function(commits){
                     $scope.user.commits = commits;
                 });
@@ -17,6 +14,8 @@ angular.module('observatory3App')
                 });
 
                 $scope.isuser = loggedInUser._id == user._id;
+                $scope.user = user;
+
             })
             .error(function(data, status, headers, config){
                 // Redirect bad user names
@@ -30,7 +29,6 @@ angular.module('observatory3App')
         }
         else{
             $http.get('/api/users/profile/' + $stateParams.userUrl).success(function(user){
-                $scope.user = user;
                 $http.get('/api/commits/user/' + user.github.login).success(function(commits){
                     $scope.user.commits = commits;
                 });
@@ -38,7 +36,10 @@ angular.module('observatory3App')
                     $scope.user.projects = projects;
                 });
 
-                $scope.isuser = loggedInUser._id == user._id;
+                $scope.isuser = false;
+
+                $scope.user = user;
+
             })
             .error(function(data, status, headers, config){
                 // Redirect bad user names
@@ -65,7 +66,7 @@ angular.module('observatory3App')
             "bio": $scope.user.bio
         }).success(function(){
             alert("Bio updated!");
-            $http.get('/api/users/profile/' + $stateParams.userUrl).success(function(user){
+            $http.get('/api/users/profile/' + $scope.user._id).success(function(user){
                 $scope.user.bio = user.bio;
             });
         }).error(function(err){
@@ -75,7 +76,7 @@ angular.module('observatory3App')
 
     $scope.addTech = function(){
         if($scope.insertTechContent){
-            $http.put("/api/users/" + $stateParams.id + "/addTech", {
+            $http.put("/api/users/" + $scope.user._id + "/addTech", {
                 "tech": $scope.insertTechContent
             }).success(function(){
                 $scope.user.tech.push($scope.insertTechContent);
@@ -106,6 +107,25 @@ angular.module('observatory3App')
             alert("Invalid Attendance Code!");
         });
     };
+
+    $scope.currentPage = 0;
+    $scope.pageSize = 5;
+
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.user.commits.length/$scope.pageSize);
+    }
+
+    $scope.increment = function(){
+        if ($scope.currentPage < $scope.numberOfPages()-1){
+            $scope.currentPage += 1;
+        }
+    }
+
+    $scope.decrement = function(){
+        if ($scope.currentPage > 0){
+            $scope.currentPage -= 1;
+        }
+    }
 
     updateUser();
 })
