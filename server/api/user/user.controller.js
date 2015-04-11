@@ -30,7 +30,7 @@ exports.index = function(req, res) {
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-hashedPassword -salt -github.events -attendance' ).exec(function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-hashedPassword -salt' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
@@ -57,7 +57,7 @@ exports.stats = function(req, res) {
     }
 
     for (var i = 0; i < users.length; i++){
-      var u = users[i].stats;
+      var u = users[i].adminStats;
       getCommits(u);
       }
     });
@@ -70,7 +70,7 @@ exports.stats = function(req, res) {
  */
 exports.allStats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({'github.login': {$exists: true}}, '-hashedPassword -salt -github.events -attendance' ).exec(function (err, users) {
+  User.find({'github.login': {$exists: true}}, '-hashedPassword -salt' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
@@ -108,7 +108,7 @@ exports.allStats = function(req, res) {
     }
 
     for (var i = 0; i < users.length; i++){
-      var u = users[i].stats;
+      var u = users[i].adminStats;
       getCommits(u);
       }
     });

@@ -86,9 +86,9 @@ UserSchema
       'tech': this.tech,
       'bio': this.bio,
       'github': {
-          login: this.github.login,
-          profile_url: this.github.profile_url,
-          events: this.github.events
+          'login': this.github.login,
+          'profile_url': this.github.profile_url,
+          'events': this.github.events
       }
       };
   });
@@ -110,9 +110,9 @@ UserSchema
         'tech': this.tech,
         'bio': this.bio,
         'github': {
-            login: this.github.login,
-            profile_url: this.github.profile_url,
-            events: this.github.events
+            'login': this.github.login,
+            'profile_url': this.github.profile_url,
+            'events': this.github.events
         },
         'attendance': this.attendance,
 
@@ -131,12 +131,33 @@ UserSchema
         'semesterCount': this.semesterCount,
         'tech': this.tech,
         'github': {
-            login: this.github.login,
-            profile_url: this.github.profile_url,
-            events: this.github.events
+            'login': this.github.login,
+            'profile_url': this.github.profile_url,
+            'events': this.github.events
         }
     }
 });
+
+// User list information
+UserSchema
+  .virtual('adminStats')
+  .get(function() {
+      return {
+        '_id':this._id.toString('binary'),
+        'name': this.name,
+        'email': this.email,
+        'active': this.active,
+        'role': this.role,
+        'semesterCount': this.semesterCount,
+        'github': {
+            'login': this.github.login,
+            'profile_url': this.github.profile_url,
+            'events': this.github.events
+        },
+        'attendance': this.attendance
+    }
+});
+
 
 // Non-sensitive info we'll be putting in the token
 UserSchema

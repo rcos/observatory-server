@@ -19,10 +19,10 @@
       </thead>
       <tbody>
           <tr ng-repeat="user in users | orderBy:sortorder">
-              <td><a href="/users/{{user._id}}/profile">{{ user.name }}</a></td>
+              <td><a href="/users/{{user.github.login}}/profile">{{ user.name }}</a></td>
               <td> {{ user.email }}</td>
               <td><a href="http://github.com/{{user.github.login}}">{{user.github.login}}</a></td>
-              <td>{{ user.attendance }}</td>
+              <td>{{ user.attendance.length }}</td>
               <td>{{ user.github.events.length }}</td>
               <td>{{ user.commits.length }}</td>
               <td><a class="btn btn-warning" href="#" role="button" ng-click="toggle( user )">{{ user.active }}</a></td>
