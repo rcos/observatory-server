@@ -29,7 +29,7 @@ exports.index = function(req, res) {
  * restriction: 'admin'
  */
 exports.stats = function(req, res) {
-  // Only return users who are active and have a github login
+  // Only return users who are active and have a github login;
   User.find({active: true, 'github.login': {$exists: true}}, '-hashedPassword -salt' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
@@ -339,11 +339,15 @@ exports.attendance = function(req,res){
    
     Thing.findOne({type: 'daycode'}, function (err, thing) {
         if(err) return handleError(res, err);
-        var RCOSDAYCODE = thing.name;
+        //if (thing) return res.send(500, err);
 
+        var RCOSDAYCODE = thing.name;
+        console.log(RCOSDAYCODE);
+        console.log(thing);
         if (!userCode || userCode.toUpperCase() != RCOSDAYCODE.toUpperCase()){
             return res.send(500, err);
         } else{
+            console.log("Passed");
             var date = new Date();
             User.findById(userId, function(err, user){
                 if (err) return res.send(500, err);
@@ -355,8 +359,9 @@ exports.attendance = function(req,res){
                                attendance: new Date()
                            }
                        }, function(err){
-                           res.send({"success":(err !== 0)});
+                           res.send(500, err);
                        });
+                    res.json({'success': true});
                 } else{
                     res.json({'success': false});
                 }
@@ -371,7 +376,9 @@ exports.attendance = function(req,res){
 exports.setAttendance = function(req,res){
    var userCode = req.body.code;
     // User the thing database to store the daycode
-    Thing.update({type: 'daycode'}, { $set: {name: userCode}});
+    Thing.findOneAndUpdate({type: 'daycode'}, { $set: {name: userCode}}, {upsert: true}, function(err, thing){
+        if(err) return res.send(500, err);
+    });
     res.send(204);
 };
 
