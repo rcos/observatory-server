@@ -3,7 +3,7 @@
 <div class='container'>
     <div class='row'>
         <div class='col-md-3 profile-sidebar'>
-            <img width='75%' src='http://www.gravatar.com/avatar/{{user.avatar}}?d=identicon&s=256px'/>
+            <img width='75%' src='http://www.gravatar.com/avatar/{{user.avatar || 00000000000000000000000000000000}}?d=identicon&s=256px'/>
             <span id='semester-count' ng-show="user.semesterCount">{{user.semesterCount}}</span>
             <div class='sidebar-text name'>
                 {{user.name}}
