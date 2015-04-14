@@ -5,22 +5,22 @@ var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var Commit = require('../commit/commit.model');
+var Thing = require('../thing/thing.model');
 var mongoose = require('mongoose');
 var request = require('request');
 
-
 var validationError = function(res, err) {
-  return res.json(422, err);
+    return res.json(422, err);
 };
 
 /**
  * Get list of users
  */
 exports.index = function(req, res) {
-  User.find({},'-hashedPassword -salt -github.events -attendance -tech', function (err, users) {
-    if(err) return res.send(500, err);
-    res.json(200, users);
-  });
+   User.find({}, '-salt -hashedPassword', function (err, users) {
+        if(err) return res.send(500, err);
+        res.json(200, users);
+    });
 };
 
 /**
@@ -47,26 +47,26 @@ exports.stats = function(req, res) {
                     commitList.push(c.toObject());
                   }
                 )
-                user.commits = commitList ;
-                count--;
-                userInfo.push(user);
-                if (count === 0){
-                  res.json(200, userInfo);
-                }
-            });
-    }
+               user.commits = commitList ;
+            count--;
+            userInfo.push(user);
+            if (count === 0){
+                res.json(200, userInfo);
+            }
+        });
+        }
 
     for (var i = 0; i < users.length; i++){
       var u = users[i].adminStats;
       getCommits(u);
       }
-    });
+   });
 };
 
 /**
-* Get list of all users with stats including last commits
-* in previous 2 weeks including inactive
-* restriction: 'admin'
+ * Get list of all users with stats including last commits
+ * in previous 2 weeks including inactive
+ * restriction: 'admin'
  */
 exports.allStats = function(req, res) {
   // Only return users who are active and have a github login
@@ -89,29 +89,24 @@ exports.allStats = function(req, res) {
                     if (count === 0){
                       res.json(200, userInfo);
                     }
-                }
-                else{
-                    var commitList = [];
-                    commits.forEach(function (c){
-                        commitList.push(c.toObject());
-                      }
-                    )
+               }
+                )
                     user.commits = commitList ;
-                    count--;
-                    userInfo.push(user);
-                    if (count === 0){
-                      res.json(200, userInfo);
-                    }
+                count--;
+                userInfo.push(user);
+                if (count === 0){
+                    res.json(200, userInfo);
                 }
+            }
 
-            });
-    }
+        });
+        }
 
     for (var i = 0; i < users.length; i++){
       var u = users[i].adminStats;
       getCommits(u);
       }
-    });
+   });
 };
 
 /**
@@ -149,12 +144,12 @@ exports.past = function(req, res) {
  * Get a list of all the recent RCOS commits for a user
  */
 exports.commits = function(req, res) {
-  var userId = String(req.params.id);
+    var userId = String(req.params.id);
 
-  Commit.find({ userId: userId}, function(err, commits){
-    if (err) return res.send(500, err);
-    res.json(200, commits);
-  });
+    Commit.find({ userId: userId}, function(err, commits){
+        if (err) return res.send(500, err);
+        res.json(200, commits);
+    });
 };
 
 /**
@@ -177,14 +172,13 @@ exports.create = function (req, res, next) {
       return validationError(res, "Invalid Github Username");
     }
   })
-
 };
 
 /**
  * Get a single user
  */
 exports.show = function (req, res, next) {
-  var userId = req.params.id;
+    var userId = req.params.id;
 
   User.findById(userId, '-hashedPassword -salt -attendance', function (err, user) {
     if (err) return next(err);
@@ -282,18 +276,18 @@ exports.changeBio = function(req,res){
  * Deactivates a user
  */
 exports.deactivate = function(req, res, next) {
-  var userId = String(req.params.id);
+    var userId = String(req.params.id);
 
   User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
     if (!user){return UserNotFoundError(res);}
 
-    user.active = false;
-    user.save(function(err){
-    if (err) return res.send(500, err);
-      res.json(200, {success: true});
-    })
-  });
+        user.active = false;
+        user.save(function(err){
+            if (err) return res.send(500, err);
+            res.json(200, {success: true});
+        })
+    });
 };
 
 /**
@@ -301,18 +295,15 @@ exports.deactivate = function(req, res, next) {
  */
 exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
-
-
   User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
     if (!user){return UserNotFoundError(res);}
-
-    user.active = true;
-    user.save(function(err){
-    if (err) return res.send(500, err);
-      res.json(200, {success: true});
-    })
-  });
+        user.active = true;
+        user.save(function(err){
+            if (err) return res.send(500, err);
+            res.json(200, {success: true});
+        })
+    });
 };
 
 /**
@@ -331,7 +322,7 @@ exports.me = function(req, res, next) {
  * Authentication callback
  */
 exports.authCallback = function(req, res, next) {
-  res.redirect('/');
+    res.redirect('/');
 };
 
 /**
@@ -340,44 +331,43 @@ exports.authCallback = function(req, res, next) {
 exports.attendance = function(req,res){
     var userId = req.params.id;
     var userCode = req.body.code;
-    console.log("userCode",userCode);
-    console.log("process.env.RCOSDAYCODE",process.env.RCOSDAYCODE);
-    if (! process.env.RCOSDAYCODE){
+   
+    Thing.findOne({type: 'daycode'}, function (err, thing) {
+        if(err) return handleError(res, err);
+        var RCOSDAYCODE = thing.name;
 
-        res.send(500, "No day code yet!");
-
-    }
-    else if (!userCode || userCode.toUpperCase() != process.env.RCOSDAYCODE.toUpperCase()){
-
-        res.send(500, "Day Code Incorrect!");
-
-    }else{
-
-        var result = User.update({
-            _id: userId
-        },{
-            $push: {
-                attendance: new Date()
-            }
-        }, function(err){
-            if (err) return res.send(500, err);
-            res.send({"success":(err !== 0)});
-
-        });
-    }
+        if (!userCode || userCode.toUpperCase() != RCOSDAYCODE.toUpperCase()){
+            return res.send(500, err);
+        } else{
+            var date = new Date();
+            User.findById(userId, function(err, user){
+                if (err) return res.send(500, err);
+                if (user.attendance.length === 0 || user.attendance[user.attendance.length-1].getDate() < date.getDate()){
+                    User.update({
+                           _id: userId
+                       },{
+                           $push: {
+                               attendance: new Date()
+                           }
+                       }, function(err){
+                           res.send({"success":(err !== 0)});
+                       });
+                } else{
+                    res.json({'success': false});
+                }
+            });
+        }
+    });
 };
 
 /**
  * Set the attendance day code
  */
 exports.setAttendance = function(req,res){
-     var userCode = req.body.code;
-
-     process.env.RCOSDAYCODE = userCode;
-
-     console.log("process.env.RCOSDAYCODE",process.env.RCOSDAYCODE);
-
-     res.send(204);
+   var userCode = req.body.code;
+    // User the thing database to store the daycode
+    Thing.update({type: 'daycode'}, { $set: {name: userCode}});
+    res.send(204);
 };
 
 /**
