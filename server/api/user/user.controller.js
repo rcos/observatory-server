@@ -89,24 +89,29 @@ exports.allStats = function(req, res) {
                     if (count === 0){
                       res.json(200, userInfo);
                     }
-               }
-                )
-                    user.commits = commitList ;
-                count--;
-                userInfo.push(user);
-                if (count === 0){
-                    res.json(200, userInfo);
                 }
-            }
+                else{
+                    var commitList = [];
+                    commits.forEach(function (c){
+                        commitList.push(c.toObject());
+                      }
+                    )
+                    user.commits = commitList ;
+                    count--;
+                    userInfo.push(user);
+                    if (count === 0){
+                      res.json(200, userInfo);
+                    }
+                }
 
-        });
-        }
+            });
+    }
 
     for (var i = 0; i < users.length; i++){
       var u = users[i].adminStats;
       getCommits(u);
       }
-   });
+    });
 };
 
 /**

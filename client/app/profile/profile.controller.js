@@ -1,7 +1,6 @@
 'use strict';
 
 angular.module('observatory3App')
-<<<<<<< HEAD
 .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth, $location) {
     function updateUser(){
         var loggedInUser = Auth.getCurrentUser();
