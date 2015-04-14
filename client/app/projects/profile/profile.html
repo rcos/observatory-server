@@ -42,7 +42,7 @@
         <div class="row">
           <div ng-repeat='user in project.authors'>
             <div class="col-md-4">
-              <img href="/users/{{user.github.login}}/profile" src="{{user.avatar}}" class="img-responsive" alt="">
+              <img href="/users/{{user.github.login}}/profile" src="http://www.gravatar.com/avatar/{{user.avatar}}?d=identicon&s=128px" class="img-responsive" alt="">
             </div>
             <div class="col-md-8">
               <a href="/users/{{user.github.login}}/profile" title="" class="contributor-name">
