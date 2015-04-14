@@ -17,7 +17,7 @@ var validationError = function(res, err) {
  * Get list of users
  */
 exports.index = function(req, res) {
-   User.find({}, '-salt -hashedPassword', function (err, users) {
+   User.find({},'-hashedPassword -salt -github.events -attendance -tech', function (err, users) {
         if(err) return res.send(500, err);
         res.json(200, users);
     });
