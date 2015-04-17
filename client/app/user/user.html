@@ -14,7 +14,7 @@
             <a class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></a>
         </div>
         <!-- Single button -->
-        <div class="col-md-2 btn-group col-md-offset-5">
+        <div class="col-md-2 btn-group col-md-offset-8">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             {{currentView}} <span class="caret"></span>
           </button>
@@ -28,7 +28,7 @@
         <div ng-repeat="user in users | startFrom:currentPage*pageSize | limitTo:pageSize" class="col-md-2 col-sm-2 text-center">
             <div class="row image-row">
                 <a href="/users/{{ user.github.login }}/profile" title="">
-                    <img class="profile-img img-responsive" src='{{user.avatar}}?s=128px'>
+                    <img class="profile-img img-responsive" src='http://www.gravatar.com/avatar/{{user.avatar || 00000000000000000000000000000000}}?d=identicon&s=128px'>
                 </a>
                 <p>
                     <a href="/users/{{ user.github.login }}/profile" title="" class="">{{ user.name }}</a>

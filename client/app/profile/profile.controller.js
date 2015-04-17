@@ -116,7 +116,11 @@ angular.module('observatory3App')
     $scope.pageSize = 5;
 
     $scope.numberOfPages=function(){
-        return Math.ceil($scope.user.commits.length/$scope.pageSize);
+        if ($scope.user && $scope.user.commits && $scope.pageSize){
+            return Math.ceil($scope.user.commits.length/$scope.pageSize);
+
+        }
+        return 1;
     }
 
     $scope.increment = function(){
