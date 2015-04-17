@@ -13,6 +13,14 @@
     letter-spacing: -1px;
 }
 
+#body-text{
+	
+}
+
+#body-text h2{
+	font-size: 20px;
+}
+
 .hero-unit {
     position: relative;
     padding: 30px 15px;
@@ -20,6 +28,13 @@
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     background: #4393B9;
+}
+
+.text-area {
+	position: relative;
+	padding:15px 15px;
+	text-align: left;
+	margin-top: 15px;
 }
 
 .footer {

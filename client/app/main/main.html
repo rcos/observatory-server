@@ -1,24 +1,75 @@
+<!--Above banner login and home navigation bar-->
 <div ng-include="'components/navbar/navbar.html'"></div>
 
+<!--Top of Page Banner-->
 <header class="hero-unit" id="banner">
   <div class="container">
-    <h1>'Allo, 'Allo!</h1>
-    <p class="lead">Kick-start your next web app with Angular Fullstack</p>
-    <img src="assets/images/yeoman.png" alt="I'm Yeoman">
+    <h1>Observatory</h1>
+    <p class="lead">All Your RCOS Needs in One Website!</p>
   </div>
 </header>
 
+<!--Main Menu Navagation; pulled from database, changed in seed.js-->
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
       <h1 class="page-header">Features:</h1>
       <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
-        <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}</a></li>
+        <li><a href="{{thing.link}}" tooltip="{{thing.info}}">{{thing.name}}</a></li>
       </ul>
     </div>
   </div>
 </div>
 
+
+<!--Work on body information for home page pulling from Database)
+<div class="text-area" id="body-text">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="about in awesomeAbouts">
+					<li><h2>{{about.name}}</h2><p>{{about.info}}</p></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>-->
+
+<!--Current Body Code-->
+<div class="text-area" id="body-text">
+	<div class="container">
+		<h2>Mission Statement</h2><p>
+			To provide a creative, intellectual and entrepreneurial outlet for
+	students to use the latest open-source software platforms to develop
+	applications that solve societal problems.
+		</p>
+		<h2>Description</h2><p>
+			RCOS is a group of RPI students who work on open source projects. During the semester, meeting times are as follows:
+	<ul><li>Tuesday(4-5:15)  Meeting with individual mentors <a href= http://goo.gl/wdorY9 >  Rooms 
+	</a></li><li>Friday(4-5:15)  Meeting in DCC 318 
+	</li></ul></br>	
+	Our members work on a variety of projects, as can be seen
+	 <a href="http://rcos.rpi.edu/projects/">here</a>. 
+	 The projects page is itself our dashboard to help us keep up with 
+	 the status of the projects!</a></p>
+		</p>
+		<h2>Benefits of being an RCOS member</h2><p>
+			<ul><li>The opportunity to help society by creating useful software.</li><li>An excellent environment to share your skills with your peers and
+		learn from them as well</li><li>Great practice in the code review process, a very important skill
+		for your software career!</li><li>Practice giving and receiving feedback. Learning how to discuss
+		technical and non-technical aspects of a project in a constructive
+		fashion is a critical skill that employers look for!</li></ul>
+		</p>
+		<h2>Details</h2><p>
+			Students can participate in RCOS for course credit or for a stipend.
+	At the beginning of each semester, the Internal Advisory Board will
+	review project proposals and decide which projects should receive
+	financial support.
+		</p>
+	</div>
+</div>
+
+<!--Footer Code-->
 <footer class="footer">
   <div class="container">
       <p>Observatory | An <a href="http://rcos.rpi.edu" title="Rensselaer Center for Open Source">RCOS</a> project | <a href="https://github.com/rcos/Observatory3/issues">Issues</a></p>
