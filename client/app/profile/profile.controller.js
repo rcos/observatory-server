@@ -100,9 +100,13 @@ angular.module('observatory3App')
     $scope.markAttendance = function(code){
         $http.put("/api/users/" +  $scope.user._id + "/attendance", {
             "code": code
-        }).success(function(){
-            alert("Attendance added!");
-            updateUser();
+        }).success(function(res){
+            if (!res.success){
+                alert("Could not add attendance");
+            } else{
+              alert("Added attendance!");
+              updateUser();
+            }
         }).error(function(data){
             alert("Invalid Attendance Code!");
         });
