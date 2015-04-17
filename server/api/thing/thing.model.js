@@ -7,6 +7,7 @@ var ThingSchema = new Schema({
   name: String,
   info: String,
   link: String,
+  type: String,
   active: Boolean
 });
 

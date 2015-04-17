@@ -14,30 +14,26 @@ var Commit = require('../api/commit/commit.model');
 
 Thing.find({}).remove(function() {
   Thing.create({
-    name : 'Feed',
-    info : 'View the feed from all project blogs posts and commits',
-    link : '/Feed',
+    // name : 'Feed',
+    // info : 'View the feed from all project blogs posts and commits',
+    // link : '/Feed',
+    // type: 'homepage'
   // }, {
   //   name : 'Projects',
   //   info : 'Look at current and past Projects',
-  //   link : '/Projects' 
+  //   link : '/Projects',
+  //   type: 'homepage'
   }, {
     name : 'Developers',
     info : 'View current and past RCOS developers',
-    link : '/Developers'
-  },  {
-    name : 'Modular Structure',
-    info : 'Best practice client and server structures allow for more code reusability and maximum scalability',
-    type : 'homepage'
-  },  {
-    name : 'Optimized Build',
-    info : 'Build process packs up your templates as a single JavaScript payload, minifies your scripts/css/images, and rewrites asset names for caching.',
-    type : 'homepage'
-  },{
-    name : 'Deployment Ready',
-    info : 'Easily deploy your app to Heroku or Openshift with the heroku and openshift subgenerators',
-    type : 'homepage'
-  },{
+    link : '/users',
+    type: 'homepage'
+  }, {
+    name : 'Archive',
+    info : 'View the past observatory',
+    link : 'http://rcos.rpi.edu',
+    type: 'homepage'
+}, {
     name : '',
     info : '',
     type : 'daycode'
