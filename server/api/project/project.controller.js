@@ -3,6 +3,9 @@
 var _ = require('lodash');
 var Project = require('./project.model');
 var User = require('../user/user.model');
+var multiparty = require('multiparty');
+var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 // Get list of current projects
 exports.index = function(req, res) {
@@ -76,3 +79,35 @@ exports.destroy = function(req, res) {
 function handleError(res, err) {
   return res.send(500, err);
 }
+
+exports.upload = function(req, res) {
+  var form = new multiparty.Form();
+  form.parse(req, function(err, fields, files) {
+    console.log(files.file[0].path);
+    var file = files.file[0];
+    var name = file.path.substring(file.path.lastIndexOf('/')).substring(1);
+    var path = '/var/www/uploads/' + req.params.username + '/' + req.params.project;
+    var destPath = path + '/' + name;
+    if(!fs.existsSync(path)){
+      mkdirp.sync(path);
+    }
+    fs.rename(file.path, destPath, function (err) {
+      if (err) console.error(err)
+    });
+    console.log(destPath);
+    Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
+      if(err) { return handleError(res, err); }
+      if(!project) { return res.send(404); }
+      if(project.photos.length==10){
+        var temp = project.photos.shift();
+        var toRemove = path + '/' + temp;
+        fs.unlinkSync(toRemove);
+      }
+      project.photos.push(name);
+      project.save(function (err) {
+        console.error(err);
+      });
+    });
+  });
+};
+

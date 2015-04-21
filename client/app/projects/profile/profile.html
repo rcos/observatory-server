@@ -38,5 +38,7 @@
         <div class="col-sm-7 description">
             <p>{{project.description}}</p>
         </div>
+        <input type="file" ng-file-select="" ng-file-change="onFileSelect($files)">
+        <div ng-repeat="url in project.photos"> <img ng-src={{imgPrefix+url}} height=100> </div>
     </div>
 </div>

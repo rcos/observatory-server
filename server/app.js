@@ -10,6 +10,25 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
+var mkdirp = require('mkdirp');
+var fs = require('fs');
+
+var tmp = '/var/www/tmp';
+var uploads = '/var/www/tmp';
+
+if(!fs.existsSync(tmp)){
+	if(!mkdirp.sync(tmp)){
+		console.log("Could not create temp directory!");
+	}
+}
+
+process.env.TMPDIR = tmp;
+
+if(!fs.existsSync(uploads)){
+	if(!mkdirp.sync(uploads)){
+		console.log("Could not create uploads directory!");
+	}
+}
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
