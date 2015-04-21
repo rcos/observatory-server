@@ -86,8 +86,7 @@ exports.upload = function(req, res) {
     console.log(files.file[0].path);
     var file = files.file[0];
     var name = file.path.substring(file.path.lastIndexOf('/')).substring(1);
-    var cwd = process.cwd();
-    var path = cwd + '/server/static/uploads/' + req.params.username + '/' + req.params.project;
+    var path = '/var/www/uploads/' + req.params.username + '/' + req.params.project;
     var destPath = path + '/' + name;
     if(!fs.existsSync(path)){
       mkdirp.sync(path);
