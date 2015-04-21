@@ -16,9 +16,7 @@
     "angular-ui-router": "~0.2.10",
     "angular-bootstrap": "~0.11.0",
     "codemirror": "~5.1.0",
-    "angular-file-upload": "~1.1.5",
-    "ng-file-upload": "~3.3.1",
-    "ng-file-upload-shim": "~3.3.1"
+    "ng-file-upload": "~3.3.1"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
