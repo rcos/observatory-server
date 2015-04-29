@@ -34,3 +34,93 @@
 .header-buttons{
     padding-top: 20px;
 }
+
+.carousel-indicators li {
+    border: 1px solid #444;
+}
+
+.carousel-indicators {
+    bottom: -45px;
+}
+
+.carousel-control {
+    background-image: none !important; /* remove background gradients on controls */
+}
+
+.carousel-indicators .active {
+    background-color: #444;
+}
+
+.carousel {
+    max-height: 600px;
+}
+
+.project-image {
+    padding-bottom: 50px;
+}
+
+.slide {
+    height: 350px;
+    margin: 0 auto;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+}
+
+//change carousel transition to fade instead of slide
+.carousel {
+    .carousel-inner {
+        .item {
+            opacity: 0;
+            -webkit-transition-property: opacity;
+            -moz-transition-property: opacity;
+            -o-transition-property: opacity;
+            transition-property: opacity;
+            -webkit-transition-duration: 300ms;
+            -moz-transition-duration: 300ms;
+            -o-transition-duration: 300ms;
+            transition-duration: 300ms;
+        }
+
+        .active {
+            opacity: 1;
+        }
+
+        .active.left,
+        .active.right {
+            left: 0;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .next.left,
+        .prev.right {
+            opacity: 1;
+        }
+    }
+
+    .carousel-control {
+        z-index: 2;
+    }
+}
+
+// hide the file upload input
+#upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin-top: -10px;
+    margin-bottom: 5px;
+    margin-left: -10px;
+}
+

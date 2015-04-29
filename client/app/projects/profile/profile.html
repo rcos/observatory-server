@@ -16,8 +16,21 @@
     </div>
     <div class="row">
         <div class="col-sm-7 project-image">
-            <img src="http://rcos.rpi.edu/site-media/screenshots/207.png" class="img-responsive" alt="">
+
+            <div class="fileUpload btn btn-sm btn-default" ng-show="userInProject()">
+                <span>Upload Images</span>
+                <div id="upload">
+                    <input type="file" ng-file-select="" ng-file-change="onFileSelect($files)" multiple />
+                </div>
+            </div>
+
+            <carousel>
+                <slide ng-repeat="url in project.photos" active="$first">
+                    <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt=""></div>
+                </slide>
+            </carousel>
         </div>
+
         <div class="col-sm-4">
         <div class="contributors">
             <div class="row">
@@ -35,10 +48,10 @@
             </div>
         </div>
         </div>
+
         <div class="col-sm-7 description">
             <p>{{project.description}}</p>
         </div>
-        <input type="file" ng-file-select="" ng-file-change="onFileSelect($files)">
-        <div ng-repeat="url in project.photos"> <img ng-src={{imgPrefix+url}} height=100> </div>
+
     </div>
 </div>
