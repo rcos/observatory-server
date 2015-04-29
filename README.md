@@ -21,7 +21,7 @@ Once the project is cloned you need nodejs (nodejs-legacy for debian-based distr
 npm install -g grunt-cli grunt bower
 npm install
 # if you have errors running the above, run the following line:
-sudo $USER chown -R ~/.npm
+sudo chown $USER -R ~/.npm
 bower install
 sudo gem install sass
 sudo service mongodb start # or equivalent if not on an ubuntu-based distribution
@@ -30,7 +30,7 @@ sudo mkdir -p /data/db
 sudo mkdir /var/www
 sudo groupadd www-data
 sudo chgrp www-data /var/www
-sudo chown 775 /var/www
+sudo chmod 775 /var/www
 sudo usermod -aG www-data $USER
 grunt serve
 ```
