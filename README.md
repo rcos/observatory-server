@@ -27,6 +27,11 @@ sudo gem install sass
 sudo service mongodb start # or equivalent if not on an ubuntu-based distribution
 # if mongodb fails to start, run the following line and retry:
 sudo mkdir -p /data/db
+sudo mkdir /var/www
+sudo groupadd www-data
+sudo chgrp www-data /var/www
+sudo chown 775 /var/www
+sudo usermod -aG www-data $USER
 grunt serve
 ```
 
