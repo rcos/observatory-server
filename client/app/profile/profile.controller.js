@@ -58,7 +58,7 @@ angular.module('observatory3App')
 
       return {
           restrict:'E',
-          template: "<div ng-show='!edittingBio' style='white-space:pre;'>{{user.bio}}</div> \
+          template: "<div style='white-space:pre;' btf-markdown='user.bio'></div> \
                      <textarea ng-show='edittingBio' ng-model='user.bio' ></textarea>"
       }
   });

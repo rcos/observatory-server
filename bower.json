@@ -16,12 +16,14 @@
     "angular-ui-router": "~0.2.10",
     "angular-bootstrap": "~0.11.0",
     "codemirror": "~5.1.0",
-    "ng-file-upload": "~3.3.1"
+    "ng-file-upload": "~3.3.1",
+    "angular-markdown-directive": "~0.3.1"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
     "angular-scenario": ">=1.2.*"
-  }, "resolutions": {
+  },
+  "resolutions": {
     "angular": "~1.3.x"
   }
 }

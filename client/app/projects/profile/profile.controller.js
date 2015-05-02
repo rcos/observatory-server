@@ -8,6 +8,25 @@ angular.module('observatory3App')
 
     $scope.imgPrefix = "/uploads/" + $stateParams.username + '/' + $stateParams.project + '/';
 
+
+    $scope.edittingDesc = false;
+
+    $scope.editDesc = function(){
+        $scope.edittingDesc = !$scope.edittingDesc;
+    };
+
+    $scope.saveDesc = function(){
+        $scope.edittingDesc = false;
+        $http.put("/api/projects/" + $scope.project._id, {
+            "description": $scope.project.description
+        }).success(function(){
+            alert("Description updated!");
+        }).error(function(){
+            alert("Could not update description!");
+        });
+    };
+
+
     $scope.userInProject = function() {
         return true; // delete when we get people in projects
         return $scope.project.authors.indexOf(Auth.getCurrentUser()._id) !== -1;
@@ -26,4 +45,11 @@ angular.module('observatory3App')
             $scope.project = project;
         });
     }
+})
+.directive("desc", function() {
+      return {
+          restrict:'E',
+          template: "<div btf-markdown='project.description'></div> \
+                     <textarea ng-show='edittingDesc && userInProject()' ng-model='project.description' ></textarea>"
+      }
 });
