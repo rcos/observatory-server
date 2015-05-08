@@ -83,7 +83,6 @@ function handleError(res, err) {
 exports.upload = function(req, res) {
   var form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
-    console.log(files.file[0].path);
     var file = files.file[0];
     var name = file.path.substring(file.path.lastIndexOf('/')).substring(1);
     var path = '/var/www/uploads/' + req.params.username + '/' + req.params.project;
@@ -94,7 +93,6 @@ exports.upload = function(req, res) {
     fs.rename(file.path, destPath, function (err) {
       if (err) console.error(err)
     });
-    console.log(destPath);
     Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
       if(err) { return handleError(res, err); }
       if(!project) { return res.send(404); }
@@ -105,7 +103,7 @@ exports.upload = function(req, res) {
       }
       project.photos.push(name);
       project.save(function (err) {
-        console.error(err);
+          // TODO handle project saving error
       });
     });
   });
