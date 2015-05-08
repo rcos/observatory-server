@@ -13,6 +13,13 @@ Features
 
 Observatory is a powerful dashboard tracking open source projects and contributors that are built through Rensselaer Center for Open Source. the current implemenation can be seen in action at [rcos.rpi.edu](http://rcos.rpi.edu). We are a highly active community of open source developers that attend school at Rensselaer.
 
+Key Features Include
+
+- Project Tracking
+- Individual Progress reports
+- Attendance system for users
+- Information gathering and blog platform for projects
+
 Installation
 ------------
 
