@@ -5,7 +5,7 @@ angular.module('observatory3App')
     $stateProvider
       .state('profile', {
         url: '/users/:id/profile',
-        templateUrl: 'app/profile/profile.html',
+        templateUrl: 'app/user/profile/profile.html',
         controller: 'ProfileCtrl'
       });
   });

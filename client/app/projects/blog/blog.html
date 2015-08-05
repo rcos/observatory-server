@@ -16,11 +16,29 @@
         <br/><br/>
     </div>
 
+    <div class="extra-content" ng-hide="newPostIsEmpty()">
+        <h2 id="title" btf-markdown="post.title"></h2>
+        <div class="clear"></div>
+        <div id="content" btf-markdown="postToAdd.content"></div>
+        <div class="bottom-bar">
+        </div>
+    </div>
+    
     <div ng-repeat="post in posts | orderBy:'-date'">
-        <div class="extra-content" >
-            <h2 id="title">{{ post.title }}</h2>
+        <div class="extra-content">
+            <div ng-show='userInProject()'>
+                <h2 ng-hide='edittingPost(post._id)' id="title" class="col-xs-6" btf-markdown="post.title"></h2>
+                <textarea ng-show='edittingPost(post._id)' id="titleEdit" class="col-xs-6" ng-model='post.title'></textarea>
+                <div class="col-xs-6 text-right">
+                    <div class="btn-group">
+                        <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post._id)'>Edit</button>
+                        <button type="button" class='btn btn-default btn-sm' ng-click='savePost(post._id)'>Save</button>
+                    </div>
+                </div>
+            </div>
             <div class="clear"></div>
-            <div id="content">{{ post.content }}</div>
+            <div ng-hide='edittingPost(post._id)' id="content" btf-markdown="post.content"></div>
+            <textarea ng-show='edittingPost(post._id)' id="contentEdit" ng-model='post.content'></textarea>
             <div class="bottom-bar">
                 <div class="bottom-bar-left">
                     <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
