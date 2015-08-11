@@ -86,14 +86,21 @@ exports.upload = function(req, res) {
   form.parse(req, function(err, fields, files) {
     var file = files.file[0];
     var name = file.path.substring(file.path.lastIndexOf('/')).substring(1);
-    var path = '/var/www/uploads/' + req.params.username + '/' + req.params.project;
+    var cwd = process.cwd();
+    var path = cwd + '/server/static/uploads/' + req.params.username + '/' + req.params.project;
     var destPath = path + '/' + name;
     if(!fs.existsSync(path)){
       mkdirp.sync(path);
     }
-    fs.rename(file.path, destPath, function (err) {
-      if (err) console.error(err)
+    // Copy file from temp to uploads folder with streams. 
+    // Allows upload across partitions unlike fs.renameSync
+    var is = fs.createReadStream(file.path);
+    var os = fs.createWriteStream(destPath);
+    is.pipe(os);
+    is.on('end', function() {
+        fs.unlinkSync(file.path);
     });
+
     Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
       if(err) { return handleError(res, err); }
       if(!project) { return res.send(404); }

@@ -16,7 +16,7 @@ module.exports = function(app) {
   app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
 
-  app.use('/uploads', express.static( "/var/www/uploads" ));
+  app.use('/uploads', express.static( __dirname + "/static/uploads" ));
 
   app.use('/auth', require('./auth'));
   
