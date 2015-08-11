@@ -97,7 +97,7 @@ exports.upload = function(req, res) {
     Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
       if(err) { return handleError(res, err); }
       if(!project) { return res.send(404); }
-      if(project.photos.length==10){
+      if(project.photos.length===10){
         var temp = project.photos.shift();
         var toRemove = path + '/' + temp;
         fs.unlinkSync(toRemove);

@@ -21,16 +21,16 @@ angular.module('observatory3App')
 
     $scope.getInfo = function() {
         if($scope.projectToAdd.repositoryUrl) {
-            var splitUrl = $scope.projectToAdd.repositoryUrl.split("/");
+            var splitUrl = $scope.projectToAdd.repositoryUrl.split('/');
             $scope.projectToAdd.githubUsername = splitUrl[splitUrl.length - 2];
             $scope.projectToAdd.githubProjectName = $scope.projectToAdd.name = splitUrl[splitUrl.length - 1];
-            $.getJSON('https://api.github.com/repos/' + $scope.projectToAdd.githubUsername + "/" + $scope.projectToAdd.githubProjectName, function(response) {
+            $.getJSON('https://api.github.com/repos/' + $scope.projectToAdd.githubUsername + '/' + $scope.projectToAdd.githubProjectName, function(response) {
                 $scope.projectToAdd.websiteURL = response.homepage;
                 $scope.projectToAdd.description = response.description;
                 $scope.$apply();
             });
         }
-    }
+    };
 
     $scope.submit = function(form) {
         $scope.submitted = true;

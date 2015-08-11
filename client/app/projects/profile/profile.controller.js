@@ -1,12 +1,13 @@
+/*jshint multistr: true */
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, $stateParams, $upload, Auth) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, $stateParams, $upload) {
     $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
       $scope.project = project;
     });
 
-    $scope.imgPrefix = "/uploads/" + $stateParams.username + '/' + $stateParams.project + '/';
+    $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
 
 
     $scope.edittingDesc = false;
@@ -17,20 +18,20 @@ angular.module('observatory3App')
 
     $scope.saveDesc = function(){
         $scope.edittingDesc = false;
-        $http.put("/api/projects/" + $scope.project._id, {
-            "description": $scope.project.description
+        $http.put('/api/projects/' + $scope.project._id, {
+            'description': $scope.project.description
         }).success(function(){
-            alert("Description updated!");
+            window.alert('Description updated!');
         }).error(function(){
-            alert("Could not update description!");
+            window.alert('Could not update description!');
         });
     };
 
 
     $scope.userInProject = function() {
         return true; // delete when we get people in projects
-        return $scope.project.authors.indexOf(Auth.getCurrentUser()._id) !== -1;
-    }
+        // return $scope.project.authors.indexOf(Auth.getCurrentUser()._id) !== -1;
+    };
 
     $scope.onFileSelect = function($files) {
         //$files: an array of files selected, each file has name, size, and type.
@@ -44,12 +45,12 @@ angular.module('observatory3App')
         $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
             $scope.project = project;
         });
-    }
+    };
 })
-.directive("desc", function() {
+.directive('desc', function() {
       return {
           restrict:'E',
-          template: "<div btf-markdown='project.description'></div> \
-                     <textarea ng-show='edittingDesc && userInProject()' ng-model='project.description' ></textarea>"
-      }
+          template: '<div btf-markdown=\'project.description\'></div> \
+                     <textarea ng-show=\'edittingDesc && userInProject()\' ng-model=\'project.description\' ></textarea>'
+      };
 });

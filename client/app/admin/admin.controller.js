@@ -6,7 +6,7 @@ angular.module('observatory3App')
     if (Auth.isLoggedIn()){
       var loggedInUser = Auth.getCurrentUser();
 
-          if(!(loggedInUser.role==="admin")){
+          if(loggedInUser.role!=='admin'){
             $location.path('/');
           }
           else{
@@ -42,20 +42,20 @@ angular.module('observatory3App')
     };
 
     $scope.toggle = function(user){
-      var endpoint =  '/deactivate'
-      if(user.active == false){
-        endpoint = '/activate'
+      var endpoint =  '/deactivate';
+      if(user.active === false){
+        endpoint = '/activate';
       }
       $http.put('/api/users/' + user._id + endpoint).success(function(message){
         if (message.success){
-          angular.forEach($scope.users, function(u, i) {
+          angular.forEach($scope.users, function(u) {
             if (u._id === user._id) {
-              u.active = !user.active ;
+              u.active = !user.active;
             }
           });
-          }
-    });
-  }
+        }
+      });
+    };
 
     $scope.sortorder = 'name';
 
