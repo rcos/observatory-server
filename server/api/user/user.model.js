@@ -21,6 +21,8 @@ var UserSchema = new Schema({
   bio:String,
   attendance: [Date],
   semesterCount: Number,
+  passwordResetToken: String,
+  passwordResetExpiration: Date,
 
 
   // field for what user is currently enrolled as (pay, credit, experience)
@@ -202,6 +204,16 @@ UserSchema.methods = {
    */
   authenticate: function(plainText) {
     return this.encryptPassword(plainText) === this.hashedPassword;
+  },
+
+  /**
+   * Return true if the reset token is valid for this user
+   *
+   * @param {String} token
+   * @return {Boolean}
+   */
+  validResetToken: function(token){
+    return this.passwordResetToken === token && new Date() < this.passwordResetExpiration;
   },
 
   /**

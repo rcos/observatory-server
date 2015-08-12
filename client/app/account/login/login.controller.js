@@ -23,4 +23,13 @@ angular.module('observatory3App')
       }
     };
 
+    // Check URL for token
+    if ($location.search().token){
+      // Attempt to login with token
+      var token = $location.search().token;
+      Auth.loginWithResetToken(token)
+        .then(function(){
+          $location.path('/settings'); // allow user to change password
+        });
+    }
   });

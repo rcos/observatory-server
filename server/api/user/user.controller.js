@@ -4,6 +4,8 @@ var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
+var crypto = require('crypto');
+var email = require("../../components/email");
 var Commit = require('../commit/commit.model');
 
 
@@ -195,15 +197,20 @@ exports.destroy = function(req, res) {
 
 /**
  * Change a users password
+ *
+ * This can be done with either the reset token or the user's old
+ * password
  */
 exports.changePassword = function(req, res, next) {
   var userId = req.user._id;
   var oldPass = String(req.body.oldPassword);
+  var token   = String(req.body.token);
   var newPass = String(req.body.newPassword);
 
   User.findById(userId, function (err, user) {
-    if(user.authenticate(oldPass)) {
+    if(user.authenticate(oldPass) || user.validResetToken(token)) {
       user.password = newPass;
+      user.passwordResetToken = '';
       user.save(function(err) {
         if (err) return validationError(res, err);
         res.send(200);
@@ -339,4 +346,44 @@ exports.removeTech = function(req,res){
             });
         }
     });
+};
+
+/**
+ * Set reset token for user and email it the password token will expire after 24 hours.
+ */
+exports.resetPassword = function(req, res){
+    var userEmail = req.body.email;
+    User.findOne({
+        email: userEmail.toLowerCase()
+    }, function (err, user){
+        if (err) return res.json(401, err);
+        if (!user) return res.json(401, {message: 'User does not exist'});
+
+        crypto.randomBytes(12, function(ex, buf) {
+            var token = buf.toString('hex');
+            user.passwordResetToken = token;
+            
+            // Get tomorrow's date
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            user.passwordResetExpiration = tomorrow;
+
+            user.save(function(err){
+                if (err) return validationError(res,err);
+                res.send(200);
+
+                // email token to user
+                email.send(userEmail,
+                    "Observatory3 password reset",
+                    "Please go to the following url to reset your password\n\n\
+                    " + config.addr + "/login?token=" + user.passwordResetToken + "\n\n\
+                    The token will expire after 24 hours\n\n\
+                    If you did not initiate this action, please ignore this email");
+            });
+
+        });
+
+    });
+    
 };

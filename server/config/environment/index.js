@@ -31,6 +31,8 @@ var all = {
   // Should we populate the DB with sample data?
   seedDB: false,
 
+  serverEmail: process.env.SERVER_EMAIL || "test@example.com",
+
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
     session: 'observatory3-secret'

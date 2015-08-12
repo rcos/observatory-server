@@ -8,7 +8,7 @@
     <div class="col-sm-12">
       <form class="form" name="form" ng-submit="changePassword(form)" novalidate>
 
-        <div class="form-group">
+        <div ng-hide='token' class="form-group">
           <label>Current Password</label>
 
           <input type="password" name="password" class="form-control" ng-model="user.oldPassword"
