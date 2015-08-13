@@ -357,7 +357,7 @@ exports.resetPassword = function(req, res){
         email: userEmail.toLowerCase()
     }, function (err, user){
         if (err) return res.json(401, err);
-        if (!user) return res.json(401, {message: 'User does not exist'});
+        if (!user) return res.send(200);
 
         crypto.randomBytes(12, function(ex, buf) {
             var token = buf.toString('hex');
