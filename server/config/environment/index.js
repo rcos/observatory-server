@@ -38,6 +38,9 @@ var all = {
     session: 'observatory3-secret'
   },
 
+  // Sendgrid API key for sending emails
+  sendgridApiKey: process.env.SENDGRID_API_KEY || '',
+
   // List of user roles
   userRoles: ['guest', 'user', 'admin'],
 

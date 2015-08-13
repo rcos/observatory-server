@@ -11,7 +11,5 @@ module.exports = {
   // Server Address
   addr: "http://localhost:9000",
 
-  sendgridApiKey: process.env.SENDGRID_API_KEY || '',
-
   seedDB: false
 };

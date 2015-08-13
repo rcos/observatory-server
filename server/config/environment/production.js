@@ -17,9 +17,6 @@ module.exports = {
   addr:     process.env.SERVER_ADDR ||
             "",
 
-  // Sendgrid email
-  sendgridApiKey: process.env.SENDGRID_API_KEY,
-
   // MongoDB connection options
   mongo: {
     uri:    process.env.MONGOLAB_URI ||
