@@ -18,5 +18,10 @@ angular.module('observatory3App')
         templateUrl: 'app/account/settings/settings.html',
         controller: 'SettingsCtrl',
         authenticate: true
+      })
+      .state('forgot-password', {
+        url: '/forgot-password',
+        templateUrl: 'app/account/forgot-password/forgot-password.html',
+        controller: 'ForgotPasswordCtrl'
       });
   });

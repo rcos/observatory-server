@@ -40,6 +40,35 @@ angular.module('observatory3App')
       },
 
       /**
+       * Authenticate user via reset token and save session token
+       *
+       * @param  {String}   resetToken
+       * @param  {Function} callback - optional
+       * @return {Promise}
+       */
+      loginWithResetToken: function(resetToken, callback) {
+        var cb = callback || angular.noop;
+        var deferred = $q.defer();
+
+        $http.post('/auth/local/token', {
+          token: resetToken
+        }).
+        success(function(data) {
+          $cookieStore.put('token', data.token);
+          currentUser = User.get();
+          deferred.resolve(data);
+          return cb();
+        }).
+        error(function(err) {
+          this.logout();
+          deferred.reject(err);
+          return cb(err);
+        }.bind(this));
+
+        return deferred.promise;
+      },
+
+      /**
        * Delete access token and user info
        *
        * @param  {Function}
@@ -84,6 +113,27 @@ angular.module('observatory3App')
 
         return User.changePassword({ id: currentUser._id }, {
           oldPassword: oldPassword,
+          newPassword: newPassword
+        }, function(user) {
+          return cb(user);
+        }, function(err) {
+          return cb(err);
+        }).$promise;
+      },
+
+      /**
+       * Change password using token
+       *
+       * @param  {String}   token
+       * @param  {String}   newPassword
+       * @param  {Function} callback    - optional
+       * @return {Promise}
+       */
+      changePasswordWithToken: function(token, newPassword, callback) {
+        var cb = callback || angular.noop;
+
+        return User.changePassword({ id: currentUser._id }, {
+          token: token,
           newPassword: newPassword
         }, function(user) {
           return cb(user);
@@ -141,6 +191,22 @@ angular.module('observatory3App')
        */
       getToken: function() {
         return $cookieStore.get('token');
-      }
+      },
+
+      /**
+       * Sends password reminder to specified email
+       *
+       * @param {String} email
+       * @return {Promise}
+       **/
+       resetPassword: function(email, callback){
+        $http.post('/api/users/resetPassword', {
+          email: email
+        }).success(function(){
+          callback();
+        }).error(function(err){
+          callback(err);
+        });
+       }
     };
   });

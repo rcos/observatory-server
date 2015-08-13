@@ -8,5 +8,8 @@ module.exports = {
     uri: 'mongodb://localhost/observatory3-dev'
   },
 
+  // Server Address
+  addr: "http://localhost:9000",
+
   seedDB: false
 };
