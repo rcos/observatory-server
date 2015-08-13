@@ -202,10 +202,10 @@ angular.module('observatory3App')
        resetPassword: function(email, callback){
         $http.post('/api/users/resetPassword', {
           email: email
-        }).success(function(data){
+        }).success(function(){
           callback();
         }).error(function(err){
-          callback(err)
+          callback(err);
         });
        }
     };
