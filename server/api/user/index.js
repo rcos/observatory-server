@@ -21,6 +21,8 @@ router.get('/:id', controller.show);
 router.post('/', controller.create);
 router.get("/:id/attendance", auth.canEdit(), controller.attendance);
 router.put('/:id/bio', auth.canEdit(), controller.changeBio);
+router.put('/:id/project', auth.isAuthenticated(), controller.addProject);
+router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);
 router.put("/:id/addTech", auth.canEdit(), controller.addTech);
 router.put("/:id/removeTech", auth.canEdit(), controller.removeTech);
 router.post('/resetPassword', controller.resetPassword);

@@ -11,7 +11,6 @@ angular.module('observatory3App')
 
     // If the user navigates to /me, redirect them to their profile page
     $urlRouterProvider.when('/me', function($location, Auth){
-    	console.log(Auth.isLoggedIn(), Auth.getCurrentUser());
     	Auth.isLoggedInAsync(function(loggedIn){
     		if (loggedIn){
       		var loggedInUser = Auth.getCurrentUser();

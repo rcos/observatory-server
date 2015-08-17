@@ -387,3 +387,44 @@ exports.resetPassword = function(req, res){
     });
     
 };
+
+/**
+ * Add an item to the projects array for the user
+ */
+exports.addProject = function(req,res){
+    var userId = req.params.id;
+    var newProject = req.body.project;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (!user.projects) user.projects = [];
+            if (user.projects.indexOf(newProject) !== -1) return;
+            user.projects.push(newProject);
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
+    });
+};
+
+/**
+ * Remove an item from the tech array for a user
+ */
+exports.removeProject = function(req,res){
+    var userId = req.params.id;
+    var project = req.body.project;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (!user.projects) user.projects = [];
+            user.projects.splice(user.projects.indexOf(project), 1);
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
+    });
+};
