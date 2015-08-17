@@ -40,13 +40,14 @@
                 </div>
                 <bio></bio>
             </div>
-            <div class='content-box' ng-repeat='project in user.projects'>
+            <div class='content-box' ng-repeat='project in projects'>
                 <div class='project row'>
                     <div class='col-xs-3' style='text-align:center;'>
                         <img width='80%' src='{{project.avatar}}'/>
                     </div>
                     <div class='col-xs-9'>
                         <div class='title'> {{project.name}} </div>
+                        <a ng-href='{{project.repositoryUrl}}' class='repo'> {{project.repositoryUrl}} </a> 
                         <div class='description'>{{project.description}}</div>
                         <div class='tech-boxes'>
                             <div ng-repeat='tech in project.tech'>{{tech}}</div>

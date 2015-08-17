@@ -12,6 +12,13 @@ angular.module('observatory3App')
           $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
               $scope.user.commits = commits;
           });
+          // get all users projects information
+          $scope.projects = [];
+          user.projects.forEach(function(projectId){
+            $http.get("/api/projects/" + projectId).success(function(project){
+              $scope.projects.push(project);
+            });
+          });
       });
 
       $scope.edittingBio = false;
@@ -53,7 +60,6 @@ angular.module('observatory3App')
               window.alert('Could not add tech!');
           });
       };
-
   })
   .directive('bio', function(){
 
