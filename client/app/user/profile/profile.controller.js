@@ -6,7 +6,6 @@ angular.module('observatory3App')
 
       var loggedInUser;
       Auth.getCurrentUser(function(user){
-        console.log("Hello");
         loggedInUser = user;
         $scope.isuser = loggedInUser._id === $stateParams.id;
       });
