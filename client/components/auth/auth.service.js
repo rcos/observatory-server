@@ -7,6 +7,20 @@ angular.module('observatory3App')
       currentUser = User.get();
     }
 
+    function isLoggedInAsync(cb) {
+      if(currentUser.hasOwnProperty('$promise')) {
+        currentUser.$promise.then(function() {
+          cb(true);
+        }).catch(function() {
+          cb(false);
+        });
+      } else if(currentUser.hasOwnProperty('role')) {
+        cb(true);
+      } else {
+        cb(false);
+      }
+    }
+
     return {
 
       /**
@@ -145,10 +159,18 @@ angular.module('observatory3App')
       /**
        * Gets all available info on authenticated user
        *
+       * @param {Function} OPTIONAL callback
        * @return {Object} user
        */
-      getCurrentUser: function() {
-        return currentUser;
+      getCurrentUser: function(callback) {
+        if (!callback){
+          return currentUser;
+        }else{
+          // Wait for user login status
+          isLoggedInAsync(function(){
+            return callback(currentUser);
+          });
+        }
       },
 
       /**
@@ -163,19 +185,7 @@ angular.module('observatory3App')
       /**
        * Waits for currentUser to resolve before checking if user is logged in
        */
-      isLoggedInAsync: function(cb) {
-        if(currentUser.hasOwnProperty('$promise')) {
-          currentUser.$promise.then(function() {
-            cb(true);
-          }).catch(function() {
-            cb(false);
-          });
-        } else if(currentUser.hasOwnProperty('role')) {
-          cb(true);
-        } else {
-          cb(false);
-        }
-      },
+      isLoggedInAsync: isLoggedInAsync,
 
       /**
        * Check if a user is an admin
