@@ -4,8 +4,12 @@
 angular.module('observatory3App')
   .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth) {
 
-      var loggedInUser = Auth.getCurrentUser();
-      $scope.isuser = loggedInUser._id === $stateParams.id;
+      var loggedInUser;
+      Auth.getCurrentUser(function(user){
+        console.log("Hello");
+        loggedInUser = user;
+        $scope.isuser = loggedInUser._id === $stateParams.id;
+      });
 
       $http.get('/api/users/' + $stateParams.id).success(function(user){
           $scope.user = user;
