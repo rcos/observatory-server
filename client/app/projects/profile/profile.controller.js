@@ -2,15 +2,24 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, $stateParams, $upload) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, $upload) {
     $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
-      $scope.project = project;
+        $scope.project = project;
+        Auth.isLoggedInAsync(function(loggedIn){
+            if (loggedIn){
+                var user = Auth.getCurrentUser();
+                if (user.projects.indexOf(project._id) !== -1){
+                    $scope.userOnProject = true;
+                }
+            }
+        });
     });
 
     $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
 
 
     $scope.edittingDesc = false;
+    $scope.isLoggedIn = Auth.isLoggedIn;
 
     $scope.editDesc = function(){
         $scope.edittingDesc = !$scope.edittingDesc;
@@ -24,6 +33,30 @@ angular.module('observatory3App')
             window.alert('Description updated!');
         }).error(function(){
             window.alert('Could not update description!');
+        });
+    };
+
+    $scope.joinProject = function(){
+        var loggedInUser = Auth.getCurrentUser();
+        $http.put("/api/users/" + loggedInUser._id + "/project",{
+            "project": $scope.project._id
+        }).success(function(){
+            window.alert("You are now on this project!");
+            $scope.userOnProject = true;
+        }).error(function(){
+            window.alert("Error adding user to project!");
+        });
+    };
+
+    $scope.leaveProject = function(){
+        var loggedInUser = Auth.getCurrentUser();
+        $http.delete("/api/users/" + loggedInUser._id + "/project",{
+            "project": $scope.project._id
+        }).success(function(){
+            window.alert("You are now off this project!");
+            $scope.userOnProject = false;
+        }).error(function(){
+            window.alert("Error removing user from project!");
         });
     };
 

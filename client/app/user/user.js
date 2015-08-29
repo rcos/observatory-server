@@ -1,11 +1,23 @@
 'use strict';
 
 angular.module('observatory3App')
-  .config(function ($stateProvider) {
+  .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('user', {
         url: '/users',
         templateUrl: 'app/user/user.html',
         controller: 'UserCtrl'
       });
+
+    // If the user navigates to /me, redirect them to their profile page
+    $urlRouterProvider.when('/me', function($location, Auth){
+    	Auth.isLoggedInAsync(function(loggedIn){
+    		if (loggedIn){
+      		var loggedInUser = Auth.getCurrentUser();
+				$location.path("/users/" + loggedInUser._id + "/profile");
+			}else{
+				$location.path("/login");
+			}
+    	});
+    });
   });
