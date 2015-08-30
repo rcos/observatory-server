@@ -8,10 +8,12 @@ angular.module('observatory3App')
       Auth.getCurrentUser(function(user){
         loggedInUser = user;
         $scope.isuser = loggedInUser._id === $stateParams.id;
+        $scope.loggedInUserRole = loggedInUser.role;
       });
 
       $http.get('/api/users/' + $stateParams.id).success(function(user){
           $scope.user = user;
+          $scope.originalRole = user.role;
           $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
               $scope.user.commits = commits;
           });
@@ -63,6 +65,15 @@ angular.module('observatory3App')
               window.alert('Could not add tech!');
           });
       };
+
+      $scope.setRole = function(){
+        // $scope.user.role
+        $http.post('/api/users/' + $stateParams.id + '/role', {
+            role: $scope.user.role
+        }).success(function(){
+          $scope.originalRole = $scope.user.role;
+        });
+      }
   })
   .directive('bio', function(){
 
