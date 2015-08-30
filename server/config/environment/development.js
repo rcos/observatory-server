@@ -11,5 +11,8 @@ module.exports = {
   // Server Address
   addr: "http://localhost:9000",
 
-  seedDB: true
+  // For testing verification
+  // attendanceVerificationRatio: 1,
+
+  seedDB: false
 };

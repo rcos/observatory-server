@@ -28,6 +28,15 @@ ClassSchema
 		}
 		return null;
 	});
-	
 
-module.exports = mongoose.model('ClassYear', ClassSchema);
+var ClassYear;
+ClassSchema.statics.getCurrent = function(cb){
+	ClassYear.findOne({
+		"current": true
+	}, function(err, classYear){
+		cb(err, classYear);
+	});
+};
+
+ClassYear = mongoose.model('ClassYear', ClassSchema);
+module.exports = ClassYear;

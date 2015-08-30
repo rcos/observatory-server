@@ -1,0 +1,9 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+	<h3>Unverified Users</h3>
+  <div ng-repeat='user in unverifiedUsers'>
+    <button ng-click='verifyAttendance(user)' class='btn btn-primary'>Verify Attendance</button>
+    <span>{{ user.name }}</span>
+  </div>
+</div>

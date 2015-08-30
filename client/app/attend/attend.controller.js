@@ -6,8 +6,12 @@ angular.module('observatory3App')
       var user = Auth.getCurrentUser();
       $http.put('/api/users/' + user._id + '/attend', {
         dayCode: $scope.userDayCode
-      }).success(function(){
-        window.alert("Day code submitted successfully!");
+      }).success(function(info){
+        if (info.unverified){
+          $scope.unverified = true;
+        }else{
+          window.alert("Day code submitted successfully!");
+        }
       }).error(function(err){
         window.alert("Error: " + err);
       });

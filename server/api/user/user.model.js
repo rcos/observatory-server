@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var crypto = require('crypto');
 var md5 = require('MD5');
 var Commit = require('../commit/commit.model');
+var ClassYear = require('../classyear/classyear.model');
 
 var UserSchema = new Schema({
   name: String,
@@ -79,6 +80,81 @@ UserSchema
     // return 'http://www.gravatar.com/avatar/00000000000000000000000000000000';
 });
 
+
+function isoDateToTime(isoDate){
+  var date = new Date(isoDate);
+  date.setHours(0,0,0,0);
+  return date.getTime();
+}
+
+// Represents a users attendance on a given day
+UserSchema
+  .virtual('presence')
+  .get(function(){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+
+    for (var i = 0;i < this.attendance.length;i++){
+      if (isoDateToTime(this.attendance[i]) == today.getTime()){
+        return "present";
+      }
+    }
+    for (var i = 0;i < this.unverifiedAttendance.length;i++){
+      if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+        return "unverified";
+      }
+    }
+    return "absent";
+  })
+  .set(function(status){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    if (status === "present"){
+      // Make sure user is not unverified for today
+      for (var i = this.unverifiedAttendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+           this.unverifiedAttendance.splice(i,1);
+        }
+      }
+
+      // If user already has attendance don't change anything
+      for (var i = 0;i < this.attendance.length;i++){
+        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+          return;
+        }
+      }
+      this.attendance.push(today);
+    }else if (status === "unverified"){
+      // If user already has attendance remove their attendance
+      for (var i = this.attendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+          this.attendance.splice(i,1);
+        }
+      }
+
+      // See if user already is unverifed
+      for (var i = 0;i < this.unverifiedAttendance.length;i++){
+        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+          return;
+        }
+      }
+
+      this.unverifiedAttendance.push(today);
+    }else if (status === "absent"){
+      // Remove attendance from unverified and attendance
+      for (var i = this.attendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+          this.attendance.splice(i,1);
+        }
+      }
+      for (var i = this.unverifiedAttendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+           this.unverifiedAttendance.splice(i,1);
+        }
+      }
+    }
+    this.save();
+  });
 
 // Public profile information
 UserSchema
