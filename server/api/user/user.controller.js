@@ -196,6 +196,32 @@ exports.destroy = function(req, res) {
 };
 
 /**
+ * Change what role the user is 
+ * restriction: 'admin'
+ */
+exports.role = function(req, res) {
+    var roles = ['user', 'mentor', 'admin'];
+    var userId = req.params.id;
+    var newRole = req.body.role;
+    // Check that role is valid
+    if (roles.indexOf(newRole) === -1){
+        res.send(400, {error: "Role does not exist."});
+    }
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (user.role === newRole) return;
+            user.role = newRole;
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
+    });
+}
+
+/**
  * Change a users password
  *
  * This can be done with either the reset token or the user's old
