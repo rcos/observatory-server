@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
 var email = require("../../components/email");
 var Commit = require('../commit/commit.model');
+var ClassYear = require('../classyear/classyear.model');
 
 
 var validationError = function(res, err) {
@@ -295,17 +296,30 @@ exports.authCallback = function(req, res, next) {
 /**
  * Mark attendance for specified user
  */
-exports.attendance = function(req,res){
+exports.attend = function(req,res){
     var userId = req.params.id;
-    var result = User.update({
+    var code = req.body.dayCode;
+    if (!code) res.send(400, "No Code Submitted");
+    // Check code against current class year
+    ClassYear.findOne({
+      current: true
+    }, function(err, classYear){
+      if (err) return res.send(500, err);
+      if (!classYear) return res.send(500, "No Class Year");
+      if (classYear.dayCode === code){
+        var result = User.update({
         _id: userId
-    },{
-        $push: {
-            attendance: new Date()
-        }
-    }, function(err){
-        res.send({"success":(err !== 0)});
-    });
+        },{
+            $addToSet: {
+                attendance: new Date()
+            }
+        }, function(err){
+            res.send({"success":(err !== 0)});
+        });
+      }else{
+        res.send(400, "Incorrect Day Code");
+      }
+    })
 };
 
 /**

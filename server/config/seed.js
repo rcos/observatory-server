@@ -11,6 +11,7 @@ var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
 var Project = require('../api/project/project.model');
 var Commit = require('../api/commit/commit.model');
+var ClassYear = require('../api/classyear/classyear.model')
 
 Thing.find({}).remove(function() {
   Thing.create({
@@ -60,7 +61,18 @@ User.find({}).remove(function() {
       login: 'agundy'
     }
 
-  }, function() {
+  },
+  {
+    provider: 'local',
+    role: 'admin',
+    name: 'Seve',
+    email: 'seve@admin.com',
+    password: 'admin',
+    github:{
+      login: 'seveibar'
+    }
+  },
+   function() {
       console.log('finished populating users');
     }
   );
@@ -77,4 +89,11 @@ Project.find({}).remove(function(){
   }, function() {
     console.log('finished populating projects')
   })
+});
+
+ClassYear.find({}).remove(function(){
+  ClassYear.create({
+    semester: '1970fall',
+    current: true
+  });
 });

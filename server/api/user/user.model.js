@@ -21,6 +21,7 @@ var UserSchema = new Schema({
   projects: [{type : Schema.Types.ObjectId, ref: 'Project'}], // project id
   bio:String,
   attendance: [Date],
+  unverifiedAttendance: [Date],
   semesterCount: Number,
   passwordResetToken: String,
   passwordResetExpiration: Date,

@@ -11,5 +11,5 @@ module.exports = {
   // Server Address
   addr: "http://localhost:9000",
 
-  seedDB: false
+  seedDB: true
 };
