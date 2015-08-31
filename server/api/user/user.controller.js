@@ -330,7 +330,6 @@ exports.attend = function(req,res){
     if (req.user.presence !== "absent") res.send(200);
     // Check code against current class year
     ClassYear.getCurrent(function(err, classYear){
-      console.log(err, classYear);
       if (err) return res.send(500, err);
       if (classYear.dayCode === code){
         var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;

@@ -170,8 +170,8 @@ UserSchema
       'email': this.email,
       'semesters': this.semesterCount,
       'attendance': this.attendance,
-      "attendanceScore": 88,
-      "attendanceBonus": 12,
+      "attendanceScore": 0,
+      "attendanceBonus": 0,
       'projects': this.projects,//TODO pull projects
       'tech': this.tech,
       'bio': this.bio,
