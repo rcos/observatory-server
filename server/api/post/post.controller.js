@@ -48,7 +48,7 @@ exports.create = function(req, res) {
     User.findById(req.user._id, function(err, user) {
       if (err) { return handleError(res, err); }
 
-      if ((project.authors && project.authors.indexOf(req.user._id) !== -1) || user.role === 'mentor' || user.role === 'admin'){
+      if ((user.projects && user.projects.indexOf(project._id) !== -1) || user.role === 'mentor' || user.role === 'admin'){
         Post.create(req.body, function(err, post) {
           if(err) { return handleError(res, err); }
           return res.json(201, post);

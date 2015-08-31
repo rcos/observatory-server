@@ -2,18 +2,27 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, $upload) {
-    $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
-        $scope.project = project;
+.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, $upload, Project) {
+    $scope.userOnProject = false;
+
+    Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
+        $scope.project = result.data;
+        getAuthors();
         Auth.isLoggedInAsync(function(loggedIn){
             if (loggedIn){
                 var user = Auth.getCurrentUser();
-                if (user.projects.indexOf(project._id) !== -1){
-                    $scope.userOnProject = true;
-                }
+                $scope.user = user;
+                $scope.checkUserProject();
             }
         });
     });
+
+    var getAuthors = function() {
+        var project = $scope.project;
+        $http.get('/api/projects/' + project._id + '/authors')
+            .success(function(authors){
+                $scope.authors = authors;})
+    }
 
     $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
 
@@ -37,12 +46,13 @@ angular.module('observatory3App')
     };
 
     $scope.joinProject = function(){
-        var loggedInUser = Auth.getCurrentUser();
-        $http.put("/api/users/" + loggedInUser._id + "/project",{
+        $http.put("/api/users/" + $scope.user._id + "/project",{
             "project": $scope.project._id
         }).success(function(){
             window.alert("You are now on this project!");
             $scope.userOnProject = true;
+            $scope.user.projects.push($scope.project._id);
+            getAuthors();
         }).error(function(){
             window.alert("Error adding user to project!");
         });
@@ -54,16 +64,17 @@ angular.module('observatory3App')
             "project": $scope.project._id
         }).success(function(){
             window.alert("You are now off this project!");
+            $scope.user.projects.splice($scope.user.projects.indexOf($scope.project._id), 1);
             $scope.userOnProject = false;
+            getAuthors();
         }).error(function(){
             window.alert("Error removing user from project!");
         });
     };
 
 
-    $scope.userInProject = function() {
-        return true; // delete when we get people in projects
-        // return $scope.project.authors.indexOf(Auth.getCurrentUser()._id) !== -1;
+    $scope.checkUserProject = function() {
+        $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
     };
 
     $scope.onFileSelect = function($files) {
@@ -81,9 +92,9 @@ angular.module('observatory3App')
     };
 })
 .directive('desc', function() {
-      return {
-          restrict:'E',
-          template: '<div btf-markdown=\'project.description\'></div> \
-                     <textarea ng-show=\'edittingDesc && userInProject()\' ng-model=\'project.description\' ></textarea>'
-      };
+    return {
+        restrict:'E',
+        template: '<div btf-markdown=\'project.description\'></div> \
+            <textarea ng-show=\'edittingDesc && userOnProject\' ng-model=\'project.description\' ></textarea>'
+    };
 });
