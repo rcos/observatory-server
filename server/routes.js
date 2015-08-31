@@ -15,6 +15,7 @@ module.exports = function(app) {
   app.use('/api/commits', require('./api/commit'));
   app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
+  app.use('/api/classyear', require('./api/classyear'));
 
   app.use('/uploads', express.static( __dirname + "/static/uploads" ));
 

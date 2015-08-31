@@ -21,6 +21,9 @@ var all = {
   // Server port
   port: process.env.PORT || 9000,
 
+  // Attendance verification ratio
+  attendanceVerificationRatio: .1,
+
   // Github API Info
   // Client ID
   githubClientId: process.env.GITHUBCLIENTID || '',

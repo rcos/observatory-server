@@ -1,0 +1,29 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+  <div class='currentSemester'>
+    <p>Current semester: {{ currentClass.semester }}</p>
+    <p>The attendance code is: {{ attendanceCode }}</p>
+    <button ng-show='!attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
+    <button ng-show='!attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
+    <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Attendance Code</button>
+    <div class='big-attendance' ng-show='showAttendanceCode' ng-click='showAttendanceCode=false;'>
+      <div class='small-text'>
+        The Attendance Code is...
+      </div>
+      <div class='big-text'>
+        {{ attendanceCode }}
+      </div>
+    </div>
+  </div>
+  <div class='newSemester'>
+    <div class="input-group">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">Create new semester</button>
+        </span>
+        <input type="text" class="form-control" placeholder="2014fall">
+      </div>
+    </div>
+  </div>
+  
+</div>

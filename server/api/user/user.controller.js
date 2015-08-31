@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
 var email = require("../../components/email");
 var Commit = require('../commit/commit.model');
+var ClassYear = require('../classyear/classyear.model');
 
 
 var validationError = function(res, err) {
@@ -321,17 +322,64 @@ exports.authCallback = function(req, res, next) {
 /**
  * Mark attendance for specified user
  */
-exports.attendance = function(req,res){
+exports.attend = function(req,res){
     var userId = req.params.id;
-    var result = User.update({
-        _id: userId
-    },{
-        $push: {
-            attendance: new Date()
+    var user = req.user;
+    var code = req.body.dayCode;
+    if (!code) res.send(400, "No Code Submitted");
+    if (req.user.presence !== "absent") res.send(200);
+    // Check code against current class year
+    ClassYear.getCurrent(function(err, classYear){
+      console.log(err, classYear);
+      if (err) return res.send(500, err);
+      if (classYear.dayCode === code){
+        var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
+        if (!needsVerification){
+          user.presence = "present";
+        }else{
+          user.presence = "unverified";
         }
-    }, function(err){
-        res.send({"success":(err !== 0)});
+        if (user.presence === "unverified"){
+          res.send(200, {"unverified": true});
+        }else if (user.presence === "present"){
+          res.send(200, {"unverified": false});
+        }
+      }
     });
+};
+
+/**
+ * Gets all users with unverifed attendance for today
+ */
+exports.getUnverifiedAttendanceUsers = function(req,res){
+  User.find({
+    active: true
+  }, function(err, users){
+    if (err) res.send(500, err);
+
+    var unverifiedUsers = [];
+    for (var i = 0;i < users.length;i++){
+      if (users[i].presence == "unverified"){
+        unverifiedUsers.push(users[i].profile);
+      }
+    }
+    res.json(200,unverifiedUsers);
+  });
+};
+
+/**
+ * Verify users attendance, available only to mentors
+ */
+exports.verifyAttendance = function(req,res){
+  var userId = req.params.id;
+  User.findById(userId, function(err, user){
+    if (err) return res.send(500, err);
+    if (!user) return res.send(400, "No User with Id");
+    if (user.presence === "unverified"){
+      user.presence = "present";
+    }
+    res.send(200);
+  });
 };
 
 /**
