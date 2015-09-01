@@ -197,6 +197,15 @@ angular.module('observatory3App')
       },
 
       /**
+       * Check if a user is a mentor
+       *
+       * @return {Boolean}
+       */
+      isMentor: function() {
+        return currentUser.role === 'mentor';
+      },
+
+      /**
        * Get auth token
        */
       getToken: function() {

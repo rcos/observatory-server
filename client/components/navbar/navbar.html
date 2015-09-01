@@ -15,7 +15,7 @@
             <a ng-href="{{item.link}}">{{item.title}}</a>
         </li>
         <li ng-show="isLoggedIn()" ng-class="{active: isActive('/attend')}"><a href="/attend">Attend</a></li>
-        <li ng-show="isAdmin()" ng-class="{active: isActive('/mentor')}"><a href="/mentor">Mentor</a></li>
+        <li ng-show="isMentor()" ng-class="{active: isActive('/mentor')}"><a href="/mentor">Mentor</a></li>
         <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin">Admin</a></li>
         <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/classcontrol')}"><a href="/admin/classcontrol">Class Control</a></li>
       </ul>
