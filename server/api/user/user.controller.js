@@ -343,6 +343,8 @@ exports.attend = function(req,res){
         }else if (user.presence === "present"){
           res.send(200, {"unverified": false});
         }
+      }else{
+        res.send(400, "Incorrect day code");
       }
     });
 };

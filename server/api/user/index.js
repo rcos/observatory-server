@@ -22,7 +22,7 @@ router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
 router.put('/:id/attend', auth.canEdit(), controller.attend);
-router.put('/:id/verifyAttendance', auth.hasRole('admin'), controller.verifyAttendance);
+router.put('/:id/verifyAttendance', auth.hasRole('mentor'), controller.verifyAttendance);
 router.put('/:id/bio', auth.canEdit(), controller.changeBio);
 router.put('/:id/project', auth.isAuthenticated(), controller.addProject);
 router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);

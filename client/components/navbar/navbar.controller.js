@@ -16,6 +16,7 @@ angular.module('observatory3App')
     $scope.isCollapsed = true;
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
+    $scope.isMentor = Auth.isMentor;
     $scope.getCurrentUser = Auth.getCurrentUser;
 
     $scope.logout = function() {
