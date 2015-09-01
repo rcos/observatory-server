@@ -56,7 +56,7 @@
                         <img width='80%' src='{{project.avatar}}'/>
                     </div>
                     <div class='col-xs-9'>
-                        <div class='title'> {{project.name}} </div>
+                        <div class='title'><a href="/projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{project.name}} </a></div>
                         <a ng-href='{{project.repositoryUrl}}' class='repo'> {{project.repositoryUrl}} </a> 
                         <div class='description'>{{project.description}}</div>
                         <div class='tech-boxes'>

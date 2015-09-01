@@ -40,6 +40,15 @@ exports.show = function(req, res) {
   }
 };
 
+// Get authors on a project
+exports.authors = function(req, res) {
+    var projectId = req.params.id;
+    User.find({projects: projectId}, 'name email', function(err, authors) {
+        if (err) { return handleError(res, err); }
+        return res.json(200, authors);
+    });
+}
+
 // Creates a new project in the DB.
 exports.create = function(req, res) {
   Project.create(req.body, function(err, project) {
@@ -60,7 +69,7 @@ exports.update = function(req, res) {
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
 
-      if (project.authors.indexOf(userId) >= 0 || user.role === 'mentor' || user.role === 'admin'){
+      if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
         var updated = _.merge(project, req.body);
         updated.save(function (err) {
           if (err) { return handleError(res, err); }

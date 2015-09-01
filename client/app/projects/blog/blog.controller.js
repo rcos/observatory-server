@@ -1,21 +1,21 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsBlogCtrl', function ($scope, $http, Auth, $stateParams) {
+.controller('ProjectsBlogCtrl', function ($scope, $http, Auth, $stateParams, Project) {
     $scope.isAuthor = false;
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
     $scope.getCurrentUser = Auth.getCurrentUser;
     $scope.postToAdd = {};
     $scope.edittingPostId = -1;
+    $scope.user = Auth.getCurrentUser();
 
     $scope.newPostIsEmpty = function() {
         return $.isEmptyObject($scope.postToAdd);
     };
 
     $scope.userInProject = function() {
-        return true; // delete when we get people in projects
-        // return $scope.project.authors.indexOf(Auth.getCurrentUser()._id) !== -1;
+        return $scope.isAuthor;
     };
 
     $scope.editPost = function(postId) {
@@ -53,14 +53,15 @@ angular.module('observatory3App')
     };
 
     $scope.load = function() {
-      $http.get('/api/projects/'+ $stateParams.username + '/' + $stateParams.project).success(function(project){
-          $scope.project = project;
-          $http.get('/api/posts/project/'+$scope.project._id).success(function(posts){
-              $scope.posts = posts;
+      Project.getProject($stateParams.username, $stateParams.project).then(function(result){
+          $scope.project = result.data;
+
+          Project.getProjectPosts($scope.project._id).then(function(result){
+              $scope.posts = result.data;
           });
 
           if ($scope.isLoggedIn()){
-            if($scope.project.authors.indexOf($scope.getCurrentUser()._id) !== -1){
+            if($scope.user.projects.indexOf($scope.project._id) !== -1){
               $scope.isAuthor = true;
             }
             else if( $scope.isAdmin()){

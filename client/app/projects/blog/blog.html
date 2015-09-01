@@ -3,7 +3,7 @@
 <div class="container">
     <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
 
-    <button ng-show="isAuthor" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#post" aria-expanded="false" aria-controls="post">
+    <button ng-show="userInProject()" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#post" aria-expanded="false" aria-controls="post">
         Add a post
     </button>
     <br/><br/>
