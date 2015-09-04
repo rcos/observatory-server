@@ -6,6 +6,7 @@ var User = require('../user/user.model');
 var multiparty = require('multiparty');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var config = require('../../config/environment');
 
 // Get list of current projects
 exports.index = function(req, res) {
@@ -103,8 +104,7 @@ exports.upload = function(req, res) {
   form.parse(req, function(err, fields, files) {
     var file = files.file[0];
     var name = file.path.substring(file.path.lastIndexOf('/')).substring(1);
-    var cwd = process.cwd();
-    var path = cwd + '/server/static/uploads/' + req.params.username + '/' + req.params.project;
+    var path = config.imageUploadPath  + req.params.username + '/' + req.params.project;
     var destPath = path + '/' + name;
     if(!fs.existsSync(path)){
       mkdirp.sync(path);

@@ -6,6 +6,7 @@
 
 var errors = require('./components/errors');
 var express = require('express');
+var config = require('./config/environment');
 
 module.exports = function(app) {
 
@@ -17,7 +18,7 @@ module.exports = function(app) {
   app.use('/api/users', require('./api/user'));
   app.use('/api/classyear', require('./api/classyear'));
 
-  app.use('/uploads', express.static( __dirname + "/static/uploads" ));
+  app.use('/uploads', express.static(config.imageUploadPath));
 
   app.use('/auth', require('./auth'));
   
