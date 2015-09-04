@@ -3,11 +3,9 @@ node_js:
   - '0.10'
   - '0.11'
 before_script:
-  - sudo mkdir -p /var/www
-  - sudo chmod 777 /var/www
   - npm install -g bower grunt-cli
   - gem install sass
   - bower install
 services: mongodb
 #enable container builds
-sudo: true
+sudo: false
