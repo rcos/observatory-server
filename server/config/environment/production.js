@@ -17,6 +17,9 @@ module.exports = {
   addr:     process.env.SERVER_ADDR ||
             "",
 
+  // Location of image uploads
+  imageUploadPath: '/opt/uploads/images/',
+
   // MongoDB connection options
   mongo: {
     uri:    process.env.MONGOLAB_URI ||

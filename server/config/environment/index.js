@@ -31,6 +31,9 @@ var all = {
   // Client Secret
   githubClientSecret: process.env.GITHUBCLIENTSECRET || '',
 
+  // Location of image uploads
+  imageUploadPath: './uploads/',
+
   // Should we populate the DB with sample data?
   seedDB: false,
 

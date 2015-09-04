@@ -11,6 +11,9 @@ module.exports = {
   // Server Address
   addr: "http://localhost:9000",
 
+  // Location of image uploads
+  imageUploadPath: './uploads/',
+
   // For testing verification
   // attendanceVerificationRatio: 1,
 
