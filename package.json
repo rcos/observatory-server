@@ -2,6 +2,7 @@
   "name": "observatory3",
   "version": "0.0.0",
   "main": "server/app.js",
+  "license" : "MIT",
   "dependencies": {
     "MD5": ">=1.2.1",
     "body-parser": "~1.5.0",
