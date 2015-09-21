@@ -4,6 +4,7 @@ echo "Provisioning virtual machine..."
 
 echo "Installing NodeJS"
 apt-get update 
+apt-get install -y ruby-full build-essential
 apt-get install -y nodejs-legacy
 
 echo "Installing npm"
