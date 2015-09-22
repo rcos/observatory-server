@@ -3,13 +3,14 @@
 echo "Provisioning virtual machine..."
 
 echo "Installing git"
+apt-get update 
 apt-get install -y git
 
 echo "Installing g++"
 apt-get install -y g++
 
 echo "Installing NodeJS"
-apt-get update 
+
 apt-get install -y ruby-full build-essential
 apt-get install -y nodejs-legacy
 
