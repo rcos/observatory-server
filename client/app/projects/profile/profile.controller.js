@@ -117,13 +117,21 @@ angular.module('observatory3App')
     
 
     $scope.edittingDesc = false;
-    $scope.isLoggedIn = Auth.isLoggedIn;   
+    $scope.edittingName = false; 
+    $scope.isLoggedIn = Auth.isLoggedIn;
 
     $scope.editDesc = function(){
         $scope.edittingDesc = !$scope.edittingDesc;
     }; 
 
+<<<<<<< HEAD
     // Function for saving the description
+=======
+    $scope.editName = function(){
+        $scope.edittingName = !$scope.edittingName; 
+    };
+
+>>>>>>> 9174586... Can now edit the title of a project
     $scope.saveDesc = function(){
         $scope.edittingDesc = false;
         $http.put('/api/projects/' + $scope.project._id, {
@@ -134,6 +142,17 @@ angular.module('observatory3App')
             notify({message: 'Could not update description!', classes: ["alert-danger"]});
         });
     }; 
+
+    $scope.saveName = function(){
+        $scope.edittingName = false;
+        $http.put('/api/projects/' + $scope.project._id, {
+            'name': $scope.project.name
+        }).success(function(){
+            window.alert('Project Name updated!');
+        }).error(function(){
+            window.alert('Could not update project name!');
+        });
+    };
 
     $scope.joinProject = function(){
         $http.put('/api/users/' + $scope.user._id + '/project',{
@@ -162,7 +181,6 @@ angular.module('observatory3App')
             notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
     }; 
-    
 
     $scope.checkUserProject = function() {
         $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
@@ -197,4 +215,11 @@ angular.module('observatory3App')
         template: '<div btf-markdown=\'project.description\'></div> \
         <textarea ng-show=\'edittingDesc && userOnProject\' ng-model=\'project.description\' ></textarea>'
     };
-});
+}).directive('pname', function() {
+    return {
+        restrict:'E',
+        template: '<input type=\'text\' maxlength="50" ng-show=\'edittingName && userOnProject\' ng-model=\'project.name\' ></textarea> \
+            <div ng-show=\'edittingName && userOnProject\'>'
+
+    };
+})
