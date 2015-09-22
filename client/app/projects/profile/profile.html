@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row text-right">
         <div class="col-sm-3">
-          <h1>{{ project.name }}</h1>
+          <h1>{{project.name}}</h1>
         </div>
         <div class="col-sm-9 header-buttons">
             <div ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</div>
@@ -59,10 +59,25 @@
                 <div class="btn-group description-buttons">
                     <button type="button" class='btn btn-default btn-sm' ng-click='editDesc()'>Edit</button>
                     <button type="button" class='btn btn-default btn-sm' ng-click='saveDesc()'>Save</button>
+
                 </div>
             </div>
             <desc></desc>
         </div>
+        
+        <div id="nameDiv" class="col-sm-7 description">
+
+            <div ng-show='userOnProject'>
+                <div class="btn-group description-buttons">
+                    <button type="button" class='btn btn-default btn-sm' ng-click='editName()'>Edit Project Name</button>
+                    <button type="button" class='btn btn-default btn-sm' ng-click='saveName()'>Save Project Name</button> 
+                </div>
+                
+            </div>
+
+            <pname></pname>
+            
+        </div> 
 
     </div>
 </div>

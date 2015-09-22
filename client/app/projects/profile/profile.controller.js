@@ -28,10 +28,15 @@ angular.module('observatory3App')
 
 
     $scope.edittingDesc = false;
+    $scope.edittingName = false; 
     $scope.isLoggedIn = Auth.isLoggedIn;
 
     $scope.editDesc = function(){
         $scope.edittingDesc = !$scope.edittingDesc;
+    };
+
+    $scope.editName = function(){
+        $scope.edittingName = !$scope.edittingName; 
     };
 
     $scope.saveDesc = function(){
@@ -42,6 +47,17 @@ angular.module('observatory3App')
             window.alert('Description updated!');
         }).error(function(){
             window.alert('Could not update description!');
+        });
+    };
+
+    $scope.saveName = function(){
+        $scope.edittingName = false;
+        $http.put('/api/projects/' + $scope.project._id, {
+            'name': $scope.project.name
+        }).success(function(){
+            window.alert('Project Name updated!');
+        }).error(function(){
+            window.alert('Could not update project name!');
         });
     };
 
@@ -72,6 +88,8 @@ angular.module('observatory3App')
         });
     };
 
+   
+
 
     $scope.checkUserProject = function() {
         $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
@@ -97,4 +115,12 @@ angular.module('observatory3App')
         template: '<div btf-markdown=\'project.description\'></div> \
             <textarea ng-show=\'edittingDesc && userOnProject\' ng-model=\'project.description\' ></textarea>'
     };
-});
+}).directive('pname', function() {
+    return {
+        restrict:'E',
+        template: '<div btf-markdown=\'project.name\'></div> \
+            <textarea maxlength="50" ng-show=\'edittingName && userOnProject\' ng-model=\'project.name\' ></textarea> \
+            <div ng-show=\'edittingName && userOnProject\'>{{project.name.length}}/50'
+
+    };
+})
