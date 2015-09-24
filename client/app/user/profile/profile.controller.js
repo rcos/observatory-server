@@ -67,14 +67,6 @@ angular.module('observatory3App')
           });
       };
 
-    //  $scope.isEmpty = function(tech){
-    //    $http.put('/api/users/' + $stateParams.id + '/isEmpty', {
-    //        'tech': tech
-    //    }).success(function(){
-    //      return (tech.length == 0) ;
-    //    });
-    //  };
-
       $scope.setRole = function(){
         // $scope.user.role
         $http.post('/api/users/' + $stateParams.id + '/role', {
