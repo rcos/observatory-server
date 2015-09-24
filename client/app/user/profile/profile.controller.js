@@ -36,7 +36,8 @@ angular.module('observatory3App')
           $scope.edittingBio = false;
           $http.put('/api/users/' + $stateParams.id + '/bio', {
               'bio': $scope.user.bio
-          }).success(function(){
+          }).success(function(data){
+              $scope.user.bio = data.bio;
               window.alert('Bio updated!');
           }).error(function(){
               window.alert('Could not update bio!');
@@ -65,6 +66,14 @@ angular.module('observatory3App')
               window.alert('Could not add tech!');
           });
       };
+
+    //  $scope.isEmpty = function(tech){
+    //    $http.put('/api/users/' + $stateParams.id + '/isEmpty', {
+    //        'tech': tech
+    //    }).success(function(){
+    //      return (tech.length == 0) ;
+    //    });
+    //  };
 
       $scope.setRole = function(){
         // $scope.user.role

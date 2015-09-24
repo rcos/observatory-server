@@ -28,6 +28,7 @@
         </div>
         </div>
         <div class='col-md-6'>
+        <div ng-show="!user.tech.length">User has not input any tags</div>
             <div class='tech-boxes'>
                 <div ng-repeat="tech in user.tech track by $index">
                     {{tech}}
@@ -57,7 +58,7 @@
                     </div>
                     <div class='col-xs-9'>
                         <div class='title'><a href="/projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{project.name}} </a></div>
-                        <a ng-href='{{project.repositoryUrl}}' class='repo'> {{project.repositoryUrl}} </a> 
+                        <a ng-href='{{project.repositoryUrl}}' class='repo'> {{project.repositoryUrl}} </a>
                         <div class='description'>{{project.description}}</div>
                         <div class='tech-boxes'>
                             <div ng-repeat='tech in project.tech'>{{tech}}</div>

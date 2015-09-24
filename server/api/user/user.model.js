@@ -18,9 +18,9 @@ var UserSchema = new Schema({
   hashedPassword: String,
   provider: String,
   salt: String,
-  tech: [String],
+  tech: [String], 
   projects: [{type : Schema.Types.ObjectId, ref: 'Project'}], // project id
-  bio:String,
+  bio: {type:String, default: "No Bio written yet. Please tell us some more about yourself"},
   attendance: [Date],
   unverifiedAttendance: [Date],
   semesterCount: Number,
@@ -175,7 +175,7 @@ UserSchema
       'projects': this.projects,//TODO pull projects
       'tech': this.tech,
       'bio': this.bio,
-      'githubProfile': this.github.login 
+      'githubProfile': this.github.login
     };
   });
 
