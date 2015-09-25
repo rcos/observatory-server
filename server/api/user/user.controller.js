@@ -257,9 +257,6 @@ exports.changeBio = function(req,res){
 
     User.findById(userId, function(err,user){
         user.bio = newBio;
-        if(newBio == ""){
-          user.bio = "No Bio written yet. Please tell us some more about yourself";
-        }
         res.json({bio:user.bio});
         user.save(function(err){
             if (err) return validationError(res,err);

@@ -18,9 +18,9 @@ var UserSchema = new Schema({
   hashedPassword: String,
   provider: String,
   salt: String,
-  tech: [String], 
+  tech: [String],
   projects: [{type : Schema.Types.ObjectId, ref: 'Project'}], // project id
-  bio: {type:String, default: "No Bio written yet. Please tell us some more about yourself"},
+  bio: {type:String},
   attendance: [Date],
   unverifiedAttendance: [Date],
   semesterCount: Number,
