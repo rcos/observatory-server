@@ -32,14 +32,14 @@ angular.module('observatory3App')
     };
 
     $scope.deletePost = function(postId) {
-        if (window.confirm("ARE YOU SURE?")) {
+        if (window.confirm("Are you sure you want to delete this post?")) {
             $http.delete('/api/posts/' + postId).success(function(){
                 window.alert('Post deleted!');
             }).error(function(){
                 window.alert('Could not delete Post!');
             });
         }
-        
+
         $scope.load();
     };
 
