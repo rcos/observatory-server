@@ -72,6 +72,22 @@ angular.module('observatory3App')
         });
     };
 
+    $scope.isDefault = function(){
+
+    };
+
+    $scope.isAdmin = function(){
+
+    };
+
+    $scope.markDefault = function(){
+
+    };
+
+    $scope.unmarkDefault = function(){
+
+    };
+
 
     $scope.checkUserProject = function() {
         $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
