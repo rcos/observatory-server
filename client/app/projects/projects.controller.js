@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, $http) {
+.controller('ProjectsCtrl', function ($scope, $location, $http) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true};
 
@@ -42,13 +42,18 @@ angular.module('observatory3App')
             // and results in the modal disappearing but the overlay staying if not used
             setTimeout(function() {
                 $http.post('/api/projects', $scope.projectToAdd);
-                $scope.projectToAdd = {active: true};
+                
                 if ($scope.past){
                     $scope.getPastProjects();
                 }
                 else{
                     $scope.getCurrentProjects();
                 }
+                var redirectUsername = $scope.projectToAdd.githubUsername;
+                var redirectProjectName = $scope.projectToAdd.githubProjectName;
+                $scope.projectToAdd = {active: true};
+
+                $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
             }, 200);
         }
     };
