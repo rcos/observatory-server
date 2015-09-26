@@ -1,12 +1,17 @@
-
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-    <div class="row text-right">
+    <div class="row text-left">
         <div class="col-sm-3">
-          <h1>{{ project.name }}</h1>
+            <h1 ng-hide="edittingName">{{project.name}}</h1>
+            <pname></pname>
+            <br>
+            <div class="btn-group description-buttons">
+                <button type="button" class='btn btn-default btn-sm' ng-click='editName()'>Edit Project Name</button>
+                <button type="button" class='btn btn-default btn-sm' ng-click='saveName()'>Save Project Name</button> 
+            </div>
         </div>
-        <div class="col-sm-9 header-buttons">
+        <div class="col-sm-9 text-right header-buttons">
             <div ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</div>
             <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
@@ -26,32 +31,32 @@
             </div>
 
             <p ng-show="project.photos.length === 0">
-              No images uploaded yet.
+            No images uploaded yet.
             </p>
 
             <carousel>
-                <slide ng-repeat="url in project.photos" active="$first">
-                    <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt=""></div>
-                </slide>
+            <slide ng-repeat="url in project.photos" active="$first">
+            <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt=""></div>
+            </slide>
             </carousel>
         </div>
 
         <div class="col-sm-4">
-        <div class="contributors">
-            <div class="row">
-                <h4>Contributors</h4>
-            </div>
-            <div class="row" ng-repeat="user in authors">
-                <div class="col-md-3">
-                    <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=128px" class="img-responsive" alt="">
+            <div class="contributors">
+                <div class="row">
+                    <h4>Contributors</h4>
                 </div>
-                <div class="col-md-8">
-                    <a href="/users/{{ user._id }}/profile" title="" class="contributor-name">
-                        {{ user.name }}
-                    </a>
+                <div class="row" ng-repeat="user in authors">
+                    <div class="col-md-3">
+                        <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=128px" class="img-responsive" alt="">
+                    </div>
+                    <div class="col-md-8">
+                        <a href="/users/{{ user._id }}/profile" title="" class="contributor-name">
+                            {{ user.name }}
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
 
         <div class="col-sm-7 description">
@@ -59,10 +64,10 @@
                 <div class="btn-group description-buttons">
                     <button type="button" class='btn btn-default btn-sm' ng-click='editDesc()'>Edit</button>
                     <button type="button" class='btn btn-default btn-sm' ng-click='saveDesc()'>Save</button>
+
                 </div>
             </div>
             <desc></desc>
         </div>
-
     </div>
 </div>
