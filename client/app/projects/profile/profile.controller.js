@@ -118,9 +118,8 @@ angular.module('observatory3App')
 }).directive('pname', function() {
     return {
         restrict:'E',
-        template: '<div btf-markdown=\'project.name\'></div> \
-            <textarea maxlength="50" ng-show=\'edittingName && userOnProject\' ng-model=\'project.name\' ></textarea> \
-            <div ng-show=\'edittingName && userOnProject\'>{{project.name.length}}/50'
+        template: '<input type=\'text\' maxlength="50" ng-show=\'edittingName && userOnProject\' ng-model=\'project.name\' ></textarea> \
+            <div ng-show=\'edittingName && userOnProject\'>'
 
     };
 })
