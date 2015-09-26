@@ -1,5 +1,5 @@
 /*jshint multistr: true */
-'use strict';  
+'use strict';
 
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
@@ -18,7 +18,7 @@ angular.module('observatory3App')
             });
         });
     };
-    updateProject();   
+    updateProject();
 
     var getAuthors = function() {
         var project = $scope.project;
@@ -28,7 +28,7 @@ angular.module('observatory3App')
             })
     }
 
-    $scope.getPic = function(user) {   
+    $scope.getPic = function(user) {
 
         if (! ('avatar' in user)){
             user.avatar = "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid";
@@ -37,7 +37,7 @@ angular.module('observatory3App')
             })
         }
         return user.avatar
-    }  
+    }
 
     var initializeSlides = function(photos) {
         var slides = [];
@@ -51,7 +51,7 @@ angular.module('observatory3App')
             }
         }
         $scope.slides = slides;
-    }  
+    }
 
     var setActiveSlide = function(photoName){
         for (var i = 0; i < $scope.slides.length; i++){
@@ -62,7 +62,7 @@ angular.module('observatory3App')
             }
         }
     };
-    updateProject();   
+    updateProject();
 
     var getAuthors = function() {
         var project = $scope.project;
@@ -70,7 +70,7 @@ angular.module('observatory3App')
         .success(function(authors){
             $scope.authors = authors;
         });
-    }; 
+    };
 
     var initializeSlides = function(photos) {
         var slides = [];
@@ -84,7 +84,7 @@ angular.module('observatory3App')
             }
         }
         $scope.slides = slides;
-    }; 
+    };
 
     var setActiveSlide = function(photoName){
         for (var i = 0; i < $scope.slides.length; i++){
@@ -94,7 +94,7 @@ angular.module('observatory3App')
                 $scope.slides[i].active = false;
             }
         }
-    }; 
+    };
 
     var addSlide = function(photoName){
         $scope.slides.push({
@@ -102,7 +102,7 @@ angular.module('observatory3App')
             src: photoName
         });
         setActiveSlide(photoName);
-    }; 
+    };
 
     var removeSlide = function(photoName){
         for (var i = 0; i < $scope.slides.length; i++){
@@ -110,11 +110,11 @@ angular.module('observatory3App')
                 $scope.slides.splice(i, 1);
             }
         }
-    }; 
-    
+    };
 
-    $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/'; 
-    
+
+    $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
+
 
     $scope.edittingDesc = false;
     $scope.edittingName = false;
@@ -122,7 +122,7 @@ angular.module('observatory3App')
 
     $scope.editDesc = function(){
         $scope.edittingDesc = !$scope.edittingDesc;
-    }; 
+    };
 
     $scope.editName = function(){
         $scope.edittingName = !$scope.edittingName;
@@ -135,10 +135,11 @@ angular.module('observatory3App')
             'description': $scope.project.description
         }).success(function(){
             notify('Description updated!');
+<<<<<<< HEAD
         }).error(function(){
             notify({message: 'Could not update description!', classes: ["alert-danger"]});
         });
-    }; 
+    };
 
     $scope.saveName = function(){
         $scope.edittingName = false;
@@ -148,6 +149,10 @@ angular.module('observatory3App')
             notify('Project Name updated!');
         }).error(function(){
             notify('Could not update project name!', {classes: ["alert-danger"] });
+=======
+        }).error(function(){
+            notify({message: 'Could not update description!', classes: ["alert-danger"]});
+>>>>>>> initial notifications implementation
         });
     };
 
@@ -162,7 +167,7 @@ angular.module('observatory3App')
         }).error(function(){
             notify({message: 'Error adding user to project!', classes: ["alert-danger"]});
         });
-    }; 
+    };
 
     $scope.leaveProject = function(){
         var loggedInUser = Auth.getCurrentUser();
@@ -181,7 +186,7 @@ angular.module('observatory3App')
 
     $scope.checkUserProject = function() {
         $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
-    }; 
+    };
 
     $scope.upload = function($file) {
         Upload.upload({
@@ -192,7 +197,7 @@ angular.module('observatory3App')
         }).error(function (data, status) {
             console.log('error status: ' + status);
         });
-    }; 
+    };
 
     $scope.deletePhoto = function(){
         var username = $scope.project.githubUsername;
