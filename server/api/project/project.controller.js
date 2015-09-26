@@ -99,6 +99,11 @@ function handleError(res, err) {
   return res.send(500, err);
 }
 
+
+exports.markedDefault = function(req, res) {
+
+};
+
 exports.upload = function(req, res) {
   var form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {

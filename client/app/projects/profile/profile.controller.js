@@ -73,12 +73,10 @@ angular.module('observatory3App')
     };
 
     $scope.isDefault = function(){
-
+        return false;
     };
 
-    $scope.isAdmin = function(){
-
-    };
+    $scope.isAdmin = Auth.isAdmin;
 
     $scope.markDefault = function(){
 
@@ -87,7 +85,6 @@ angular.module('observatory3App')
     $scope.unmarkDefault = function(){
 
     };
-
 
     $scope.checkUserProject = function() {
         $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
