@@ -36,7 +36,8 @@ angular.module('observatory3App')
           $scope.edittingBio = false;
           $http.put('/api/users/' + $stateParams.id + '/bio', {
               'bio': $scope.user.bio
-          }).success(function(){
+          }).success(function(data){
+              $scope.user.bio = data.bio;
               window.alert('Bio updated!');
           }).error(function(){
               window.alert('Could not update bio!');

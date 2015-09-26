@@ -20,7 +20,7 @@ var UserSchema = new Schema({
   salt: String,
   tech: [String],
   projects: [{type : Schema.Types.ObjectId, ref: 'Project'}], // project id
-  bio:String,
+  bio: {type:String},
   attendance: [Date],
   unverifiedAttendance: [Date],
   semesterCount: Number,
@@ -175,7 +175,7 @@ UserSchema
       'projects': this.projects,//TODO pull projects
       'tech': this.tech,
       'bio': this.bio,
-      'githubProfile': this.github.login 
+      'githubProfile': this.github.login
     };
   });
 
