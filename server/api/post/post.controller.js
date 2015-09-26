@@ -53,8 +53,7 @@ exports.create = function(req, res) {
           if(err) { return handleError(res, err); }
           return res.json(201, post);
         });
-      }
-      else{
+      } else {
         return res.status(403).send("User not part of project");
       }
     });
@@ -105,8 +104,10 @@ exports.destroy = function(req, res) {
           if(err) { return handleError(res, err); }
           return res.send(204);
         });
+      } else {
+        return handleError(res, err);
       }
-      return handleError(res, err);
+      
     });
 
   });

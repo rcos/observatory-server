@@ -7,6 +7,7 @@ angular.module('observatory3App')
     $scope.isAdmin = Auth.isAdmin;
     $scope.getCurrentUser = Auth.getCurrentUser;
     $scope.postToAdd = {};
+    $scope.postToDelete = {};
     $scope.edittingPostId = -1;
     $scope.user = Auth.getCurrentUser();
 
@@ -28,6 +29,18 @@ angular.module('observatory3App')
 
     $scope.edittingPost = function(postId) {
         return $scope.edittingPostId === postId;
+    };
+
+    $scope.deletePost = function(postId) {
+        if (window.confirm("Are you sure you want to delete this post?")) {
+            $http.delete('/api/posts/' + postId).success(function(){
+                window.alert('Post deleted!');
+            }).error(function(){
+                window.alert('Could not delete Post!');
+            });
+        }
+
+        $scope.load();
     };
 
     var findPost = function(postId) {
