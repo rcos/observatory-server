@@ -2,7 +2,7 @@
 'use strict';  
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, $upload, Project, notify) {
     $scope.userOnProject = false;
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
@@ -129,9 +129,9 @@ angular.module('observatory3App')
         $http.put('/api/projects/' + $scope.project._id, {
             'description': $scope.project.description
         }).success(function(){
-            window.alert('Description updated!');
+            notify('Description updated!');
         }).error(function(){
-            window.alert('Could not update description!');
+            notify({message: 'Could not update description!', classes: ["alert-danger"]});
         });
     }; 
 
@@ -139,12 +139,12 @@ angular.module('observatory3App')
         $http.put('/api/users/' + $scope.user._id + '/project',{
             'project': $scope.project._id
         }).success(function(){
-            window.alert('You are now on this project!');
+            notify({ message: "You are now on this project!"  });
             $scope.userOnProject = true;
             $scope.user.projects.push($scope.project._id);
             getAuthors();
         }).error(function(){
-            window.alert('Error adding user to project!');
+            notify({message: 'Error adding user to project!', classes: ["alert-danger"]});
         });
     }; 
 
@@ -154,12 +154,12 @@ angular.module('observatory3App')
         {
             'project': $scope.project._id
         }).success(function(){
-            window.alert('You are now off this project!');
+            notify({message: "You are now off this project!", classes: []});
             $scope.user.projects.splice($scope.user.projects.indexOf($scope.project._id), 1);
             $scope.userOnProject = false;
             getAuthors();
         }).error(function(){
-            window.alert('Error removing user from project!');
+            notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
     }; 
     
