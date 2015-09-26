@@ -23,7 +23,6 @@ angular.module('observatory3App')
     function updateClassYear(){
       $http.get("/api/classyear")
         .success(function(currentClass){
-
           // Check if there is already an attendance code
           var today = new Date();
           today.setHours(0,0,0,0);
@@ -34,7 +33,7 @@ angular.module('observatory3App')
           }
 
           $scope.currentClass = currentClass;
-
+          $scope.displayURP = currentClass.displayURP;
         }).error(function(err){
           console.error("Error getting class year", err);
         });
@@ -46,6 +45,16 @@ angular.module('observatory3App')
       }).success(function(dayCode){
           $scope.attendanceCode = dayCode;
         });
+    };
+
+    // Toggles the display of URP form
+    $scope.URPDisplay = function(){
+      $scope.displayURP = !$scope.displayURP;
+      $http.put("/api/classyear/displayURP", {
+         displayURP: $scope.displayURP ? true : false
+      }).error(function(err){
+        console.error("Error getting class year", err);
+      });
     };
 
     updateClassYear();

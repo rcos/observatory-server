@@ -84,7 +84,7 @@ exports.destroy = function(req, res) {
   });
 };
 
-// Generate a daycode or return the current day code for the 
+// Generate a daycode or return the current day code for the
 // current class year
 exports.daycode = function(req, res){
   ClassYear.findOne({
@@ -110,6 +110,30 @@ exports.daycode = function(req, res){
     });
   });
 };
+
+// Toggles URP display
+exports.displayURP = function(req, res) {
+  ClassYear.findOne({
+    "current": true
+  }, function(err, classYear){
+    if(err) { return handleError(res, err); }
+    classYear.update(req.body, function(err){
+      if(err) { return handleError(res, err); }
+      res.send(200);
+    });
+  });
+};
+
+// Toggles URP display
+exports.getDisplayURP = function(req, res) {
+  ClassYear.findOne({
+    "current": true
+  }, function (err, classYear){
+    if(err) { return handleError(res, err); }
+    res.json({displayURP:classYear.displayURP});
+  })
+};
+
 
 function handleError(res, err) {
   return res.send(500, err);
