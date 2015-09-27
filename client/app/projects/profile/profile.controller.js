@@ -4,12 +4,11 @@
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project) {
     $scope.userOnProject = false;
-
     var updateProject = function(){
       Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
           $scope.project = result.data;
+          initializeSlides($scope.project.photos);
           getAuthors();
-          initializeSlides();
           Auth.isLoggedInAsync(function(loggedIn){
               if (loggedIn){
                   var user = Auth.getCurrentUser();
@@ -18,7 +17,7 @@ angular.module('observatory3App')
               }
           });
       });
-    }
+    };
     updateProject();
 
     var getAuthors = function() {
@@ -26,8 +25,8 @@ angular.module('observatory3App')
         $http.get('/api/projects/' + project._id + '/authors')
             .success(function(authors){
                 $scope.authors = authors;
-        })
-    }
+        });
+    };
 
     $scope.getPic = function(user) {
 
@@ -40,12 +39,11 @@ angular.module('observatory3App')
         return user.avatar
     }
 
-    var initializeSlides = function() {
+    var initializeSlides = function(photos) {
         var slides = [];
-        var photos = $scope.project.photos;
         for (var i = 0; i < photos.length; i++){
             slides.push({
-                active: false, 
+                active: false,
                 src: photos[i]
             });
             if (i === 0) {
@@ -62,7 +60,7 @@ angular.module('observatory3App')
             } else {
                 $scope.slides[i].active = false;
             }
-        } 
+        }
     }
 
     var addSlide = function(photoName){
@@ -78,8 +76,9 @@ angular.module('observatory3App')
         if ($scope.slides[i].src === photoName){
           $scope.slides.splice(i, 1);
         }
-      } 
+      }
     }
+
 
     $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
 

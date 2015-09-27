@@ -24,11 +24,11 @@
                     <input type="file"  ngf-select="upload($file)" />
                 </div>
             </div>
-            <div class="remove-photo btn btn-sm btn-default text-right" ng-show="userOnProject" ng-click="deletePhoto()">
+            <div class="remove-photo btn btn-sm btn-default text-right" ng-show="userOnProject && project && slides.length" ng-click="deletePhoto()">
                 <span>X</span>
             </div>
 
-            <p ng-hide="project.photos.length">
+            <p ng-show="project && !slides.length">
               No images uploaded yet.
             </p>
 
