@@ -6,7 +6,7 @@ angular.module('observatory3App', [
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
-  'angularFileUpload',
+  'ngFileUpload',
   'btford.markdown'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
