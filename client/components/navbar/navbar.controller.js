@@ -34,8 +34,6 @@ angular.module('observatory3App')
         .success(function(data){
           $scope.displayURP = data.displayURP;
         });
-        console.log("did it");
-        console.log($scope.displayURP);
     };
 
     URPDisplay();
