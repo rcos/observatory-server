@@ -41,7 +41,6 @@ angular.module('observatory3App')
     require: 'ngModel',
     link: function(scope, elm, attrs, ctrl) {
       ctrl.$validators.matchField = function(modelValue, viewValue) {
-        // console.log('matchField',modelValue, attrs, attrs.matchField, scope, scope.user[attrs.matchField]);
         if (ctrl.$isEmpty(modelValue)) {
           // consider empty models to be valid
           return true;
