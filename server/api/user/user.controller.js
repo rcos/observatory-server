@@ -186,6 +186,20 @@ exports.show = function (req, res, next) {
 };
 
 /**
+ * Get a single user's avatar
+ */
+exports.avatar = function (req, res, next) {
+  var userId = req.params.id;
+
+  User.findById(userId, function (err, user) {
+    if (err) return next(err);
+    if (!user) return res.send(404);
+    res.json(user.avatar);
+  });
+};
+
+
+/**
  * Deletes a user
  * restriction: 'admin'
  */

@@ -43,7 +43,8 @@
             </div>
             <div class="row" ng-repeat="user in authors">
                 <div class="col-md-3">
-                    <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=128px" class="img-responsive" alt="">
+                    <img ng-src="{{getPic(user)}}&s=128px" class="img-responsive" alt="">
+
                 </div>
                 <div class="col-md-8">
                     <a href="/users/{{ user._id }}/profile" title="" class="contributor-name">
