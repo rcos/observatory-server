@@ -219,7 +219,7 @@ def getProjectCollaborators(owner, projectName):
         print name + ',' + username
     print count
 
-def getUserGravatar(user):
+def getUserGravatar(user): #TODO: gravatar is not imported from github
     path = HOST + '/users/%s'%(user['github']['login'])
     events = []
     r = requests.get(path, params=PAYLOAD, headers=headers)

@@ -21,7 +21,19 @@ angular.module('observatory3App')
         var project = $scope.project;
         $http.get('/api/projects/' + project._id + '/authors')
             .success(function(authors){
-                $scope.authors = authors;})
+                $scope.authors = authors;
+        })
+    }
+
+    $scope.getPic = function(user) {
+
+        if (! ('avatar' in user)){
+            user.avatar = "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid";
+            $http.get('/api/users/' + user._id + '/avatar')            .success(function(avatar){
+                user.avatar = avatar;
+            })
+        }
+        return user.avatar
     }
 
     $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';

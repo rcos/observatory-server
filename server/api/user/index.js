@@ -12,6 +12,8 @@ router.get('/past', controller.past);
 router.get('/stats', auth.hasRole('admin'), controller.stats);
 router.get('/allstats', auth.hasRole('admin'), controller.allStats);
 router.get('/:id/commits', controller.commits);
+router.get('/:id/avatar', controller.avatar);
+
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.post('/:id/role', auth.hasRole('admin'), controller.role);
 router.get('/me', auth.isAuthenticated(), controller.me);
