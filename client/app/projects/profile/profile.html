@@ -4,9 +4,10 @@
     <div class="row text-left">
         <div class="col-sm-3">
             <h1 ng-hide="edittingName">{{project.name}}</h1>
+            <p>
             <pname></pname>
-            <br>
-            <div class="btn-group description-buttons">
+            </p>
+            <div class="btn-group description-buttons" ng-show="userOnProject">
                 <button type="button" class='btn btn-default btn-sm' ng-click='editName()'>Edit Project Name</button>
                 <button type="button" class='btn btn-default btn-sm' ng-click='saveName()'>Save Project Name</button> 
             </div>
@@ -45,17 +46,14 @@
         </div>
 
         <div class="col-sm-4">
-        <div class="contributors">
-            <div class="row">
-                <h4>Contributors</h4>
-            </div>
-            <div class="row" ng-repeat="user in authors">
-                <div class="col-md-3">
-                    <img ng-src="{{getPic(user)}}&s=128px" class="img-responsive" alt="">
+            <div class="contributors">
+                <div class="row">
+                    <h4>Contributors</h4>
                 </div>
                 <div class="row" ng-repeat="user in authors">
                     <div class="col-md-3">
-                        <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?s=128px" class="img-responsive" alt="">
+                        <img ng-src="{{getPic(user)}}&s=128px" class="img-responsive" alt="">
+
                     </div>
                     <div class="col-md-8">
                         <a href="/users/{{ user._id }}/profile" title="" class="contributor-name">
@@ -65,16 +63,17 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-sm-7 description">
-            <div ng-show='userOnProject'>
-                <div class="btn-group description-buttons">
-                    <button type="button" class='btn btn-default btn-sm' ng-click='editDesc()'>Edit</button>
-                    <button type="button" class='btn btn-default btn-sm' ng-click='saveDesc()'>Save</button>
-
-                </div>
-            </div>
-            <desc></desc>
-        </div>
     </div>
+
+    <div class="col-sm-7 description">
+        <div ng-show='userOnProject'>
+            <div class="btn-group description-buttons">
+                <button type="button" class='btn btn-default btn-sm' ng-click='editDesc()'>Edit</button>
+                <button type="button" class='btn btn-default btn-sm' ng-click='saveDesc()'>Save</button>
+
+            </div>
+        </div>
+        <desc></desc>
+    </div>
+</div>
 </div>
