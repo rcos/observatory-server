@@ -9,12 +9,15 @@ var router = express.Router();
 
 // TODO permissions
 router.get('/', controller.index);
-router.get('/displayURP', controller.getDisplayURP);
-router.get('/semester/:semester',  auth.hasRole('admin'), controller.getClassYear);
 router.post('/',  auth.hasRole('admin'), controller.create);
-router.post('/daycode', auth.hasRole('admin'), controller.daycode);
+
+router.get('/displayURP', controller.getDisplayURP);
 router.put('/displayURP', auth.hasRole('admin'), controller.displayURP);
+
+router.get('/semester/:semester',  auth.hasRole('admin'), controller.getClassYear);
 router.put('/semester/:semester', auth.hasRole('admin'), controller.update);
 router.delete('/semester/:semester', auth.hasRole('admin') ,controller.destroy);
+
+router.post('/daycode', auth.hasRole('admin'), controller.daycode);
 
 module.exports = router;

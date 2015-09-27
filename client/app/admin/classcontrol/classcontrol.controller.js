@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('AdminClassControlCtrl', function ($scope, $http, Auth, User, $location) {
+.controller('AdminClassControlCtrl', function ($scope, $http, Auth, User, $location, $window) {
 
   if (Auth.isLoggedIn()){
     var loggedInUser = Auth.getCurrentUser();
@@ -33,6 +33,7 @@ angular.module('observatory3App')
         }
       }
       $scope.currentClass = currentClass;
+      $scope.displayURP = currentClass.displayURP;
 
     }).error(function(err){
       console.error('Error getting class year', err);
@@ -50,11 +51,13 @@ angular.module('observatory3App')
     // Toggles the display of URP form
     $scope.URPDisplay = function(){
       $scope.displayURP = !$scope.displayURP;
-      $http.put("/api/classyear/displayURP", {
+      $http.put('/api/classyear/displayURP', {
          displayURP: $scope.displayURP ? true : false
       }).error(function(err){
-        console.error("Error getting class year", err);
+        console.error('Error getting class year', err);
       });
+      $window.location.reload();
+
     };
 
   var getSemesterToday = function(){

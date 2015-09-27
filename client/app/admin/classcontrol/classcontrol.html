@@ -9,6 +9,7 @@
         <button ng-show='!attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
         <button ng-show='!attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
         <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Attendance Code</button>
+
         <div class='big-attendance' ng-show='showAttendanceCode' ng-click='showAttendanceCode=false;'>
           <div class="row">
             <div class="col-sm-12">
@@ -24,10 +25,16 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm-12 buttonLine">
+      <button ng-show= "!displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP'>Show URP Form</button>
+      <button ng-show= "displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP' >Hide URP Form</button>
+    </div>
+</div>
 
   <div class="row">
     <div class="col-sm-12">
-      <div class='newSemester' ng-show='!showAttendanceCode'>
+      <div class='buttonLine' ng-show='!showAttendanceCode'>
         <button ng-hide='showNewSemester' ng-click='showNewSemester=true' class='btn btn-primary'>Create a New Semester</button>
         <div ng-show="showNewSemester">
           <form class="form-inline" name="form" ng-submit="createNewSemester(form)" novalidate>
