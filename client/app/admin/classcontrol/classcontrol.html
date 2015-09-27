@@ -1,31 +1,57 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-  <div class='currentSemester'>
-    <p>Current semester: {{ currentClass.semester }}</p>
-    <button ng-show= "!displayURP" ng-click='URPDisplay()' class='btn btn-primary'>Show URP Form</button>
-    <button ng-show= "displayURP" ng-click='URPDisplay()' class='btn btn-primary' >Hide URP Form</button>
-    <p>The attendance code is: {{ attendanceCode }}</p>
-    <button ng-show='!attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
-    <button ng-show='!attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
-    <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Attendance Code</button>
-    <div class='big-attendance' ng-show='showAttendanceCode' ng-click='showAttendanceCode=false;'>
-      <div class='small-text'>
-        The Attendance Code is...
-      </div>
-      <div class='big-text'>
-        {{ attendanceCode }}
-      </div>
-    </div>
-  </div>
-  <div class='newSemester'>
-    <div class="input-group">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button">Create new semester</button>
-        </span>
-        <input type="text" class="form-control" placeholder="2014fall">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div class='currentSemester'>
+        <p>Current semester: {{ currentClass.semester }}</p>
+        <p ng-show='attendanceCode' >The attendance code is: {{ attendanceCode }}</p>
+        <button ng-show='!attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
+        <button ng-show='!attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
+        <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Attendance Code</button>
+        <div class='big-attendance' ng-show='showAttendanceCode' ng-click='showAttendanceCode=false;'>
+          <div class="row">
+              <div class="col-sm-12">
+
+              <div class='small-text'>
+                The Attendance Code is...
+              </div>
+              <div class='big-text'>
+                {{ attendanceCode }}
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div class='newSemester' ng-show='!showAttendanceCode'>
+        <button ng-hide='showNewSemester' ng-click='showNewSemester=true' class='btn btn-primary'>Create a New Semester</button>
+
+        <div ng-show="showNewSemester">
+          <form class="form-inline" name="form" ng-submit="createNewSemester(form)" novalidate>
+            <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                  ng-class="{ 'has-success': form.semester.$valid && (submitted || form.semester.$dirty),
+                              'has-error': form.semester.$invalid && (submitted || form.semester.$dirty) }">
+              <input type="text" class="form-control" id="semester" placeholder="{{todaySemester.semester}}" ng-model="newSemester.semester">
+            </div>
+            <div class="form-group"  ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                  ng-class="{ 'has-success': form.year.$valid && (submitted || form.year.$dirty),
+                              'has-error': form.year.$invalid && (submitted || form.year.$dirty) }">
+              <input type="text" class="form-control" id="year" placeholder="{{todaySemester.year}}" ng-model="newSemester.year">
+            </div>
+
+            <button type="submit" class="btn btn-default">Create new semester</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<<<<<<< 252b2b07735aa70e224940108c507c6a6b8d0a7f
 </div>

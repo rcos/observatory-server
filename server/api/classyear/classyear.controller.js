@@ -48,11 +48,16 @@ exports.create = function(req, res) {
 
       // Make sure there are no other current class years
       ClassYear.find({
-        "current": true
-      }, function(err, otherClassYear){
-        if (classYear.semester !== otherClassYear.semester){
-          otherClassYear.current = false;
-          otherClassYear.save();
+        "current": true,
+        "semester": {$ne : classYear.semester}
+      }, function(err, otherClassYears){
+
+        for (var a = 0 ; a < otherClassYears.length ; a ++){
+          var otherClassYear = otherClassYears[a];
+          if (classYear.semester !== otherClassYear.semester){
+            otherClassYear.current = false;
+            otherClassYear.save();
+          }
         }
       });
 
