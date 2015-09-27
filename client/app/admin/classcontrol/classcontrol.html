@@ -3,6 +3,8 @@
 <div class="container">
   <div class='currentSemester'>
     <p>Current semester: {{ currentClass.semester }}</p>
+    <button ng-show= "!displayURP" ng-click='URPDisplay()' class='btn btn-primary'>Show URP Form</button>
+    <button ng-show= "displayURP" ng-click='URPDisplay()' class='btn btn-primary' >Hide URP Form</button>
     <p>The attendance code is: {{ attendanceCode }}</p>
     <button ng-show='!attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
     <button ng-show='!attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
@@ -25,5 +27,5 @@
       </div>
     </div>
   </div>
-  
+
 </div>
