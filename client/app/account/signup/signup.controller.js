@@ -16,6 +16,7 @@ angular.module('observatory3App')
             login: $scope.user.githubLogin
           },
           password: $scope.user.password
+
         })
         .then( function() {
           // Account created, redirect to home
@@ -34,4 +35,26 @@ angular.module('observatory3App')
       }
     };
 
-  });
+  })
+  .directive('matchField', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      ctrl.$validators.matchField = function(modelValue, viewValue) {
+        // console.log('matchField',modelValue, attrs, attrs.matchField, scope, scope.user[attrs.matchField]);
+        if (ctrl.$isEmpty(modelValue)) {
+          // consider empty models to be valid
+          return true;
+        }
+
+        if (modelValue == scope.user[attrs.matchField]) {
+          // it is valid
+          return true;
+        }
+
+        // it is invalid
+        return false;
+      };
+    }
+  };
+});
