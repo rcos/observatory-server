@@ -3,66 +3,64 @@
 
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project) {
-    $scope.userOnProject = false;
-    var updateProject = function(){
-      Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
-          $scope.project = result.data;
-          initializeSlides($scope.project.photos);
-          getAuthors();
-          Auth.isLoggedInAsync(function(loggedIn){
-              if (loggedIn){
-                  var user = Auth.getCurrentUser();
-                  $scope.user = user;
-                  $scope.checkUserProject();
-              }
-          });
-      });
-    };
-    updateProject();
-
-    var getAuthors = function() {
-        var project = $scope.project;
-        $http.get('/api/projects/' + project._id + '/authors')
-            .success(function(authors){
-                $scope.authors = authors;
-        });
-    };
-
-    $scope.getPic = function(user) {
-
-        if (! ('avatar' in user)){
-            user.avatar = "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid";
-            $http.get('/api/users/' + user._id + '/avatar')            .success(function(avatar){
-                user.avatar = avatar;
-            })
-        }
-        return user.avatar
-    }
-
-    var initializeSlides = function(photos) {
-        var slides = [];
-        for (var i = 0; i < photos.length; i++){
-            slides.push({
-                active: false,
-                src: photos[i]
-            });
-            if (i === 0) {
-                slides[0].active = true;
-            }
-        }
-        $scope.slides = slides;
-    }
-
-    var setActiveSlide = function(photoName){
-        for (var i = 0; i < $scope.slides.length; i++){
-            if ($scope.slides[i].src === photoName){
-                $scope.slides[i].active = true;
-            } else {
-                $scope.slides[i].active = false;
-            }
+  $scope.userOnProject = false;
+  var updateProject = function(){
+    Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
+      $scope.project = result.data;
+      initializeSlides($scope.project.photos);
+      getAuthors();
+      Auth.isLoggedInAsync(function(loggedIn){
+        if (loggedIn){
+          var user = Auth.getCurrentUser();
+          $scope.user = user;
+          $scope.checkUserProject();
         }
       });
     });
+  };
+  updateProject();
+
+  var getAuthors = function() {
+    var project = $scope.project;
+    $http.get('/api/projects/' + project._id + '/authors')
+    .success(function(authors){
+      $scope.authors = authors;
+    });
+  };
+
+  $scope.getPic = function(user) {
+
+    if (! ('avatar' in user)){
+      user.avatar = "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid";
+      $http.get('/api/users/' + user._id + '/avatar')            .success(function(avatar){
+        user.avatar = avatar;
+      })
+    }
+    return user.avatar
+  }
+
+  var initializeSlides = function(photos) {
+    var slides = [];
+    for (var i = 0; i < photos.length; i++){
+      slides.push({
+        active: false,
+        src: photos[i]
+      });
+      if (i === 0) {
+        slides[0].active = true;
+      }
+    }
+    $scope.slides = slides;
+  }
+
+  var setActiveSlide = function(photoName){
+    for (var i = 0; i < $scope.slides.length; i++){
+      if ($scope.slides[i].src === photoName){
+        $scope.slides[i].active = true;
+      } else {
+        $scope.slides[i].active = false;
+      }
+    }
   };
   updateProject();
 
