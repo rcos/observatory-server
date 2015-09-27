@@ -67,9 +67,9 @@ UserSchema
 */
 var makeAvatar = function(email) {
   if (email){
-    return 'http://www.gravatar.com/avatar/'+md5(email.trim().toLowerCase())+"?d=monsterid";
+    return 'http://www.gravatar.com/avatar/'+md5(email.trim().toLowerCase())+"?d=identicon";
   }
-  return  'http://www.gravatar.com/avatar/00000000000000000000000000000000+"?d=monsterid"';
+  return  'http://www.gravatar.com/avatar/00000000000000000000000000000000+"?d=identicon"';
 
 };
 
