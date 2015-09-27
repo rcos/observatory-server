@@ -21,17 +21,20 @@
             <div class="fileUpload btn btn-sm btn-default" ng-show="userOnProject">
                 <span>Upload Images</span>
                 <div id="upload">
-                    <input type="file" ng-file-select="" ng-file-change="onFileSelect($files)" multiple />
+                    <input type="file"  ngf-select="upload($file)" />
                 </div>
             </div>
+            <div class="remove-photo btn btn-sm btn-default text-right" ng-show="userOnProject" ng-click="deletePhoto()">
+                <span>X</span>
+            </div>
 
-            <p ng-show="project.photos.length === 0">
+            <p ng-hide="project.photos.length">
               No images uploaded yet.
             </p>
 
             <carousel>
-                <slide ng-repeat="url in project.photos" active="$first">
-                    <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt=""></div>
+                <slide ng-repeat="slide in slides" active="slide.active">
+                    <div style="background:url({{imgPrefix+slide.src}}) center center;" class="slide" alt=""></div>
                 </slide>
             </carousel>
         </div>

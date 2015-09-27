@@ -95,6 +95,44 @@ exports.destroy = function(req, res) {
   });
 };
 
+exports.deletePhoto = function(req, res) {
+    var photoName = req.params.photoName;
+    var username = req.params.username;
+    var project = req.params.project;
+    var userId = req.user._id;
+    var path = config.imageUploadPath  + req.params.username + '/' + req.params.project;
+
+    Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
+      if(err) { return handleError(res, err); }
+      if(!project) { return res.send(404); }
+      if(project.photos.length===10){
+        var temp = project.photos.shift();
+        var toRemove = path + '/' + temp;
+        fs.unlinkSync(toRemove);
+      }
+      for (var i = 0; i < project.photos.length; i++){
+          if (project.photos[i] === photoName){
+            project.photos.splice(i, 1);
+          }
+      }
+      project.save(function (err) {
+        User.findById(userId, function(err, user) {
+          if (err) { return handleError(res, err); }
+
+          if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
+            var updated = _.merge(project, req.body);
+            updated.save(function (err) {
+            if (err) { return handleError(res, err); }
+              return res.json(200, project);
+            });
+          } else {
+            return handleError(res, err);
+          }
+        });
+      });
+    });
+};
+
 function handleError(res, err) {
   return res.send(500, err);
 }
@@ -130,6 +168,7 @@ exports.upload = function(req, res) {
       project.save(function (err) {
           // TODO handle project saving error
       });
+      return res.json(201, name);
     });
   });
 };
