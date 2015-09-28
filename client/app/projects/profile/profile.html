@@ -9,8 +9,8 @@
         <div class="col-sm-9 header-buttons">
             <div ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</div>
             <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
-            <div ng-show='isDefault() && isAdmin()' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</div>
-            <div ng-show='!isDefault() && isAdmin()' class="btn btn-success" ng-click='markDefault()'>Mark Default</div>
+            <div ng-show='isDefault() && isAdmin' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</div>
+            <div ng-show='!isDefault() && isAdmin' class="btn btn-success" ng-click='markDefault()'>Mark Default</div>
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
             <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
             <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>

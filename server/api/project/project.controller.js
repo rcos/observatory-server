@@ -100,8 +100,8 @@ function handleError(res, err) {
 }
 
 
-exports.markedDefault = function(req, res) {
-
+exports.isMarkedDefault = function(req, res) {
+  return true;
 };
 
 exports.upload = function(req, res) {

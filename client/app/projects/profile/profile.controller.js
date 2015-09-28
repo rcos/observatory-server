@@ -73,7 +73,13 @@ angular.module('observatory3App')
     };
 
     $scope.isDefault = function(){
-        return false;
+        //return false;
+        $http.get('/api/projects/' + $scope.project._id + '/markeddefault').success(function(marked)
+        {
+            return marked;
+        }).error(function(){
+            console.log("Error checking if project is default!");
+        });
     };
 
     $scope.isAdmin = Auth.isAdmin;
