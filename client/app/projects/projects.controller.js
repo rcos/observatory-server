@@ -1,15 +1,30 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, $location, $http) {
+
+.controller('ProjectsCtrl', function ($scope, $location, $http, Auth) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true};
+    $scope.loggedIn = false; 
+
+    Auth.isLoggedInAsync(function(loggedIn){
+        if (loggedIn){
+            var user = Auth.getCurrentUser();
+            $scope.user = user;
+            $scope.checkUserProject();
+        }
+    });
 
     $scope.getCurrentProjects = function() {
         $http.get('/api/projects').success(function(projects) {
             $scope.projects = projects;
         });
         $scope.past = false;
+        Auth.isLoggedInAsync(function(loggedIn){
+            if (loggedIn){
+                loggedIn = true;         
+            }
+        });
     };
 
     $scope.getPastProjects = function() {
@@ -30,6 +45,10 @@ angular.module('observatory3App')
                 $scope.$apply();
             });
         }
+    };
+
+   $scope.checkUserProject = function() {
+        $scope.userOnProject = $scope.user.projects !== -1;
     };
 
     $scope.submit = function(form) {
