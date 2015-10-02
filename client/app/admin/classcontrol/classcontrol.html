@@ -27,8 +27,8 @@
     </div>
     <div class="row">
         <div class="col-sm-12 buttonLine">
-            <button ng-show= "!displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP'>Show URP Form</button>
-            <button ng-show= "displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP' >Hide URP Form</button>
+            <button ng-show= "!displayURP && !showAttendanceCode" ng-click='URPDisplay()' class='btn btn-primary displayURP'>Show URP Form</button>
+            <button ng-show= "displayURP && !showAttendanceCode" ng-click='URPDisplay()' class='btn btn-primary displayURP' >Hide URP Form</button>
         </div>
     </div>
 
