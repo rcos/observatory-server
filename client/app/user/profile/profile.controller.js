@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth) {
+  .controller('ProfileCtrl', function ($scope, $stateParams, $http, Auth, notify) {
 
       var loggedInUser;
       Auth.getCurrentUser(function(user){
@@ -38,9 +38,9 @@ angular.module('observatory3App')
               'bio': $scope.user.bio
           }).success(function(data){
               $scope.user.bio = data.bio;
-              window.alert('Bio updated!');
+              notify({message: "Bio updated!", classes: []});
           }).error(function(){
-              window.alert('Could not update bio!');
+              notify({message: "Could not update bio!", classes: ["alert-danger"]});
           });
       };
 
@@ -52,7 +52,7 @@ angular.module('observatory3App')
               $scope.user.tech.push($scope.insertTechContent);
               $scope.insertTechContent = '';
           }).error(function(){
-              window.alert('Could not add tech!');
+              notify({message: "Could not add tech!", classes: ["alert-danger"]});
           });
         }
       };
@@ -63,7 +63,7 @@ angular.module('observatory3App')
           }).success(function(){
               $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
           }).error(function(){
-              window.alert('Could not add tech!');
+              notify({message: "Could not add tech!", classes: ["alert-danger"]});
           });
       };
 

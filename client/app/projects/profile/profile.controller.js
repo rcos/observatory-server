@@ -2,7 +2,7 @@
 'use strict';  
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
     $scope.userOnProject = false;
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
@@ -23,10 +23,10 @@ angular.module('observatory3App')
     var getAuthors = function() {
         var project = $scope.project;
         $http.get('/api/projects/' + project._id + '/authors')
-        .success(function(authors){
-            $scope.authors = authors;
-        });
-    }; 
+            .success(function(authors){
+                $scope.authors = authors;
+            })
+    }
 
     $scope.getPic = function(user) {   
 
@@ -117,11 +117,16 @@ angular.module('observatory3App')
     
 
     $scope.edittingDesc = false;
-    $scope.isLoggedIn = Auth.isLoggedIn;   
+    $scope.edittingName = false;
+    $scope.isLoggedIn = Auth.isLoggedIn;
 
     $scope.editDesc = function(){
         $scope.edittingDesc = !$scope.edittingDesc;
     }; 
+
+    $scope.editName = function(){
+        $scope.edittingName = !$scope.edittingName;
+    };
 
     // Function for saving the description
     $scope.saveDesc = function(){
@@ -129,22 +134,33 @@ angular.module('observatory3App')
         $http.put('/api/projects/' + $scope.project._id, {
             'description': $scope.project.description
         }).success(function(){
-            window.alert('Description updated!');
+            notify('Description updated!');
         }).error(function(){
-            window.alert('Could not update description!');
+            notify({message: 'Could not update description!', classes: ["alert-danger"]});
         });
     }; 
+
+    $scope.saveName = function(){
+        $scope.edittingName = false;
+        $http.put('/api/projects/' + $scope.project._id, {
+            'name': $scope.project.name
+        }).success(function(){
+            notify('Project Name updated!');
+        }).error(function(){
+            notify('Could not update project name!', {classes: ["alert-danger"] });
+        });
+    };
 
     $scope.joinProject = function(){
         $http.put('/api/users/' + $scope.user._id + '/project',{
             'project': $scope.project._id
         }).success(function(){
-            window.alert('You are now on this project!');
+            notify({ message: "You are now on this project!"  });
             $scope.userOnProject = true;
             $scope.user.projects.push($scope.project._id);
             getAuthors();
         }).error(function(){
-            window.alert('Error adding user to project!');
+            notify({message: 'Error adding user to project!', classes: ["alert-danger"]});
         });
     }; 
 
@@ -154,15 +170,14 @@ angular.module('observatory3App')
         {
             'project': $scope.project._id
         }).success(function(){
-            window.alert('You are now off this project!');
+            notify({message: "You are now off this project!", classes: []});
             $scope.user.projects.splice($scope.user.projects.indexOf($scope.project._id), 1);
             $scope.userOnProject = false;
             getAuthors();
         }).error(function(){
-            window.alert('Error removing user from project!');
+            notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
-    }; 
-    
+    };
 
     $scope.checkUserProject = function() {
         $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
@@ -197,4 +212,9 @@ angular.module('observatory3App')
         template: '<div btf-markdown=\'project.description\'></div> \
         <textarea ng-show=\'edittingDesc && userOnProject\' ng-model=\'project.description\' ></textarea>'
     };
-});
+}).directive('pname', function() {
+    return {
+        restrict:'E',
+        template: '<input type=\'text\' maxlength="50" ng-show=\'edittingName && userOnProject\' ng-model=\'project.name\'><br>'
+    };
+})

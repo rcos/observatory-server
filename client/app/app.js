@@ -3,6 +3,7 @@
 angular.module('observatory3App', [
   'ngCookies',
   'ngResource',
+  'cgNotify',
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
