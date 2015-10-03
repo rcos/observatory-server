@@ -117,7 +117,7 @@ angular.module('observatory3App')
     
 
     $scope.edittingDesc = false;
-    $scope.edittingName = false; 
+    $scope.edittingName = false;
     $scope.isLoggedIn = Auth.isLoggedIn;
 
     $scope.editDesc = function(){
@@ -128,7 +128,7 @@ angular.module('observatory3App')
     // Function for saving the description
 =======
     $scope.editName = function(){
-        $scope.edittingName = !$scope.edittingName; 
+        $scope.edittingName = !$scope.edittingName;
     };
 
 >>>>>>> 9174586... Can now edit the title of a project
@@ -148,9 +148,9 @@ angular.module('observatory3App')
         $http.put('/api/projects/' + $scope.project._id, {
             'name': $scope.project.name
         }).success(function(){
-            window.alert('Project Name updated!');
+            notify('Project Name updated!');
         }).error(function(){
-            window.alert('Could not update project name!');
+            notify('Could not update project name!', {classes: ["alert-danger"] });
         });
     };
 
@@ -181,7 +181,7 @@ angular.module('observatory3App')
             notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
     };
- 
+
     $scope.checkUserProject = function() {
         $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
     }; 
