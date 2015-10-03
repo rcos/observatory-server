@@ -72,6 +72,16 @@ User.find({}).remove(function() {
       login: 'seveibar'
     }
   },
+  {
+    provider: 'local',
+    role: 'mentor',
+    name: 'Mentor',
+    email: 'mentor@mentor.com',
+    password: 'mentor',
+    github: {
+      login: 'mentorguy'
+    }
+  },
    function() {
       console.log('finished populating users');
     }
