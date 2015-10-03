@@ -18,8 +18,8 @@ angular.module('observatory3App')
     $scope.isAdmin = Auth.isAdmin;
     $scope.isMentor = Auth.isMentor;
     $scope.getCurrentUser = Auth.getCurrentUser;
-
-    $scope.logout = function() {
+    
+		$scope.logout = function() {
       Auth.logout();
       $location.path('/login');
     };

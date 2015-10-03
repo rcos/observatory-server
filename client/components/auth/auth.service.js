@@ -202,7 +202,7 @@ angular.module('observatory3App')
        * @return {Boolean}
        */
       isMentor: function() {
-        return currentUser.role === 'mentor';
+        return currentUser.role === 'mentor' || currentUser.role === 'admin'; 
       },
 
       /**
