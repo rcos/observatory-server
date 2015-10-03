@@ -2,7 +2,7 @@
 'use strict';  
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, $upload, Project, notify) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
     $scope.userOnProject = false;
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
@@ -23,10 +23,10 @@ angular.module('observatory3App')
     var getAuthors = function() {
         var project = $scope.project;
         $http.get('/api/projects/' + project._id + '/authors')
-        .success(function(authors){
-            $scope.authors = authors;
-        });
-    }; 
+            .success(function(authors){
+                $scope.authors = authors;
+            })
+    }
 
     $scope.getPic = function(user) {   
 
@@ -124,14 +124,11 @@ angular.module('observatory3App')
         $scope.edittingDesc = !$scope.edittingDesc;
     }; 
 
-<<<<<<< HEAD
-    // Function for saving the description
-=======
     $scope.editName = function(){
         $scope.edittingName = !$scope.edittingName;
     };
 
->>>>>>> 9174586... Can now edit the title of a project
+    // Function for saving the description
     $scope.saveDesc = function(){
         $scope.edittingDesc = false;
         $http.put('/api/projects/' + $scope.project._id, {
