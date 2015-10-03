@@ -135,7 +135,6 @@ angular.module('observatory3App')
             'description': $scope.project.description
         }).success(function(){
             notify('Description updated!');
-<<<<<<< HEAD
         }).error(function(){
             notify({message: 'Could not update description!', classes: ["alert-danger"]});
         });
@@ -149,10 +148,6 @@ angular.module('observatory3App')
             notify('Project Name updated!');
         }).error(function(){
             notify('Could not update project name!', {classes: ["alert-danger"] });
-=======
-        }).error(function(){
-            notify({message: 'Could not update description!', classes: ["alert-danger"]});
->>>>>>> initial notifications implementation
         });
     };
 
