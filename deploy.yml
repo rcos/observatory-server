@@ -5,10 +5,10 @@
     - log_file: "/opt/observatory.log"
     - server_dir: "/opt/Observatory3/"
   tasks:
-    - command: /usr/local/bin/forever stopall
-
     - fail: msg="Missing Observatory version. Pass with --extra-vars release=v0.0.1"
       when: release is undefined
+
+    - command: /usr/local/bin/forever stopall
 
     - git: 
         repo='https://github.com/rcos/Observatory3.git'
@@ -19,7 +19,7 @@
       args:
         chdir: "{{ server_dir }}"
 
-    - command: /usr/local/bin/grunt --force
+    - command: /usr/local/bin/grunt build --force
       args:
         chdir: "{{ server_dir }}"
 
