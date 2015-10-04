@@ -57,44 +57,45 @@ module.exports = function (grunt) {
       }
     },
     bower: {
-         options: {
-           targetDir: 'client/bower_components',
-           layout: 'byType',
-           install: true,
-           verbose: false,
-           cleanTargetDir: false,
-           cleanBowerDir: false,
-           bowerOptions: {}
-       },
-       all: {
+      options: {
+        targetDir: 'client/bower_components',
+        layout: 'byType',
+        install: true,
+        verbose: false,
+        cleanTargetDir: false,
+        cleanBowerDir: false,
+        bowerOptions: {}
+      },
+      all: {
         src: ['bower.json','.bowerrc'],
       }
-     },
-     auto_install: {
-        local: {},
-        subdir: {
-          options: {
-            bower: false
-          }
+    },
+    auto_install: {
+      local: {},
+      subdir: {
+        options: {
+          bower: false
+        }
       },
-        src: ['package.json'],
+      src: ['package.json'],
 
-      },
+    },
     watch: {
       installBower: {
-          files: ['bower.json','.bowerrc'],
-          tasks: ['changed:bower']
+        files: ['bower.json','.bowerrc'],
+        tasks: ['changed:bower']
       },
       installNPM: {
-          files: ['package.json'],
-          tasks: ['changed:auto_install']
+        files: ['package.json'],
+        tasks: ['changed:auto_install']
       },
       injectJS: {
         files: [
           '<%= yeoman.client %>/{app,components}/**/*.js',
           '!<%= yeoman.client %>/{app,components}/**/*.spec.js',
           '!<%= yeoman.client %>/{app,components}/**/*.mock.js',
-          '!<%= yeoman.client %>/app/app.js'],
+          '!<%= yeoman.client %>/app/app.js'
+        ],
         tasks: ['injector:scripts']
       },
       injectCss: {
@@ -115,13 +116,12 @@ module.exports = function (grunt) {
         tasks: ['newer:jshint:all', 'karma']
       },
       injectSass: {
-        files: [
-          '<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
+      files: [
+        '<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
         tasks: ['injector:sass']
       },
       sass: {
-        files: [
-          '<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
+        files: ['<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
         tasks: ['sass', 'autoprefixer']
       },
       gruntfile: {
@@ -531,11 +531,11 @@ module.exports = function (grunt) {
         },
         files: {
           '<%= yeoman.client %>/index.html': [
-              ['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
-               '!{.tmp,<%= yeoman.client %>}/app/app.js',
-               '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
-               '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js']
-            ]
+            ['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
+            '!{.tmp,<%= yeoman.client %>}/app/app.js',
+            '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
+            '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js']
+          ]
         }
       },
 
