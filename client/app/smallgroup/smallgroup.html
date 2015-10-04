@@ -1,0 +1,41 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+	<h3>Small Group : {{ smallgroup.name }}</h3>
+	<div ng-hide='isPresent()' class="input-group dayCodeForm">
+    <input type="text" ng-model='userDayCode' class="form-control" placeholder="Day Code">
+    <span class="input-group-btn">
+      <button class="btn btn-primary" ng-click='submitDayCode()' type="button">Submit Day Code</button>
+    </span>
+  </div>
+	<button class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendance()'> Show Attendance </button>
+
+	<div ng-show='isPresent()'>
+		Your attendance has been taken!
+	</div>
+	<div ng-show='isMentor()' class="input-group dayCodeForm">
+		<input type="text" ng-model='user' class="form-control" placeholder="User name">
+    <span class="input-group-btn">
+      <button class="btn btn-primary" ng-click='submitDayCode()' type="button">Add User</button>
+    </span>
+	</div>
+	<div class='students'>
+		<div ng-repeat='student in smallgroup.students' class='student' ng-class='{present: student.present}'>
+			<img ng-src='{{student.avatar}}&s=72px'/>
+			{{ student.name }}
+		</div>
+	</div>
+
+	<div class='big-attendance' ng-show='showAttendanceCode' ng-click='showAttendanceCode=false;'>
+			<div class="row">
+					<div class="col-sm-12">
+							<div class='small-text'>
+									The Attendance Code is...
+							</div>
+							<div class='big-text'>
+									{{ attendanceCode }}
+							</div>
+					</div>
+			</div>
+	</div>
+</div>
