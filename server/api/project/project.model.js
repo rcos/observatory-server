@@ -16,6 +16,7 @@ var ProjectSchema = new Schema({
   authors: [String],
   photos: [String],
   mentor: String,
+  tech: [String],
   active: {type: Boolean, default: true}
 });
 

@@ -17,4 +17,6 @@ router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.update);
 router.delete('/:id', auth.hasRole('mentor'), controller.destroy);
 
+router.put("/:id/addTechBubble", /*auth.canEdit(),*/ controller.addTechBubble);
+
 module.exports = router;
