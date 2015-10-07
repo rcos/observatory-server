@@ -200,6 +200,34 @@ angular.module('observatory3App')
             });
         }
     };
+//tech bubble code
+
+	$scope.addTechBubble = function(){
+        if($scope.insertTechContent){
+          $http.put('/api/project/' + $stateParams.project + '/addTechBubble', {
+              'tech': $scope.insertTechContent
+          }).success(function(){
+              $scope.user.tech.push($scope.insertTechContent);
+              $scope.insertTechContent = '';
+          }).error(function(){
+              notify({message: "Could not add tech!", classes: ["alert-danger"]});
+          });
+        }
+      };
+			//may be erroneously copied
+      $scope.removeTech = function(tech){
+          $http.put('/api/project/' + $stateParams.id + '/:w removeTech', {
+              'tech': tech
+          }).success(function(){
+              $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
+          }).error(function(){
+              notify({message: "Could not add tech!", classes: ["alert-danger"]});
+          });
+      };
+
+//end tech bubble code
+
+
 })
 .directive('desc', function() {
     return {

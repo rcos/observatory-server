@@ -85,6 +85,18 @@
         </div>
         <desc></desc>
     </div>
+
+	<div class='col-md-6'>
+		<div class='tech-boxes'>
+			<div ng-repeat="tech in project.tech track by $index">
+				{{tech}} <!-- button ng-show='' class='btn btn-default btn-xs' ng-click='removeTechTag(tech)'>x</button -->
+			</div>
+		 <div class="col-sm-7">
+			<input ng-enter="addTechBubble()" ng-model="insertTechContent" size='4' type='text'/>
+			<button ng-click="addTechBubble()" class="btn btn=defualt btn-xs">+</button>
+		</div>
+	</div>
+
 </div>
 </div>
 <div ng-include="'components/footer/footer.html'"></div>

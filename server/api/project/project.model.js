@@ -18,6 +18,7 @@ var ProjectSchema = new Schema({
   mentor: String,
   active: {type: Boolean, default: true},
   markedDefault: {type: Boolean, default: false}
+  tech: [String],
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);
