@@ -17,7 +17,7 @@ var ProjectSchema = new Schema({
   photos: [String],
   mentor: String,
   active: {type: Boolean, default: true},
-  markedDefault: Boolean
+  markedDefault: {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);

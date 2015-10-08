@@ -9,13 +9,15 @@ var router = express.Router();
 router.get('/', controller.index);
 router.get('/past', controller.indexOld);
 router.get('/:id/authors', controller.authors);
+router.get('/:id/markeddefault', auth.hasRole('admin'), controller.isMarkedDefault);
 router.get('/:username/:project', controller.show);
 router.get('/:id', controller.show);
 router.post('/:username/:project/upload', auth.isAuthenticated(), controller.upload);
 router.delete('/:username/:project/:photoName', auth.isAuthenticated(), controller.deletePhoto);
 router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.update);
-router.put('/:username/:project/markeddefault', auth.hasRole('admin'), controller.markedDefault);
+//router.get('/:username/:project/markeddefault', auth.hasRole('admin'), controller.isMarkedDefault);
+
 router.delete('/:id', auth.hasRole('mentor'), controller.destroy);
 
 module.exports = router;

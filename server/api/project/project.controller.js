@@ -137,8 +137,15 @@ function handleError(res, err) {
   return res.send(500, err);
 }
 
-
-exports.markedDefault = function(req, res) {
+// Checks if a project is marked as default.
+exports.isMarkedDefault = function(req, res) {
+  //return true;
+  console.log("in isMarkedDefault()");
+  
+  Project.findById(req.params.id, function (err, project) {
+    if (err) { return handleError(res, err); }
+    return res.json({markedDefault: true});
+  });
 
 };
 
