@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('MentorCtrl', function ($scope, $stateParams, $http, Auth, User, $location) {
+  .controller('MentorCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify) {
     function updateUnverified(){
         $http.get("/api/users/unverified")
         	.success(function(unverifiedUsers){
         		$scope.unverifiedUsers = unverifiedUsers;
         	})
         	.error(function(err){
-        		window.alert("Error Occurred: " + err);
+            notify({ message: "Error Occurred: " + err, classes: ["alert-danger"] });
         	});
     }
     $scope.verifyAttendance = function(user){
@@ -17,7 +17,7 @@ angular.module('observatory3App')
                 updateUnverified();
             })
             .error(function(err){
-                window.alert("Error occurred:" + err);
+                notify({ message: "Error Occurred: " + err, classes: ["alert-danger"] });
             });
     };
     updateUnverified();

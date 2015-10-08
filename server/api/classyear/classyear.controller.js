@@ -48,14 +48,18 @@ exports.create = function(req, res) {
 
       // Make sure there are no other current class years
       ClassYear.find({
-        "current": true
-      }, function(err, otherClassYear){
-        if (classYear.semester !== otherClassYear.semester){
-          otherClassYear.current = false;
-          otherClassYear.save();
+        "current": true,
+        "semester": {$ne : classYear.semester}
+      }, function(err, otherClassYears){
+
+        for (var i = 0 ; i < otherClassYears.length ; i++){
+          var otherClassYear = otherClassYears[i];
+          if (classYear.semester !== otherClassYear.semester){
+            otherClassYear.current = false;
+            otherClassYear.save();
+          }
         }
       });
-
       res.send(204);
     });
 
@@ -84,7 +88,7 @@ exports.destroy = function(req, res) {
   });
 };
 
-// Generate a daycode or return the current day code for the 
+// Generate a daycode or return the current day code for the
 // current class year
 exports.daycode = function(req, res){
   ClassYear.findOne({
@@ -94,7 +98,7 @@ exports.daycode = function(req, res){
     var today = new Date();
     today.setHours(0,0,0,0);
     for (var i = 0;i < classYear.dayCodes.length;i++){
-      if (today.getTime() == classYear.dayCodes[i].date.getTime()){
+      if (today.getTime() === classYear.dayCodes[i].date.getTime()){
         return res.send(200, classYear.dayCodes[i].code);
       }
     }
@@ -110,6 +114,30 @@ exports.daycode = function(req, res){
     });
   });
 };
+
+// Toggles URP display
+exports.displayURP = function(req, res) {
+  ClassYear.findOne({
+    "current": true
+  }, function(err, classYear){
+    if(err) { return handleError(res, err); }
+    classYear.update(req.body, function(err){
+      if(err) { return handleError(res, err); }
+      res.send(200);
+    });
+  });
+};
+
+// Toggles URP display
+exports.getDisplayURP = function(req, res) {
+  ClassYear.findOne({
+    "current": true
+  }, function (err, classYear){
+    if(err) { return handleError(res, err); }
+    res.json({displayURP:classYear.displayURP});
+  })
+};
+
 
 function handleError(res, err) {
   return res.send(500, err);

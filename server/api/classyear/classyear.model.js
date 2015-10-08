@@ -7,6 +7,7 @@ var ClassSchema = new Schema({
   semester: String,
   bonusDays: [Date],
   current: false,
+  displayURP:{type: Boolean, default: true},
   mentors: [{type : Schema.Types.ObjectId, ref: 'User'}],
   students: [{type : Schema.Types.ObjectId, ref: 'User'}],
   projects: [{type : Schema.Types.ObjectId, ref: 'Project'}],

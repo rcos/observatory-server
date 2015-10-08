@@ -17,7 +17,9 @@ module.exports = function (grunt) {
     cdnify: 'grunt-google-cdn',
     protractor: 'grunt-protractor-runner',
     injector: 'grunt-asset-injector',
-    buildcontrol: 'grunt-build-control'
+    buildcontrol: 'grunt-build-control',
+    bower: 'grunt-bower-task',
+    auto_install: 'grunt-auto-install'
   });
 
   // Time how long tasks take. Can help when optimizing build times
@@ -54,13 +56,46 @@ module.exports = function (grunt) {
         url: 'http://localhost:<%= express.options.port %>'
       }
     },
+    bower: {
+      options: {
+        targetDir: 'client/bower_components',
+        layout: 'byType',
+        install: true,
+        verbose: false,
+        cleanTargetDir: false,
+        cleanBowerDir: false,
+        bowerOptions: {}
+      },
+      all: {
+        src: ['bower.json','.bowerrc'],
+      }
+    },
+    auto_install: {
+      local: {},
+      subdir: {
+        options: {
+          bower: false
+        }
+      },
+      src: ['package.json'],
+
+    },
     watch: {
+      installBower: {
+        files: ['bower.json','.bowerrc'],
+        tasks: ['changed:bower']
+      },
+      installNPM: {
+        files: ['package.json'],
+        tasks: ['changed:auto_install']
+      },
       injectJS: {
         files: [
           '<%= yeoman.client %>/{app,components}/**/*.js',
           '!<%= yeoman.client %>/{app,components}/**/*.spec.js',
           '!<%= yeoman.client %>/{app,components}/**/*.mock.js',
-          '!<%= yeoman.client %>/app/app.js'],
+          '!<%= yeoman.client %>/app/app.js'
+        ],
         tasks: ['injector:scripts']
       },
       injectCss: {
@@ -81,13 +116,12 @@ module.exports = function (grunt) {
         tasks: ['newer:jshint:all', 'karma']
       },
       injectSass: {
-        files: [
-          '<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
+      files: [
+        '<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
         tasks: ['injector:sass']
       },
       sass: {
-        files: [
-          '<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
+        files: ['<%= yeoman.client %>/{app,components}/**/*.{scss,sass}'],
         tasks: ['sass', 'autoprefixer']
       },
       gruntfile: {
@@ -497,11 +531,11 @@ module.exports = function (grunt) {
         },
         files: {
           '<%= yeoman.client %>/index.html': [
-              ['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
-               '!{.tmp,<%= yeoman.client %>}/app/app.js',
-               '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
-               '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js']
-            ]
+            ['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
+            '!{.tmp,<%= yeoman.client %>}/app/app.js',
+            '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
+            '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js']
+          ]
         }
       },
 
@@ -562,14 +596,16 @@ module.exports = function (grunt) {
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open', 'express-keepalive']);
+      return grunt.task.run(['changed:bower', 'changed:auto_install','build', 'env:all', 'env:prod', 'express:prod', 'wait', 'open', 'express-keepalive']);
     }
 
     if (target === 'debug') {
       return grunt.task.run([
         'clean:server',
         'env:all',
-        'injector:sass', 
+        'changed:bower',
+        'changed:auto_install',
+        'injector:sass',
         'concurrent:server',
         'injector',
         'wiredep',
@@ -581,7 +617,9 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'env:all',
-      'injector:sass', 
+      'changed:bower',
+      'changed:auto_install',
+      'injector:sass',
       'concurrent:server',
       'injector',
       'wiredep',
@@ -611,7 +649,7 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'clean:server',
         'env:all',
-        'injector:sass', 
+        'injector:sass',
         'concurrent:test',
         'injector',
         'autoprefixer',
@@ -624,7 +662,7 @@ module.exports = function (grunt) {
         'clean:server',
         'env:all',
         'env:test',
-        'injector:sass', 
+        'injector:sass',
         'concurrent:test',
         'injector',
         'wiredep',
@@ -641,8 +679,10 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('build', [
+    'changed:bower',
+    'changed:auto_install',
     'clean:dist',
-    'injector:sass', 
+    'injector:sass',
     'concurrent:dist',
     'injector',
     'wiredep',
