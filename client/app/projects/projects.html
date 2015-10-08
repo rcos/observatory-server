@@ -28,22 +28,29 @@
                 <div class="modal-body" >
                     <form class="form" name="addProjectForm" ng-submit="submit(addProjectForm)" novalidate>
                         <label>Your project's github repository</label>
-                        <br/>
-                        <div class="url">https://github.com/</div>
-                        <div id="githubUsername" class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
-                        'has-error': addProjectForm.githubUsername.$invalid && submitted }">
+                        <div class="input-group">
+                            <span class="input-group-addon">https://github.com/</span>
 
-                            <input type="text" name="githubUsername" class="form-control" ng-model="projectToAdd.githubUsername" required/>
+                            <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
+                            'has-error': addProjectForm.githubUsername.$invalid && submitted }">
+                                <input type="text" name="githubUsername" class="form-control" ng-model="projectToAdd.githubUsername" required/>
+                            </div>
+                            <span class="input-group-addon">/</span>
+
+                            <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
+                            'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
+                                <input type="text" name="githubProjectName" id="githubProjectName" class="form-control" ng-model="projectToAdd.githubProjectName" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
+                        'has-error': addProjectForm.githubUsername.$invalid && submitted }">
                             <p class="help-block" ng-show="addProjectForm.githubUsername.$error.required && submitted">
                             The project owner's github username is required
                             </p>
                         </div>
-
-                        <div class="url">/</div>
-                        <div id="githubProjectName" class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
+                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
                         'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
-
-                            <input type="text" name="githubProjectName" class="form-control" ng-model="projectToAdd.githubProjectName" required/>
                             <p class="help-block" ng-show="addProjectForm.githubProjectName.$error.required && submitted">
                             The project's github name is required
                             </p>
