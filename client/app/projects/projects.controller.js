@@ -3,7 +3,7 @@
 angular.module('observatory3App')
 .controller('ProjectsCtrl', function ($scope, $location, $http) {
     $scope.projects = [];
-    $scope.projectToAdd = {active: true};
+    $scope.projectToAdd = {active: true, repositories: [""]};
 
     $scope.getCurrentProjects = function() {
         $http.get('/api/projects').success(function(projects) {
@@ -20,10 +20,8 @@ angular.module('observatory3App')
     };
 
     $scope.getInfo = function() {
-        if($scope.projectToAdd.repositoryUrl) {
-            var splitUrl = $scope.projectToAdd.repositoryUrl.split('/');
-            $scope.projectToAdd.githubUsername = splitUrl[splitUrl.length - 2];
-            $scope.projectToAdd.githubProjectName = $scope.projectToAdd.name = splitUrl[splitUrl.length - 1];
+        if($scope.projectToAdd.githubUsername && $scope.projectToAdd.githubProjectName) {
+            $scope.projectToAdd.name = $scope.projectToAdd.githubProjectName;
             $.getJSON('https://api.github.com/repos/' + $scope.projectToAdd.githubUsername + '/' + $scope.projectToAdd.githubProjectName, function(response) {
                 $scope.projectToAdd.websiteURL = response.homepage;
                 $scope.projectToAdd.description = response.description;
@@ -32,11 +30,20 @@ angular.module('observatory3App')
         }
     };
 
+    $scope.addRepository = function() {
+        $scope.projectToAdd.repositories[$scope.projectToAdd.repositories.length] = "";
+    }
+
+    $scope.removeRepository = function(index) {
+        $scope.projectToAdd.repositories.splice(index, 1);
+    }
+
     $scope.submit = function(form) {
         $scope.submitted = true;
 
         if(form.$valid) {
             $scope.submitted = false;
+            $scope.projectToAdd.repositories[0] = "https://github.com/" + $scope.projectToAdd.githubUsername + "/" + $scope.projectToAdd.githubProjectName;
             $('#addProject').modal('hide');
             // use setTimeout because hiding the modal takes longer than the post request
             // and results in the modal disappearing but the overlay staying if not used

@@ -16,7 +16,13 @@
             <div ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</div>
             <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
-            <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
+            <a class="btn btn-info" href="{{project.repositories[0]}}" title="" ng-show="project.repositories.length == 1">Repository</a>
+            <div id="repos" ng-show="project.repositories.length > 1">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-info">Repositories</a>
+                    <a class="btn btn-info" href="{{repo}}" ng-repeat="repo in project.repositories">{{$index+1}}</a>
+                </div>
+            </div>
             <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
 
         </div>
