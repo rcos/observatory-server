@@ -39,7 +39,6 @@
                     <button ng-click="addTech()" class='btn btn-default btn-xs'>+</button>
                 </div>
             </div>
-            <div ng-show="user.commits.length != 0">User has not committed anything yet</div>
             <div ng-show="!user.bio">User has not written a bio</div>
             <div ng-show='isuser || user.bio' class='content-box'>
                 <div class='content-title row'>
@@ -81,6 +80,7 @@
             </div>
             <div class='content-box'>
                 <div class='content-title'>Commits</div>
+                <div ng-show="user.commits.length != 0">User has not committed anything yet</div>
                 <div ng-repeat='event in user.github.events' class='commit'>
                     <a href='{{event.url}}'>{{event.message}}</a>
                 </div>
