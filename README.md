@@ -11,7 +11,7 @@ See our [planned feature set.](docs/Feature_Requirements.md)
 Features
 --------
 
-Observatory is a powerful dashboard tracking open source projects and contributors that are built through Rensselaer Center for Open Source. the current implemenation can be seen in action at [rcos.rpi.edu](http://rcos.rpi.edu). We are a highly active community of open source developers that attend school at Rensselaer.
+Observatory is a powerful dashboard tracking open source projects and contributors that are built through Rensselaer Center for Open Source. The current implemenation can be seen in action at [rcos.io](http://rcos.io). We are a highly active community of open source developers that attend school at Rensselaer.
 
 Key Features Include
 
@@ -24,6 +24,7 @@ Installation
 ------------
 
 Once the project is cloned you need nodejs (nodejs-legacy for debian-based distributions), npm, ruby, and Mongo DB. You can then run
+
 ```
 npm install -g grunt-cli grunt bower
 npm install
