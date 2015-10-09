@@ -17,4 +17,14 @@ describe('GET /api/projects', function() {
         done();
       });
   });
+
+  it('should',function(done) {
+    request(app)
+      .post('/api/projects')
+      .send({'name':'test_api_add_project'})
+      .expect(200)
+      .end(function(err,res){
+        if (err) return done(err);
+      });
+  });
 });
