@@ -57,6 +57,18 @@
                             </p>
                         </div>
 
+                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.blogUrl.$valid && submitted && projectToAdd.blogUrl, 'has-error': addProjectForm.blogUrl.$invalid && submitted }">
+                            <label>Blog URL (optional)</label>
+
+                            <div class="form-inline">
+                                <input type="url" name="blogUrl" class="form-control" ng-model="projectToAdd.blogUrl" />
+                                <select class="form-control" ng-options="blogType.value as blogType.label for blogType in blogTypes" ng-model="projectToAdd.blogType"></select>
+                            </div>
+                            <p class="help-block" ng-show="addProjectForm.blogUrl.$error.url && submitted">
+                            Doesn't look like a valid url.
+                            </p>
+                        </div>
+
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
                         'has-error': addProjectForm.githubUsername.$invalid && submitted }">
                             <label>Project owner's github username</label>

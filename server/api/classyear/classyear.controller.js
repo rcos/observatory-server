@@ -134,6 +134,7 @@ exports.getDisplayURP = function(req, res) {
     "current": true
   }, function (err, classYear){
     if(err) { return handleError(res, err); }
+    if(!classYear) { return res.send(403); } // TODO switch to 404 once client error handling improves
     res.json({displayURP:classYear.displayURP});
   })
 };
