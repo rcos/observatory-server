@@ -156,29 +156,6 @@ angular.module('observatory3App')
         });
     };
 
-    // Function for saving the description
-    $scope.saveDesc = function(){
-        $scope.edittingDesc = false;
-        $http.put('/api/projects/' + $scope.project._id, {
-            'description': $scope.project.description
-        }).success(function(){
-            notify('Description updated!');
-        }).error(function(){
-            notify({message: 'Could not update description!', classes: ["alert-danger"]});
-        });
-    };
-
-    $scope.saveName = function(){
-        $scope.edittingName = false;
-        $http.put('/api/projects/' + $scope.project._id, {
-            'name': $scope.project.name
-        }).success(function(){
-            notify('Project Name updated!');
-        }).error(function(){
-            notify('Could not update project name!', {classes: ["alert-danger"] });
-        });
-    };
-
     $scope.joinProject = function(){
         $http.put('/api/users/' + $scope.user._id + '/project',{
             'project': $scope.project._id
@@ -232,17 +209,5 @@ angular.module('observatory3App')
                 removeSlide(activePhoto.src);
             });
         }
-    };
-})
-.directive('desc', function() {
-    return {
-        restrict:'E',
-        template: '<div btf-markdown=\'project.description\'></div> \
-        <textarea ng-show=\'edittingDesc && userOnProject\' ng-model=\'project.description\' ></textarea>'
-    };
-}).directive('pname', function() {
-    return {
-        restrict:'E',
-        template: '<input type=\'text\' maxlength="50" ng-show=\'edittingName && userOnProject\' ng-model=\'project.name\'><br>'
     };
 });
