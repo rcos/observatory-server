@@ -30,9 +30,11 @@ angular.module('observatory3App')
 
     // Toggles the display of URP form
     var URPDisplay = function(){
-      $http.get("/api/classyear/displayURP")
-        .success(function(data){
-          $scope.displayURP = data.displayURP;
+      $http.get("/api/classyear/displayURP").
+        then(function(data){
+          if (data) {
+            $scope.displayURP = data.displayURP;
+          }
         });
     };
 

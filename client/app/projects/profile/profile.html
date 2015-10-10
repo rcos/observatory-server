@@ -8,8 +8,7 @@
             <pname></pname>
             </p>
             <div class="btn-group description-buttons" ng-show="userOnProject">
-                <button type="button" class='btn btn-default btn-sm' ng-click='editName()'>Edit Project Name</button>
-                <button type="button" class='btn btn-default btn-sm' ng-click='saveName()'>Save Project Name</button> 
+                <button type="button" class='btn btn-default btn-sm' ng-click='editProjectDetails()'>Edit Project Details</button>
             </div>
         </div>
         <div class="col-sm-9 text-right header-buttons">
@@ -17,10 +16,12 @@
             <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
             <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
-            <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
-
+            <a class="btn btn-info" ng-if="!project.blogType || project.blogType === 'RSS'" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
+            <a class="btn btn-info" ng-if="project.blogType === 'EXTERNAL'" href="{{projects.blogUrl}}">Blog</a>
         </div>
     </div>
+
+    {{project.blogUrl}}
     <div class="row">
         <div class="col-sm-7 project-image">
 
@@ -64,16 +65,22 @@
             </div>
         </div>
     </div>
-
-    <div class="col-sm-7 description">
-        <div ng-show='userOnProject'>
-            <div class="btn-group description-buttons">
-                <button type="button" class='btn btn-default btn-sm' ng-click='editDesc()'>Edit</button>
-                <button type="button" class='btn btn-default btn-sm' ng-click='saveDesc()'>Save</button>
-
+    <div class="row">
+        <div class="col-sm-7 description">
+            <desc></desc>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-7 rss-feed">
+            <h4>Blog</h4>        
+            <div class="rss-post" ng-hide="edittingBlogUrl" ng-repeat="post in project.feed.entries">
+                <h5>{{ post.title }}</h5>
+                <span class="post-author">{{ post.author }}</span> --
+                <span class="post-date">{{ post.publishedDate | date:'medium' }}</span>
+                <p>{{ post.contentSnippet }}</p>
+                <a href="{{ post.link }}" target="_blank">Read more…</a>
             </div>
         </div>
-        <desc></desc>
     </div>
 </div>
 </div>

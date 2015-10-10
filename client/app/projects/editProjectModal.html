@@ -1,0 +1,29 @@
+<form name="editProjectForm">
+	<div class="modal-header">
+		<h3 class="modal-title">Edit {{ project.name }}</h3>
+	</div>
+	<div class="modal-body">
+		<div class="form-group">
+			<label for="projectName">Project Name</label>
+			<input pattern=".{0}|.{2,}" name="projectName" class="form-control" type="text" ng-model="project.name" />
+		</div>
+		<div class="form-group">
+			<label for="projectDesc">Project Description</label>
+			<textarea pattern=".{0}|.{2,}" class="form-control" type="text" ng-model="project.description">
+			</textarea>
+		</div>
+		<div class="form-group">
+			<label for="blogUrl">Blog URL</label>
+		</div>
+		<div class="form-inline">
+			<input type="url" name="blogUrl" class="form-control" type="text" ng-model="project.blogUrl" />
+			<select class="form-control" ng-options="blogType.value as blogType.label for blogType in blogTypes" ng-model="project.blogType"></select>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<div class="btn-group">
+			<button class="btn btn-primary" ng-disable="editProjectForm.projectName.$invalid || editProjectForm.projectDesc.$invalid || editProjectForm.blogUrl.$invalid" ng-click="$close(project)">Save</button>
+			<button class="btn btn-danger" ng-click="$dismiss()">Cancel</button>
+		</div>
+	</div>
+</form>

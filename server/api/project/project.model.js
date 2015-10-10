@@ -16,7 +16,9 @@ var ProjectSchema = new Schema({
   authors: [String],
   photos: [String],
   mentor: String,
-  active: {type: Boolean, default: true}
+  active: {type: Boolean, default: true},
+  blogUrl: String,
+  blogType: String
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);
