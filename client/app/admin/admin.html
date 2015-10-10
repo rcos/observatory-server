@@ -8,6 +8,7 @@
         <tr>
             <td ng-click="setSortOrder('name')">Name</td>
             <td ng-click="setSortOrder('email')">Email</td>
+            <td ng-click="setSortOrder('role')">Role</td>
             <td ng-click="setSortOrder('github.login')">Github</td>
             <td ng-click="setSortOrder('attendence')">Attendence</td>
             <td ng-click="setSortOrder('github.events.length')">Events</td>
@@ -19,6 +20,13 @@
           <tr ng-repeat="user in users | orderBy:sortorder">
               <td><a href="/users/{{user._id}}/profile">{{ user.name }}</a></td>
               <td> {{ user.email }}</td>
+              <td>
+              <select class="form-control" ng-model="user.role" ng-change="updateUserRole(user)">
+                    <option value="user">User</option>
+                    <option value="mentor">Mentor</option>
+                    <option value="admin">Admin</option>
+                </select>
+              </td>
               <td><a href="http://github.com/{{user.github.login}}">{{user.github.login}}</a></td>
               <td>{{ user.attendance }}</td>
               <td>{{ user.github.events.length }}</td>
