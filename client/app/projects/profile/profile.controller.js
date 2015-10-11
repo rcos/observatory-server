@@ -33,7 +33,7 @@ angular.module('observatory3App')
         $http.get('/api/projects/' + project._id + '/authors')
             .success(function(authors){
                 $scope.authors = authors;
-            })
+            });
     }
 
     $scope.getPic = function(user) {
@@ -156,6 +156,11 @@ angular.module('observatory3App')
         });
     };
 
+    $scope.hasRSSFeed = function(){
+        return $scope.project && !!$scope.project.blogUrl
+                && $scope.project.blogType === 'RSS';
+    };
+
     $scope.joinProject = function(){
         $http.put('/api/users/' + $scope.user._id + '/project',{
             'project': $scope.project._id
@@ -194,6 +199,7 @@ angular.module('observatory3App')
             data: {file: $file}
         }).success(function (data) {
             addSlide(data);
+            updateProject();
         }).error(function (data, status) {
             console.log('error status: ' + status);
         });

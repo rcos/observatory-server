@@ -1,80 +1,94 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container">
-    <div class="row text-left">
-        <div class="col-sm-3">
-            <h1 ng-hide="edittingName">{{project.name}}</h1>
-        </div>
-        <div class="col-sm-9 text-right header-buttons">
-            <div ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</div>
-            <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
-            <a type="button" class='btn btn-primary' ng-click='editProjectDetails()'>Edit Project Details</a>
-            <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
-            <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
-            <a class="btn btn-info" ng-if="!project.blogType || project.blogType === 'RSS'" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
-            <a class="btn btn-info" ng-if="project.blogType === 'EXTERNAL'" href="{{projects.blogUrl}}">Blog</a>
-        </div>
-    </div>
-
+<div class="container project-profile">
+    <!-- header -->
     <div class="row">
-        <div class="col-sm-7 project-image">
+        <div class="col-sm-5">
+            <h1>{{ project.name }}</h1>
+        </div>
 
-            <div class="fileUpload btn btn-sm btn-default" ng-show="userOnProject">
+        <!-- Action buttons -->
+        <div class="col-sm-7 text-right header-buttons">
+            <a type="button" ng-show='isLoggedIn() && userOnProject' class='btn btn-primary' ng-click='editProjectDetails()'>
+                Edit Project Details
+            </a>
+            <div class="fileUpload btn btn-primary" ng-show="userOnProject">
                 <span>Upload Images</span>
                 <div id="upload">
                     <input type="file"  ngf-select="upload($file)" />
                 </div>
             </div>
-            <div class="remove-photo btn btn-sm btn-default text-right" ng-show="userOnProject && project && slides.length" ng-click="deletePhoto()">
-                <span>X</span>
-            </div>
-
-            <p ng-show="project.photos.length === 0">
-            No images uploaded yet.
-            </p>
-
-            <carousel>
-            <slide ng-repeat="url in project.photos" active="$first">
-            <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt=""></div>
-            </slide>
-            </carousel>
+            <a ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>
+                Join Project
+            </a>
+            <a ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>
+                Leave Project
+            </a>
         </div>
-
-        <div class="col-sm-4">
+    </div>
+    <div class="row">
+        <div class="col-sm-5 description">
+            <div>
+                <a class="btn btn-info" href="{{project.websiteUrl}}" title="">
+                    Website
+                </a>
+                <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">
+                    Repository
+                </a>
+                <a class="btn btn-info" ng-if="!project.blogType || project.blogType === 'RSS'" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">
+                    Blog
+                </a>
+                <a class="btn btn-info" ng-if="project.blogType === 'EXTERNAL'" href="{{projects.blogUrl}}">
+                    Blog
+                </a>
+                <p>{{ project.description }}</p>
+            </div>
             <div class="contributors">
-                <div class="row">
-                    <h4>Contributors</h4>
-                </div>
-                <div class="row" ng-repeat="user in authors">
-                    <div class="col-md-3">
-                        <img ng-src="{{getPic(user)}}&s=128px" class="img-responsive" alt="">
+                <h4>Contributors</h4>
+                <div class="author-container">
+                    <div class="author" ng-repeat="user in authors">
+                        <div >
+                            <img ng-src="{{getPic(user)}}&s=64px" class="img-responsive" alt="">
 
+                        </div>
+                        <div>
+                            <a href="/users/{{ user._id }}/profile" title="" class="contributor-name">
+                                {{ user.name }}
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-md-8">
-                        <a href="/users/{{ user._id }}/profile" title="" class="contributor-name">
-                            {{ user.name }}
-                        </a>
+                </div>
+            </div>
+
+            <div class="rss-feed" ng-if="hasRSSFeed() && project.photos.length">
+                <h4>Blog</h4>        
+                <div class="rss-post" ng-hide="edittingBlogUrl" ng-repeat="post in project.feed.entries">
+                    <h5>{{ post.title }}</h5>
+                    <span class="post-author">{{ post.author }}</span> --
+                    <span class="post-date">{{ post.publishedDate | date:'medium' }}</span>
+                    <p>{{ post.contentSnippet }}</p>
+                    <a href="{{ post.link }}" target="_blank">Read more…</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <carousel ng-if="project.photos.length">
+                <slide ng-repeat="url in project.photos" active="$first">
+                    <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt="">
                     </div>
+                </slide>
+            </carousel>
+            <div class="rss-feed" ng-if="hasRSSFeed() && !project.photos.length">
+                <h4>Blog</h4>        
+                <div class="rss-post" ng-hide="edittingBlogUrl" ng-repeat="post in project.feed.entries">
+                    <h5>{{ post.title }}</h5>
+                    <span class="post-author">{{ post.author }}</span> --
+                    <span class="post-date">{{ post.publishedDate | date:'medium' }}</span>
+                    <p>{{ post.contentSnippet }}</p>
+                    <a href="{{ post.link }}" target="_blank">Read more…</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-7 description">
-            <p>{{ project.description }}</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-7 rss-feed" ng-if="project.blogType === 'RSS'">
-            <h4>Blog</h4>        
-            <div class="rss-post" ng-hide="edittingBlogUrl" ng-repeat="post in project.feed.entries">
-                <h5>{{ post.title }}</h5>
-                <span class="post-author">{{ post.author }}</span> --
-                <span class="post-date">{{ post.publishedDate | date:'medium' }}</span>
-                <p>{{ post.contentSnippet }}</p>
-                <a href="{{ post.link }}" target="_blank">Read more…</a>
-            </div>
-        </div>
-    </div>
 </div>
-</div>
+
