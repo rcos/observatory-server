@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('AdminCtrl', function ($scope, $http, Auth, User, $location) {
+  .controller('AdminCtrl', function ($scope, $http, Auth, User, notify, $location) {
 
     if (Auth.isLoggedIn()){
       var loggedInUser = Auth.getCurrentUser();
@@ -19,6 +19,17 @@ angular.module('observatory3App')
     else{
       $location.path('/');
     }
+
+    $scope.updateUserRole = function(user) {
+      
+      $http.post('/api/users/' + user._id + '/role', {
+            role: user.role
+        }).success(function() {
+          notify('Updated user role.')
+        }).error(function() {
+          notify('Unable to set user role');
+        });
+    };
 
     $scope.delete = function(user) {
       User.remove({ id: user._id });
