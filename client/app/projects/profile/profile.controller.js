@@ -65,7 +65,6 @@ angular.module('observatory3App')
             }
         }
     };
-    updateProject();
 
     var getAuthors = function() {
         var project = $scope.project;
@@ -185,19 +184,19 @@ angular.module('observatory3App')
 
     $scope.markDefault = function(){
         $http.put('api/projects/'+$scope.project._id+'/markdefault').success(function(){
-            window.alert("Project marked as default");
+            notify("Project marked as default");
             updateProject();
         }).error(function(){
-            window.alert("Could not mark project as default!");
+            notify("Could not mark project as default!");
         });
     };
 
     $scope.unmarkDefault = function(){
         $http.put('api/projects/'+$scope.project._id+'/unmarkdefault').success(function(){
-            window.alert("Project unmarked as default");
+            notify("Project unmarked as default");
             updateProject();
         }).error(function(){
-            window.alert("Could not unmark project as default!");
+            notify("Could not unmark project as default!");
         });
     };
 
