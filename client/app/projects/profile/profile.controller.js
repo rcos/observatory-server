@@ -4,20 +4,23 @@
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, $upload, Project) {
     $scope.userOnProject = false;
-    //$scope.updatedDefault = false;
-    //$scope.markedDefault = false;
 
-    Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
-        $scope.project = result.data;
-        getAuthors();
-        Auth.isLoggedInAsync(function(loggedIn){
-            if (loggedIn){
-                var user = Auth.getCurrentUser();
-                $scope.user = user;
-                $scope.checkUserProject();
-            }
+    function updateProject(){
+        Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
+            $scope.project = result.data;
+            getAuthors();
+            Auth.isLoggedInAsync(function(loggedIn){
+                if (loggedIn){
+                    var user = Auth.getCurrentUser();
+                    $scope.user = user;
+                    $scope.checkUserProject();
+                }
+            });
         });
-    });
+    }
+
+    updateProject();
+
 
     var getAuthors = function() {
         var project = $scope.project;
@@ -31,6 +34,7 @@ angular.module('observatory3App')
 
     $scope.edittingDesc = false;
     $scope.isLoggedIn = Auth.isLoggedIn;
+    $scope.isAdmin = Auth.isAdmin;
 
     $scope.editDesc = function(){
         $scope.edittingDesc = !$scope.edittingDesc;
@@ -76,34 +80,27 @@ angular.module('observatory3App')
 
 
     $scope.isDefault = function(){
-        //return false;
-        //$http.get('api/projects/'+$stateParams.username+'/'+$stateParams.project+'/markeddefault').success(function(markedDefault)
-        $http.get('api/projects/'+$scope.project._id+'/markeddefault').success(function(marked){
-            return marked;
-            //$scope.markedDefault = true;
-            //$scope.updatedDefault = true;
+        return $scope.project.markedDefault;
+    };
+
+    
+
+    $scope.markDefault = function(){
+        $http.put('api/projects/'+$scope.project._id+'/markdefault').success(function(){
+            window.alert("Project marked as default");
+            updateProject();
         }).error(function(){
-            console.error("Error checking if project is default!");
+            window.alert("Could not mark project as default!");
         });
     };
 
-    /*
-    $scope.isDefault = function(){
-        if(!$scope.updatedDefault){
-            $scope.checkDefault();
-        }
-        return $scope.markedDefault;
-    };
-    */
-
-    $scope.isAdmin = Auth.isAdmin;
-
-    $scope.markDefault = function(){
-
-    };
-
     $scope.unmarkDefault = function(){
-
+        $http.put('api/projects/'+$scope.project._id+'/unmarkdefault').success(function(){
+            window.alert("Project unmarked as default");
+            updateProject();
+        }).error(function(){
+            window.alert("Could not unmark project as default!");
+        });
     };
 
     $scope.checkUserProject = function() {

@@ -99,16 +99,26 @@ function handleError(res, err) {
   return res.send(500, err);
 }
 
-// Checks if a project is marked as default.
-exports.isMarkedDefault = function(req, res) {
-  //return true;
-  console.log("in isMarkedDefault()");
-  
+exports.markDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
-    if (err) { return handleError(res, err); }
-    return res.json({markedDefault: true});
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    project.update({ markedDefault: true }, function(err) {
+      if(err) { return handleError(res, err); }
+      return res.send(200);
+    });
   });
+};
 
+exports.unmarkDefault = function(req, res) {
+  Project.findById(req.params.id, function (err, project) {
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    project.update({ markedDefault: false }, function(err) {
+      if(err) { return handleError(res, err); }
+      return res.send(200);
+    });
+  });
 };
 
 exports.upload = function(req, res) {
