@@ -3,7 +3,22 @@
 angular.module('observatory3App')
 .controller('ProjectsCtrl', function ($scope, $location, $http) {
     $scope.projects = [];
-    $scope.projectToAdd = {active: true};
+    $scope.blogTypes = [
+        {
+            label: 'RSS',
+            value: 'RSS'
+        },
+        {
+            label: 'External',
+            value: 'EXTERNAL'
+        }
+    ];
+    //lol
+
+    $scope.projectToAdd = {
+        active: true,
+        blogType: $scope.blogTypes[0].value
+    };
 
     $scope.getCurrentProjects = function() {
         $http.get('/api/projects').success(function(projects) {

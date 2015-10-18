@@ -2,13 +2,21 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, $modal, Auth, $stateParams, Project, RSSService, Upload, notify) {
     $scope.userOnProject = false;
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
             $scope.project = result.data;
             initializeSlides($scope.project.photos);
             getAuthors();
+            if ($scope.project.blogType === 'RSS') {
+                RSSService.parseFeed($scope.project.blogUrl).then(function(data) {
+                    if (data && data.data && data.data.responseData && data.data.responseData.feed) {
+                        $scope.project.feed = data.data.responseData.feed;
+                    }
+                });
+            }
+
             Auth.isLoggedInAsync(function(loggedIn){
                 if (loggedIn){
                     var user = Auth.getCurrentUser();
@@ -114,40 +122,37 @@ angular.module('observatory3App')
 
 
     $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
-
-
-    $scope.edittingDesc = false;
-    $scope.edittingName = false;
     $scope.isLoggedIn = Auth.isLoggedIn;
 
-    $scope.editDesc = function(){
-        $scope.edittingDesc = !$scope.edittingDesc;
-    };
-
-    $scope.editName = function(){
-        $scope.edittingName = !$scope.edittingName;
-    };
-
-    // Function for saving the description
-    $scope.saveDesc = function(){
-        $scope.edittingDesc = false;
-        $http.put('/api/projects/' + $scope.project._id, {
-            'description': $scope.project.description
-        }).success(function(){
-            notify('Description updated!');
-        }).error(function(){
-            notify({message: 'Could not update description!', classes: ["alert-danger"]});
+    $scope.editProjectDetails = function() {
+        var modal = $modal.open({
+            templateUrl: '/app/projects/editProjectModal.html',
+            controller: function($scope, $modalInstance, project) {
+                $scope.project = project;
+                $scope.blogTypes = [
+                    {
+                        label: 'RSS',
+                        value: 'RSS'
+                    },
+                    {
+                        label: 'External',
+                        value: 'EXTERNAL'
+                    }
+                ];
+            },
+            resolve: {
+                project: function() {
+                    return $scope.project;
+                }
+            }
         });
-    };
 
-    $scope.saveName = function(){
-        $scope.edittingName = false;
-        $http.put('/api/projects/' + $scope.project._id, {
-            'name': $scope.project.name
-        }).success(function(){
-            notify('Project Name updated!');
-        }).error(function(){
-            notify('Could not update project name!', {classes: ["alert-danger"] });
+        modal.result.then(function(projectInfo) {
+            $scope.newProject = projectInfo;
+            return $http.put('/api/projects/' + $scope.project._id, $scope.project);
+        }).then(function() {;
+            notify('Project updated');
+            $scope.project = _.clone(newProject);
         });
     };
 
@@ -205,16 +210,4 @@ angular.module('observatory3App')
             });
         }
     };
-})
-.directive('desc', function() {
-    return {
-        restrict:'E',
-        template: '<div btf-markdown=\'project.description\'></div> \
-        <textarea ng-show=\'edittingDesc && userOnProject\' ng-model=\'project.description\' ></textarea>'
-    };
-}).directive('pname', function() {
-    return {
-        restrict:'E',
-        template: '<input type=\'text\' maxlength="50" ng-show=\'edittingName && userOnProject\' ng-model=\'project.name\'><br>'
-    };
-})
+});

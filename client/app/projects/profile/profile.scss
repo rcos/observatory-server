@@ -10,6 +10,10 @@
     border-radius: 5px;
 }
 
+.modal-body textarea {
+    resize: none;
+}
+
 .contributors{
     background-color: #eee;
     margin-top: 20px;
@@ -25,6 +29,19 @@
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+
+.rss-feed{
+    background-color: #eee;
+    margin-top: 20px;
+    padding: 20px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    .post-author, .post-date{
+        font-weight: 500;
+    }
 }
 
 .contributor-name{
