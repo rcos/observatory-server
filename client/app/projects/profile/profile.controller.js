@@ -5,7 +5,9 @@ angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
     $scope.userOnProject = false;
 
-    function updateProject(){
+
+
+    var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
             $scope.project = result.data;
             initializeSlides($scope.project.photos);
@@ -18,8 +20,7 @@ angular.module('observatory3App')
                 }
             });
         });
-    }
-
+    };
     updateProject();
 
     var getAuthors = function() {
@@ -180,19 +181,7 @@ angular.module('observatory3App')
         }).error(function(){
             notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
-    };
-
-<<<<<<< HEAD
-
-    $scope.isDefault = function(){
-        return $scope.project.markedDefault;
-=======
-    $scope.isDefault = function(){
-        return false;
->>>>>>> 72c263b7ece28363095a6d14b8a9cfc42da6b3f8
-    };
-
-    
+    };  
 
     $scope.markDefault = function(){
         $http.put('api/projects/'+$scope.project._id+'/markdefault').success(function(){
