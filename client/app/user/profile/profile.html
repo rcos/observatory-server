@@ -80,7 +80,7 @@
             </div>
             <div class='content-box'>
                 <div class='content-title'>Commits</div>
-                <div ng-show="user.commits.length != 0">User has not committed anything yet</div>
+                <div ng-show="user.commits.length == 0">User has not committed anything yet</div>
                 <div ng-repeat='event in user.github.events' class='commit'>
                     <a href='{{event.url}}'>{{event.message}}</a>
                 </div>
