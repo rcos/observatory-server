@@ -58,4 +58,7 @@ describe('User Model', function() {
   it("should not authenticate user if password is invalid", function() {
     return user.authenticate('blah').should.not.be.true;
   });
+ it("should not authenticate user if password is blank", function() {
+    return user.authenticate('').should.not.be.true;
+  });
 });
