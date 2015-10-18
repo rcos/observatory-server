@@ -8,6 +8,7 @@ var fs = require('fs');
 var mkdirp = require('mkdirp');
 var config = require('../../config/environment');
 
+
 // Get list of current projects
 exports.index = function(req, res) {
   Project.find({active:true},function (err, projects) {
