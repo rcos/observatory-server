@@ -3,7 +3,7 @@
 <div class='container'>
     <div class='row'>
         <div class='col-md-3 profile-sidebar'>
-            <img width='75%' src='{{user.avatar}}?s=1024px'/>
+            <img width='75%' ng-src='{{user.avatar}}&s=256px'/>
             <span id='semester-count' ng-show="user.semesters">{{user.semesters}}</span>
             <div class='sidebar-text name'>
                 {{user.name}}
@@ -28,6 +28,7 @@
         </div>
         </div>
         <div class='col-md-6'>
+        <div ng-show="!user.tech.length">User has not input any tags</div>
             <div class='tech-boxes'>
                 <div ng-repeat="tech in user.tech track by $index">
                     {{tech}}
@@ -38,6 +39,7 @@
                     <button ng-click="addTech()" class='btn btn-default btn-xs'>+</button>
                 </div>
             </div>
+            <div ng-show="!user.bio">User has not written a bio</div>
             <div ng-show='isuser || user.bio' class='content-box'>
                 <div class='content-title row'>
                     <div class='col-xs-6'>Bio</div>
@@ -53,11 +55,12 @@
             <div class='content-box' ng-repeat='project in projects'>
                 <div class='project row'>
                     <div class='col-xs-3' style='text-align:center;'>
-                        <img width='80%' src='{{project.avatar}}'/>
+						<!-- TODO: Add avatar -->
+                        <img width='80%' ng-src='{{project.avatar}}'/>
                     </div>
                     <div class='col-xs-9'>
                         <div class='title'><a href="/projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{project.name}} </a></div>
-                        <a ng-href='{{project.repositoryUrl}}' class='repo'> {{project.repositoryUrl}} </a> 
+                        <a ng-href='{{project.repositoryUrl}}' class='repo'> {{project.repositoryUrl}} </a>
                         <div class='description'>{{project.description}}</div>
                         <div class='tech-boxes'>
                             <div ng-repeat='tech in project.tech'>{{tech}}</div>

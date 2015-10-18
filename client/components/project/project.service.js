@@ -4,7 +4,7 @@ angular.module('observatory3App')
   .factory('Project', function ($http) {
     return {
       getProjects: function() {
-        return $http.get('/api/projects');
+        return $http.get('/api/projects/');
       },
       getPastProjects: function() {
         return $http.get('/api/projects/past')

@@ -18,7 +18,7 @@
         <li ng-show="isMentor()" ng-class="{active: isActive('/mentor')}"><a href="/mentor">Mentor</a></li>
         <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin">Admin</a></li>
         <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/classcontrol')}"><a href="/admin/classcontrol">Class Control</a></li>
-        <li><a href='http://urp.rcos.xyz/'>URP Form</a></li>
+        <li ng-show="displayURP"><a href='http://urp.rcos.xyz/'>URP Form</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">

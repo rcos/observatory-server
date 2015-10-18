@@ -186,6 +186,20 @@ exports.show = function (req, res, next) {
 };
 
 /**
+ * Get a single user's avatar
+ */
+exports.avatar = function (req, res, next) {
+  var userId = req.params.id;
+
+  User.findById(userId, function (err, user) {
+    if (err) return next(err);
+    if (!user) return res.send(404);
+    res.json(user.avatar);
+  });
+};
+
+
+/**
  * Deletes a user
  * restriction: 'admin'
  */
@@ -197,7 +211,7 @@ exports.destroy = function(req, res) {
 };
 
 /**
- * Change what role the user is 
+ * Change what role the user is
  * restriction: 'admin'
  */
 exports.role = function(req, res) {
@@ -257,10 +271,12 @@ exports.changeBio = function(req,res){
 
     User.findById(userId, function(err,user){
         user.bio = newBio;
+        res.json({bio:user.bio});
         user.save(function(err){
             if (err) return validationError(res,err);
             res.send(200);
         })
+
     });
 };
 
@@ -437,11 +453,11 @@ exports.resetPassword = function(req, res){
         crypto.randomBytes(12, function(ex, buf) {
             var token = buf.toString('hex');
             user.passwordResetToken = token;
-            
+
             // Get tomorrow's date
             var tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            
+
             user.passwordResetExpiration = tomorrow;
 
             user.save(function(err){
@@ -460,7 +476,7 @@ exports.resetPassword = function(req, res){
         });
 
     });
-    
+
 };
 
 /**

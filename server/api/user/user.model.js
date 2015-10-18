@@ -20,7 +20,7 @@ var UserSchema = new Schema({
   salt: String,
   tech: [String],
   projects: [{type : Schema.Types.ObjectId, ref: 'Project'}], // project id
-  bio:String,
+  bio: {type:String},
   attendance: [Date],
   unverifiedAttendance: [Date],
   semesterCount: Number,
@@ -67,9 +67,9 @@ UserSchema
 */
 var makeAvatar = function(email) {
   if (email){
-    return 'http://www.gravatar.com/avatar/'+md5(email.trim().toLowerCase());
+    return 'http://www.gravatar.com/avatar/'+md5(email.trim().toLowerCase())+"?d=identicon";
   }
-  return  'http://www.gravatar.com/avatar/00000000000000000000000000000000';
+  return  'http://www.gravatar.com/avatar/00000000000000000000000000000000+"?d=identicon"';
 
 };
 
@@ -77,7 +77,6 @@ UserSchema
   .virtual('avatar')
   .get(function(){
     return makeAvatar(this.email) ;
-    // return 'http://www.gravatar.com/avatar/00000000000000000000000000000000';
 });
 
 
@@ -175,7 +174,7 @@ UserSchema
       'projects': this.projects,//TODO pull projects
       'tech': this.tech,
       'bio': this.bio,
-      'githubProfile': this.github.login 
+      'githubProfile': this.github.login
     };
   });
 

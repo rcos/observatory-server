@@ -12,6 +12,7 @@ router.get('/:id/authors', controller.authors);
 router.get('/:username/:project', controller.show);
 router.get('/:id', controller.show);
 router.post('/:username/:project/upload', auth.isAuthenticated(), controller.upload);
+router.delete('/:username/:project/:photoName', auth.isAuthenticated(), controller.deletePhoto);
 router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.update);
 router.put('/:id/markdefault', auth.hasRole('admin'), controller.markDefault);
