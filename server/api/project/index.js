@@ -20,6 +20,6 @@ router.put('/:id/unmarkdefault', auth.hasRole('admin'), controller.unmarkDefault
 
 router.delete('/:id', auth.hasRole('mentor'), controller.destroy);
 
-router.put("/:id/addTechBubble", /*auth.canEdit(),*/ controller.addTechBubble);
+router.put('/:id/:tech/addTechBubble', auth.isAuthenticated(), controller.addTechBubble);
 
 module.exports = router;
