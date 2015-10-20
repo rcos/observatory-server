@@ -209,10 +209,8 @@ angular.module('observatory3App')
 
 	$scope.addTechBubble = function(){
         if($scope.insertTechContent){
-          $http.put('/api/project/' + $stateParams.project + '/addTechBubble', {
-              'tech': $scope.insertTechContent
-          }).success(function(){
-              $scope.user.tech.push($scope.insertTechContent);
+          $http.put('/api/project/' + $scope.project._id + '/' + $scope.insertTechContent + '/addTechBubble').success(function(){
+              $scope.project.tech.push($scope.insertTechContent);
               $scope.insertTechContent = '';
           }).error(function(){
               notify({message: "Could not add tech!", classes: ["alert-danger"]});
