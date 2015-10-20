@@ -137,6 +137,28 @@ function handleError(res, err) {
   return res.send(500, err);
 }
 
+exports.markDefault = function(req, res) {
+  Project.findById(req.params.id, function (err, project) {
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    project.update({ markedDefault: true }, function(err) {
+      if(err) { return handleError(res, err); }
+      return res.send(200);
+    });
+  });
+};
+
+exports.unmarkDefault = function(req, res) {
+  Project.findById(req.params.id, function (err, project) {
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    project.update({ markedDefault: false }, function(err) {
+      if(err) { return handleError(res, err); }
+      return res.send(200);
+    });
+  });
+};
+
 exports.upload = function(req, res) {
   var form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
