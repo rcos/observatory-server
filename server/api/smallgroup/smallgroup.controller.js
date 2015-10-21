@@ -56,7 +56,6 @@ exports.getSmallGroup = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
         if (err) return handleError(res, err);
-        console.log(req.user);
         if (!req.user || !req.user.isMentor){
             smallgroup.dayCodes = null;
         }else{
