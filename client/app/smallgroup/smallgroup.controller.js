@@ -77,6 +77,21 @@ angular.module('observatory3App')
         }
       ]
     };
+    Auth.getCurrentUser(function(user){
+        $scope.user = user;
+        $http.get('/api/smallgroup/' + user.smallgroup).success(function(smallgroup){
+            $scope.smallgroup = smallgroup;
+        });
+        $http.get('/api/smallgroup/' + user.smallgroup + '/members').success(function(members){
+            console.log(members);
+            $scope.members = members;
+        });
+    });
+    $scope.createSmallGroup = function(){
+        $http.post("/api/smallgroup/").success(function(err, data){
+            console.log("Success!");
+        });
+    };
     $scope.showAttendance = function(){
       $scope.showAttendanceCode = true;
     };

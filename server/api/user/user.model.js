@@ -6,6 +6,7 @@ var crypto = require('crypto');
 var md5 = require('MD5');
 var Commit = require('../commit/commit.model');
 var ClassYear = require('../classyear/classyear.model');
+var Project = require('../project/project.model');
 
 var UserSchema = new Schema({
   name: String,
@@ -15,6 +16,7 @@ var UserSchema = new Schema({
     type: String,
     default: 'user'
   },
+  smallgroup: {type : Schema.Types.ObjectId, ref: 'SmallGroup'},
   hashedPassword: String,
   provider: String,
   salt: String,
@@ -156,6 +158,7 @@ UserSchema
   });
 
 // Public profile information
+// TODO this is redundant with getFullProfile- can it be deleted?
 UserSchema
   .virtual('profile')
   .get(function() {
@@ -171,7 +174,7 @@ UserSchema
       'attendance': this.attendance,
       "attendanceScore": 0,
       "attendanceBonus": 0,
-      'projects': this.projects,//TODO pull projects
+      'projects': this.projects,
       'tech': this.tech,
       'bio': this.bio,
       'githubProfile': this.github.login
@@ -263,6 +266,26 @@ UserSchema
       next();
   });
 
+
+function loadUserProjects(user, callback){
+    // If the user doesn't have any projects, return
+    if (user.projects.length == 0){
+        return callback([]);
+    }
+    // Otherwise load all the user projects
+    var fullProjects = [];
+    var loadedProjects = 0;
+    for (var i = 0;i < user.projects.length;i++){
+        Project.findById(user.projects[i], function(err, project){
+            loadedProjects ++;
+            if (!err) fullProjects.push(project);
+            if (loadedProjects == fullProjects.length){
+                callback(fullProjects);
+            }
+        });
+    }
+}
+
 /**
  * Methods
  */
@@ -309,6 +332,34 @@ UserSchema.methods = {
     if (!password || !this.salt) return '';
     var salt = new Buffer(this.salt, 'base64');
     return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+  },
+
+  /**
+   * Gets the full user profile (includes full projects, instead of just ids)
+   *
+   * @param {Function(JSON)} callback - Called when all full profile properties
+   *        have been loaded
+   * @api public
+   */
+  getFullProfile: function(callback){
+     var user = this;
+     loadUserProjects(user, function(fullProjects){
+         callback({
+           '_id': user._id.toString('binary'),
+           'name': user.name,
+           'role': user.role,
+           'avatar': user.avatar,
+           'email': user.email,
+           'semesters': user.semesterCount,
+           'attendance': user.attendance,
+           "attendanceScore": 0,
+           "attendanceBonus": 0,
+           'projects': fullProjects,
+           'tech': user.tech,
+           'bio': user.bio,
+           'githubProfile': user.github.login
+       });
+     });
   }
 };
 
