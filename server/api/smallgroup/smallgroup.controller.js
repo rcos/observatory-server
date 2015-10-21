@@ -74,16 +74,13 @@ function getFullMember(memberId, callback){
 exports.getSmallGroupMembers = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
-        console.log("Got small group");
         if (err) return handleError(res, err);
         var members = [];
         var loadedMembers = 0;
 
         // Load each group member's full profile
         smallgroup.students.forEach(function(studentId){
-            console.log("student:",studentId);
             getFullMember(studentId, function(err, member){
-                console.log("Got member");
                 loadedMembers ++;
                 if (member){
                     members.push(member);
