@@ -15,6 +15,9 @@ router.post('/:username/:project/upload', auth.isAuthenticated(), controller.upl
 router.delete('/:username/:project/:photoName', auth.isAuthenticated(), controller.deletePhoto);
 router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.update);
+router.put('/:id/markdefault', auth.hasRole('admin'), controller.markDefault);
+router.put('/:id/unmarkdefault', auth.hasRole('admin'), controller.unmarkDefault);
+
 router.delete('/:id', auth.hasRole('mentor'), controller.destroy);
 
 module.exports = router;
