@@ -216,6 +216,20 @@ UserSchema
     };
   });
 
+// Helper Virtual for isAdmin
+UserSchema
+  .virtual('isAdmin')
+  .get(function(){
+      return this.role == 'admin';
+  });
+
+// Helper Virtual for isAdmin
+UserSchema
+  .virtual('isMentor')
+  .get(function(){
+    return this.role == 'admin' || this.role == 'mentor';
+  });
+
 /**
  * Validations
  */

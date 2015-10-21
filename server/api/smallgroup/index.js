@@ -17,6 +17,7 @@ router.get('/', controller.index);
 router.post('/', auth.hasRole('mentor'), controller.create);
 router.put('/:id', auth.hasRole('mentor'), controller.modify);
 router.get('/:id/members', controller.getSmallGroupMembers);
+router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
 router.get('/:id', controller.getSmallGroup);
 router.delete('/:id', auth.hasRole('mentor'), controller.delete);
 
