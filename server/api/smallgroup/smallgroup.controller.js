@@ -71,6 +71,7 @@ exports.getSmallGroup = function(req, res){
                     date: today,
                     code: code
                 });
+                smallgroup.save();
             }
             // This has to be called because "dayCode" is a virtual
             responseObject.dayCode = smallgroup.dayCode;

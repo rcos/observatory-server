@@ -85,6 +85,7 @@ angular.module('observatory3App')
         });
         $http.get('/api/smallgroup/' + user.smallgroup + '/members').success(function(members){
             $scope.members = members;
+            console.log(members);
         });
     });
     $scope.createSmallGroup = function(){
