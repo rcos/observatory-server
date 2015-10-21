@@ -2,95 +2,51 @@
 
 angular.module('observatory3App')
   .controller('SmallGroupCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify) {
-    $scope.smallgroup = {
-      name: "<Small Group Name>",
-      mentors: [
-        {
-          name: "<Mentor Name>",
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Mentor Name>",
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        }
-      ],
-      students: [
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: true,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: true,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: true,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: false,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: true,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: false,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: true,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: false,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: false,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        },
-        {
-          name: "<Student Name>",
-          project: "<Project",
-          present: true,
-          avatar: "http://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=identicon"
-        }
-      ]
-    };
     Auth.getCurrentUser(function(user){
         $scope.user = user;
-        $http.get('/api/smallgroup/' + user.smallgroup).success(function(smallgroup){
-            $scope.smallgroup = smallgroup;
-            console.log(smallgroup);
-        });
-        $http.get('/api/smallgroup/' + user.smallgroup + '/members').success(function(members){
-            $scope.members = members;
-            console.log(members);
-        });
+        loadSmallGroup();
     });
+
+    function loadSmallGroup(callback){
+        callback = callback || function(){};
+        $http.get('/api/smallgroup/' + $scope.user.smallgroup).success(function(smallgroup){
+            $scope.smallgroup = smallgroup;
+            callback(smallgroup);
+        });
+        $http.get('/api/smallgroup/' + $scope.user.smallgroup + '/members').success(function(members){
+            $scope.members = members;
+        });
+    }
+
     $scope.createSmallGroup = function(){
-        $http.post("/api/smallgroup/").success(function(err, data){
-            console.log("Success!");
+        $http.post("/api/smallgroup/").success(function(){
+            notify("Success!");
+        });
+    };
+    $scope.addUser = function(user){
+        $http.get("/api/users/search", {
+            params: {
+                query: user,
+                single: true
+            }
+        }).success(function(user){
+            if (!user) return notify({message: 'User not found!', classes: ["alert-danger"]});
+
+            // Reload small group (in case other mentors have modified it since page load)
+            loadSmallGroup(function(smallgroup){
+                // Check if user is already in small group
+                if (smallgroup.students.indexOf(user._id) !== -1){
+                    // User is already in group
+                    return notify("User already in group");
+                }else{
+                    $http.put("/api/smallgroup/" + $scope.smallgroup._id + "/member", {
+                        "memberId": user._id
+                    }).success(function(){
+                        notify("Successfully added " + user.name);
+                        loadSmallGroup();
+                    });
+                }
+            })
         });
     };
     $scope.showAttendance = function(){

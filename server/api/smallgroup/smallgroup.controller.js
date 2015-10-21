@@ -115,6 +115,18 @@ exports.getSmallGroupMembers = function(req, res){
     });
 };
 
+exports.addMember = function(req, res){
+    var memberId = req.body.memberId;
+    var smallGroupId = req.params.id;
+    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+        $addToSet: { students : memberId }
+    }, function(err, smallgroup){
+        if (err) return handleError(res, err);
+        res.send(200);
+    });
+
+};
+
 function handleError(res, err) {
   return res.send(500, err);
 }

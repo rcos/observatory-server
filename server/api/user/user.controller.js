@@ -26,6 +26,31 @@ exports.index = function(req, res) {
 };
 
 /**
+ * Returns user or list of users that match a supplied query
+ *
+ * Takes {query:String, single:Boolean, limit:Integer}
+ */
+ // TODO Make this work with fuzzy queries, multiple results etc.
+exports.search = function(req, res){
+    if (!req.query.query) return res.send(400, "No query supplied");
+    User.findOne({name: req.query.query}, function(err, user){
+        if (err) return res.send(500, err);
+        if (!user){
+            if (req.query.single){
+                return res.send(200, null);
+            }else{
+                return res.send(200, []);
+            }
+        }
+        if (req.query.single){
+            return res.send(200, user.profile);
+        }else{
+            return res.send(200, [user.profile]);
+        }
+    });
+};
+
+/**
  * Get list of users with stats including last commits
  * in previous 2 weeks
  * restriction: 'admin'
