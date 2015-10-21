@@ -122,7 +122,11 @@ exports.addMember = function(req, res){
         $addToSet: { students : memberId }
     }, function(err, smallgroup){
         if (err) return handleError(res, err);
-        res.send(200);
+        User.findById(memberId, function(err, user){
+            if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
+            user.smallgroup = smallGroupId
+            res.send(200);
+        });
     });
 
 };

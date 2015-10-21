@@ -1,18 +1,13 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div ng-show='smallgroup' class='container'>
+<div ng-show='!smallgroup && isMentor()' class='container'>
 	<h3> You do not have a small group </h3>
 	<button ng-click='createSmallGroup()' ng-show='isMentor()'> Create Small Group </button>
 </div>
 
 <div ng-show='smallgroup' class="container">
 	<h3>Small Group : {{ smallgroup.name }}</h3>
-	<div ng-hide='isPresent()' class="input-group dayCodeForm">
-    <input type="text" ng-model='userDayCode' class="form-control" placeholder="Day Code">
-    <span class="input-group-btn">
-      <button class="btn btn-primary" ng-click='submitDayCode()' type="button">Submit Day Code</button>
-    </span>
-  </div>
+
 	<button class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendance()'> Show Attendance </button>
 
 	<div ng-show='isPresent()'>
