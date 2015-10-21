@@ -20,6 +20,7 @@ angular.module('observatory3App')
 
     $scope.createSmallGroup = function(){
         $http.post("/api/smallgroup/").success(function(){
+            window.location.reload();
             notify("Success!");
         });
     };

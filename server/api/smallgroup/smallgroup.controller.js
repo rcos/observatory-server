@@ -125,6 +125,7 @@ exports.addMember = function(req, res){
         User.findById(memberId, function(err, user){
             if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
             user.smallgroup = smallGroupId
+            user.save();
             res.send(200);
         });
     });
