@@ -81,9 +81,9 @@ angular.module('observatory3App')
         $scope.user = user;
         $http.get('/api/smallgroup/' + user.smallgroup).success(function(smallgroup){
             $scope.smallgroup = smallgroup;
+            console.log(smallgroup);
         });
         $http.get('/api/smallgroup/' + user.smallgroup + '/members').success(function(members){
-            console.log(members);
             $scope.members = members;
         });
     });

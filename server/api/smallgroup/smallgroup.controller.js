@@ -56,13 +56,26 @@ exports.getSmallGroup = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
         if (err) return handleError(res, err);
+        var responseObject = smallgroup.toObject();
+        // If user is not a mentor or not authenticated, don't give dayCode
         if (!req.user || !req.user.isMentor){
-            smallgroup.dayCodes = null;
+            responseObject.dayCodes = null;
         }else{
+            // Mentors should get a day code
+            // Generate a day code if one does not already exist
+            if (!smallgroup.dayCode){
+                var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
+                var today = new Date();
+                today.setHours(0,0,0,0);
+                smallgroup.dayCodes.push({
+                    date: today,
+                    code: code
+                });
+            }
             // This has to be called because "dayCode" is a virtual
-            smallgroup.dayCode = smallgroup.dayCode;
+            responseObject.dayCode = smallgroup.dayCode;
         }
-        res.json(200, smallgroup);
+        res.json(200, responseObject);
     });
 };
 
@@ -71,7 +84,7 @@ function getFullMember(memberId, callback){
         if (err) return callback("Could not find user", null);
         member.getFullProfile(function(fullProfile){
             // Add the user's attendance
-            fullProfile.presense = member.presence;
+            fullProfile.presence = member.presence;
             callback(null, fullProfile);
         });
     });

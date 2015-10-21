@@ -25,7 +25,7 @@
 	    </span>
 	</div>
 	<div class='students'>
-		<div ng-repeat='student in members' class='student' ng-class='{present: student.presence == "here"}'>
+		<div ng-repeat='student in members' class='student' ng-class='{present: student.presence != "absent"}'>
 			<div class='row'>
 				<div class='col-xs-4'>
 					<img ng-src='{{student.avatar}}&s=72px'/>
