@@ -1,0 +1,18 @@
+120499 error EEXIST, mkdir '/home/mike/tmp/npm-3652-90xDcIQd/1444409008223-0.5586922999937087/package/string'
+File exists: /home/mike/tmp/npm-3652-90xDcIQd/1444409008223-0.5586922999937087/package/string
+Move it away, and try again.
+120500 error System Linux 3.11.0-20-generic
+120501 error command "/usr/bin/nodejs" "/usr/bin/npm" "install"
+120502 error cwd /home/mike/Observatory3/client
+120503 error node -v v0.10.25
+120504 error npm -v 1.3.10
+120505 error path /home/mike/tmp/npm-3652-90xDcIQd/1444409008223-0.5586922999937087/package/string
+120506 error fstream_path /home/mike/tmp/npm-3652-90xDcIQd/1444409008223-0.5586922999937087/package/string/insert.js
+120507 error fstream_type File
+120508 error fstream_class FileWriter
+120509 error code EEXIST
+120510 error errno 47
+120511 error fstream_stack /usr/lib/nodejs/fstream/lib/writer.js:171:23
+120511 error fstream_stack /usr/lib/nodejs/mkdirp/index.js:37:53
+120511 error fstream_stack Object.oncomplete (fs.js:107:15)
+120512 verbose exit [ 47, true ]
