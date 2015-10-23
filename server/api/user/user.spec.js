@@ -4,7 +4,7 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 
-describe('POST /api/user', function() {
+describe('POST /api/user/create', function() {
     it('should respond with JSON array', function(done) {
 	var postData = {
 	    "user":{}
