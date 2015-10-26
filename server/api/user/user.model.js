@@ -22,7 +22,9 @@ var UserSchema = new Schema({
   projects: [{type : Schema.Types.ObjectId, ref: 'Project'}], // project id
   bio: {type:String},
   attendance: [Date],
+  bonusAttendance: [Date],
   unverifiedAttendance: [Date],
+  unverifiedBonusAttendance: [Date],
   semesterCount: Number,
   passwordResetToken: String,
   passwordResetExpiration: Date,
@@ -92,15 +94,25 @@ UserSchema
   .get(function(){
     var today = new Date();
     today.setHours(0,0,0,0);
-
-    for (var i = 0;i < this.attendance.length;i++){
-      if (isoDateToTime(this.attendance[i]) == today.getTime()){
+    var i = 0;
+    for (i = 0;i < this.attendance.length;i++){
+      if (isoDateToTime(this.attendance[i]) === today.getTime()){
         return "present";
       }
     }
-    for (var i = 0;i < this.unverifiedAttendance.length;i++){
-      if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+    for (i = 0;i < this.bonusAttendance.length;i++){
+      if (isoDateToTime(this.bonusAttendance[i]) === today.getTime()){
+        return "presentBonus";
+      }
+    }
+    for (i = 0;i < this.unverifiedAttendance.length;i++){
+      if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
         return "unverified";
+      }
+    }
+    for (i = 0;i < this.unverifiedBonusAttendance.length;i++){
+      if (isoDateToTime(this.unverifiedBonusAttendance[i]) === today.getTime()){
+        return "unverifiedBonus";
       }
     }
     return "absent";
@@ -108,47 +120,92 @@ UserSchema
   .set(function(status){
     var today = new Date();
     today.setHours(0,0,0,0);
+    var i = 0;
     if (status === "present"){
       // Make sure user is not unverified for today
-      for (var i = this.unverifiedAttendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+      for (i = this.unverifiedAttendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
            this.unverifiedAttendance.splice(i,1);
         }
       }
-
       // If user already has attendance don't change anything
-      for (var i = 0;i < this.attendance.length;i++){
-        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+      for (i = 0;i < this.attendance.length;i++){
+        if (isoDateToTime(this.attendance[i]) === today.getTime()){
           return;
         }
       }
       this.attendance.push(today);
-    }else if (status === "unverified"){
+    }
+    else if (status === "unverified"){
       // If user already has attendance remove their attendance
-      for (var i = this.attendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+      for (i = this.attendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.attendance[i]) === today.getTime()){
           this.attendance.splice(i,1);
         }
       }
 
       // See if user already is unverifed
-      for (var i = 0;i < this.unverifiedAttendance.length;i++){
-        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+      for (i = 0;i < this.unverifiedAttendance.length;i++){
+        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
           return;
         }
       }
 
       this.unverifiedAttendance.push(today);
-    }else if (status === "absent"){
+    }
+    else if (status === "presentBonus"){
+      // Make sure user is not unverified for today
+      for (i = this.unverifiedBonusAttendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.unverifiedBonusAttendance[i]) === today.getTime()){
+           this.unverifiedBonusAttendance.splice(i,1);
+        }
+      }
+      // If user already has attendance don't change anything
+      for (i = 0;i < this.bonusAttendance.length;i++){
+        if (isoDateToTime(this.bonusAttendance[i]) === today.getTime()){
+          return;
+        }
+      }
+      this.bonusAttendance.push(today);
+    }
+    else if (status === "unverifiedBonus"){
+      // If user already has attendance remove their attendance
+      for (i = this.bonusAttendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.bonusAttendance[i]) === today.getTime()){
+          this.bonusAttendance.splice(i,1);
+        }
+      }
+
+      // See if user already is unverifed
+      for (i = 0;i < this.unverifiedBonusAttendance.length;i++){
+        if (isoDateToTime(this.unverifiedBonusAttendance[i]) === today.getTime()){
+          return;
+        }
+      }
+
+      this.unverifiedBonusAttendance.push(today);
+    }
+
+    else if (status === "absent"){
       // Remove attendance from unverified and attendance
-      for (var i = this.attendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+      for (i = this.attendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.attendance[i]) === today.getTime()){
           this.attendance.splice(i,1);
         }
       }
-      for (var i = this.unverifiedAttendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+      for (i = this.unverifiedAttendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
            this.unverifiedAttendance.splice(i,1);
+        }
+      }
+      for (i = this.bonusAttendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.bonusAttendance[i]) === today.getTime()){
+          this.bonusAttendance.splice(i,1);
+        }
+      }
+      for (i = this.unverifiedBonusAttendance.length-1;i >= 0;i--){
+        if (isoDateToTime(this.unverifiedBonusAttendance[i]) === today.getTime()){
+           this.unverifiedBonusAttendance.splice(i,1);
         }
       }
     }
@@ -169,8 +226,10 @@ UserSchema
       'email': this.email,
       'semesters': this.semesterCount,
       'attendance': this.attendance,
-      "attendanceScore": 0,
-      "attendanceBonus": 0,
+      'bonusAttendance': this.bonusAttendance,
+
+      // "attendanceScore": 0,
+      // "attendanceBonus": 0,
       'projects': this.projects,//TODO pull projects
       'tech': this.tech,
       'bio': this.bio,

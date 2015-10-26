@@ -30,6 +30,20 @@ ClassSchema
 		return null;
 	});
 
+ClassSchema
+	.virtual("dayCodeInfo")
+	.get(function(){
+		var today = new Date();
+		today.setHours(0,0,0,0);
+		for (var i = 0;i < this.dayCodes.length;i++){
+			if (this.dayCodes[i].date.getTime() == today.getTime()){
+				return this.dayCodes[i];
+			}
+		}
+		return null;
+	});
+
+
 var ClassYear;
 ClassSchema.statics.getCurrent = function(cb){
 	ClassYear.findOne({

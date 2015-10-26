@@ -347,19 +347,32 @@ exports.attend = function(req,res){
     // Check code against current class year
     ClassYear.getCurrent(function(err, classYear){
       if (err) return res.send(500, err);
-      if (classYear.dayCode === code){
+      if (classYear.dayCodeInfo.code === code){
         var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
         if (!needsVerification){
-          user.presence = "present";
-        }else{
-          user.presence = "unverified";
+          if (classYear.dayCodeInfo.bonusDay){
+            user.presence = "presentBonus";
+          }
+          else{
+            user.presence = "present";
+          }
         }
-        if (user.presence === "unverified"){
+        else{
+          if (classYear.dayCodeInfo.bonusDay){
+            user.presence = "unverifiedBonus";
+          }
+          else{
+            user.presence = "unverified";
+          }
+        }
+        if (user.presence === "unverified" || user.presence === "unverifiedBonus"){
           res.send(200, {"unverified": true});
-        }else if (user.presence === "present"){
+        }
+        else if (user.presence === "present" || user.presence === "presentBonus"){
           res.send(200, {"unverified": false});
         }
-      }else{
+      }
+      else{
         res.send(400, "Incorrect day code");
       }
     });
@@ -376,7 +389,7 @@ exports.getUnverifiedAttendanceUsers = function(req,res){
 
     var unverifiedUsers = [];
     for (var i = 0;i < users.length;i++){
-      if (users[i].presence == "unverified"){
+      if (users[i].presence === "unverified" || users[i].presence === "unverifiedBonus"){
         unverifiedUsers.push(users[i].profile);
       }
     }
@@ -394,6 +407,9 @@ exports.verifyAttendance = function(req,res){
     if (!user) return res.send(400, "No User with Id");
     if (user.presence === "unverified"){
       user.presence = "present";
+    }
+    else if(user.presence === "unverifiedBonus"){
+      user.presence = "presentBonus";
     }
     res.send(200);
   });
