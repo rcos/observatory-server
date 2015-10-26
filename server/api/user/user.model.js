@@ -220,18 +220,18 @@ UserSchema
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
     return {
-      '_id':this._id.toString('binary'),
-      'name': this.name,
-      'role': this.role,
-      'avatar': this.avatar,
-      'email': this.email,
-      'semesters': this.semesterCount,
-      'attendance': this.attendance,
-      'bonusAttendance': this.bonusAttendance,
-      'projects': this.projects,//TODO pull projects
-      'tech': this.tech,
-      'bio': this.bio,
-      'githubProfile': this.github.login
+        '_id': this._id.toString('binary'),
+        'name': this.name,
+        'role': this.role,
+        'avatar': this.avatar,
+        'email': this.email,
+        'semesters': this.semesterCount,
+        'attendance': this.attendance,
+        'bonusAttendance': this.bonusAttendance,
+        'projects': this.projects,//TODO pull projects
+        'tech': this.tech,
+        'bio': this.bio,
+        'githubProfile': this.github.login
     };
   });
 
@@ -252,7 +252,7 @@ UserSchema
   .virtual('listInfo')
   .get(function() {
     return {
-      '_id':this._id.toString('binary'),
+      '_id': this._id.toString('binary'),
       'name': this.name,
       'role': this.role,
       'avatar': this.avatar,

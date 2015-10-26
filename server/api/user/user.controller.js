@@ -375,38 +375,38 @@ exports.attend = function(req,res){
     if (!code) res.send(400, "No Code Submitted");
     else if (req.user.presence !== "absent") res.send(200);
     else{
-    // Check code against current class year
-    ClassYear.getCurrent(function(err, classYear){
-      if (err) return res.send(500, err);
+        // Check code against current class year
+        ClassYear.getCurrent(function(err, classYear){
+          if (err) return res.send(500, err);
           else if (classYear.dayCodeInfo.code === code){
-        var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
-        if (!needsVerification){
-          if (classYear.dayCodeInfo.bonusDay){
-            user.presence = "presentBonus";
+            var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
+            if (!needsVerification){
+              if (classYear.dayCodeInfo.bonusDay){
+                user.presence = "presentBonus";
+              }
+              else{
+                user.presence = "present";
+              }
+            }
+            else{
+              if (classYear.dayCodeInfo.bonusDay){
+                user.presence = "unverifiedBonus";
+              }
+              else{
+                user.presence = "unverified";
+              }
+            }
+            if (user.presence === "unverified" || user.presence === "unverifiedBonus"){
+              res.send(200, {"unverified": true});
+            }
+            else if (user.presence === "present" || user.presence === "presentBonus"){
+              res.send(200, {"unverified": false});
+            }
           }
           else{
-            user.presence = "present";
+            res.send(400, "Incorrect day code");
           }
-        }
-        else{
-          if (classYear.dayCodeInfo.bonusDay){
-            user.presence = "unverifiedBonus";
-          }
-          else{
-            user.presence = "unverified";
-          }
-        }
-        if (user.presence === "unverified" || user.presence === "unverifiedBonus"){
-          res.send(200, {"unverified": true});
-        }
-        else if (user.presence === "present" || user.presence === "presentBonus"){
-          res.send(200, {"unverified": false});
-        }
-      }
-      else{
-        res.send(400, "Incorrect day code");
-      }
-    });
+        });
     }
 };
 
