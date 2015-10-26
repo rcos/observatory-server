@@ -1,8 +1,21 @@
-.profile-img{
-    width: 70%;
-    margin: 15%;
-}
+.developers{
+    .profile-img{
+        margin: 5%;
+    }
 
-.image-row{
-    height: 200px;
+    .image-row{
+    }
+
+    .align-bottom{
+        vertical-align: middle;
+    }
+
+    .full-height{
+        position:relative;
+        overflow:hidden;
+
+    }
+    .profile-img{
+        display: inline;
+    }
 }
