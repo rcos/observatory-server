@@ -18,21 +18,49 @@
           </p>
         </div>
 
-        <div class="form-group">
-          <label>New Password</label>
+        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+            ng-class="{ 'has-success': form.password.$valid && (submitted || form.password.$dirty),
+                        'has-error': form.password.$invalid && (submitted || form.password.$dirty) }">
+          <label>Password</label>
 
-          <input type="password" name="newPassword" class="form-control" ng-model="user.newPassword"
+          <input type="password" name="password" class="form-control" ng-model="user.password"
                  ng-minlength="3"
-                 required/>
+                 required
+                 mongoose-error/>
           <p class="help-block"
-             ng-show="(form.newPassword.$error.minlength || form.newPassword.$error.required) && (form.newPassword.$dirty || submitted)">
+             ng-show="(form.password.$error.minlength || form.password.$error.required) && (submitted || form.password.$dirty)">
             Password must be at least 3 characters.
           </p>
+          <p class="help-block" ng-show="form.password.$error.mongoose">
+            {{ errors.password }}
+          </p>
+        </div>
+        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+            ng-class="{ 'has-success': form.passwordverify.$valid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)),
+                        'has-error': form.passwordverify.$invalid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)) }">
+          <label>Re-type Password</label>
+
+          <input type="password" name="passwordverify" class="form-control" ng-model="user.passwordverify"
+                 ng-minlength="3"
+                 required
+                 match-field="password"
+                 />
+          <p class="help-block"
+             ng-show="(form.passwordverify.$error.minlength || form.passwordverify.$error.required) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
+            Password must be at least 3 characters.
+          </p>
+          <p class="help-block"
+             ng-show="(form.passwordverify.$error.matchField) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
+            Passwords must match
+          </p>
+
         </div>
 
         <p class="help-block"> {{ message }} </p>
 
-        <button class="btn btn-lg btn-primary" type="submit">Save changes</button>
+         <button class="btn btn-lg btn-inverse btn-login" ng-class="{'disabled': !form.$valid}" type="submit">
+            Save changes
+          </button>
       </form>
     </div>
   </div>
