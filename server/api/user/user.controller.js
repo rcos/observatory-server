@@ -373,12 +373,12 @@ exports.attend = function(req,res){
     var user = req.user;
     var code = req.body.dayCode;
     if (!code) res.send(400, "No Code Submitted");
-    else if (req.user.presence !== "absent") res.send(200);
+    else if (req.user.presence !== "absent") res.send(400, "Attendence already submitted");
     else{
         // Check code against current class year
         ClassYear.getCurrent(function(err, classYear){
           if (err) return res.send(500, err);
-          else if (classYear.dayCodeInfo.code === code){
+          else if (classYear.dayCode === code){
             var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
             if (!needsVerification){
               if (classYear.dayCodeInfo.bonusDay){
