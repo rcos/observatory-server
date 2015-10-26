@@ -56,8 +56,8 @@ exports.create = function(req, res) {
     if(err) { return handleError(res, err); }
 
     //Add creator to any new project
-    var userId = req.params.id;
-    User.findById(userId, function(err,user){
+    var userId = req.user._id;
+    User.findById(userId, function(err, user){
       if (err){
         res.send(500, err);
       }else{
@@ -66,11 +66,10 @@ exports.create = function(req, res) {
         user.projects.push(project);
         user.save(function(err) {
           if (err) return res.json(422, err);
-          res.send(200);
+          return res.json(201, project);
         });
       }
     });
-    return res.json(201, project);
   });
 };
 
@@ -210,4 +209,3 @@ exports.upload = function(req, res) {
     });
   });
 };
-
