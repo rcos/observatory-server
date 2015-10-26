@@ -54,7 +54,22 @@ exports.authors = function(req, res) {
 exports.create = function(req, res) {
   Project.create(req.body, function(err, project) {
     if(err) { return handleError(res, err); }
-    return res.json(201, project);
+
+    //Add creator to any new project
+    var userId = req.user._id;
+    User.findById(userId, function(err, user){
+      if (err){
+        res.send(500, err);
+      }else{
+        if (!user.projects) user.projects = [];
+        if (user.projects.indexOf(project) !== -1) return;
+        user.projects.push(project);
+        user.save(function(err) {
+          if (err) return res.json(422, err);
+          return res.json(201, project);
+        });
+      }
+    });
   });
 };
 
@@ -169,7 +184,7 @@ exports.upload = function(req, res) {
     if(!fs.existsSync(path)){
       mkdirp.sync(path);
     }
-    // Copy file from temp to uploads folder with streams. 
+    // Copy file from temp to uploads folder with streams.
     // Allows upload across partitions unlike fs.renameSync
     var is = fs.createReadStream(file.path);
     var os = fs.createWriteStream(destPath);
@@ -194,4 +209,3 @@ exports.upload = function(req, res) {
     });
   });
 };
-
