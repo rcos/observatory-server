@@ -33,7 +33,8 @@ exports.index = function(req, res) {
  // TODO Make this work with fuzzy queries, multiple results etc.
 exports.search = function(req, res){
     if (!req.query.query) return res.send(400, "No query supplied");
-    User.findOne({name: req.query.query}, function(err, user){
+    var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
+    User.findOne({name: query}, function(err, user){
         if (err) return res.send(500, err);
         if (!user){
             if (req.query.single){
