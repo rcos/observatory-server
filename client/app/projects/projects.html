@@ -5,7 +5,7 @@
     <div id="header">
     <h1> {{ past ? "Past" : "Current" }} RCOS Projects</h1>
 
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProject">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProject" ng-show="user">
         Add a Project
     </button>
     <button type="button" class="btn btn-primary" ng-click="getCurrentProjects()" ng-show="past">
