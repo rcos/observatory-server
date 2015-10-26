@@ -181,7 +181,37 @@ exports.show = function (req, res, next) {
   User.findById(userId, function (err, user) {
     if (err) return next(err);
     if (!user) return res.send(404);
-    res.json(user.profile);
+    var profile = user.profile;
+    ClassYear.findOne({
+        "current": true
+    }, function (err, classYear) {
+        if(err) { return res;}
+        profile.attendanceAll=profile.attendance;
+        profile.bonusAttendanceAll=profile.bonusAttendance;
+
+        profile.attendance = profile.attendance.filter(function(value){
+            for (var i = 0;i < classYear.dates.length;i++){
+                if (classYear.dates[i].getTime() === value.getTime()){
+                    return true;
+                }
+            }
+            return false;
+        });
+        profile.bonusAttendance = profile.bonusAttendance.filter(function(value){
+            for (var i = 0;i < classYear.bonusDates.length;i++){
+                if (classYear.bonusDates[i].getTime() === value.getTime()){
+                    return true;
+                }
+            }
+            return false;
+        });
+        profile.totalDays = classYear.days;
+        profile.dates = classYear.dates;
+        profile.bonusDates = classYear.bonusDates;
+
+        profile.totalBonusDays = classYear.bonusDays;
+        res.json(profile);
+    });
   });
 };
 
@@ -343,11 +373,12 @@ exports.attend = function(req,res){
     var user = req.user;
     var code = req.body.dayCode;
     if (!code) res.send(400, "No Code Submitted");
-    if (req.user.presence !== "absent") res.send(200);
+    else if (req.user.presence !== "absent") res.send(200);
+    else{
     // Check code against current class year
     ClassYear.getCurrent(function(err, classYear){
       if (err) return res.send(500, err);
-      if (classYear.dayCodeInfo.code === code){
+          else if (classYear.dayCodeInfo.code === code){
         var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
         if (!needsVerification){
           if (classYear.dayCodeInfo.bonusDay){
@@ -376,6 +407,7 @@ exports.attend = function(req,res){
         res.send(400, "Incorrect day code");
       }
     });
+    }
 };
 
 /**
@@ -483,10 +515,10 @@ exports.resetPassword = function(req, res){
                 // email token to user
                 email.send(userEmail,
                     "Observatory3 password reset",
-                    "Please go to the following url to reset your password\n\n\
-                    " + config.addr + "/login?token=" + user.passwordResetToken + "\n\n\
-                    The token will expire after 24 hours\n\n\
-                    If you did not initiate this action, please ignore this email");
+                    "Please go to the following url to reset your password\n\n" +
+                    config.addr + "/login?token=" + user.passwordResetToken +
+                    "\n\nThe token will expire after 24 hours\n\n" +
+                    "If you did not initiate this action, please ignore this email");
             });
 
         });

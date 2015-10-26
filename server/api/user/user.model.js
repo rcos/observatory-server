@@ -213,6 +213,7 @@ UserSchema
   });
 
 // Public profile information
+
 UserSchema
   .virtual('profile')
   .get(function() {
@@ -227,9 +228,6 @@ UserSchema
       'semesters': this.semesterCount,
       'attendance': this.attendance,
       'bonusAttendance': this.bonusAttendance,
-
-      // "attendanceScore": 0,
-      // "attendanceBonus": 0,
       'projects': this.projects,//TODO pull projects
       'tech': this.tech,
       'bio': this.bio,

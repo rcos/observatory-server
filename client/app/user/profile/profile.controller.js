@@ -14,13 +14,22 @@ angular.module('observatory3App')
       $http.get('/api/users/' + $stateParams.id).success(function(user){
           $scope.user = user;
           $scope.originalRole = user.role;
+
+            $scope.user.badDays = user.dates.filter(function(value){
+                for (var i = 0;i < user.attendance.length;i++){
+                    if (new Date(user.attendance[i]).getTime() === new Date(value).getTime()){
+                        return true;
+                    }
+                }
+                return false;
+            });
           $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
               $scope.user.commits = commits;
           });
           // get all users projects information
           $scope.projects = [];
           user.projects.forEach(function(projectId){
-            $http.get("/api/projects/" + projectId).success(function(project){
+              $http.get('/api/projects/' + projectId).success(function(project){
               $scope.projects.push(project);
             });
           });
@@ -38,9 +47,9 @@ angular.module('observatory3App')
               'bio': $scope.user.bio
           }).success(function(data){
               $scope.user.bio = data.bio;
-              notify({message: "Bio updated!", classes: []});
+                notify({message: 'Bio updated!', classes: []});
           }).error(function(){
-              notify({message: "Could not update bio!", classes: ["alert-danger"]});
+                notify({message: 'Could not update bio!', classes: ['alert-danger']});
           });
       };
 
@@ -52,7 +61,7 @@ angular.module('observatory3App')
               $scope.user.tech.push($scope.insertTechContent);
               $scope.insertTechContent = '';
           }).error(function(){
-              notify({message: "Could not add tech!", classes: ["alert-danger"]});
+                notify({message: 'Could not add tech!', classes: ['alert-danger']});
           });
         }
       };
@@ -63,7 +72,7 @@ angular.module('observatory3App')
           }).success(function(){
               $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
           }).error(function(){
-              notify({message: "Could not add tech!", classes: ["alert-danger"]});
+                notify({message: 'Could not add tech!', classes: ['alert-danger']});
           });
       };
 
@@ -74,7 +83,7 @@ angular.module('observatory3App')
         }).success(function(){
           $scope.originalRole = $scope.user.role;
         });
-      }
+        };
   })
   .directive('bio', function(){
 
