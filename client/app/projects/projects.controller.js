@@ -20,11 +20,6 @@ angular.module('observatory3App')
             $scope.projects = projects;
         });
         $scope.past = false;
-        Auth.isLoggedInAsync(function(loggedIn){
-            if (loggedIn){
-                loggedIn = true;         
-            }
-        });
     };
 
     $scope.getPastProjects = function() {
@@ -45,10 +40,6 @@ angular.module('observatory3App')
                 $scope.$apply();
             });
         }
-    };
-
-   $scope.checkUserProject = function() {
-        $scope.userOnProject = $scope.user.projects !== -1;
     };
 
     $scope.submit = function(form) {
