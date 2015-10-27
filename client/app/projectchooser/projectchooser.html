@@ -1,0 +1,17 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+	<h3>Starter Projects</h3>
+    <div ng-repeat="project in defaultProjects">
+        <div class="extra-content" >
+            <h2 id="name"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a> </h2>
+            <ul class="project-info">
+                <li><a href="{{ project.websiteUrl }}">Website</a></li>
+                <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
+                <li><a href="{{ project.repositoryUrl }}">Repository</a></li>
+            </ul>
+            <div class="clear"></div>
+            <div id="description" btf-markdown="project.description"></div>
+        </div>
+    </div>
+</div>
