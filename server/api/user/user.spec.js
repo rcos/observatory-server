@@ -4,14 +4,14 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 
-describe('POST /api/user/', function() {
+describe('POST /api/users/', function() {
     it('should respond with JSON array', function(done) {
 	var postData = {
 	    "user":{}
 	};
 
 	request(app)
-	    .post('/api/user/')
+	    .post('/api/users/')
 	    .send(postData)
 	    .expect(200)
 	    .end(function(err, res) {
