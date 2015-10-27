@@ -72,10 +72,11 @@
         <div class='col-md-3'>
             <div ng-hide='!isuser' class='content-box'>
                 <div class='content-title'>
-                    Attendance <span class='attendance-score'>{{user.attendanceScore}}% +{{user.attendanceBonus}}%</span>
+                    Attendance <span class='attendance-score'>{{100* (user.attendance.length / user.totalDays)}}% + {{user.bonusAttendance.length}} bonus</span>
                 </div>
                 <div id='attendance-box-container'>
                     <div ng-repeat='day in user.attendance' class='good'></div>
+                    <div ng-repeat='day in user.badDays' class='bad'></div>
                 </div>
             </div>
             <div class='content-box'>
