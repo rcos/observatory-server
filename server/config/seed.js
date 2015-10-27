@@ -17,34 +17,16 @@ User.find({}).remove(function() {
     provider: 'local',
     name: 'Test User',
     email: 'test@test.com',
-    password: 'test'
+    password: 'test',
+    github: {
+        login: "test"
+    }
   }, {
     provider: 'local',
     role: 'admin',
     name: 'Admin',
     email: 'admin@admin.com',
     password: 'admin'
-  },
-  {
-    provider: 'local',
-    role: 'admin',
-    name: 'Aaron',
-    email: 'aaron@admin.com',
-    password: 'admin',
-    github:{
-      login: 'agundy'
-    }
-
-  },
-  {
-    provider: 'local',
-    role: 'admin',
-    name: 'Seve',
-    email: 'seve@admin.com',
-    password: 'admin',
-    github:{
-      login: 'seveibar'
-    }
   },
   {
     provider: 'local',

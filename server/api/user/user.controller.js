@@ -8,6 +8,7 @@ var crypto = require('crypto');
 var email = require("../../components/email");
 var Commit = require('../commit/commit.model');
 var ClassYear = require('../classyear/classyear.model');
+var SmallGroup = require('../smallgroup/smallgroup.model');
 
 
 var validationError = function(res, err) {
@@ -22,6 +23,32 @@ exports.index = function(req, res) {
     if(err) return res.send(500, err);
     res.json(200, users);
   });
+};
+
+/**
+ * Returns user or list of users that match a supplied query
+ *
+ * Takes {query:String, single:Boolean, limit:Integer}
+ */
+ // TODO Make this work with fuzzy queries, multiple results etc.
+exports.search = function(req, res){
+    if (!req.query.query) return res.send(400, "No query supplied");
+    var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
+    User.findOne({name: query}, function(err, user){
+        if (err) return res.send(500, err);
+        if (!user){
+            if (req.query.single){
+                return res.send(200, null);
+            }else{
+                return res.send(200, []);
+            }
+        }
+        if (req.query.single){
+            return res.send(200, user.profile);
+        }else{
+            return res.send(200, [user.profile]);
+        }
+    });
 };
 
 /**
@@ -343,7 +370,7 @@ exports.attend = function(req,res){
     var user = req.user;
     var code = req.body.dayCode;
     if (!code) res.send(400, "No Code Submitted");
-    if (req.user.presence !== "absent") res.send(200);
+    if (req.user.presence !== "absent") return res.send(400, "Attendance already recorded: " + req.user.presence);
     // Check code against current class year
     ClassYear.getCurrent(function(err, classYear){
       if (err) return res.send(500, err);
@@ -360,7 +387,20 @@ exports.attend = function(req,res){
           res.send(200, {"unverified": false});
         }
       }else{
-        res.send(400, "Incorrect day code");
+          // Classyear attendance code was incorrect, try small group
+          if (!user.smallgroup){
+              res.send(400, "Incorrect day code");
+              return;
+          }
+          SmallGroup.findById(user.smallgroup, function(err, smallgroup){
+              if (err) return res.send(500, err);
+              if (code === smallgroup.dayCode){
+                  user.presence = "present";
+                  res.send(200);
+              }else{
+                  res.send(400, "Incorrect day code");
+              }
+          });
       }
     });
 };

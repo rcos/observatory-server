@@ -18,7 +18,7 @@ angular.module('observatory3App')
     $scope.isAdmin = Auth.isAdmin;
     $scope.isMentor = Auth.isMentor;
     $scope.getCurrentUser = Auth.getCurrentUser;
-    
+
 		$scope.logout = function() {
       Auth.logout();
       $location.path('/login');
@@ -26,6 +26,10 @@ angular.module('observatory3App')
 
     $scope.isActive = function(route) {
       return route === $location.path();
+    };
+
+    $scope.hasSmallGroup = function(){
+        return $scope.getCurrentUser().smallgroup != null;
     };
 
     // Toggles the display of URP form
