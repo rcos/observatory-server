@@ -4,6 +4,7 @@
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
     $scope.userOnProject = false;
+    
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
             $scope.project = result.data;
@@ -62,7 +63,6 @@ angular.module('observatory3App')
             }
         }
     };
-    updateProject();
 
     var getAuthors = function() {
         var project = $scope.project;
@@ -119,6 +119,7 @@ angular.module('observatory3App')
     $scope.edittingDesc = false;
     $scope.edittingName = false;
     $scope.isLoggedIn = Auth.isLoggedIn;
+    $scope.isAdmin = Auth.isAdmin;
 
     $scope.editDesc = function(){
         $scope.edittingDesc = !$scope.edittingDesc;
@@ -176,6 +177,24 @@ angular.module('observatory3App')
             getAuthors();
         }).error(function(){
             notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
+        });
+    };  
+
+    $scope.markDefault = function(){
+        $http.put('api/projects/'+$scope.project._id+'/markdefault').success(function(){
+            notify("Project marked as default");
+            updateProject();
+        }).error(function(){
+            notify("Could not mark project as default!");
+        });
+    };
+
+    $scope.unmarkDefault = function(){
+        $http.put('api/projects/'+$scope.project._id+'/unmarkdefault').success(function(){
+            notify("Project unmarked as default");
+            updateProject();
+        }).error(function(){
+            notify("Could not unmark project as default!");
         });
     };
 

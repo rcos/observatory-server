@@ -9,7 +9,7 @@ angular.module('observatory3App')
       'title': 'Projects',
       'link': '/projects'
     },{
-      'title': 'Users',
+      'title': 'Developers',
       'link': '/users'
     }];
 
