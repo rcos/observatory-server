@@ -5,6 +5,13 @@
     <div ng-repeat="project in defaultProjects">
         <div class="extra-content" >
             <h2 id="name"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a> </h2>
+            <p>
+	            <carousel>
+	            <slide ng-repeat="url in project.photos" active="$first">
+	            <div style="background:url({{getImagePrefix(project)+url}}) center center;" class="slide" alt=""></div>
+	            </slide>
+	            </carousel>
+            </p>
             <ul class="project-info">
                 <li><a href="{{ project.websiteUrl }}">Website</a></li>
                 <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>

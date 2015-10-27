@@ -16,6 +16,14 @@ exports.index = function(req, res) {
   });
 };
 
+// Get list of default projects
+exports.defaults = function(req, res) {
+  Project.find({markedDefault: true}, function (err, projects) {
+    if(err) { return handleError(res, err); }
+    return res.json(200, projects);
+  });
+};
+
 // Get list of past projects
 exports.indexOld = function(req, res) {
   Project.find({active:false},function (err, projects) {
