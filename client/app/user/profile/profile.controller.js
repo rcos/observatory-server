@@ -85,6 +85,21 @@ angular.module('observatory3App')
           });
       };
 
+      $scope.deleteUser = function(user){
+         
+          $http.put('/api/users/' + $stateParams.id + '/removeUser', {
+              'user': user
+          })
+          .success(function(){
+              Auth.logout();
+              notify({message: "Account deleted"}); 
+             $http.get("/api/main");
+             
+          }) .error(function(){
+              notify({message: "Could not delete!", classes: ["alert-danger"]});
+      });
+    }
+
       $scope.setRole = function(){
         // $scope.user.role
         $http.post('/api/users/' + $stateParams.id + '/role', {
@@ -94,6 +109,7 @@ angular.module('observatory3App')
         });
       }
   })
+
   .directive('bio', function(){
 
       return {

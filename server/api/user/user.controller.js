@@ -577,3 +577,13 @@ exports.removeProject = function(req,res){
         }
     });
 };
+
+exports.deleteUser = function(req,res){
+  var userId = req.params.id; 
+  User.findByIdAndRemove(userID, function(err) {
+  if (err) {
+     res.send(500, err);
+   }
+  
+  });
+}

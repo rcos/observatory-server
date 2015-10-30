@@ -33,5 +33,6 @@ router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);
 router.put("/:id/addTech", auth.canEdit(), controller.addTech);
 router.put("/:id/removeTech", auth.canEdit(), controller.removeTech);
 router.post('/resetPassword', controller.resetPassword);
+router.put('/:id/removeUser',auth.isAuthenticated(),controller.destroy); 
 
 module.exports = router;
