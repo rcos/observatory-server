@@ -153,6 +153,28 @@ function handleError(res, err) {
   return res.send(500, err);
 }
 
+exports.markPast = function(req,res){
+  Project.findById(req.params.id,function(err,project){
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    project.update({ active: false }, function(err) {
+      if(err) { return handleError(res, err); }
+      return res.send(200);
+    });
+  });
+};
+
+exports.markActive = function(req,res){
+  Project.findById(req.params.id,function(err,project){
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    project.update({ active: true }, function(err) {
+      if(err) { return handleError(res, err); }
+      return res.send(200);
+    });
+  });
+};
+
 exports.markDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }

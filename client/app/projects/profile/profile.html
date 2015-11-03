@@ -17,6 +17,9 @@
             <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
             <div ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</div>
             <div ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</div>
+             <div ng-show='isLoggedIn() && userOnProject && project.active' class="btn btn-primary" ng-click='markPast()'>Mark Past Project </div> 
+           <div ng-show='isLoggedIn() && userOnProject && !project.active' class="btn btn-primary" ng-click='markActive()'>Mark Active Project </div>
+            
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
             <a class="btn btn-info" href="{{project.repositories[0]}}" title="" ng-show="project.repositories.length == 1">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
             <div class="btn-group" ng-show="project.repositories.length > 1">
@@ -72,6 +75,8 @@
                     </div>
                 </div>
             </div>
+
+            
         </div>
     </div>
 

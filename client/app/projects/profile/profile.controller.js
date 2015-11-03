@@ -180,6 +180,24 @@ angular.module('observatory3App')
         });
     };  
 
+    $scope.markPast = function(){
+        $http.put('api/projects/'+$scope.project._id+'/markPast').success(function(){
+            notify("Project marked as past project"); 
+            updateProject(); 
+        }).error(function(){
+            notify("Project not marked as a past project")
+        });
+    };
+
+    $scope.markActive =  function(){
+        $http.put('api/projects/'+$scope.project._id+'/markActive').success(function(){
+            notify("Project marked as a current project"); 
+            updateProject(); 
+        }).error(function(){
+            notify("Project not marked as a current project")
+        });
+    };
+
     $scope.markDefault = function(){
         $http.put('api/projects/'+$scope.project._id+'/markdefault').success(function(){
             notify("Project marked as default");
