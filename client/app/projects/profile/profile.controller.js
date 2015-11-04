@@ -201,10 +201,10 @@ angular.module('observatory3App')
         }
     };
 //tech bubble code
-
+	$scope.isMentor = Auth.isMentor;
 	$scope.addTechBubble = function(){
         if($scope.insertTechContent){
-          $http.put('/api/project/' + $scope.project._id + '/' + $scope.insertTechContent + '/addTechBubble').success(function(){
+          $http.put('/api/projects/addTechBubble/' + $scope.project._id + '/' + $scope.insertTechContent).success(function(){
               $scope.project.tech.push($scope.insertTechContent);
               $scope.insertTechContent = '';
           }).error(function(){
@@ -212,14 +212,11 @@ angular.module('observatory3App')
           });
         }
       };
-			//may be erroneously copied
-      $scope.removeTech = function(tech){
-          $http.put('/api/project/' + $stateParams.id + '/:w removeTech', {
-              'tech': tech
-          }).success(function(){
-              $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
+   $scope.removeTech = function(tech){
+          $http.put('/api/projects/' + $scope.project._id + '/' + tech + '/removeTech').success(function(){
+				$scope.project.tech.splice($scope.project.tech.indexOf(tech),1);
           }).error(function(){
-              notify({message: "Could not add tech!", classes: ["alert-danger"]});
+              notify({message: "Could not remove tech!", classes: ["alert-danger"]});
           });
       };
 

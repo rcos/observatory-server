@@ -117,7 +117,22 @@ exports.addTechBubble = function(req, res){
 	});
 };
 
-
+exports.removeTech = function(req, res){
+	var projectId = req.params.id;
+	var oldTech = req.params.tech;
+	Project.findById(projectId, function(err, project){
+		if (err){
+			res.send(500, err);
+		}else{
+			if (!project.tech) project.tech = [];
+			project.tech.splice(project.tech.indexOf(oldTech), 1);
+			project.save(function(err){
+				if (err) return validationError(res, err);
+				res.send(200);
+			});
+		}
+	});
+};
 
 // Deletes a project from the DB.
 exports.destroy = function(req, res) {
