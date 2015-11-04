@@ -48,11 +48,11 @@
             No images uploaded yet.
             </p>
 
-            <carousel>
-            <slide ng-repeat="url in project.photos" active="$first">
-            <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt=""></div>
-            </slide>
-            </carousel>
+            <uib-carousel>
+                <uib-slide ng-repeat="slide in slides" active="slide.active">
+                    <div style="background:url({{imgPrefix+slide.src}}) center center;" class="slide" alt=""></div>
+                </uib-slide>
+            </uib-carousel>
         </div>
 
         <div class="col-sm-4">
