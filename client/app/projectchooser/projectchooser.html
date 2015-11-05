@@ -19,7 +19,7 @@
 
                     <div ng-show="project.photos.length > 0">
                         <!-- <div style="background:url({{getImagePrefix(project)+url}}) center center;" class="slide" alt="{{url}}"></div> -->
-                    <img src="{{getImagePrefix(project)+project.photos[0]}}" height="200" width="200">
+                    <img ng-src="{{project.photos.length > 0 && getImagePrefix(project)+project.photos[0]}}" height="200" width="200">
                     </div>
 
                 </div>
