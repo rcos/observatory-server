@@ -1,38 +1,48 @@
 
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container">
+<div class="container developers">
     <div class="row">
-        <h3>RCOS Developers</h3>
-        <br>
-    </div>
-    <div class="row text-right">
-        <div class="text-left">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></span>
-                {{ currentPage + 1 }} of {{ numberOfPages() }}
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></span>
-        </div>
-        <!-- Single button -->
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            {{currentView}} <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#" ng-click="changeView('current')">Active Developers</a></li>
-            <li><a href="#" ng-click="changeView('past')">Past Developers</a></li>
-          </ul>
+        <div class="col-sm-12 text-left col-bottom col-height">
+            <h3>RCOS Developers</h3>
+            <br>
         </div>
     </div>
     <div class="row">
-        <div ng-repeat="user in users | startFrom:currentPage*pageSize | limitTo:pageSize" class="col-md-2 col-sm-2 text-center">
-            <div class="row image-row">
-                <a href="/users/{{ user._id}}/profile" title="">
-                    <img class="profile-img img-responsive" src='{{user.avatar}}&s=248px'>
-                </a>
-                <p>
-                    <a href="/users/{{ user._id}}/profile" title="" class="">{{ user.name }}</a>
-                </p>
+        <div class="row-height">
+            <div class="col-sm-6 text-left col-bottom col-height">
+                <div class="inside">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></span>
+                        {{ currentPage + 1 }} of {{ numberOfPages() }}
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></span>
+                    <button type="button" class="btn btn-default btn-link" data-toggle="dropdown" ng-show="numberOfPages() > 1">
+                        View all
+                    </button>
+                </div>
             </div>
+            <!-- Single button -->
+            <div class="btn-group col-sm-6 text-right col-height">
+                <div class="inside">
+                  <button type="button" class="btn btn-default dropdown-toggle pull-right" data-toggle="dropdown" aria-expanded="false">
+                    {{currentView}} <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#" ng-click="changeView('current')">Active Developers</a></li>
+                    <li><a href="#" ng-click="changeView('past')">Past Developers</a></li>
+                  </ul>
+              </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row image-row">
+        <div ng-repeat="user in users | startFrom:currentPage*pageSize | limitTo:pageSize" class="col-lg-1 col-md-2 col-sm-3 text-center">
+            <a href="/users/{{ user._id}}/profile" title="">
+                <img class="profile-img img-responsive" src='{{user.avatar}}&s=248px'>
+            </a>
+            <p>
+                <a href="/users/{{ user._id}}/profile">{{ user.name }}</a>
+            </p>
         </div>
     </div>
 </div>
