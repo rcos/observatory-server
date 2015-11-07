@@ -72,30 +72,6 @@ angular.module('observatory3App')
         });
     };
 
-    var initializeSlides = function(photos) {
-        var slides = [];
-        for (var i = 0; i < photos.length; i++){
-            slides.push({
-                active: false,
-                src: photos[i]
-            });
-            if (i === 0) {
-                slides[0].active = true;
-            }
-        }
-        $scope.slides = slides;
-    };
-
-    var setActiveSlide = function(photoName){
-        for (var i = 0; i < $scope.slides.length; i++){
-            if ($scope.slides[i].src === photoName){
-                $scope.slides[i].active = true;
-            } else {
-                $scope.slides[i].active = false;
-            }
-        }
-    };
-
     var addSlide = function(photoName){
         $scope.slides.push({
             active: false,
