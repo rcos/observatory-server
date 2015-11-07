@@ -34,7 +34,7 @@ exports.index = function(req, res) {
 exports.search = function(req, res){
     if (!req.query.query) return res.send(400, "No query supplied");
     var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
-    User.findOne({name: query}, function(err, user){
+    User.findOne({name: query},{active:{$nin:false}},function(err, user){
         if (err) return res.send(500, err);
         if (!user){
             if (req.query.single){
@@ -290,6 +290,22 @@ exports.changePassword = function(req, res, next) {
 };
 
 /**
+ * Deactivates a user
+ */
+exports.deactivate = function(req,res) { 
+        var userId = req.user.id;
+        User.findById(userId, function(err, user){
+        if (err) return res.send(500, err);
+        user.active = false;
+        user.save(function(err){
+        if (err) return res.send(500, err);
+        res.json(200, {success: true});
+      })
+    
+  });  
+};
+
+/**
  * Changes a user's bio
  */
 exports.changeBio = function(req,res){
@@ -321,23 +337,6 @@ exports.changeBio = function(req,res){
      })
    });
  };
-
-/**
- * Deactivates a user
- */
-exports.deactivate = function(req, res, next) {
-  var userId = String(req.params.id);
-
-  User.findOne({ '_id': userId}, function(err, user){
-    if (err) return res.send(500, err);
-
-    user.active = false;
-    user.save(function(err){
-    if (err) return res.send(500, err);
-      res.json(200, {success: true});
-    })
-  });
-};
 
 /**
  * Activates a user
@@ -578,12 +577,18 @@ exports.removeProject = function(req,res){
     });
 };
 
-exports.deleteUser = function(req,res){
-  var userId = req.params.id; 
-  User.findByIdAndRemove(userID, function(err) {
-  if (err) {
-     res.send(500, err);
-   }
-  
+exports.deleteUser = function(req,res,next){
+  var userId = req.params.id;
+  var pass = String(req.body.oldPassword);
+  User.findById(userId, function (err, user) {
+    if(user.authenticate(pass)) {
+      User.findByIdAndRemove(req.params.id, function(err, user) {
+           if(err) return res.send(500, err);
+          return res.send(204);
+        });
+      
+    } else {
+      res.send(403);
+    }
   });
-}
+};

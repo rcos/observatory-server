@@ -135,6 +135,7 @@ angular.module('observatory3App')
         }).$promise;
       },
 
+      
       /**
        * Change password using token
        *
@@ -172,7 +173,17 @@ angular.module('observatory3App')
           });
         }
       },
-
+      
+      deleteUser: function(currpass,callback){
+        var cb = callback || angular.noop;
+        return User.deleteUser({ id: currentUser._id }, {
+          oldPassword: currpass
+        }, function(user) {
+          return cb(user);
+        }, function(err) {
+          return cb(err);
+        }).$promise;
+      },
       /**
        * Check if a user is logged in
        *

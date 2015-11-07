@@ -6,6 +6,12 @@ angular.module('observatory3App')
       id: '@_id'
     },
     {
+      deleteUser: {
+        method: 'PUT',
+        params: {
+          controller:'removeUser'
+        }
+      },
       changePassword: {
         method: 'PUT',
         params: {
@@ -38,6 +44,7 @@ angular.module('observatory3App')
           controller:'allstats'
         },
         isArray:true
-      }
+      } 
+      
 	  });
   });

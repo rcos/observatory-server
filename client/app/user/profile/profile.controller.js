@@ -85,19 +85,18 @@ angular.module('observatory3App')
           });
       };
 
-      $scope.deleteUser = function(user){
-         
-          $http.put('/api/users/' + $stateParams.id + '/removeUser', {
+      $scope.pastUser = function(user){
+          var conf = confirm("Are you sure you want to make your account inactive?"); 
+          if (conf){
+            $http.put('/api/users/' + $stateParams.id + '/deactUser', {
               'user': user
-          })
-          .success(function(){
-              Auth.logout();
-              notify({message: "Account deleted"}); 
-             $http.get("/api/main");
-             
-          }) .error(function(){
-              notify({message: "Could not delete!", classes: ["alert-danger"]});
-      });
+            })
+            .success(function(){
+                notify({message: "Account made inactive"}); 
+            }) .error(function(){
+                notify({message: "Could not make a past account!", classes: ["alert-danger"]});
+            });
+        }
     }
 
       $scope.setRole = function(){
