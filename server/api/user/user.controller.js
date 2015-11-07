@@ -268,7 +268,6 @@ exports.changePassword = function(req, res, next) {
 exports.changeBio = function(req,res){
     var userId = req.user._id;
     var newBio = String(req.body.bio);
-
     User.findById(userId, function(err,user){
         user.bio = newBio;
         res.json({bio:user.bio});
@@ -279,6 +278,22 @@ exports.changeBio = function(req,res){
 
     });
 };
+
+/**
+ * Changes a user's Github profile
+ */
+ exports.changeGithub = function(req,res){
+   var userId = req.user._id;
+   var newGithubProfile = String(req.body.github);
+   User.findById(userId, function(err,user){
+     user.github.login = newGithubProfile;
+     res.json({githubProfile:user.github.login});
+     user.save(function(err){
+        if (err) return validationError(res,err);
+        res.send(200);
+     })
+   });
+ };
 
 /**
  * Deactivates a user
