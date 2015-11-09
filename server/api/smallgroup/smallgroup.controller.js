@@ -25,6 +25,7 @@ exports.create = function(req, res){
             "name": "New Small Group",
             "semester": currentClassYear.semester,
             "enabled": true,
+				"leader": user._id,
             "students": [user._id],
             "dayCodes": []
         });
@@ -113,6 +114,16 @@ exports.getSmallGroupMembers = function(req, res){
             })
         });
     });
+};
+
+exports.getLeader = function(req, res){
+    var id = req.params.id;
+    SmallGroup.findById(id, function(err, smallgroup){
+        if (err) return handleError(res, err);
+			var leader = "";
+			leader = smallgroup.leader;
+			res.json(200, leader);
+		});
 };
 
 exports.addMember = function(req, res){

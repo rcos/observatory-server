@@ -19,6 +19,9 @@
 	      <button class="btn btn-primary" ng-click='addUser(input_user)' type="button">Add User</button>
 	    </span>
 	</div>
+	<div><!--style this-->
+		<p> Group Leader: {{leader}} </p>
+	</div>
 	<div class='students'>
 		<div ng-repeat='student in members' class='student' ng-class='{present: student.presence != "absent"}'>
 			<div class='row'>

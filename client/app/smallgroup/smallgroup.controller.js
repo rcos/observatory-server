@@ -16,8 +16,11 @@ angular.module('observatory3App')
         $http.get('/api/smallgroup/' + $scope.user.smallgroup + '/members').success(function(members){
             $scope.members = members;
         });
+		  $http.get('/api/smallgroup/' + $scope.user.smallgroup + '/leader').success(function(leader){
+			$scope.leader = leader;
+		});
     }
-
+		
     $scope.createSmallGroup = function(){
         $http.post("/api/smallgroup/").success(function(){
             window.location.reload();

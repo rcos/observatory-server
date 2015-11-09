@@ -7,6 +7,7 @@ var SmallGroupSchema = new Schema({
   semester: String,
   name: String,
   enabled: Boolean,
+  leader: String,
   students: [{type : Schema.Types.ObjectId, ref: 'User'}],
   dayCodes: [{date:Date, code:String}]
 });
