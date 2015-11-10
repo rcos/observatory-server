@@ -18,4 +18,17 @@
     .profile-img{
         display: inline;
     }
+    .user-box{
+        overflow:hidden;
+        word-break: break-all;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+        margin-bottom: 10px;
+
+    }
+    .user-name{
+        height: 2em;
+    }
 }
