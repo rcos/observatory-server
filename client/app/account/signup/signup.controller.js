@@ -19,7 +19,7 @@ angular.module('observatory3App')
 
         })
         .then( function() {
-          // Account created, redirect to home
+          // Account created, redirect to project chooser
           $location.path('/projectchooser');
         })
         .catch( function(err) {
