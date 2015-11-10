@@ -118,12 +118,15 @@ exports.getSmallGroupMembers = function(req, res){
 
 exports.getLeader = function(req, res){
     var id = req.params.id;
-    SmallGroup.findById(id, function(err, smallgroup){
-        if (err) return handleError(res, err);
-			var leader = "";
-			leader = smallgroup.leader;
-			res.json(200, leader);
-		});
+	 var ledProfile = null;
+	 SmallGroup.findById(id, function( err, smallgroup){
+		getFullMember(smallgroup.leader, function(err, member){
+			if (member){
+				ledProfile = member;
+			}
+			res.json(200, ledProfile);
+		})
+	 });
 };
 
 exports.addMember = function(req, res){
