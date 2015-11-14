@@ -1,6 +1,5 @@
 .developers{
     .profile-img{
-        margin: 5%;
     }
 
     .image-row{
@@ -13,22 +12,32 @@
     .full-height{
         position:relative;
         overflow:hidden;
-
     }
     .profile-img{
         display: inline;
     }
     .user-box{
         overflow:hidden;
-        word-break: break-all;
+        word-break: normal;
         -webkit-hyphens: auto;
         -moz-hyphens: auto;
         -ms-hyphens: auto;
         hyphens: auto;
         margin-bottom: 10px;
-
+        padding-left:  1%;
+        padding-right: 1%;
     }
     .user-name{
         height: 2em;
+        line-height: 1em;
+        margin-top: 5%;
     }
+
+    .user-avatar{
+    }
+
+    p{
+        margin: 0 0 0px;
+    }
+
 }
