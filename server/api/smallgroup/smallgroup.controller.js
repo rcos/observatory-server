@@ -25,7 +25,7 @@ exports.create = function(req, res){
             "name": "New Small Group",
             "semester": currentClassYear.semester,
             "enabled": true,
-            "students":[user.id],
+            "students":[user._id],
             "dayCodes": []
         });
         smallgroup.save();
