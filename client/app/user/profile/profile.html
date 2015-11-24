@@ -22,7 +22,14 @@
                 </div>
             </div>
             <div class='sidebar-text box'>
-                <a href='http://github.com/{{user.githubProfile}}'>Github</a>
+              <div class='row'> <div class='col-xs-3'>  <a href='http://github.com/{{user.githubProfile}}'>Github</a> </div>
+                <div ng-show='isuser' class='col-xs-9 text-right'>
+                    <div class="btn-group">
+                        <button type="button" class='btn btn-default btn-sm' ng-click='editGithub()'>Edit</button>
+                        <button type="button" class='btn btn-default btn-sm' ng-click='saveGithub()'>Save</button>
+                    </div>
+                </div> </div>
+                <github></github>
                 <br/>
                 {{user.email}}
         </div>

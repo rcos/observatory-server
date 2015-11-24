@@ -27,6 +27,7 @@ router.post('/', controller.create);
 router.put('/:id/attend', auth.canEdit(), controller.attend);
 router.put('/:id/verifyAttendance', auth.hasRole('mentor'), controller.verifyAttendance);
 router.put('/:id/bio', auth.canEdit(), controller.changeBio);
+router.put('/:id/github', auth.canEdit(), controller.changeGithub);
 router.put('/:id/project', auth.isAuthenticated(), controller.addProject);
 router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);
 router.put("/:id/addTech", auth.canEdit(), controller.addTech);
