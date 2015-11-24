@@ -21,7 +21,7 @@ describe('GET /api/users/past', function() {
 
 
 describe('POST /api/users/', function() {
-    it('should respond with JSON array', function(done) {
+    it('should respond with a token', function(done) {
 	//Create a user object without any of the required fields
 	var postData = {
 	    "user":{}
@@ -33,7 +33,7 @@ describe('POST /api/users/', function() {
 	    .expect(422)
 	    .end(function(err, res) {
 		if(err) return done(err);
-		//res.body.should.be.instanceof(Array);
+			//TODO check if token present
 		done();
 	    });
     });
