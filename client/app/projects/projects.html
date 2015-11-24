@@ -14,7 +14,12 @@
     <button type="button" class="btn btn-primary" ng-click="getPastProjects()" ng-show="!past">
         Show Past Projects
     </button>
+    <search-bar>
+      Search Projects<input type="text" class="search-bar" ng-model="searchString" placeholder="Enter your search terms" />
+    </search-bar>
     </div>
+
+
 
     <br/><br/>
 
@@ -118,7 +123,7 @@
         </div>
     </div>
 
-    <div ng-repeat="project in projects">
+    <div ng-repeat="project in projects | searchFor:searchString">
         <div class="extra-content" >
             <h2 id="name"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a> </h2>
             <ul class="project-info">

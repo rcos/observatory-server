@@ -3,6 +3,8 @@ html {
     font-size: 10pt;
 }
 
+
+
 .extra-content {
     background-color: #eee;
     clear: both;
@@ -76,6 +78,14 @@ h2 {
 
 #header h1 {
     float: left;
+}
+
+#header search-bar{
+  width: 200px;
+  float: right;
+  margin-left:10px;
+  margin-right:10px;
+  margin-top: 10px;
 }
 
 .bottom-bar {

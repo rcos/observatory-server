@@ -44,6 +44,24 @@ angular.module('observatory3App')
           });
       };
 
+      $scope.edittingGithub = false;
+
+      $scope.editGithub = function(){
+        $scope.edittingGithub = !$scope.edittingGithub;
+      };
+
+      $scope.saveGithub = function(){
+        $scope.edittingGithub = false;
+        $http.put('/api/users/' + $stateParams.id + '/github',{
+            'github': $scope.user.githubProfile
+        }).success(function(data){
+            $scope.user.githubProfile = data.githubProfile;
+            notify({message: "Github updated!", classes: []});
+        }).error(function(){
+          notify({message: "Could not update Github!", classes: ["alert-danger"]});
+        });
+      };
+
       $scope.addTech = function(){
         if($scope.insertTechContent){
           $http.put('/api/users/' + $stateParams.id + '/addTech', {
@@ -83,4 +101,11 @@ angular.module('observatory3App')
           template: '<div style=\'white-space:pre;\' btf-markdown=\'user.bio\'></div> \
                      <textarea ng-show=\'edittingBio\' ng-model=\'user.bio\' ></textarea>'
       };
+  })
+  .directive('github', function(){
+    return {
+      restrict:'E',
+      template: '<div style=\'white-space:pre;\'></div> \
+                 <textarea ng-show=\'edittingGithub\' ng-model=\'user.githubProfile\' ></textarea>'
+    }
   });

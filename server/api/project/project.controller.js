@@ -17,6 +17,14 @@ exports.index = function(req, res) {
   });
 };
 
+// Get list of default projects
+exports.defaults = function(req, res) {
+  Project.find({markedDefault: true}, function (err, projects) {
+    if(err) { return handleError(res, err); }
+    return res.json(200, projects);
+  });
+};
+
 // Get list of past projects
 exports.indexOld = function(req, res) {
   Project.find({active:false},function (err, projects) {
@@ -97,6 +105,41 @@ exports.update = function(req, res) {
       }
     });
   });
+};
+
+//adds a tech bubble to the project
+exports.addTechBubble = function(req, res){
+	var projectId = req.params.id;
+	var newTech = req.params.tech;
+	Project.findById(projectId, function(err, project){
+		if (err){
+			res.send(500, err);
+		}else{
+			if (!project.tech) project.tech=[];
+			project.tech.push(newTech);
+			project.save(function(err){
+				if (err) return validationError(res, err);
+				res.send(200);
+			});
+		}
+	});
+};
+
+exports.removeTech = function(req, res){
+	var projectId = req.params.id;
+	var oldTech = req.params.tech;
+	Project.findById(projectId, function(err, project){
+		if (err){
+			res.send(500, err);
+		}else{
+			if (!project.tech) project.tech = [];
+			project.tech.splice(project.tech.indexOf(oldTech), 1);
+			project.save(function(err){
+				if (err) return validationError(res, err);
+				res.send(200);
+			});
+		}
+	});
 };
 
 // Deletes a project from the DB.
