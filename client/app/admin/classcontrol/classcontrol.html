@@ -19,12 +19,14 @@
                             <div class='big-text'>
                                 {{ attendanceCode }}
                             </div>
+                            <div ng-include="'components/footer/footer.html'"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-12 buttonLine">
             <button ng-show= "!displayURP && !showAttendanceCode" ng-click='URPDisplay()' class='btn btn-primary displayURP'>Show URP Form</button>
@@ -55,4 +57,5 @@
         </div>
     </div>
 </div>
+
 <div ng-include="'components/footer/footer.html'"></div>
