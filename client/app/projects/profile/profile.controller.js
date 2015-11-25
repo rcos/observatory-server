@@ -194,7 +194,7 @@ angular.module('observatory3App')
             notify("Project marked as a current project"); 
             updateProject(); 
         }).error(function(){
-            notify("Project not marked as a current project")
+            notify("ERROR: Project not marked as a current project")
         });
     };
 

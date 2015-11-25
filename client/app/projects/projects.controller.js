@@ -11,7 +11,7 @@ angular.module('observatory3App')
         if (loggedIn){
             var user = Auth.getCurrentUser();
             $scope.user = user;
-            $scope.checkUserProject();
+           // $scope.checkUserProject();
         }
     });
 
