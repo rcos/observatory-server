@@ -4,6 +4,7 @@
   vars:
     - log_file: "/opt/observatory.log"
     - server_dir: "/opt/Observatory3/"
+    - port: 8443
   tasks:
     - fail: msg="Missing Observatory version. Pass with --extra-vars release=v0.0.1"
       when: release is undefined
@@ -23,4 +24,4 @@
       args:
         chdir: "{{ server_dir }}"
 
-    - shell: "NODE_ENV=production PORT=80 forever -a -l {{ log_file }} start {{ server_dir }}dist/server/app.js"
+    - shell: "NODE_ENV=production PORT={{ port }} forever -a -l {{ log_file }} start {{ server_dir }}dist/server/app.js"

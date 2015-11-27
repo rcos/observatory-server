@@ -35,6 +35,11 @@ module.exports = function (grunt) {
       client: require('./bower.json').appPath || 'client',
       dist: 'dist'
     },
+    changed: {
+      options: {
+        cache: '.changed_cache'
+      }
+    },
     express: {
       options: {
         port: process.env.PORT || 9000
@@ -71,14 +76,15 @@ module.exports = function (grunt) {
       }
     },
     auto_install: {
-      local: {},
-      subdir: {
-        options: {
-          bower: false
-        }
-      },
-      src: ['package.json'],
-
+      all:{
+        local: {},
+        subdir: {
+          options: {
+            bower: false
+          }
+        },
+        src: ['package.json'],
+      }
     },
     watch: {
       installBower: {
@@ -155,8 +161,8 @@ module.exports = function (grunt) {
     // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
-        jshintrc: '<%= yeoman.client %>/.jshintrc',
-        reporter: require('jshint-stylish')
+        reporter: require('jshint-stylish'),
+        force: true
       },
       server: {
         options: {
@@ -173,16 +179,27 @@ module.exports = function (grunt) {
         },
         src: ['server/**/*.spec.js']
       },
-      all: [
-        '<%= yeoman.client %>/{app,components}/**/*.js',
-        '!<%= yeoman.client %>/{app,components}/**/*.spec.js',
-        '!<%= yeoman.client %>/{app,components}/**/*.mock.js'
-      ],
-      test: {
+      client: {
+        options: {
+            jshintrc: '<%= yeoman.client %>/.jshintrc',
+        },
+        src:[
+            '<%= yeoman.client %>/{app,components}/**/*.js',
+            '!<%= yeoman.client %>/{app,components}/**/*.spec.js',
+            '!<%= yeoman.client %>/{app,components}/**/*.mock.js'
+        ]
+      },
+      clientTest: {
+        options: {
+            jshintrc: '<%= yeoman.client %>/.jshintrc',
+        },
         src: [
           '<%= yeoman.client %>/{app,components}/**/*.spec.js',
           '<%= yeoman.client %>/{app,components}/**/*.mock.js'
         ]
+      },
+      all:{
+          tasks: ['jshint:server', 'jshint:client', 'jshint:serverTest', 'jshint:clientTest']
       }
     },
 
@@ -641,7 +658,9 @@ module.exports = function (grunt) {
       return grunt.task.run([
         'env:all',
         'env:test',
-        'mochaTest'
+        'mochaTest',
+        'jshint:server',
+        'jshint:serverTest'
       ]);
     }
 
@@ -653,7 +672,9 @@ module.exports = function (grunt) {
         'concurrent:test',
         'injector',
         'autoprefixer',
-        'karma'
+        'karma',
+        'jshint:client',
+        'jshint:clientTest'
       ]);
     }
 

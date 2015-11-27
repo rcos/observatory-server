@@ -15,8 +15,9 @@ GET | /api/projects/:id | Gets more detail on project
 POST | /api/projects | Adds new project with data sent (see project.model.js)
 PUT | /api/projects/:id | Updates project with data sent (see project.model.js)
 DELETE | /api/projects/:id | Deletes project
-
-
+GET | /api/defaults | Gets all default (starter) projects
+PUT | /api/:id/markdefault | Marks a project as default
+PUT | /api/:id/unmarkdefault | Unmarks a project as default
 
 ## Users
 Method | URL | Action

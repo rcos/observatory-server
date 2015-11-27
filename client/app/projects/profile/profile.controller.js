@@ -4,6 +4,7 @@
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
     $scope.userOnProject = false;
+    
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
             $scope.project = result.data;
@@ -62,7 +63,6 @@ angular.module('observatory3App')
             }
         }
     };
-    updateProject();
 
     var getAuthors = function() {
         var project = $scope.project;
@@ -70,30 +70,6 @@ angular.module('observatory3App')
         .success(function(authors){
             $scope.authors = authors;
         });
-    };
-
-    var initializeSlides = function(photos) {
-        var slides = [];
-        for (var i = 0; i < photos.length; i++){
-            slides.push({
-                active: false,
-                src: photos[i]
-            });
-            if (i === 0) {
-                slides[0].active = true;
-            }
-        }
-        $scope.slides = slides;
-    };
-
-    var setActiveSlide = function(photoName){
-        for (var i = 0; i < $scope.slides.length; i++){
-            if ($scope.slides[i].src === photoName){
-                $scope.slides[i].active = true;
-            } else {
-                $scope.slides[i].active = false;
-            }
-        }
     };
 
     var addSlide = function(photoName){
@@ -119,6 +95,7 @@ angular.module('observatory3App')
     $scope.edittingDesc = false;
     $scope.edittingName = false;
     $scope.isLoggedIn = Auth.isLoggedIn;
+    $scope.isAdmin = Auth.isAdmin;
 
     $scope.editDesc = function(){
         $scope.edittingDesc = !$scope.edittingDesc;
@@ -177,6 +154,24 @@ angular.module('observatory3App')
         }).error(function(){
             notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
+    };  
+
+    $scope.markDefault = function(){
+        $http.put('api/projects/'+$scope.project._id+'/markdefault').success(function(){
+            notify("Project marked as default");
+            updateProject();
+        }).error(function(){
+            notify("Could not mark project as default!");
+        });
+    };
+
+    $scope.unmarkDefault = function(){
+        $http.put('api/projects/'+$scope.project._id+'/unmarkdefault').success(function(){
+            notify("Project unmarked as default");
+            updateProject();
+        }).error(function(){
+            notify("Could not unmark project as default!");
+        });
     };
 
     $scope.checkUserProject = function() {
@@ -205,6 +200,29 @@ angular.module('observatory3App')
             });
         }
     };
+//tech bubble code
+	$scope.isMentor = Auth.isMentor;
+	$scope.addTechBubble = function(){
+        if($scope.insertTechContent){
+          $http.put('/api/projects/addTechBubble/' + $scope.project._id + '/' + $scope.insertTechContent).success(function(){
+              $scope.project.tech.push($scope.insertTechContent);
+              $scope.insertTechContent = '';
+          }).error(function(){
+              notify({message: "Could not add tech!", classes: ["alert-danger"]});
+          });
+        }
+      };
+   $scope.removeTech = function(tech){
+          $http.put('/api/projects/' + $scope.project._id + '/' + tech + '/removeTech').success(function(){
+				$scope.project.tech.splice($scope.project.tech.indexOf(tech),1);
+          }).error(function(){
+              notify({message: "Could not remove tech!", classes: ["alert-danger"]});
+          });
+      };
+
+//end tech bubble code
+
+
 })
 .directive('desc', function() {
     return {

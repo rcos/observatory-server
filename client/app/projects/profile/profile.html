@@ -9,14 +9,24 @@
             </p>
             <div class="btn-group description-buttons" ng-show="userOnProject">
                 <button type="button" class='btn btn-default btn-sm' ng-click='editName()'>Edit Project Name</button>
-                <button type="button" class='btn btn-default btn-sm' ng-click='saveName()'>Save Project Name</button> 
+                <button type="button" class='btn btn-default btn-sm' ng-click='saveName()'>Save Project Name</button>
             </div>
         </div>
         <div class="col-sm-9 text-right header-buttons">
             <div ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</div>
             <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
+            <div ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</div>
+            <div ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</div>
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
-            <a class="btn btn-info" href="{{project.repositoryUrl}}" title="">Repository</a>
+            <a class="btn btn-info" href="{{project.repositories[0]}}" title="" ng-show="project.repositories.length == 1">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
+            <div class="btn-group" ng-show="project.repositories.length > 1">
+                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Repositories <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{repo}}" ng-repeat="repo in project.repositories">{{repo}} <span class="glyphicon glyphicon-menu-right"></span></a></li>
+                </ul>
+            </div>
             <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
 
         </div>
@@ -38,11 +48,11 @@
             No images uploaded yet.
             </p>
 
-            <carousel>
-            <slide ng-repeat="url in project.photos" active="$first">
-            <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt=""></div>
-            </slide>
-            </carousel>
+            <uib-carousel>
+                <uib-slide ng-repeat="slide in slides" active="slide.active">
+                    <div style="background:url({{imgPrefix+slide.src}}) center center;" class="slide" alt=""></div>
+                </uib-slide>
+            </uib-carousel>
         </div>
 
         <div class="col-sm-4">
@@ -75,6 +85,17 @@
         </div>
         <desc></desc>
     </div>
+
+	 <div class="col-sm-7">
+		<div class='tech-boxes'>
+			<div ng-repeat="tech in project.tech track by $index">
+				{{tech}} <button  ng-show='isLoggedIn() && userOnProject' class='btn btn=default btn-xs' ng-click='removeTech(tech)'>x</button>
+			</div>
+			<input  ng-show='isLoggedIn() && userOnProject' ng-enter="addTechBubble()" ng-model="insertTechContent" size='4' type='text'/>
+			<button  ng-show='isLoggedIn() && userOnProject' ng-click="addTechBubble()" class="btn btn=defualt btn-xs">+</button>
+		</div>
+	</div>
+
 </div>
 </div>
 <div ng-include="'components/footer/footer.html'"></div>

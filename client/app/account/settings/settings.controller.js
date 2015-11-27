@@ -9,7 +9,7 @@ angular.module('observatory3App')
       $scope.submitted = true;
       if(form.$valid) {
         if (!$scope.token){
-          Auth.changePassword( $scope.user.oldPassword, $scope.user.newPassword )
+          Auth.changePassword( $scope.user.oldPassword, $scope.user.password )
           .then( function() {
             $scope.message = 'Password successfully changed.';
           })
@@ -19,7 +19,7 @@ angular.module('observatory3App')
             $scope.message = '';
           });
         }else{
-          Auth.changePasswordWithToken($scope.token, $scope.user.newPassword)
+          Auth.changePasswordWithToken($scope.token, $scope.user.password)
             .then( function() {
               $scope.message = 'Password changed successfully';
             })

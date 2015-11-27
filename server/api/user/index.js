@@ -9,6 +9,7 @@ var router = express.Router();
 
 router.get('/',  controller.list);
 router.get('/past', controller.past);
+router.get('/search', controller.search);
 router.get('/stats', auth.hasRole('admin'), controller.stats);
 router.get('/allstats', auth.hasRole('admin'), controller.allStats);
 router.get('/:id/commits', controller.commits);
@@ -26,6 +27,7 @@ router.post('/', controller.create);
 router.put('/:id/attend', auth.canEdit(), controller.attend);
 router.put('/:id/verifyAttendance', auth.hasRole('mentor'), controller.verifyAttendance);
 router.put('/:id/bio', auth.canEdit(), controller.changeBio);
+router.put('/:id/github', auth.canEdit(), controller.changeGithub);
 router.put('/:id/project', auth.isAuthenticated(), controller.addProject);
 router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);
 router.put("/:id/addTech", auth.canEdit(), controller.addTech);
