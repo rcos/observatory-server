@@ -2,25 +2,54 @@
 
 <div class="container">
 
-    <div id="header">
-    <h1> {{ past ? "Past" : "Current" }} RCOS Projects</h1>
-
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProject" ng-show="user">
-        Add a Project
-    </button>
-    <button type="button" class="btn btn-primary" ng-click="getCurrentProjects()" ng-show="past">
-        Show Current Projects
-    </button>
-    <button type="button" class="btn btn-primary" ng-click="getPastProjects()" ng-show="!past">
-        Show Past Projects
-    </button>
-    <search-bar>
-      Search Projects<input type="text" class="search-bar" ng-model="searchString" placeholder="Enter your search terms" />
-    </search-bar>
+    <div class="row">
+        <div class="col-sm-4">
+            <h3> {{ past ? "Past" : "Active" }} RCOS Projects</h3>
+        </div>
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-lg-12 col-sm-10 col-sm-offset-1">
+                    <div class="input-group top-group">
+                        <input type="text" class="form-control" placeholder="Search for project..." ng-model="searchString">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span> 
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-primary pull-right top-group" data-toggle="modal" data-target="#addProject" ng-show="user">
+                Add a Project
+            </button>
+            <button type="button" class="btn btn-primary pull-right top-group" ng-click="getCurrentProjects()" ng-show="past">
+                Show Current Projects
+            </button>
+            <button type="button" class="btn btn-primary pull-right top-group" ng-click="getPastProjects()" ng-show="!past">
+                Show Past Projects
+            </button>
+        </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
 
-
+            <div ng-repeat="project in projects | searchFor:searchString">
+                <div class="extra-content" >
+                    <h2 id="{{ project.githubUsername }}-{{ project.githubProjectName }}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a> </h2>
+                    <ul class="project-info">
+                        <li><a href="{{ project.websiteUrl }}">Website</a></li>
+                        <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
+                        <li><a href="{{ project.repositories[0] }}">Repository</a></li>
+                    </ul>
+                    <div class="clear"></div>
+                    <div id="description" btf-markdown="project.description"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <br/><br/>
 
     <div class="modal fade" id="addProject" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
@@ -37,36 +66,36 @@
                             <span class="input-group-addon">https://github.com/</span>
 
                             <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
-                            'has-error': addProjectForm.githubUsername.$invalid && submitted }">
+                                'has-error': addProjectForm.githubUsername.$invalid && submitted }">
                                 <input type="text" name="githubUsername" class="form-control" ng-model="projectToAdd.githubUsername" required/>
                             </div>
                             <span class="input-group-addon">/</span>
 
                             <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
-                            'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
+                                'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
                                 <input type="text" name="githubProjectName" id="githubProjectName" class="form-control" ng-model="projectToAdd.githubProjectName" required/>
                             </div>
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
-                        'has-error': addProjectForm.githubUsername.$invalid && submitted }">
+                            'has-error': addProjectForm.githubUsername.$invalid && submitted }">
                             <p class="help-block" ng-show="addProjectForm.githubUsername.$error.required && submitted">
                             The project owner's github username is required
                             </p>
                         </div>
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
-                        'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
+                            'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
                             <p class="help-block" ng-show="addProjectForm.githubProjectName.$error.required && submitted">
                             The project's github name is required
                             </p>
                         </div>
 
                         <div id="getInfo" align="right">
-                        <button type="button" class="btn btn-default" ng-click="getInfo()" >Auto-complete info via github</button>
+                            <button type="button" class="btn btn-default" ng-click="getInfo()" >Auto-complete info via github</button>
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.name.$valid && submitted,
-                        'has-error': addProjectForm.name.$invalid && submitted }">
+                            'has-error': addProjectForm.name.$invalid && submitted }">
                             <label>Name of the project</label>
 
                             <input type="text" name="name" class="form-control" ng-model="projectToAdd.name" required/>
@@ -76,7 +105,7 @@
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.websiteUrl.$valid && submitted,
-                        'has-error': addProjectForm.websiteUrl.$invalid && submitted }">
+                            'has-error': addProjectForm.websiteUrl.$invalid && submitted }">
                             <label>Your project's homepage</label>
 
                             <input type="url" name="websiteUrl" class="form-control" ng-model="projectToAdd.websiteUrl" required />
@@ -99,7 +128,7 @@
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.description.$valid && submitted,
-                        'has-error': addProjectForm.description.$invalid && submitted }">
+                            'has-error': addProjectForm.description.$invalid && submitted }">
                             <label>Describe your project</label>
 
                             <textarea name="description" class="form-control" ng-model="projectToAdd.description" required></textarea>
@@ -120,19 +149,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div ng-repeat="project in projects | searchFor:searchString">
-        <div class="extra-content" >
-            <h2 id="name"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a> </h2>
-            <ul class="project-info">
-                <li><a href="{{ project.websiteUrl }}">Website</a></li>
-                <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
-                <li><a href="{{ project.repositories[0] }}">Repository</a></li>
-            </ul>
-            <div class="clear"></div>
-            <div id="description" btf-markdown="project.description"></div>
         </div>
     </div>
 </div>
