@@ -1,32 +1,30 @@
-.currentSemester{
+.classcontrol{
+	.currentSemester{
 
-}
-
-.big-attendance{
-
-	position:absolute;
-	left:0px;
-	top:0px;
-	width:100%;
-	height:100%;
-	z-index: 1000;
-	background-color:#fff;
-	padding-top:150px;
-	min-height:1000px;
-	text-align:center;
-
-	.small-text{
-		font-size:64px;
-	}
-	.big-text{
-		font-size:240px;
 	}
 
-}
-.displayURP{
-	background: #808080;
-}
+	.big-attendance{
+		padding-top:60px;
+		text-align:center;
 
-.buttonLine{
-	margin-top:50px;
+		.small-text{
+			font-size:64px;
+	        font-size: 5vw;
+		}
+		.big-text{
+			// font-size:240px;
+	        font-size: 240px;
+	        font-size: 20vw;
+
+		}
+
+	}
+	.displayURP{
+		background: #808080;
+	}
+
+	.buttonLine{
+		margin-top:50px;
+	}
+
 }
