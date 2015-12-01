@@ -5,7 +5,7 @@ angular.module('observatory3App')
 .controller('ProjectsCtrl', function ($scope, $location, $http, Auth) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
-    $scope.loggedIn = false; 
+    $scope.loggedIn = false;
 
     Auth.isLoggedInAsync(function(loggedIn){
         if (loggedIn){
@@ -58,7 +58,7 @@ angular.module('observatory3App')
             // and results in the modal disappearing but the overlay staying if not used
             setTimeout(function() {
                 $http.post('/api/projects', $scope.projectToAdd);
-                
+
                 if ($scope.past){
                     $scope.getPastProjects();
                 }
@@ -75,4 +75,20 @@ angular.module('observatory3App')
     };
 
     $scope.getCurrentProjects(); // update the webpage when connecting the controller
+})
+
+.filter('searchFor',function(){
+  return function(arr,searchString){
+    if(!searchString){
+      return arr;
+    }
+    var result = [];
+    searchString = searchString.toLowerCase();
+    angular.forEach(arr,function(item){
+      if(item.name.toLowerCase().indexOf(searchString) !== -1){
+        result.push(item)
+      }
+    });
+    return result;
+  };
 });

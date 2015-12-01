@@ -51,11 +51,11 @@
             No images uploaded yet.
             </p>
 
-            <carousel>
-            <slide ng-repeat="url in project.photos" active="$first">
-            <div style="background:url({{imgPrefix+url}}) center center;" class="slide" alt=""></div>
-            </slide>
-            </carousel>
+            <uib-carousel>
+                <uib-slide ng-repeat="slide in slides" active="slide.active">
+                    <div style="background:url({{imgPrefix+slide.src}}) center center;" class="slide" alt=""></div>
+                </uib-slide>
+            </uib-carousel>
         </div>
 
         <div class="col-sm-4">
@@ -90,6 +90,17 @@
         </div>
         <desc></desc>
     </div>
+
+	 <div class="col-sm-7">
+		<div class='tech-boxes'>
+			<div ng-repeat="tech in project.tech track by $index">
+				{{tech}} <button  ng-show='isLoggedIn() && userOnProject' class='btn btn=default btn-xs' ng-click='removeTech(tech)'>x</button>
+			</div>
+			<input  ng-show='isLoggedIn() && userOnProject' ng-enter="addTechBubble()" ng-model="insertTechContent" size='4' type='text'/>
+			<button  ng-show='isLoggedIn() && userOnProject' ng-click="addTechBubble()" class="btn btn=defualt btn-xs">+</button>
+		</div>
+	</div>
+
 </div>
 </div>
 <div ng-include="'components/footer/footer.html'"></div>

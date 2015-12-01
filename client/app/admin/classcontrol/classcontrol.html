@@ -1,15 +1,16 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container">
+<div class="container classcontrol">
     <div class="row">
         <div class="col-sm-12">
             <div class='currentSemester'>
-                <p>Current semester: {{ currentClass.semester }}</p>
-                <p ng-show='attendanceCode' >The attendance code is: {{ attendanceCode }}</p>
-                <button ng-show='!attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
-                <button ng-show='!attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
-                <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Attendance Code</button>
-
+                <div class='info' ng-hide='showAttendanceCode'>
+                    <p>Current semester: {{ currentClass.semester }}</p>
+                    <p ng-show='attendanceCode' >The attendance code is: {{ attendanceCode }}</p>
+                    <button ng-show='!attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
+                    <button ng-show='!attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
+                    <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Attendance Code</button>
+                </div>
                 <div class='big-attendance' ng-show='showAttendanceCode' ng-click='showAttendanceCode=false;'>
                     <div class="row">
                         <div class="col-sm-12">
@@ -25,6 +26,7 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-12 buttonLine">
             <button ng-show= "!displayURP && !showAttendanceCode" ng-click='URPDisplay()' class='btn btn-primary displayURP'>Show URP Form</button>
@@ -55,4 +57,5 @@
         </div>
     </div>
 </div>
+
 <div ng-include="'components/footer/footer.html'"></div>

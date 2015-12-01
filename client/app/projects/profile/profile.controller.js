@@ -72,30 +72,6 @@ angular.module('observatory3App')
         });
     };
 
-    var initializeSlides = function(photos) {
-        var slides = [];
-        for (var i = 0; i < photos.length; i++){
-            slides.push({
-                active: false,
-                src: photos[i]
-            });
-            if (i === 0) {
-                slides[0].active = true;
-            }
-        }
-        $scope.slides = slides;
-    };
-
-    var setActiveSlide = function(photoName){
-        for (var i = 0; i < $scope.slides.length; i++){
-            if ($scope.slides[i].src === photoName){
-                $scope.slides[i].active = true;
-            } else {
-                $scope.slides[i].active = false;
-            }
-        }
-    };
-
     var addSlide = function(photoName){
         $scope.slides.push({
             active: false,
@@ -242,6 +218,29 @@ angular.module('observatory3App')
             });
         }
     };
+//tech bubble code
+	$scope.isMentor = Auth.isMentor;
+	$scope.addTechBubble = function(){
+        if($scope.insertTechContent){
+          $http.put('/api/projects/addTechBubble/' + $scope.project._id + '/' + $scope.insertTechContent).success(function(){
+              $scope.project.tech.push($scope.insertTechContent);
+              $scope.insertTechContent = '';
+          }).error(function(){
+              notify({message: "Could not add tech!", classes: ["alert-danger"]});
+          });
+        }
+      };
+   $scope.removeTech = function(tech){
+          $http.put('/api/projects/' + $scope.project._id + '/' + tech + '/removeTech').success(function(){
+				$scope.project.tech.splice($scope.project.tech.indexOf(tech),1);
+          }).error(function(){
+              notify({message: "Could not remove tech!", classes: ["alert-danger"]});
+          });
+      };
+
+//end tech bubble code
+
+
 })
 .directive('desc', function() {
     return {
