@@ -51,9 +51,23 @@ angular.module('observatory3App')
         });
     };
     $scope.showAttendance = function(){
-      $scope.showAttendanceCode = true;
+      if ($scope.showAttendanceCode){
+        $scope.showAttendanceCode = false;
+        $scope.showAttendanceCodeText = "Show Attendance";
+      }
+      else {
+        $scope.showAttendanceCode = true;
+        $scope.showAttendanceCodeText = "Hide Attendance";
+      }
     };
+    $scope.showAttendanceFull = function(){
+      $scope.showAttendanceCodeFull = true;
+      $scope.showAttendanceCode=false;
+      $scope.showAttendanceCodeText="Show Attendance";
+    }
     $scope.showAttendanceCode = false;
+    $scope.showAttendanceCodeFull = false;
+    $scope.showAttendanceCodeText="Show Attendance";
     $scope.isPresent = function(){ return false; };
     $scope.isMentor = Auth.isMentor;
   });
