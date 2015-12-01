@@ -18,8 +18,8 @@ router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.update);
 router.put('/:id/markdefault', auth.hasRole('admin'), controller.markDefault);
 router.put('/:id/unmarkdefault', auth.hasRole('admin'), controller.unmarkDefault);
-router.put('/:id/markPast', auth.canEdit(), controller.markPast);
-router.put('/:id/markActive', auth.canEdit(), controller.markActive);
+router.put('/:id/markPast', auth.isAuthenticated(), controller.markPast);
+router.put('/:id/markActive', auth.isAuthenticated(), controller.markActive);
 router.delete('/:id', auth.hasRole('mentor'), controller.destroy);
 
 router.put('/addTechBubble/:id/:tech', auth.isAuthenticated(), controller.addTechBubble);
