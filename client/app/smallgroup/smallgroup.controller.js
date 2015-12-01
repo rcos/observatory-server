@@ -50,10 +50,36 @@ angular.module('observatory3App')
             })
         });
     };
+
+    $scope.edittingSmallGroupName = false;
+    $scope.editSmallGroupName = function(){
+      $scope.edittingSmallGroupName = !$scope.edittingSmallGroupName;
+    };
+
+    $scope.saveSmallGroupName = function(){
+      $scope.edittingSmallGroupName = false;
+      $http.put("/api/smallgroup/" + $scope.user.smallgroup + "/name", {
+          'smallGroupName': $scope.smallgroup.name
+      }).success(function(){
+          notify('Small Group Name updated!');
+      }).error(function(){
+          notify('Could not update small group name!', {classes: ["alert-danger"] });
+      });
+    };
+
+
     $scope.showAttendance = function(){
       $scope.showAttendanceCode = true;
     };
     $scope.showAttendanceCode = false;
     $scope.isPresent = function(){ return false; };
     $scope.isMentor = Auth.isMentor;
+
+
+  })
+  .directive('hname', function() {
+      return {
+          restrict:'E',
+          template: '<input type=\'text\' maxlength="50" ng-show=\'edittingSmallGroupName\' ng-model=\'smallgroup.name\'><br>'
+      };
   });

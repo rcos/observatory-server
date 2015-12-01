@@ -12,6 +12,7 @@ router.get('/', controller.index);
 
 router.post('/', auth.hasRole('mentor'), controller.create);
 router.put('/:id', auth.hasRole('mentor'), controller.modify);
+router.put('/:id/name',controller.changeName);
 router.get('/:id/members', controller.getSmallGroupMembers);
 router.put('/:id/member', controller.addMember);
 router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
