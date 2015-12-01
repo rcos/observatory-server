@@ -9,3 +9,4 @@ dist
 server/npm-debug.log
 server/static/uploads/
 /uploads
+.changed_cache

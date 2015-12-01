@@ -35,6 +35,11 @@ module.exports = function (grunt) {
       client: require('./bower.json').appPath || 'client',
       dist: 'dist'
     },
+    changed: {
+      options: {
+        cache: '.changed_cache'
+      }
+    },
     express: {
       options: {
         port: process.env.PORT || 9000
@@ -71,14 +76,15 @@ module.exports = function (grunt) {
       }
     },
     auto_install: {
-      local: {},
-      subdir: {
-        options: {
-          bower: false
-        }
-      },
-      src: ['package.json'],
-
+      all:{
+        local: {},
+        subdir: {
+          options: {
+            bower: false
+          }
+        },
+        src: ['package.json'],
+      }
     },
     watch: {
       installBower: {
