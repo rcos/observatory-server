@@ -29,7 +29,7 @@
             <div ng-show='userInProject()'>
                 <h2 ng-hide='edittingPost(post._id)' id="title" class="col-xs-6" btf-markdown="post.title"></h2>
                 <textarea ng-show='edittingPost(post._id)' id="titleEdit" class="col-xs-6" ng-model='post.title'></textarea>
-                <div class="col-xs-6 text-right">
+                <div ng-show="userOwnsPost(post)"class="col-xs-6 text-right">
                     <div class="btn-group">
                         <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post._id)'>Edit</button>
                         <button type="button" class='btn btn-default btn-sm' ng-click='savePost(post._id)'>Save</button>
