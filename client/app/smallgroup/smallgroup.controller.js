@@ -58,6 +58,7 @@ angular.module('observatory3App')
             })
         });
     };
+
     $scope.showAttendance = function(){
       if ($scope.showAttendanceCode){
         $scope.showAttendanceCodeFull=true;
@@ -73,4 +74,6 @@ angular.module('observatory3App')
     $scope.showAttendanceCodeText="Generate Attendance";
     $scope.isPresent = function(){ return false; };
     $scope.isMentor = Auth.isMentor;
+
+
   });
