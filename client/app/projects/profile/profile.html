@@ -5,7 +5,7 @@
         <div class="col-sm-3">
             <h1 ng-hide="edittingName">{{project.name}}</h1>
             <p>
-            <pname></pname>
+                <pname></pname>
             </p>
             <div class="btn-group description-buttons" ng-show="userOnProject">
                 <button type="button" class='btn btn-default btn-sm' ng-click='editName()'>Edit Project Name</button>
@@ -17,9 +17,9 @@
             <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
             <div ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</div>
             <div ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</div>
-             <div ng-show='isLoggedIn() && userOnProject && project.active' class="btn btn-primary" ng-click='markPast()'>Mark Past Project </div> 
-           <div ng-show='isLoggedIn() && userOnProject && !project.active' class="btn btn-primary" ng-click='markActive()'>Mark Active Project </div>
-            
+            <div ng-show='isLoggedIn() && userOnProject && project.active' class="btn btn-primary" ng-click='markPast()'>Mark Past Project </div>
+            <div ng-show='isLoggedIn() && userOnProject && !project.active' class="btn btn-primary" ng-click='markActive()'>Mark Active Project </div>
+
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
             <a class="btn btn-info" href="{{project.repositories[0]}}" title="" ng-show="project.repositories.length == 1">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
             <div class="btn-group" ng-show="project.repositories.length > 1">
@@ -40,7 +40,7 @@
             <div class="fileUpload btn btn-sm btn-default" ng-show="userOnProject">
                 <span>Upload Images</span>
                 <div id="upload">
-                    <input type="file"  ngf-select="upload($file)" />
+                    <input type="file" ngf-select="upload($file)" />
                 </div>
             </div>
             <div class="remove-photo btn btn-sm btn-default text-right" ng-show="userOnProject && project && slides.length" ng-click="deletePhoto()">
@@ -48,7 +48,7 @@
             </div>
 
             <p ng-show="project.photos.length === 0">
-            No images uploaded yet.
+                No images uploaded yet.
             </p>
 
             <uib-carousel>
@@ -75,32 +75,35 @@
                     </div>
                 </div>
             </div>
-
-            
         </div>
     </div>
-
-    <div class="col-sm-7 description">
-        <div ng-show='userOnProject'>
-            <div class="btn-group description-buttons">
-                <button type="button" class='btn btn-default btn-sm' ng-click='editDesc()'>Edit</button>
-                <button type="button" class='btn btn-default btn-sm' ng-click='saveDesc()'>Save</button>
-
+    <div class="row">
+        <br>
+    </div>
+    <div class="row">
+        <div class="col-sm-7 description">
+            <div ng-show='userOnProject'>
+                <div class="btn-group description-buttons">
+                    <button type="button" class='btn btn-default btn-sm' ng-click='editDesc()'>Edit</button>
+                    <button type="button" class='btn btn-default btn-sm' ng-click='saveDesc()'>Save</button>
+                </div>
+            </div>
+            <desc></desc>
+        </div>
+        <div class="col-sm-4">
+            <div class="tech-tags">
+                <h4>Tech Tags</h4>
+                <div class='tech-boxes'>
+                    <div ng-repeat="tech in project.tech track by $index">
+                        {{tech}}
+                        <button ng-show='isLoggedIn() && userOnProject' class='btn btn=default btn-xs' ng-click='removeTech(tech)'>x</button>
+                    </div>
+                    <input ng-show='isLoggedIn() && userOnProject' ng-enter="addTechBubble()" ng-model="insertTechContent" size='4' type='text' />
+                    <button ng-show='isLoggedIn() && userOnProject' ng-click="addTechBubble()" class="btn btn-default btn-xs">+</button>
+                </div>
             </div>
         </div>
-        <desc></desc>
     </div>
-
-	 <div class="col-sm-7">
-		<div class='tech-boxes'>
-			<div ng-repeat="tech in project.tech track by $index">
-				{{tech}} <button  ng-show='isLoggedIn() && userOnProject' class='btn btn=default btn-xs' ng-click='removeTech(tech)'>x</button>
-			</div>
-			<input  ng-show='isLoggedIn() && userOnProject' ng-enter="addTechBubble()" ng-model="insertTechContent" size='4' type='text'/>
-			<button  ng-show='isLoggedIn() && userOnProject' ng-click="addTechBubble()" class="btn btn=defualt btn-xs">+</button>
-		</div>
-	</div>
-
 </div>
 </div>
 <div ng-include="'components/footer/footer.html'"></div>
