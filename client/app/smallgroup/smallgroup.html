@@ -11,8 +11,8 @@
 		<hname></hname>
 		</p>
 		<div class="btn-group description-buttons">
-				<button type="button" class='btn btn-default btn-sm' ng-click='editSmallGroupName()'>Edit Small Group Name</button>
-				<button type="button" class='btn btn-default btn-sm' ng-click='saveSmallGroupName()'>Save Small Group Name</button>
+				<button type="button" class='btn btn-default btn-sm' ng-show = 'isMentor()' ng-click='editSmallGroupName()'>Edit Small Group Name</button>
+				<button type="button" class='btn btn-default btn-sm' ng-show = 'isMentor()' ng-click='saveSmallGroupName()'>Save Small Group Name</button>
 		</div>
 	<div class=info ng-hide='showAttendanceCode'>
 		<button class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendance()'> Show Attendance </button>
