@@ -9,7 +9,6 @@
 	<h3>Small Group : {{ smallgroup.name }}</h3>
 	<div class=info ng-hide='showAttendanceCodeFull'>
 		<button class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendance()'> {{ showAttendanceCodeText }} </button>
-		<button class='btn btn-primary' ng-show='isMentor() && showAttendanceCode' ng-click='showAttendanceFull()' > Show Attendance FullScreen </button>
 		<div ng-show='showAttendanceCode' ng-click ='showAttendanceCode=false;'>
 						The Attendance Code is {{ smallgroup.dayCode}}
 		</div>
