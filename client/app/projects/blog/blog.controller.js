@@ -19,6 +19,11 @@ angular.module('observatory3App')
         return $scope.isAuthor;
     };
 
+    $scope.userOwnsPost = function(post) {
+        var userId = $scope.user._id;
+        return ($scope.isAdmin() || $scope.getCurrentUser().role.toLowerCase() === 'mentor' || userId === post.author._id);
+    };
+
     $scope.editPost = function(postId) {
         if ($scope.edittingPostId === postId){
             $scope.edittingPostId = -1;
