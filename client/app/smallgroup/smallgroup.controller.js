@@ -52,19 +52,17 @@ angular.module('observatory3App')
     };
     $scope.showAttendance = function(){
       if ($scope.showAttendanceCode){
-        $scope.showAttendanceCode = false;
         $scope.showAttendanceCodeFull=true;
-        $scope.showAttendanceCodeText = "Show Attendance";
       }
       else {
         $scope.showAttendanceCode = true;
-        $scope.showAttendanceCodeText = "Show FullScreen";
+        $scope.showAttendanceCodeText = "Show Attendance";
       }
     };
-  
+
     $scope.showAttendanceCode = false;
     $scope.showAttendanceCodeFull = false;
-    $scope.showAttendanceCodeText="Show Attendance";
+    $scope.showAttendanceCodeText="Generate Attendance";
     $scope.isPresent = function(){ return false; };
     $scope.isMentor = Auth.isMentor;
   });
