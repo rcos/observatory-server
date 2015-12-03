@@ -2,20 +2,30 @@
 
 angular.module('observatory3App')
   .controller('SmallGroupCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify) {
+    $scope.showAttendanceCodeFull = false;
+    $scope.isMentor = Auth.isMentor;
+
     Auth.getCurrentUser(function(user){
         $scope.user = user;
-        loadSmallGroup();
+        updateSmallGroup();
     });
 
-    function loadSmallGroup(callback){
+    function updateSmallGroup(callback){
         callback = callback || function(){};
         $http.get('/api/smallgroup/' + $scope.user.smallgroup).success(function(smallgroup){
             $scope.smallgroup = smallgroup;
-            callback(smallgroup);
+            if ('daycode' in smallgroup && smallgroup.daycode){
+                    $scope.showAttendanceCode = true;
+            }
+            else{
+                    $scope.showAttendanceCode = false;
+            }
+            $http.get('/api/smallgroup/' + $scope.user.smallgroup + '/members').success(function(members){
+                $scope.members = members;
+                callback(smallgroup);
+            });
         });
-        $http.get('/api/smallgroup/' + $scope.user.smallgroup + '/members').success(function(members){
-            $scope.members = members;
-        });
+
     }
 
     $scope.createSmallGroup = function(){
@@ -34,7 +44,7 @@ angular.module('observatory3App')
             if (!user) return notify({message: 'User not found!', classes: ["alert-danger"]});
 
             // Reload small group (in case other mentors have modified it since page load)
-            loadSmallGroup(function(smallgroup){
+            updateSmallGroup(function(smallgroup){
                 // Check if user is already in small group
                 if (smallgroup.students.indexOf(user._id) !== -1){
                     // User is already in group
@@ -44,25 +54,20 @@ angular.module('observatory3App')
                         "memberId": user._id
                     }).success(function(){
                         notify("Successfully added " + user.name);
-                        loadSmallGroup();
+                        updateSmallGroup();
                     });
                 }
             })
         });
     };
-    $scope.showAttendance = function(){
-      if ($scope.showAttendanceCode){
+    $scope.generateAttendanceCode = function(){
+      if ($scope.showAttendanceCode){ //TODO call api to generate code
         $scope.showAttendanceCodeFull=true;
       }
       else {
         $scope.showAttendanceCode = true;
-        $scope.showAttendanceCodeText = "Show Attendance";
       }
     };
 
-    $scope.showAttendanceCode = false;
-    $scope.showAttendanceCodeFull = false;
-    $scope.showAttendanceCodeText="Generate Attendance";
     $scope.isPresent = function(){ return false; };
-    $scope.isMentor = Auth.isMentor;
   });

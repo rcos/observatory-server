@@ -9,7 +9,7 @@
                     <p ng-show='attendanceCode' >The attendance code is: {{ attendanceCode }}</p>
                     <button ng-show='!attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
                     <button ng-show='!attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
-                    <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Attendance Code</button>
+                    <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Code Full Screen</button>
                 </div>
                 <div class='big-attendance' ng-show='showAttendanceCode' ng-click='showAttendanceCode=false;'>
                     <div class="row">

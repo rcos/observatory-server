@@ -63,7 +63,7 @@ exports.getSmallGroup = function(req, res){
         }else{
             // Mentors should get a day code
             // Generate a day code if one does not already exist
-            if (!smallgroup.dayCode){
+            if (!smallgroup.dayCode){ //TODO Fix to not generate every time and use the virtual for setting
                 var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
                 var today = new Date();
                 today.setHours(0,0,0,0);
