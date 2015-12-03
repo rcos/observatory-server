@@ -63,7 +63,6 @@ exports.create = function(req, res) {
 
 // Updates an existing post in the DB.
 exports.update = function(req, res) {
-
   if(req.body._id) { delete req.body._id; }
   Post.findById(req.params.id, function (err, post) {
     if (err) { return handleError(res, err); }
@@ -74,7 +73,7 @@ exports.update = function(req, res) {
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
 
-      if (post.author === userId || user.role === 'mentor' || user.role === 'admin'){
+      if (userId.equals(post.author) || user.role === 'mentor' || user.role === 'admin'){
         var updated = _.merge(post, req.body);
         updated.save(function (err) {
           if (err) { return handleError(res, err); }
@@ -89,7 +88,6 @@ exports.update = function(req, res) {
 
 // Deletes a post from the DB.
 exports.destroy = function(req, res) {
-
   Post.findById(req.params.id, function (err, post) {
     if(err) { return handleError(res, err); }
     if(!post) { return res.send(404); }
@@ -98,8 +96,7 @@ exports.destroy = function(req, res) {
     var userId = req.user._id;
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
-
-      if (post.author === userId || user.role === 'mentor' || user.role === 'admin'){
+      if (userId.equals(post.author) || user.role === 'mentor' || user.role === 'admin'){
         post.remove(function(err) {
           if(err) { return handleError(res, err); }
           return res.send(204);

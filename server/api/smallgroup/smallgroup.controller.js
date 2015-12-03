@@ -25,7 +25,7 @@ exports.create = function(req, res){
             "name": "New Small Group",
             "semester": currentClassYear.semester,
             "enabled": true,
-            "students": [user._id],
+            "students":[user._id],
             "dayCodes": []
         });
         smallgroup.save();
@@ -118,18 +118,17 @@ exports.getSmallGroupMembers = function(req, res){
 exports.addMember = function(req, res){
     var memberId = req.body.memberId;
     var smallGroupId = req.params.id;
-    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
-        $addToSet: { students : memberId }
-    }, function(err, smallgroup){
-        if (err) return handleError(res, err);
-        User.findById(memberId, function(err, user){
-            if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
-            user.smallgroup = smallGroupId
-            user.save();
-            res.send(200);
-        });
-    });
-
+	   SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+	      $addToSet: { students : memberId }
+	    }, function(err, smallgroup){
+		     if (err) return handleError(res, err);
+		     User.findById(memberId, function(err, user){
+		         if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
+		         user.smallgroup = smallGroupId
+		         user.save();
+		         res.send(200);
+		     });
+		 });
 };
 
 exports.changeName = function(req,res){

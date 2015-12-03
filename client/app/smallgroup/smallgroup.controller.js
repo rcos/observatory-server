@@ -14,10 +14,18 @@ angular.module('observatory3App')
             callback(smallgroup);
         });
         $http.get('/api/smallgroup/' + $scope.user.smallgroup + '/members').success(function(members){
-            $scope.members = members;
+			$scope.leaders = [];
+			$scope.members = [];
+      	for(var person = 0; person < members.length; person++)
+			{
+				if (members[person].role === 'admin' || members[person].role === 'mentor')
+					$scope.leaders.push(members[person]);
+				else
+					$scope.members.push(members[person]);
+			}      
         });
-    }
-
+	}	  
+		
     $scope.createSmallGroup = function(){
         $http.post("/api/smallgroup/").success(function(){
             window.location.reload();
