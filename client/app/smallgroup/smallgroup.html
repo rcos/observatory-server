@@ -7,46 +7,31 @@
 
 <div ng-show='smallgroup' class="container smallgroup">
 	<h3>Small Group : {{ smallgroup.name }}</h3>
-	<div class=info ng-hide='showAttendanceCode'>
-		<button class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendance()'> Show Attendance </button>
-   </div>
-	<div ng-show='isPresent()'>
-		Your attendance has been taken!
-	</div>
-	<div ng-show='isMentor()' class="input-group dayCodeForm">
-		<input type="text" ng-model='input_user' class="form-control" placeholder="User name">
-	    <span class="input-group-btn">
-	      <button class="btn btn-primary" ng-click='addUser(input_user)' type="button">Add User</button>
-	    </span>
-	</div>
-	<h3> Group Leaders </h3>
-	<div class='students'>
-		<div ng-repeat='student in leaders' class='student' ng-class='{present: student.presence != "absent"}'>
-			<div class='row'> 
-				<div class='col-xs-4'>
-					<img ng-src='{{student.avatar}}&s=72px'/>
-				</div>
-				<div class='col-xs-8'>
-					<div class='name'>
-						{{ student.name }} 
-					</div>
-					<div class='projects'>
-						<span ng-repeat='project in student.projects'> {{ project.name }}, </span>
-					</div>
-				</div>
-			</div>
+	<div class=info ng-hide='showAttendanceCodeFull'>
+		<p ng-show='showAttendanceCode'>
+						The Attendance Code is {{ smallgroup.dayCode}}
+		</p>
+		<button class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendance()'> {{ showAttendanceCodeText }} </button>
+		<div ng-show='isPresent()'>
+			Your attendance has been taken!
 		</div>
-	</div>
-	<h3> Group Members </h3>
-	<div class='students'>
-		<div ng-repeat='student in members' class='student' ng-class='{present: student.presence != "absent"}'>
-			<div class='row'>
-				<div class='col-xs-4'>
-					<img ng-src='{{student.avatar}}&s=72px'/>
-				</div>
-				<div class='col-xs-8'>
-					<div class='name'>
-						{{ student.name }}
+		<div ng-show='isMentor()' class="input-group dayCodeForm">
+			<input type="text" ng-model='input_user' class="form-control" placeholder="User name">
+		    <span class="input-group-btn">
+		      <button class="btn btn-primary" ng-click='addUser(input_user)' type="button">Add User</button>
+		    </span>
+		</div>
+		<h3> Group Leaders </h3>
+		<div class='students'>
+			<div ng-repeat='student in leaders' class='student' ng-class='{present: student.presence != "absent"}'>
+				<div class='row'>
+					<div class='col-xs-4'>
+						<img ng-src='{{student.avatar}}&s=72px'/>
+					</div>
+					<div class='col-xs-8'>
+						<div class='name'>
+							{{ student.name }}
+						</div>
 						<div class='projects'>
 							<span ng-repeat='project in student.projects'> {{ project.name }}, </span>
 						</div>
@@ -54,8 +39,27 @@
 				</div>
 			</div>
 		</div>
+		<h3> Group Members </h3>
+		<div class='students'>
+			<div ng-repeat='student in members' class='student' ng-class='{present: student.presence != "absent"}'>
+				<div class='row'>
+					<div class='col-xs-4'>
+						<img ng-src='{{student.avatar}}&s=72px'/>
+					</div>
+					<div class='col-xs-8'>
+						<div class='name'>
+							{{ student.name }}
+							<div class='projects'>
+								<span ng-repeat='project in student.projects'> {{ project.name }}, </span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<div class='big-attendance' ng-show='showAttendanceCode' ng-click='showAttendanceCode=false;'>
+	
+	<div class='big-attendance' ng-show='showAttendanceCodeFull' ng-click='showAttendanceCodeFull=false;'>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class='small-text'>
@@ -67,6 +71,5 @@
 			</div>
 		</div>
 	</div>
-</div>
 </div>
 <div ng-include="'components/footer/footer.html'"></div>
