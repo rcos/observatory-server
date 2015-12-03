@@ -196,6 +196,47 @@ function handleError(res, err) {
   return res.send(500, err);
 }
 
+exports.markPast = function(req,res){
+
+  var userId = req.user._id;
+  Project.findById(req.params.id,function(err,project){
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    User.findById(userId, function(err, user) {
+      if (err) { return handleError(res, err); }
+
+      if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
+            project.update({ active: false }, function(err) {
+              if(err) { return handleError(res, err); }
+              return res.send(200);
+            });      
+      } else {
+        return handleError(res, err);
+      }
+    }); 
+  }); 
+};
+
+exports.markActive = function(req,res){
+  var userId = req.user._id;
+  Project.findById(req.params.id,function(err,project){
+    if(err) { return handleError(res, err); }
+    if(!project) { return res.send(404); }
+    User.findById(userId, function(err, user) {
+      if (err) { return handleError(res, err); }
+
+      if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
+            project.update({ active: true }, function(err) {
+              if(err) { return handleError(res, err); }
+              return res.send(200);
+            });      
+      } else {
+        return handleError(res, err);
+      }
+    }); 
+  });
+};
+
 exports.markDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
