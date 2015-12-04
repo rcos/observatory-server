@@ -84,8 +84,6 @@ function getFullMember(memberId, callback){
     User.findById(memberId, function(err, member){
         if (err) return callback("Could not find user", null);
         member.getFullProfile(function(fullProfile){
-            // Add the user's attendance
-            fullProfile.presence = member.presence;
             callback(null, fullProfile);
         });
     });
@@ -99,16 +97,20 @@ exports.getSmallGroupMembers = function(req, res){
         var loadedMembers = 0;
 
         // Load each group member's full profile
+
         smallgroup.students.forEach(function(studentId){
+
             getFullMember(studentId, function(err, member){
                 loadedMembers ++;
                 if (member){
+                    member.presence = member.presence;
                     members.push(member);
                 }
 
                 // Check if we're done loading members
                 if (loadedMembers == smallgroup.students.length){
-                    res.json(200, members);
+
+                    return res.json(200, members);
                 }
             })
         });
