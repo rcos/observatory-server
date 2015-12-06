@@ -86,7 +86,15 @@ angular.module('observatory3App')
     searchString = searchString.toLowerCase();
     angular.forEach(arr,function(item){
       if(item.name.toLowerCase().indexOf(searchString) !== -1){
-        result.push(item)
+        result.push(item);
+      }
+      else{
+        for(var i=0; i<item.tech.length;i++){
+          if(item.tech[i].toLowerCase().indexOf(searchString) !== -1){
+            result.push(item);
+            break;
+          }
+        }
       }
     });
     return result;
