@@ -14,12 +14,11 @@ angular.module('observatory3App')
         callback = callback || function(){};
         $http.get('/api/smallgroup/' + $scope.user.smallgroup).success(function(smallgroup){
             $scope.smallgroup = smallgroup;
-            console.log($scope.smallgroup);
             if (!smallgroup){
                 $scope.smallgroup = false;
                 return false;
             }
-            if ('daycode' in smallgroup && smallgroup.daycode){
+            if ('dayCode' in smallgroup && smallgroup.dayCode){
                     $scope.showAttendanceCode = true;
             }
             else{
@@ -44,7 +43,6 @@ angular.module('observatory3App')
                             $scope.members.push(members[person]);
                         }
                 }
-                console.log(members);
                 callback(smallgroup);
             });
         });
@@ -90,15 +88,17 @@ angular.module('observatory3App')
         $scope.showAttendanceCodeFull=true;
       }
       else {
-        $scope.showAttendanceCode = true;
+        $http.post('/api/smallgroup/'+$scope.smallgroup._id+'/daycode')
+        .success(function(code){
+            $scope.smallgroup.dayCode = code;
+            $scope.showAttendanceCode = true;
+        });
       }
     };
 
     $scope.isPresent = function(){ return false; };
 
     $scope.removeUser = function(student){
-        console.log('remove', student);
-        console.log('/api/smallgroup/'+$scope.smallgroup._id+'/member/'+student._id);
         $http.delete('/api/smallgroup/'+$scope.smallgroup._id+'/member/'+student._id).success(function(){
             notify('Successfully removed ' + student.name);
             if (student._id === $scope.user._id){

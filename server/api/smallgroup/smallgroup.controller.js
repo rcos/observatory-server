@@ -37,8 +37,8 @@ exports.create = function(req, res){
 
 exports.modify = function(req, res){
     var id = req.params.id;
-    SmallGroup.update({"_id": id}, req.body.smallgroup, function(err){
-        if (err) return handleError(res, err);
+    SmallGroup.update({'_id': id}, req.body.smallgroup, function(err){
+        if (err) {return handleError(res, err);}
         res.send(200);
     });
 };
@@ -56,6 +56,7 @@ exports.getSmallGroup = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
         if (err) return handleError(res, err);
+        if (!smallgroup) return handleError(res, err);
         var responseObject = smallgroup.toObject();
         // If user is not a mentor or not authenticated, don't give dayCode
         if (!req.user || !req.user.isMentor){
@@ -63,18 +64,9 @@ exports.getSmallGroup = function(req, res){
         }else{
             // Mentors should get a day code
             // Generate a day code if one does not already exist
-            if (!smallgroup.dayCode){ //TODO Fix to not generate every time and use the virtual for setting
-                var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
-                var today = new Date();
-                today.setHours(0,0,0,0);
-                smallgroup.dayCodes.push({
-                    date: today,
-                    code: code
-                });
-                smallgroup.save();
+            if (smallgroup.dayCode){
+                responseObject.dayCode = smallgroup.dayCode;
             }
-            // This has to be called because "dayCode" is a virtual
-            responseObject.dayCode = smallgroup.dayCode;
         }
         res.json(200, responseObject);
     });
@@ -85,24 +77,12 @@ exports.getSmallGroup = function(req, res){
 exports.daycode = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
-        if (err) return handleError(res, err);
+        if (err) {return handleError(res, err);}
         var responseObject = smallgroup.toObject();
-        // If user is not a mentor or not authenticated, don't give dayCode
-        if (!req.user || !req.user.isMentor){
-            responseObject.dayCodes = null;
-        }else{
-            // Mentors should get a day code
-            // Generate a day code if one does not already exist
-            if (!smallgroup.dayCode){ //TODO Fix to not generate every time and use the virtual for setting
-                var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
-                var today = new Date();
-                today.setHours(0,0,0,0);
-                smallgroup.dayCodes.push({
-                    date: today,
-                    code: code
-                });
-                smallgroup.save();
-            }
+        // Generate a day code if one does not already exist
+        if (!smallgroup.dayCode){
+            var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
+            smallgroup.dayCode = code;
         }
         res.json(200, smallgroup.dayCode);
     });
