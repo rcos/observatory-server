@@ -25,9 +25,26 @@
         }
         .text{
             margin:0;
-            padding: 8px 8px 8px 84px;
+            padding: 4px 8px 4px 84px;
             width:100%;
+            .icon{
+                margin:0;
+                padding: 0;
+                width:10%;
+                float: left;
+            }
+            .details{
+                margin:0;
+                padding: 0;
+                width:90%;
+                height:72px;
+                float: left;
+                overflow:hidden;
+
+            }
+
         }
+
       }
 
       .student:hover{

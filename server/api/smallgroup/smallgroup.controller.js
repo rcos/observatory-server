@@ -80,11 +80,42 @@ exports.getSmallGroup = function(req, res){
     });
 };
 
-function getFullMember(memberId, callback){
+// Generate a daycode or return the current day code for the
+// current class year
+exports.daycode = function(req, res){
+    var id = req.params.id;
+    SmallGroup.findById(id, function(err, smallgroup){
+        if (err) return handleError(res, err);
+        var responseObject = smallgroup.toObject();
+        // If user is not a mentor or not authenticated, don't give dayCode
+        if (!req.user || !req.user.isMentor){
+            responseObject.dayCodes = null;
+        }else{
+            // Mentors should get a day code
+            // Generate a day code if one does not already exist
+            if (!smallgroup.dayCode){ //TODO Fix to not generate every time and use the virtual for setting
+                var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
+                var today = new Date();
+                today.setHours(0,0,0,0);
+                smallgroup.dayCodes.push({
+                    date: today,
+                    code: code
+                });
+                smallgroup.save();
+            }
+        }
+        res.json(200, smallgroup.dayCode);
+    });
+};
+
+function getFullMember(memberId, mentor, callback){
     User.findById(memberId, function(err, member){
         if (err) return callback("Could not find user", null);
         member.getFullProfile(function(fullProfile){
+            // Add the user's attendance
+            fullProfile.presence = member.presence;
             callback(null, fullProfile);
+
         });
     });
 }
@@ -100,16 +131,14 @@ exports.getSmallGroupMembers = function(req, res){
 
         smallgroup.students.forEach(function(studentId){
 
-            getFullMember(studentId, function(err, member){
+            getFullMember(studentId, req.user && req.user.isMentor, function(err, member){
                 loadedMembers ++;
                 if (member){
-                    member.presence = member.presence;
                     members.push(member);
                 }
 
                 // Check if we're done loading members
                 if (loadedMembers == smallgroup.students.length){
-
                     return res.json(200, members);
                 }
             })
@@ -131,6 +160,22 @@ exports.addMember = function(req, res){
 		         res.send(200);
 		     });
 		 });
+};
+
+exports.deleteMember = function(req, res){
+    var memberId = req.params.memberId;
+    var smallGroupId = req.params.id;
+       SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+          $pull: { students : memberId }
+        }, function(err, smallgroup){
+             if (err) return handleError(res, err);
+		     User.findById(memberId, function(err, user){
+		         if (err) return handleError(res,err);
+		         user.smallgroup = undefined
+		         user.save();
+		         return res.send(200);
+		     });
+        });
 };
 
 function handleError(res, err) {

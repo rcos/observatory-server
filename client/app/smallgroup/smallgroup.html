@@ -46,13 +46,20 @@
 										<img ng-src='{{student.avatar}}&s=72px'/>
 									</div>
 									<div class='text'>
-										<div class='name'>
-											{{ student.name }}
-										</div>
-										<div class='projects'>
-											<span ng-repeat='project in student.projects'> {{ project.name }}, </span>
-										</div>
+                                        <div class='details'>
+    										<div class='name'>
+    											{{ student.name }}
+    										</div>
+    										<div class='projects'>
+    											<span ng-repeat='project in student.projects'> {{ project.name }}, </span>
+    										</div>
+                                        </div>
+                                        <!-- TODO, switch to a modal with info -->
+        									<div class='icon'>
+                                            <i class="fa fa-times" ng-click="removeUser(student)"></i>
+                                        </div>
 									</div>
+
 									<div style="clear:both"></div>
 								</div>
 							</div>
@@ -73,12 +80,18 @@
 										<img ng-src='{{student.avatar}}&s=72px'/>
 									</div>
 									<div class='text'>
-										<div class='name'>
-											{{ student.name }}
-										</div>
-										<div class='projects'>
-											<span ng-repeat='project in student.projects'> {{ project.name }}, </span>
-										</div>
+                                        <div class='details'>
+    										<div class='name'>
+    											{{ student.name }}
+    										</div>
+    										<div class='projects'>
+    											<span ng-repeat='project in student.projects'> {{ project.name }}, </span>
+    										</div>
+                                        </div>
+                                        <!-- TODO, switch to a modal with info -->
+        									<div ng-show="isMentor()" class='icon'>
+                                            <i class="fa fa-times" ng-click="removeUser(student)"></i>
+                                        </div>
 									</div>
 									<div style="clear:both"></div>
 								</div>
