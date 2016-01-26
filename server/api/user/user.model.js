@@ -293,8 +293,8 @@ function loadUserProjects(user, callback){
         Project.findById(user.projects[i], function(err, project){
             loadedProjects ++;
             if (!err) fullProjects.push(project);
-            if (loadedProjects == fullProjects.length){
-                callback(fullProjects);
+            if (loadedProjects == user.projects.length){
+                return callback(fullProjects);
             }
         });
     }
@@ -365,9 +365,6 @@ UserSchema.methods = {
            'avatar': user.avatar,
            'email': user.email,
            'semesters': user.semesterCount,
-           'attendance': user.attendance,
-           "attendanceScore": 0,
-           "attendanceBonus": 0,
            'projects': fullProjects,
            'tech': user.tech,
            'bio': user.bio,

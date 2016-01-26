@@ -37,8 +37,8 @@ exports.create = function(req, res){
 
 exports.modify = function(req, res){
     var id = req.params.id;
-    SmallGroup.update({"_id": id}, req.body.smallgroup, function(err){
-        if (err) return handleError(res, err);
+    SmallGroup.update({'_id': id}, req.body.smallgroup, function(err){
+        if (err) {return handleError(res, err);}
         res.send(200);
     });
 };
@@ -56,6 +56,7 @@ exports.getSmallGroup = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
         if (err) return handleError(res, err);
+        if (!smallgroup) return handleError(res, err);
         var responseObject = smallgroup.toObject();
         // If user is not a mentor or not authenticated, don't give dayCode
         if (!req.user || !req.user.isMentor){
@@ -63,30 +64,38 @@ exports.getSmallGroup = function(req, res){
         }else{
             // Mentors should get a day code
             // Generate a day code if one does not already exist
-            if (!smallgroup.dayCode){
-                var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
-                var today = new Date();
-                today.setHours(0,0,0,0);
-                smallgroup.dayCodes.push({
-                    date: today,
-                    code: code
-                });
-                smallgroup.save();
+            if (smallgroup.dayCode){
+                responseObject.dayCode = smallgroup.dayCode;
             }
-            // This has to be called because "dayCode" is a virtual
-            responseObject.dayCode = smallgroup.dayCode;
         }
         res.json(200, responseObject);
     });
 };
 
-function getFullMember(memberId, callback){
+// Generate a daycode or return the current day code for the
+// current class year
+exports.daycode = function(req, res){
+    var id = req.params.id;
+    SmallGroup.findById(id, function(err, smallgroup){
+        if (err) {return handleError(res, err);}
+        var responseObject = smallgroup.toObject();
+        // Generate a day code if one does not already exist
+        if (!smallgroup.dayCode){
+            var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
+            smallgroup.dayCode = code;
+        }
+        res.json(200, smallgroup.dayCode);
+    });
+};
+
+function getFullMember(memberId, mentor, callback){
     User.findById(memberId, function(err, member){
         if (err) return callback("Could not find user", null);
         member.getFullProfile(function(fullProfile){
             // Add the user's attendance
             fullProfile.presence = member.presence;
             callback(null, fullProfile);
+
         });
     });
 }
@@ -99,8 +108,10 @@ exports.getSmallGroupMembers = function(req, res){
         var loadedMembers = 0;
 
         // Load each group member's full profile
+
         smallgroup.students.forEach(function(studentId){
-            getFullMember(studentId, function(err, member){
+
+            getFullMember(studentId, req.user && req.user.isMentor, function(err, member){
                 loadedMembers ++;
                 if (member){
                     members.push(member);
@@ -108,7 +119,7 @@ exports.getSmallGroupMembers = function(req, res){
 
                 // Check if we're done loading members
                 if (loadedMembers == smallgroup.students.length){
-                    res.json(200, members);
+                    return res.json(200, members);
                 }
             })
         });
@@ -129,6 +140,22 @@ exports.addMember = function(req, res){
 		         res.send(200);
 		     });
 		 });
+};
+
+exports.deleteMember = function(req, res){
+    var memberId = req.params.memberId;
+    var smallGroupId = req.params.id;
+       SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+          $pull: { students : memberId }
+        }, function(err, smallgroup){
+             if (err) return handleError(res, err);
+		     User.findById(memberId, function(err, user){
+		         if (err) return handleError(res,err);
+		         user.smallgroup = undefined
+		         user.save();
+		         return res.send(200);
+		     });
+        });
 };
 
 function handleError(res, err) {
