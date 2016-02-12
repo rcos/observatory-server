@@ -137,10 +137,9 @@ exports.changeName = function(req,res){
   SmallGroup.findById(id, function(err,smallgroup){
     if (err) return handleError(res, err);
     smallgroup.name = newName;
-    res.json({name:smallgroup.name});
     smallgroup.save(function(err){
       if (err) return validationError(res,err);
-      res.send(200);
+      return res.json({name:smallgroup.name}).send(200);
     })
   });
 };
