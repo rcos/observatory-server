@@ -15,11 +15,23 @@
             <a ng-href="{{item.link}}">{{item.title}}</a>
         </li>
         <li ng-show="isLoggedIn()" ng-class="{active: isActive('/attend')}"><a href="/attend">Attend</a></li>
-        <li ng-show="isMentor()" ng-class="{active: isActive('/mentor')}"><a href="/mentor">Mentor</a></li>
-        <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin">Admin</a></li>
-        <li ng-show="isLoggedIn() && (isMentor() || hasSmallGroup())"><a ng-href='/smallgroup'>Small Group</a></li>
-        <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/classcontrol')}"><a href="/admin/classcontrol">Class Control</a></li>
         <li ng-show="displayURP"><a href='http://urp.rcos.xyz/'>URP Form</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Mentor <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li ng-show="isMentor()" ng-class="{active: isActive('/mentor')}"><a href="/mentor">Verify Attendance</a></li>
+                <li ng-show="isLoggedIn() && (isMentor() || hasSmallGroup())"><a ng-href='/smallgroup'>Small Group</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Admin <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin">Users</a></li>
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/classcontrol')}"><a href="/admin/classcontrol">Class Control</a></li>
+            </ul>
+        </li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
@@ -27,7 +39,7 @@
         <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/login')}"><a href="/login">Login</a></li>
         <li ng-show="isLoggedIn()"><a ng-href='/me'>Hello {{ getCurrentUser().name }}</a></li>
         <li ng-show="isLoggedIn()" ng-class="{active: isActive('/settings')}"><a href="/settings"><span class="glyphicon glyphicon-cog"></span></a></li>
-        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/logout')}"><a href="" ng-click="logout()">Logout</a></li>
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/logout')}"><a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out" title="Logout"></span></a></li>
       </ul>
     </div>
   </div>

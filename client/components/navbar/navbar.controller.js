@@ -3,9 +3,6 @@
 angular.module('observatory3App')
   .controller('NavbarCtrl', function ($scope, $location, $http, Auth) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
-    },{
       'title': 'Projects',
       'link': '/projects'
     },{
@@ -41,5 +38,4 @@ angular.module('observatory3App')
     };
 
     URPDisplay();
-
   });
