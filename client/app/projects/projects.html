@@ -3,10 +3,10 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-sm-4">
-            <h3> {{ past ? "Past" : "Active" }} RCOS Projects</h3>
+        <div class="col-md-4 text-center">
+            <h3> {{ past ? "Past" : "Active" }} Projects</h3>
         </div>
-        <div class="col-sm-4">
+        <div class="col-md-4 col-sm-7">
             <div class="row">
                 <div class="col-lg-12 col-sm-10 col-sm-offset-1">
                     <div class="input-group top-group">
@@ -20,15 +20,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-md-4 col-sm-5">
             <button type="button" class="btn btn-primary pull-right top-group" data-toggle="modal" data-target="#addProject" ng-show="user">
                 Add a Project
             </button>
             <button type="button" class="btn btn-primary pull-right top-group" ng-click="getCurrentProjects()" ng-show="past">
-                Show Current Projects
+                Current Projects
             </button>
             <button type="button" class="btn btn-primary pull-right top-group" ng-click="getPastProjects()" ng-show="!past">
-                Show Past Projects
+                Past Projects
             </button>
         </div>
     </div>
