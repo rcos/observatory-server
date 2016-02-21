@@ -66,38 +66,21 @@
 
     <div class="col-sm-12">
       <h1>Delete User</h1>
-          <p style="font-size:18px">
+        <p style="font-size:18px">
             Deleting your account is permanent. Please be sure you want to delete your account. If you will no longer be using your account you can also set your user account to inactive from your profile page.  
-          </p>
-          <button class="btn btn-lg btn-danger btn-login" type="button" data-toggle = "modal" data-target ="#deleteModal">
-            Delete Account 
+        </p>           
+        <form name="deleteForm">
+            Enter password to delete account<br><input type="password" name="Password" ng-model="pass.currpass" required="" class="form-control" mongoose-error/><br>
+        </form>
+          <button class="btn btn-lg btn-inverse btn-danger" ng-click="deleteUser(user,deleteForm)">
+                  Delete account
           </button>
-          <div id="deleteModal" class = "modal fade" role="dialog">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">Deleting Account</h4>
-                  </div>
-                  <div class="modal-body">
-                    <form name="deleteForm" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
-                      Enter password to delete account<br><input type="password" name="Password" ng-model="pass.currpass" required="" class="form-control" mongoose-error/><br>
-                      
-                    </form>
-                     <button class="btn btn-lg btn-inverse btn-danger" ng-click="deleteUser(user,deleteForm)">
-                        Delete account
-                    </button>
-                    <div class ="deleter" ng-class = "deleteForm.Password.$error.mongoose" data-dismiss ="modal"></div>
+          <div class ="deleter" ng-class = "deleteForm.Password.$error.mongoose" data-dismiss ="modal"></div>
 
-
-                     <p class="helper" ng-show="deleteForm.Password.$error.mongoose">
-                        {{ delete_errors.other }}
-                     </p>
-                  </div>
-               </div>
-            </div>
-        </div>
-    </div>     
-  </div>
-</div>
+          <p class="helper" ng-show="deleteForm.Password.$error.mongoose">
+            {{ delete_errors.other }}
+          </p>
+      </div>
+    </div>
+  </div> 
 <div ng-include="'components/footer/footer.html'"></div>

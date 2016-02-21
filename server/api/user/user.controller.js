@@ -11,6 +11,7 @@ var ClassYear = require('../classyear/classyear.model');
 var SmallGroup = require('../smallgroup/smallgroup.model');
 
 
+
 var validationError = function(res, err) {
   return res.json(422, err);
 };
@@ -576,18 +577,29 @@ exports.removeProject = function(req,res){
         }
     });
 };
+/*
+Function that is called by removeUser api call 
 
+*/
 exports.deleteUser = function(req,res,next){
   var userId = req.params.id;
   var pass = String(req.body.oldPassword);
-  User.findById(userId, function (err, user) {
+  var query = "students";
+  console.log("hello");
+  User.findById(userId, function (err, user,db) {
     if(user.authenticate(pass)) {
+       SmallGroup.findOneAndUpdate(query, {$pull: {address: userId}}, function(err, data){
+        if(err) {
+          return res.status(500).json({'error' : 'error in deleting address'});
+        }
+        res.json(data);
+      });
       User.findByIdAndRemove(req.params.id, function(err, user) {
            if(err) return res.send(500, err);
           return res.send(204);
         });
-      
     } else {
+
       res.send(403);
     }
   });
