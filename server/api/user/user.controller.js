@@ -584,7 +584,7 @@ Function that is called by removeUser api call
 exports.deleteUser = function(req,res,next){
   var userId = req.params.id;
   var pass = String(req.body.oldPassword);
-  var query = "students";
+  var query = {students:{ $in: [userId]}};
   console.log("hello");
   User.findById(userId, function (err, user,db) {
     if(user.authenticate(pass)) {
