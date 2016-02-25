@@ -1,11 +1,14 @@
 .row {
-    border: 1px solid red;
+  border: 1px solid red;
+}
+.col-sm-4 {
+  border: 1px solid blue;
 }
 .col-sm-6 {
-    border: 1px solid blue;
+  border: 1px solid blue;
 }
 .col-sm-12 {
-    border: 1px solid blue;
+  border: 1px solid blue;
 }
 .smallgroup{
   .edit-name {
