@@ -25,6 +25,7 @@
     "multiparty": "^4.1.1",
     "passport": "~0.2.0",
     "passport-local": "~0.1.6",
+    "promise": "^7.1.1",
     "sendgrid": "^1.9.2",
     "serve-favicon": "~2.0.1"
   },
