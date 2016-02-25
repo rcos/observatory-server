@@ -7,7 +7,8 @@ angular.module('observatory3App')
     $scope.users = $scope.currentUsers;
 
     $scope.currentPage = 0;
-    $scope.pageSize = 48;
+    $scope.defaultPageSize = 48;
+    $scope.pageSize = $scope.defaultPageSize;
 
     $scope.currentView = 'Active Developers';
 
@@ -26,6 +27,13 @@ angular.module('observatory3App')
             $scope.currentPage -= 1;
         }
     };
+
+    $scope.toggleViewAll = function() {
+        if ($scope.pageSize == $scope.defaultPageSize)
+           $scope.pageSize = $scope.users.length;
+        else
+           $scope.pageSize = $scope.defaultPageSize;
+    }
 
     $scope.changeView = function(view){
         if (view === 'past'){
