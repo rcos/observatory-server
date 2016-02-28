@@ -9,7 +9,7 @@ var user = new User({
   name: 'Fake User',
   email: 'test@test.com',
   password: 'password',
-  avatar: 'http://www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid'
+  avatar: '//www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid'
 });
 
 describe('User Model', function() {

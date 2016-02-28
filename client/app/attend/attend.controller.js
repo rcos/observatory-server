@@ -11,6 +11,7 @@ angular.module('observatory3App')
           $scope.unverified = true;
         }else{
           notify("Day code submitted successfully!");
+          $scope.userDayCode = '';
         }
       }).error(function(err){
         notify({ message: "Error: " + err, classes: ["alert-danger"] });

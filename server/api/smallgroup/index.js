@@ -7,16 +7,15 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-// TODO permissions
-router.get('/', controller.index);
+router.get('/', auth.isAuthenticated(), controller.index);
 
-router.post('/', auth.hasRole('mentor'), controller.create);
-router.put('/:id', auth.hasRole('mentor'), controller.modify);
-router.put('/:id/name',auth.hasRole('mentor'),controller.changeName);
-router.get('/:id/members', controller.getSmallGroupMembers);
-router.put('/:id/member', controller.addMember);
+router.post('/', auth.hasRole('mentor') || auth.hasRole('admin'), controller.create);
+router.put('/:id', auth.hasRole('mentor') || auth.hasRole('admin'), controller.modify);
+router.get('/:id/members', auth.isAuthenticated(), controller.getSmallGroupMembers);
+router.put('/:id/member', auth.hasRole('mentor') || auth.hasRole('admin'), controller.addMember);
+router.delete('/:id/member/:memberId', auth.hasRole('mentor') || auth.hasRole('admin'), controller.deleteMember);
 router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
-router.get('/:id', controller.getSmallGroup);
-router.delete('/:id', auth.hasRole('mentor'), controller.delete);
+router.delete('/:id', auth.hasRole('mentor') || auth.hasRole('admin'), controller.delete);
+router.post('/:id/daycode', auth.hasRole('mentor') || auth.hasRole('admin'), controller.daycode);
 
 module.exports = router;

@@ -14,18 +14,33 @@ var SmallGroupSchema = new Schema({
 /*
 	Virtuals
 */
+function isoDateToTime(isoDate){
+  var date = new Date(isoDate);
+  date.setHours(0,0,0,0);
+  return date.getTime();
+}
+
 SmallGroupSchema
-	.virtual("dayCode")
+	.virtual('dayCode')
 	.get(function(){
 		var today = new Date();
-		today.setHours(0,0,0,0);
 		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() == today.getTime()){
+			if (isoDateToTime(this.dayCodes[i].date.getTime()) === isoDateToTime(today.getTime())){
 				return this.dayCodes[i].code;
 			}
 		}
 		return null;
-	});
+	})
+    .set(function(value){
+		var today = new Date();
+        if (!this.dayCode){
+            this.dayCodes.push({
+                date: today,
+                code: value
+            });
+        }
+        this.save();
+    });
 
 var SmallGroup = mongoose.model('SmallGroup', SmallGroupSchema);
 module.exports = SmallGroup;

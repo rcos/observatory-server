@@ -384,7 +384,10 @@ exports.attend = function(req,res){
     var userId = req.params.id;
     var user = req.user;
     var code = req.body.dayCode;
-    if (!code) res.send(400, "No Code Submitted");
+    if (!code) return res.send(400, "No Code Submitted");
+    // Uppercase code from client so it is case-insensitive. This must happen
+    // after the above check, otherwise toUpperCase() might not exist.
+    code = code.toUpperCase();
     if (req.user.presence !== "absent") return res.send(400, "Attendance already recorded: " + req.user.presence);
     // Check code against current class year
     ClassYear.getCurrent(function(err, classYear){

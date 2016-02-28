@@ -134,7 +134,12 @@ exports.getDisplayURP = function(req, res) {
     "current": true
   }, function (err, classYear){
     if(err) { return handleError(res, err); }
-    res.json({displayURP:classYear.displayURP});
+    // if no class year is defined then don't show urp
+    if(!classYear) {
+      res.json({displayURP: false});
+    } else {
+      res.json({displayURP:classYear.displayURP});
+    }
   })
 };
 
