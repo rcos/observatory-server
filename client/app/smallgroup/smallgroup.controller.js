@@ -69,7 +69,6 @@ angular.module('observatory3App')
               if (!user) {
                 return notify({message: 'User not found!', classes: ['alert-danger']});
               }
-
               // Reload small group (in case other mentors have modified it since page load)
               updateSmallGroup(function (smallgroup) {
                 // Check if user is already in small group

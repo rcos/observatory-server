@@ -36,7 +36,7 @@
     <button class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendance()'>Show Attendance</button>
   </div>
   <div class="info" ng-hide='showAttendanceCodeFull'>
-    <div class="row">
+    <div class="row attendance" ng-show="isMentor()">
       <div class="col-sm-12">
         <p ng-show='showAttendanceCode' >The Attendance Code is {{smallgroup.dayCode}}</p>
         <button ng-hide='showAttendanceCode' class='btn btn-primary' ng-show='isMentor()' ng-click='generateAttendanceCode()'> Generate Attendance Code </button>
@@ -47,9 +47,9 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-12 col-md-6 col-lg-5">
+      <div class="col-sm-12 col-md-6 col-lg-5" ng-show="isMentor()">
         <h3>User Registration</h3>
-        <form ng-submit="addUser(input_user)" ng-show='isMentor()' class="input-group dayCodeForm">
+        <form name="adduserform" ng-submit="addUser(input_user)" class="input-group dayCodeForm">
           <input type="text" list="allUsers" ng-model='input_user' class="form-control" placeholder="User name" />
           <datalist id="allUsers">
             <option ng-repeat="user in allUsers" value="{{user.name}}" />
@@ -83,7 +83,7 @@
                   </div>
                 </div>
                 <!-- TODO, switch to a modal with info -->
-                <div class='icon'>
+                <div class='icon' ng-show="isMentor()">
                   <i class="fa fa-times" ng-click="removeUser(student)"></i>
                 </div>
               </div>
