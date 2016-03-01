@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-sm-12">
       <h3> You do not have a small group </h3>
-      <button ng-click='createSmallGroup()' ng-show='isMentor()'> Create Small Group </button>
+      <button class="btn" ng-click='createSmallGroup()' ng-show='isMentor()'> Create Small Group </button>
     </div>
   </div>
 </div>
@@ -31,9 +31,6 @@
         </span>
       </form>
     </div>
-  </div>
-  <div class="info" ng-hide='showAttendanceCode'>
-    <button class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendance()'>Show Attendance</button>
   </div>
   <div class="info" ng-hide='showAttendanceCodeFull'>
     <div class="row attendance" ng-show="isMentor()">
