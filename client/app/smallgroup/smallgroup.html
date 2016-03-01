@@ -14,7 +14,7 @@
     <div class="col-sm-12" ng-hide="edittingSmallGroupName">
       <h3 class="group-name">
         Small Group: {{smallgroup.name}}
-        <i class="glyphicon glyphicon-edit edit-name" aria-hidden="true" ng-click="editSmallGroupName()"></i>
+        <i class="glyphicon glyphicon-edit edit-name" aria-hidden="true" ng-click="editSmallGroupName()" ng-show="isMentor()"></i>
       </h3>
     </div>
     <div class="col-sm-4" ng-show="edittingSmallGroupName">
