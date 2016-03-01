@@ -35,7 +35,7 @@ exports.index = function(req, res) {
 exports.search = function(req, res){
     if (!req.query.query) return res.send(400, "No query supplied");
     var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
-    User.findOne({name: query},{active:{$nin:false}},function(err, user){
+    User.findOne({name: query},function(err, user){
         if (err) return res.send(500, err);
         if (!user){
             if (req.query.single){
@@ -263,7 +263,6 @@ exports.role = function(req, res) {
         }
     });
 }
-
 /**
  * Change a users password
  *
@@ -296,15 +295,14 @@ exports.changePassword = function(req, res, next) {
 exports.deactivate = function(req,res) { 
         var userId = req.user.id;
         User.findById(userId, function(err, user){
-        if (err) return res.send(500, err);
-        user.active = false;
-        user.save(function(err){
-        if (err) return res.send(500, err);
-        res.json(200, {success: true});
-      })
-    
-  });  
-};
+          if (err) return res.send(500, err);
+          user.active = false;
+          user.save(function(err){
+          if (err) return res.send(500, err);
+          res.json(200, {success: true});
+        })
+      });  
+  };
 
 /**
  * Changes a user's bio
@@ -344,10 +342,8 @@ exports.changeBio = function(req,res){
  */
 exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
-
   User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
-
     user.active = true;
     user.save(function(err){
     if (err) return res.send(500, err);
@@ -579,27 +575,25 @@ exports.removeProject = function(req,res){
 };
 /*
 Function that is called by removeUser api call 
-
 */
 exports.deleteUser = function(req,res,next){
   var userId = req.params.id;
   var pass = String(req.body.oldPassword);
   var query = {students:{ $in: [userId]}};
-  console.log("hello");
   User.findById(userId, function (err, user,db) {
     if(user.authenticate(pass)) {
-       SmallGroup.findOneAndUpdate(query, {$pull: {address: userId}}, function(err, data){
+       SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
         if(err) {
-          return res.status(500).json({'error' : 'error in deleting address'});
+         return res.status(500).json({'error' : 'error in deleting address'});
         }
-        res.json(data);
-      });
-      User.findByIdAndRemove(req.params.id, function(err, user) {
+        User.findByIdAndRemove(req.params.id, function(err, user) {
            if(err) return res.send(500, err);
-          return res.send(204);
+          return res.send(200);
         });
+        //res.json(data);
+      });
+      
     } else {
-
       res.send(403);
     }
   });

@@ -12,6 +12,12 @@ angular.module('observatory3App')
           controller:'removeUser'
         }
       },
+      pastUser: {
+        method: 'PUT',
+        params: {
+          controller:'deactivate'
+        }
+      },
       changePassword: {
         method: 'PUT',
         params: {

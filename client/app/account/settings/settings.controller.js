@@ -33,21 +33,17 @@ angular.module('observatory3App')
       }
 		};
 
-    
     $scope.deleteUser = function(user,df){
-      $scope.dismiss = false; 
+      $scope.dismiss = false;
       if(df.$valid){
-        
-          Auth.deleteUser($scope.pass.currpass)
-        .then(function(){
-             $location.path('/main'); 
+        Auth.deleteUser($scope.pass.currpass)
+          .then(function(){
+             $location.path('/main');
              df.Password.$setValidity('mongoose',false);
              Auth.logout();
-             notify({message: "Account deleted"}); 
-                      
+             notify({message: "Account deleted"});
         })
         .catch(function(){
-              
             df.Password.$setValidity('mongoose',false);
             $scope.delete_errors.other = 'Incorrect password'
         });

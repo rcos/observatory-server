@@ -20,7 +20,7 @@ router.post('/:id/role', auth.hasRole('admin'), controller.role);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/unverified', controller.getUnverifiedAttendanceUsers);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
-router.put('/:id/deactivate', auth.isAuthenticated(), controller.deactivate);
+router.put('/:id/deactivate', auth.canEdit(), controller.deactivate);
 router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
@@ -34,6 +34,6 @@ router.put("/:id/addTech", auth.canEdit(), controller.addTech);
 router.put("/:id/removeTech", auth.canEdit(), controller.removeTech);
 router.post('/resetPassword', controller.resetPassword);
 router.put('/:id/removeUser',controller.deleteUser); 
-router.put('/:id/deactUser',auth.canEdit(),controller.deactivate);
+
 
 module.exports = router;

@@ -173,7 +173,22 @@ angular.module('observatory3App')
           });
         }
       },
-      
+      pastUser: function(user,callback){
+         var cb = callback || angular.noop;
+        return User.pastUser({ id: currentUser._id }, {
+        }, function(user) {
+          return cb(user);
+        }, function(err) {
+          return cb(err);
+        }).$promise;
+
+      },
+       /**
+       * Deletes a user
+       *
+       * @param {Function} OPTIONAL callback NEED userinfo
+       * @return {Object} user
+       */
       deleteUser: function(currpass,callback){
         var cb = callback || angular.noop;
         return User.deleteUser({ id: currentUser._id }, {

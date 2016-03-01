@@ -88,12 +88,9 @@ angular.module('observatory3App')
       $scope.pastUser = function(user){
           var conf = confirm("Are you sure you want to make your account inactive?"); 
           if (conf){
-            $http.put('/api/users/' + $stateParams.id + '/deactUser', {
-              'user': user
-            })
-            .success(function(){
+            Auth.pastUser(user).then(function(){
                 notify({message: "Account made inactive"}); 
-            }) .error(function(){
+            }) .catch(function(){
                 notify({message: "Could not make a past account!", classes: ["alert-danger"]});
             });
         }
