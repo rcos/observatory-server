@@ -142,6 +142,19 @@ exports.addMember = function(req, res){
 		 });
 };
 
+exports.changeName = function(req,res){
+  var id = req.params.id;
+  var newName = String(req.body.smallGroupName);
+  SmallGroup.findById(id, function(err,smallgroup){
+    if (err) return handleError(res, err);
+    smallgroup.name = newName;
+    smallgroup.save(function(err){
+      if (err) return validationError(res,err);
+      return res.json({name:smallgroup.name}).send(200);
+    })
+  });
+};
+
 exports.deleteMember = function(req, res){
     var memberId = req.params.memberId;
     var smallGroupId = req.params.id;

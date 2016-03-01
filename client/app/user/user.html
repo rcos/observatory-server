@@ -37,12 +37,9 @@
             </div>
         </div>
     </div>
-    <div class=row>
-    </br>
-    </div>
     <div class="row image-row">
         <div ng-repeat="user in users | startFrom:currentPage*pageSize | limitTo:pageSize">
-            <div class="col-lg-1 col-md-2 col-sm-3 text-center user-box">
+            <div class="col-lg-1 col-md-2 col-sm-6 col-xs-6 text-center user-box">
                 <a href="/users/{{ user._id}}/profile" class="user-avatar">
                     <img class="profile-img img-responsive" src='{{user.avatar}}&s=248px'>
                 </a>
