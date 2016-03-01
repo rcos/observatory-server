@@ -593,6 +593,12 @@ module.exports = function (grunt) {
         }
       }
     },
+
+    execute: {
+        seed: {
+            src: ['./server/config/seed.js']
+        }
+    },
   });
 
   // Used for delaying livereload until after server has restarted
@@ -724,5 +730,9 @@ module.exports = function (grunt) {
     'newer:jshint',
     'test',
     'build'
+  ]);
+
+  grunt.registerTask('seed', [
+    'execute:seed'
   ]);
 };

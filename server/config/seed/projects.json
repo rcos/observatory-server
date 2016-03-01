@@ -1,0 +1,18 @@
+[{
+    "name": "Observatory",
+    "description": "Open source project tracking.",
+    "repositories": ["https://github.com/rcos/Observatory3"],
+    "repositoryType": "github",
+    "githubUsername": "RCOS",
+    "githubProjectName": "Observatory3"
+},
+{
+    "name": "YACS",
+    "description": "Yet Another Course Scheduler",
+    "repositories": ["https://github.com/aosdict/yacs"],
+    "repositoryType": "github",
+    "githubUsername": "aosdict",
+    "githubProjectName": "yacs"
+}
+]
+
