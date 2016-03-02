@@ -165,6 +165,57 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
           return {};
         });
     },
+    /**
+     * Marks a user as a inactive user
+     *   (asynchronous)
+     *
+     * @param {Object} user
+     * @param  {Function|*} callback - optional, funciton(user)
+     * @return {Object|Promise}
+     */
+    pastUser: function(user,callback){
+      console.log("user",user)
+      return User.pastUser({ id: user._id }, {
+      }, function(user) {
+        return safeCb(callback)(user);
+      }, function(err) {
+        return safeCb(callback)(err);
+      }).$promise;
+
+    },
+    /**
+     * Marks a user as a active user
+     *   (asynchronous)
+     *
+     * @param {Object} user
+     * @param  {Function|*} callback - optional, funciton(user)
+     * @return {Object|Promise}
+     */
+    currentUser: function(user,callback){
+      console.log("user",user)
+      return User.currentUser({ id: user._id }, {
+      }, function(user) {
+        return safeCb(callback)(user);
+      }, function(err) {
+        return safeCb(callback)(err);
+      }).$promise;
+
+    },
+    /**
+    * Deletes a user
+    *
+    * @param {Function} OPTIONAL callback NEED userinfo
+    * @return {Object} user
+    */
+   deleteUser: function(currpass,callback){
+     return User.deleteUser({ id: currentUser._id }, {
+       oldPassword: currpass
+     }, function(user) {
+       return safeCb(callback)(user);
+     }, function(err) {
+       return safeCb(callback)(err);
+     }).$promise;
+   },
 
     /**
      * Check if a user is logged in
@@ -173,6 +224,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
      * @param  {Function|*} callback - optional, function(is)
      * @return {Bool|Promise}
      */
+
     isLoggedIn(callback) {
       if (arguments.length === 0) {
         return currentUser.hasOwnProperty('role');

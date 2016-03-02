@@ -5,6 +5,24 @@ function UserResource($resource) {
   return $resource('/api/users/:id/:controller', {
     id: '@_id'
   }, {
+    deleteUser: {
+      method: 'PUT',
+      params: {
+        controller:'removeUser'
+      }
+    },
+    pastUser: {
+      method: 'PUT',
+      params: {
+        controller:'deactivate'
+      }
+    },
+    currentUser: {
+      method: 'PUT',
+      params: {
+        controller:'activate'
+      }
+    },
     changePassword: {
       method: 'PUT',
       params: {

@@ -35,14 +35,13 @@
 
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-
-            <div ng-repeat="project in projects | searchFor:searchString">
+            <div ng-repeat="project in projects| searchFor:searchString">
                 <div class="extra-content" >
-                    <h2 id="{{ project.githubUsername }}-{{ project.githubProjectName }}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a> </h2>
+                    <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a> </h2>
                     <ul class="project-info">
-                        <li><a href="{{ project.websiteUrl }}">Website</a></li>
+                        <li><a href="{{project.websiteUrl}}">Website</a></li>
                         <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
-                        <li><a href="{{ project.repositories[0] }}">Repository</a></li>
+                        <li><a href="{{project.repositories[0]}}">Repository</a></li>
                     </ul>
                     <div class="clear"></div>
                     <div id="description" btf-markdown="project.description"></div>
@@ -66,25 +65,25 @@
                             <span class="input-group-addon">https://github.com/</span>
 
                             <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
-                                'has-error': addProjectForm.githubUsername.$invalid && submitted }">
+                            'has-error': addProjectForm.githubUsername.$invalid && submitted }">
                                 <input type="text" name="githubUsername" class="form-control" ng-model="projectToAdd.githubUsername" required/>
                             </div>
                             <span class="input-group-addon">/</span>
 
                             <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
-                                'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
+                            'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
                                 <input type="text" name="githubProjectName" id="githubProjectName" class="form-control" ng-model="projectToAdd.githubProjectName" required/>
                             </div>
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
-                            'has-error': addProjectForm.githubUsername.$invalid && submitted }">
+                        'has-error': addProjectForm.githubUsername.$invalid && submitted }">
                             <p class="help-block" ng-show="addProjectForm.githubUsername.$error.required && submitted">
                             The project owner's github username is required
                             </p>
                         </div>
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
-                            'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
+                        'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
                             <p class="help-block" ng-show="addProjectForm.githubProjectName.$error.required && submitted">
                             The project's github name is required
                             </p>
@@ -95,7 +94,7 @@
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.name.$valid && submitted,
-                            'has-error': addProjectForm.name.$invalid && submitted }">
+                        'has-error': addProjectForm.name.$invalid && submitted }">
                             <label>Name of the project</label>
 
                             <input type="text" name="name" class="form-control" ng-model="projectToAdd.name" required/>
@@ -105,7 +104,7 @@
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.websiteUrl.$valid && submitted,
-                            'has-error': addProjectForm.websiteUrl.$invalid && submitted }">
+                        'has-error': addProjectForm.websiteUrl.$invalid && submitted }">
                             <label>Your project's homepage</label>
 
                             <input type="url" name="websiteUrl" class="form-control" ng-model="projectToAdd.websiteUrl" required />
@@ -128,7 +127,7 @@
                         </div>
 
                         <div class="form-group" ng-class="{ 'has-success': addProjectForm.description.$valid && submitted,
-                            'has-error': addProjectForm.description.$invalid && submitted }">
+                        'has-error': addProjectForm.description.$invalid && submitted }">
                             <label>Describe your project</label>
 
                             <textarea name="description" class="form-control" ng-model="projectToAdd.description" required></textarea>
