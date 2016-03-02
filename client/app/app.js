@@ -9,6 +9,7 @@ angular.module('observatory3App', [
   'cgNotify',
   'ngSanitize',
   'btford.socket-io',
+  'btford.markdown',
   'ui.router',
   'ui.bootstrap',
   'ngFileUpload',

@@ -5,7 +5,7 @@ var mongoose = require('bluebird').promisifyAll(require('mongoose'));
 import {Schema} from 'mongoose';
 const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
-var md5 = require('MD5');
+var md5 = require('md5');
 var Project = require('../project/project.model');
 
 var UserSchema = new Schema({
