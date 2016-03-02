@@ -1,5 +1,5 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('MainCtrl', function ($scope, $http) {
+  .controller('MainController', function ($scope, $http) {
   });

@@ -19,7 +19,7 @@ var validationError = function(res, err) {
  * Get list of users
  */
 exports.index = function(req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
+  User.find({}, '-salt -password', function (err, users) {
     if(err) return res.send(500, err);
     res.json(200, users);
   });
@@ -58,7 +58,7 @@ exports.search = function(req, res){
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-salt -password' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
@@ -98,7 +98,7 @@ exports.stats = function(req, res) {
  */
 exports.allStats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({'github.login': {$exists: true}}, '-salt -hashedPassword' ).exec(function (err, users) {
+  User.find({'github.login': {$exists: true}}, '-salt -password' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
@@ -147,7 +147,7 @@ exports.allStats = function(req, res) {
  */
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword', function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-salt -password', function (err, users) {
     if(err) return res.send(500, err);
     var userInfo = [];
 
@@ -162,7 +162,7 @@ exports.list = function(req, res) {
  * Get list of all past users
  */
 exports.past = function(req, res) {
-  User.find({active: false}, '-salt -hashedPassword', function (err, users) {
+  User.find({active: false}, '-salt -password', function (err, users) {
     if(err) return res.send(500, err);
       var userInfo = [];
 
@@ -363,7 +363,7 @@ exports.me = function(req, res, next) {
   var userId = req.user._id;
   User.findOne({
     _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
+  }, '-salt -password', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);

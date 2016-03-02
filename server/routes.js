@@ -4,13 +4,15 @@
 
 'use strict';
 
-var errors = require('./components/errors');
 var express = require('express');
 var config = require('./config/environment');
+import errors from './components/errors';
+import path from 'path';
 
-module.exports = function(app) {
+export default function(app) {
 
   // Insert routes below
+  app.use('/api/things', require('./api/thing'));
   app.use('/api/posts', require('./api/post'));
   app.use('/api/projects', require('./api/project'));
   app.use('/api/commits', require('./api/commit'));
@@ -26,9 +28,9 @@ module.exports = function(app) {
   app.route('/:url(api|auth|components|app|bower_components|assets|uploads)/*')
    .get(errors[404]);
 
-  //All other routes should redirect to the index.html
+  // All other routes should redirect to the index.html
   app.route('/*')
-    .get(function(req, res) {
-      res.sendfile(app.get('appPath') + '/index.html');
+    .get((req, res) => {
+      res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
     });
-};
+}
