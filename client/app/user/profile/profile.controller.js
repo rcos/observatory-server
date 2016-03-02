@@ -85,6 +85,17 @@ angular.module('observatory3App')
           });
       };
 
+      $scope.pastUser = function(user){
+          var conf = confirm("Are you sure you want to make your account inactive?"); 
+          if (conf){
+            Auth.pastUser(user).then(function(){
+                notify({message: "Account made inactive"}); 
+            }) .catch(function(){
+                notify({message: "Could not make a past account!", classes: ["alert-danger"]});
+            });
+        }
+    }
+
       $scope.setRole = function(){
         // $scope.user.role
         $http.post('/api/users/' + $stateParams.id + '/role', {
@@ -94,6 +105,7 @@ angular.module('observatory3App')
         });
       }
   })
+
   .directive('bio', function(){
 
       return {

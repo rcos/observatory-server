@@ -33,6 +33,9 @@
                 <br/>
                 {{user.email}}
         </div>
+            <div ng-show='isuser'>
+                 <button class="btn btn-primary" ng-click="pastUser()" type="button">Make Past User</button>
+            </div>
         </div>
         <div class='col-md-6'>
         <div ng-show="!user.tech.length">User has not input any tags</div>
