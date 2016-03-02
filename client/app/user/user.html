@@ -25,11 +25,11 @@
             </div>
             <!-- Single button -->
             <div class="btn-group col-sm-6 text-right col-height">
-                <div class="inside">
-                  <button type="button" class="btn btn-default dropdown-toggle pull-right" data-toggle="dropdown" aria-expanded="false">
+                <div class="inside" uib-dropdown is-open="developerMenu">
+                  <button type="button" class="btn btn-default pull-right" uib-dropdown-toggle aria-expanded="false">
                     {{currentView}} <span class="caret"></span>
                   </button>
-                  <ul class="dropdown-menu pull-right" role="menu">
+                  <ul class=" pull-right" uib-dropdown-menu role="menu">
                     <li><a href="#" ng-click="changeView('current')">Active Developers</a></li>
                     <li><a href="#" ng-click="changeView('past')">Past Developers</a></li>
                   </ul>

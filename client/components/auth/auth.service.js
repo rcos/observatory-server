@@ -197,6 +197,9 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
         return userRoles.indexOf(r) >= userRoles.indexOf(h);
       };
       if (arguments.length < 2) {
+        if (currentUser === undefined || !(currentUser.hasOwnProperty('role'))) {
+          return false;
+        }
         return hasRole(currentUser.role, role);
       }
       return Auth.getCurrentUser(null)

@@ -344,7 +344,7 @@ UserSchema.methods = {
                 return true;
               }
               else{
-                callback(null, true);
+                return callback(null, true);
               }
         }
     }

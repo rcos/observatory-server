@@ -9,5 +9,12 @@ angular.module('observatory3App.admin')
         controller: 'AdminCtrl',
         controllerAs: 'admin',
         authenticate: 'admin'
+      })
+      .state('classcontrol', {
+        url: '/admin/classcontrol',
+      	templateUrl: 'app/admin/classcontrol/classcontrol.html',
+        controller: 'AdminClassControlCtrl',
+        controllerAs: 'admin',
+        authenticate: 'admin'
       });
   });

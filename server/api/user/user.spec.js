@@ -18,23 +18,3 @@ describe('GET /api/users/past', function() {
       });
   });
 });
-
-
-describe('POST /api/users/', function() {
-    it('should respond with a token', function(done) {
-	//Create a user object without any of the required fields
-	var postData = {
-	    "user":{}
-	};
-
-	request(app)
-	    .post('/api/users/')
-	    .send(postData)
-	    .expect(422)
-	    .end(function(err, res) {
-		if(err) return done(err);
-			//TODO check if token present
-		done();
-	    });
-    });
-});
