@@ -13,12 +13,12 @@
             <div class="col-sm-6 text-left col-bottom col-height">
                 <div class="inside">
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></span>
-                        {{ currentPage + 1 }} of {{ numberOfPages() }}
+                    {{ currentPage + 1 }} of {{ numberOfPages() }}
                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></span>
                     <button type="button" class="btn btn-default btn-link" data-toggle="dropdown" ng-show="numberOfPages() > 1" ng-click="toggleViewAll()">
                         View all
                     </button>
-                    <button type="button" class="btn btn-default btn-link" data-toggle="dropdown" ng-show="numberOfPages() <= 1" ng-click="toggleViewAll()">
+                    <button type="button" class="btn btn-default btn-link" data-toggle="dropdown" ng-show="numberOfPages() <= 1 && users.length > pageSize" ng-click="toggleViewAll()">
                         View less
                     </button>
                 </div>
@@ -26,25 +26,28 @@
             <!-- Single button -->
             <div class="btn-group col-sm-6 text-right col-height">
                 <div class="inside">
-                  <button type="button" class="btn btn-default dropdown-toggle pull-right" data-toggle="dropdown" aria-expanded="false">
-                    {{currentView}} <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu pull-right" role="menu">
-                    <li><a href="#" ng-click="changeView('current')">Active Developers</a></li>
-                    <li><a href="#" ng-click="changeView('past')">Past Developers</a></li>
-                  </ul>
-              </div>
+                    <button type="button" class="btn btn-default dropdown-toggle pull-right" data-toggle="dropdown" aria-expanded="false">
+                        {{currentView}} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="#" ng-click="changeView('current')">Active Developers</a></li>
+                        <li><a href="#" ng-click="changeView('past')">Past Developers</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
+    <div class=row>
+            </br>
+    </div>
     <div class="row image-row">
         <div ng-repeat="user in users | startFrom:currentPage*pageSize | limitTo:pageSize">
-            <div class="col-lg-1 col-md-2 col-sm-6 col-xs-6 text-center user-box">
+            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 text-center user-box">
                 <a href="/users/{{ user._id}}/profile" class="user-avatar">
-                    <img class="profile-img img-responsive" src='{{user.avatar}}&s=248px'>
+                    <img class="profile-img img-responsive placeholder-img" ng-src='{{user.avatar}}&s=248px'>
                 </a>
                 <p class="user-name">
-                    <a href="/users/{{ user._id}}/profile">{{ user.name }}</a>
+                <a href="/users/{{ user._id}}/profile">{{ user.name }}</a>
                 </p>
             </div>
         </div>
