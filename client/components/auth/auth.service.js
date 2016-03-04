@@ -1,11 +1,11 @@
 'use strict';
 (function() {
-function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
+function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) {
     var currentUser = {};
     var safeCb = Util.safeCb;
     var currentUser = {};
     var userRoles = appConfig.userRoles || [];
-    if ($cookies.get('token') && $location.path() !== '/logout') {
+    if ($cookieStore.get('token') && $location.path() !== '/logout') {
       currentUser = User.get();
     }
 
@@ -36,7 +36,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
           token: resetToken
         })
           .then(res => {
-            $cookies.put('token', res.data.token);
+            $cookieStore.put('token', res.data.token);
             currentUser = User.get();
             return currentUser.$promise;
           })
@@ -65,7 +65,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
         password: password
       })
         .then(res => {
-          $cookies.put('token', res.data.token);
+          $cookieStore.put('token', res.data.token);
           currentUser = User.get();
           return currentUser.$promise;
         })
@@ -83,7 +83,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
      * Delete access token and user info
      */
     logout() {
-      $cookies.remove('token');
+      $cookieStore.remove('token');
       currentUser = {};
     },
     /**
@@ -96,7 +96,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
     createUser(user, callback) {
       return User.save(user,
         function(data) {
-          $cookies.put('token', data.token);
+          $cookieStore.put('token', data.token);
           currentUser = User.get();
           return safeCb(callback)(null, user);
         },
@@ -291,7 +291,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
      * @return {String} - a token string used for authenticating
      */
     getToken() {
-      return $cookies.get('token');
+      return $cookieStore.get('token');
     },
 
     /**
