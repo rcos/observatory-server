@@ -330,24 +330,29 @@ function loadUserProjects(user, callback){
  */
 UserSchema.methods = {
   /**
-   * Authenticate - check if the passwords are the same
-   *
-   * @param {String} password
-   * @param {Function} callback
-   * @return {Boolean}
-   * @api public
-   */
+  * Authenticate - check if the passwords are the same
+  * Also changes save method of the password if using an outdated one
+  * @param {String} password
+  * @param {Function} callback
+  * @return {Boolean}
+  * @api public
+  */
   authenticate(password, callback) {
-    console.log("Authenticate", this, password, this.encryptPasswordOld(password));
     if (!validatePresenceOf(this.password) && validatePresenceOf(this.hashedPassword)){
-        if (this.hashedPassword === this.encryptPasswordOld(password)){
-              if (!callback) {
-                return true;
-              }
-              else{
-                return callback(null, true);
-              }
+      if (this.hashedPassword === this.encryptPasswordOld(password)){
+        // Update passord in DB to new ecryption method
+
+        this.hashedPassword = undefined;
+        this.password = password; // Set the password field
+        this.save(); //Call the save pre-hooks (and re-encrypt the password)
+
+        if (!callback) {
+          return true;
         }
+        else{
+          return callback(null, true);
+        }
+      }
     }
     if (!callback) {
       return (this.password === this.encryptPassword(password));
