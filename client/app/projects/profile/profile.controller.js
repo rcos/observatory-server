@@ -4,6 +4,8 @@
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
     $scope.userOnProject = false;
+    $scope.website = "";
+    $scope.web_url="";
     
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
@@ -218,6 +220,18 @@ angular.module('observatory3App')
             });
         }
     };
+
+    $scope.editWebsite = function(){
+        console.log($scope.web_url);
+        $http.put('/api/projects/'+$scope.project._id+'/',{
+            'websiteUrl':$scope.web_url
+        }).success(function(){
+            notify({message: "Website changed!"});
+        }).error(function(){
+            notify({message:"Website not changed!"});
+        });
+    };
+    
 //tech bubble code
 	$scope.isMentor = Auth.isMentor;
 	$scope.addTechBubble = function(){

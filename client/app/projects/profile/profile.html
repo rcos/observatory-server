@@ -31,12 +31,27 @@
                 </ul>
             </div>
             <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
-
+            <div ng-show='isLoggedIn() && userOnProject' button type="button" class="btn btn-success" ng-click='joinProject()' data-toggle="modal" data-target="#editWebsite">Edit Website</div>
+            <div id = "editWebsite" class="modal fade" role="dialog">
+                <div class = "modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type = "button" class="close" data-dismiss="modal">&times;</button>
+                            <h4> Edit Website </h4>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <input type="text" class="form-control" placeholder="Enter new website" name="firstname" ng-model="web_url"><br>
+                                <button type = "button" class="danger" ng-click="editWebsite()"data-dismiss="modal">Save URL</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-7 project-image">
-
             <div class="fileUpload btn btn-sm btn-default" ng-show="userOnProject">
                 <span>Upload Images</span>
                 <div id="upload">
@@ -46,16 +61,18 @@
             <div class="remove-photo btn btn-sm btn-default text-right" ng-show="userOnProject && project && slides.length" ng-click="deletePhoto()">
                 <span>X</span>
             </div>
-
             <p ng-show="project.photos.length === 0">
                 No images uploaded yet.
             </p>
-
             <uib-carousel>
                 <uib-slide ng-repeat="slide in slides" active="slide.active">
                     <div style="background:url({{imgPrefix+slide.src}}) center center;" class="slide" alt=""></div>
                 </uib-slide>
             </uib-carousel>
+        </div>
+
+        <div class="edit_website">
+            
         </div>
 
         <div class="col-sm-4">
@@ -66,7 +83,6 @@
                 <div class="row" ng-repeat="user in authors">
                     <div class="col-md-3">
                         <img ng-src="{{getPic(user)}}&s=128px" class="img-responsive" alt="">
-
                     </div>
                     <div class="col-md-8">
                         <a href="/users/{{ user._id }}/profile" title="" class="contributor-name">
