@@ -1,3 +1,44 @@
+.row {
+  border: 1px solid red;
+}
+
+div [class *= "col-"] {
+  border: 1px solid blue;
+}
+
+.left-inner-addon {
+    position: relative;
+}
+.left-inner-addon input {
+    padding-left: 30px;    
+}
+.left-inner-addon i {
+    position: absolute;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+.right-inner-addon input {
+    padding-right: 30px;    
+}
+.right-inner-addon i {
+    position: absolute;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+.left, .right {
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+
+.right {
+  text-align: right;
+}
+
 .extra-content {
     background-color: #eee;
     clear: both;
