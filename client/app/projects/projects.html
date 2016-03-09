@@ -1,10 +1,54 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
+  <div class="row">
+      <div class="col-xs-12 col-md-10 col-md-offset-1">
+        <h3>{{ past ? "Past" : "Active" }} Projects</h3>
+      </div>
+      <div class="col-xs-12 col-md-4 col-md-offset-1 left">
+        <form class="form-inline" role="form">
+          <div class="left-inner-addon">
+            <i class="glyphicon glyphicon-search"></i>
+            <input type="text" class="form-control" placeholder="Search for project..." ng-model="searchString">
+          </div>
+        </form>
+      </div>
+      <div class="col-xs-12 col-md-6 right">
+        <button type="button" class="btn btn-primary" ng-click="getCurrentProjects()" ng-show="past">
+          Show Current Projects
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="getPastProjects()" ng-show="!past">
+          Show Past Projects
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProject" ng-show="user">
+          Add a Project
+        </button>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div ng-repeat="project in projects| searchFor:searchString">
+        <div class="extra-content" >
+          <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a> </h2>
+          <ul class="project-info">
+            <li><a href="{{project.websiteUrl}}">Website</a></li>
+            <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
+            <li><a href="{{project.repositories[0]}}">Repository</a></li>
+          </ul>
+          <div class="clear"></div>
+          <div id="description" btf-markdown="project.description"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br/><br/>
 
-    <div class="row">
-        <div class="col-md-4 text-center">
-            <h3> {{ past ? "Past" : "Active" }} Projects</h3>
+  <div class="modal fade" id="addProject" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="addProjectLabel">Add a Project</h4>
         </div>
         <div class="col-md-4 col-sm-7">
             <div class="row">

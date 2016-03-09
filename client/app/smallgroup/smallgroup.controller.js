@@ -10,7 +10,7 @@ angular.module('observatory3App')
             $scope.user = user;
             updateSmallGroup();
           });
-
+          
           var updateSmallGroup = function (callback) {
             callback = callback || function () {
             };

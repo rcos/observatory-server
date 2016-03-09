@@ -4,12 +4,12 @@
   <div class="row">
     <div class="col-sm-12">
       <h3> You do not have a small group </h3>
-      <button class="btn" ng-click='createSmallGroup()' ng-show='isMentor()'> Create Small Group </button>
+      <button class="btn btn-primary" ng-click="createSmallGroup()" ng-show="isMentor()"> Create Small Group </button>
     </div>
   </div>
 </div>
 
-<div ng-show='smallgroup' class="container smallgroup">
+<div ng-show="smallgroup" class="container smallgroup">
   <div class="row">
     <div class="col-sm-12" ng-hide="edittingSmallGroupName">
       <h3 class="group-name">
