@@ -7,9 +7,8 @@
             <p>
                 <pname></pname>
             </p>
-            <div class="btn-group description-buttons" ng-show="userOnProject">
-                <button type="button" class='btn btn-default btn-sm' ng-click='editName()'>Edit Project Name</button>
-                <button type="button" class='btn btn-default btn-sm' ng-click='saveName()'>Save Project Name</button>
+            <div class="btn-group description-buttons" data-toggle="modal" data-target="#editProject"  ng-show="userOnProject">
+                <button type="button" class='btn btn-default btn-sm'>Edit Project</button>
             </div>
         </div>
         <div class="col-sm-9 text-right header-buttons">
@@ -82,12 +81,6 @@
     </div>
     <div class="row">
         <div class="col-sm-7 description">
-            <div ng-show='userOnProject'>
-                <div class="btn-group description-buttons">
-                    <button type="button" class='btn btn-default btn-sm' ng-click='editDesc()'>Edit</button>
-                    <button type="button" class='btn btn-default btn-sm' ng-click='saveDesc()'>Save</button>
-                </div>
-            </div>
             <desc></desc>
         </div>
         <div class="col-sm-4">
@@ -103,6 +96,19 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="modal fade" id="editProject" tabindex="-1" role="dialog" aria-labelledby="editProjectLabel" aria-hidden="true">
+    <div class="modal-dialog">
+	<div class="modal-content">
+	    <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+               	<h4 class="modal-title" id="editProjectLabel">Edit Project</h4>
+	    </div>
+            <div class="modal-body">
+    	        <div ng-include="'components/projectModal/projectModal.html'" onload="editProject=Project"></div>
+            </div>
+	</div>
     </div>
 </div>
 </div>
