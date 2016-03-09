@@ -9,17 +9,17 @@
       </button>
       <a href="/" class="navbar-brand">RCOS</a>
     </div>
-    <div collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
+    <div uib-collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav">
         <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
             <a ng-href="{{item.link}}">{{item.title}}</a>
         </li>
         <li ng-show="isLoggedIn()" ng-class="{active: isActive('/attend')}"><a href="/attend">Attend</a></li>
         <li ng-show="displayURP"><a href='http://urp.rcos.xyz/'>URP Form</a></li>
-        <li ng-show="isMentor()" class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <li ng-show="isMentor()" uib-dropdown is-open="mentorMenu">
+            <a uib-dropdown-toggle href="#">
                 Mentor <span class="caret"></span></a>
-            <ul class="dropdown-menu">
+            <ul uib-dropdown-menu>
                 <li ng-show="isMentor()" ng-class="{active: isActive('/mentor')}">
                     <a href="/mentor">Verify Attendance</a>
                 </li>
@@ -28,10 +28,10 @@
                 </li>
             </ul>
         </li>
-        <li ng-show="isAdmin()" class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <li ng-show="isAdmin()" uib-dropdown is-open="adminMenu">
+            <a uib-dropdown-toggle href="#">
                 Admin <span class="caret"></span></a>
-            <ul class="dropdown-menu">
+            <ul uib-dropdown-menu>
                 <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}">
                     <a href="/admin">Users</a>
                 </li>

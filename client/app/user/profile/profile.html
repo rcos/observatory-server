@@ -33,8 +33,11 @@
                 <br/>
                 {{user.email}}
         </div>
-            <div ng-show='isuser'>
-                 <button class="btn btn-primary" ng-click="pastUser()" type="button">Make Past User</button>
+            <div ng-show='isuser && user.active'>
+                 <button class="btn btn-primary" ng-click="pastUser(user)" type="button">Make Past User</button>
+            </div>
+            <div ng-show='isuser && !user.active'>
+                 <button class="btn btn-primary" ng-click="currentUser(user)" type="button">Make Current User</button>
             </div>
         </div>
         <div class='col-md-6'>

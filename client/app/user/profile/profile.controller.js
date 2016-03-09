@@ -86,14 +86,21 @@ angular.module('observatory3App')
       };
 
       $scope.pastUser = function(user){
-          var conf = confirm("Are you sure you want to make your account inactive?"); 
+          var conf = confirm("Are you sure you want to make your account inactive?");
           if (conf){
             Auth.pastUser(user).then(function(){
-                notify({message: "Account made inactive"}); 
+                notify({message: "Account made inactive"});
             }) .catch(function(){
-                notify({message: "Could not make a past account!", classes: ["alert-danger"]});
+                notify({message: "Could not make account inactive!", classes: ["alert-danger"]});
             });
         }
+    }
+      $scope.currentUser = function(user){
+          Auth.currentUser(user).then(function(){
+              notify({message: "Account made active"});
+          }) .catch(function(){
+              notify({message: "Could not make account active!", classes: ["alert-danger"]});
+          });
     }
 
       $scope.setRole = function(){

@@ -1,11 +1,11 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var crypto = require('crypto');
-var md5 = require('MD5');
-var Commit = require('../commit/commit.model');
-var ClassYear = require('../classyear/classyear.model');
+import crypto from 'crypto';
+var mongoose = require('bluebird').promisifyAll(require('mongoose'));
+import {Schema} from 'mongoose';
+const authTypes = ['github', 'twitter', 'facebook', 'google'];
+
+var md5 = require('md5');
 var Project = require('../project/project.model');
 
 var UserSchema = new Schema({
@@ -17,6 +17,7 @@ var UserSchema = new Schema({
     default: 'user'
   },
   smallgroup: {type : Schema.Types.ObjectId, ref: 'SmallGroup'},
+  password: String,
   hashedPassword: String,
   provider: String,
   salt: String,
@@ -43,23 +44,16 @@ var UserSchema = new Schema({
     }],
     login: {type: String, lowercase: true},
     profile: String,
-  }
+},
+  facebookLogin: {},
+  googleLogin: {},
+  githubLogin: {}
 
 });
 
 /**
  * Virtuals
  */
-UserSchema
-  .virtual('password')
-  .set(function(password) {
-    this._password = password;
-    this.salt = this.makeSalt();
-    this.hashedPassword = this.encryptPassword(password);
-  })
-  .get(function() {
-    return this._password;
-  });
 
 /**
 * Get gravatar url
@@ -96,12 +90,12 @@ UserSchema
     today.setHours(0,0,0,0);
 
     for (var i = 0;i < this.attendance.length;i++){
-      if (isoDateToTime(this.attendance[i]) == today.getTime()){
+      if (isoDateToTime(this.attendance[i]) === today.getTime()){
         return "present";
       }
     }
     for (var i = 0;i < this.unverifiedAttendance.length;i++){
-      if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+      if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
         return "unverified";
       }
     }
@@ -113,14 +107,14 @@ UserSchema
     if (status === "present"){
       // Make sure user is not unverified for today
       for (var i = this.unverifiedAttendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
            this.unverifiedAttendance.splice(i,1);
         }
       }
 
       // If user already has attendance don't change anything
       for (var i = 0;i < this.attendance.length;i++){
-        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+        if (isoDateToTime(this.attendance[i]) === today.getTime()){
           return;
         }
       }
@@ -128,14 +122,14 @@ UserSchema
     }else if (status === "unverified"){
       // If user already has attendance remove their attendance
       for (var i = this.attendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+        if (isoDateToTime(this.attendance[i]) === today.getTime()){
           this.attendance.splice(i,1);
         }
       }
 
       // See if user already is unverifed
       for (var i = 0;i < this.unverifiedAttendance.length;i++){
-        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
           return;
         }
       }
@@ -144,12 +138,12 @@ UserSchema
     }else if (status === "absent"){
       // Remove attendance from unverified and attendance
       for (var i = this.attendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.attendance[i]) == today.getTime()){
+        if (isoDateToTime(this.attendance[i]) === today.getTime()){
           this.attendance.splice(i,1);
         }
       }
       for (var i = this.unverifiedAttendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.unverifiedAttendance[i]) == today.getTime()){
+        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
            this.unverifiedAttendance.splice(i,1);
         }
       }
@@ -169,6 +163,7 @@ UserSchema
       'name': this.name,
       'role': this.role,
       'avatar': this.avatar,
+      'active': this.active,
       'email': this.email,
       'semesters': this.semesterCount,
       'attendance': this.attendance,
@@ -188,6 +183,7 @@ UserSchema
     var data = this.toObject();
     data.avatar = this.avatar;
     data.attendance = 0;
+    delete data.password ;
     delete data.hashedPassword ;
     delete data.salt ;
   return data;
@@ -220,14 +216,14 @@ UserSchema
 UserSchema
   .virtual('isAdmin')
   .get(function(){
-      return this.role == 'admin';
+      return this.role === 'admin';
   });
 
 // Helper Virtual for isAdmin
 UserSchema
   .virtual('isMentor')
   .get(function(){
-    return this.role == 'admin' || this.role == 'mentor';
+    return this.role === 'admin' || this.role === 'mentor';
   });
 
 /**
@@ -238,14 +234,20 @@ UserSchema
 UserSchema
   .path('email')
   .validate(function(email) {
+    if (authTypes.indexOf(this.provider) !== -1) {
+      return true;
+    }
     return email.length;
   }, 'Email cannot be blank');
 
 // Validate empty password
 UserSchema
-  .path('hashedPassword')
-  .validate(function(hashedPassword) {
-    return hashedPassword.length;
+  .path('password')
+  .validate(function(password) {
+    if (authTypes.indexOf(this.provider) !== -1) {
+      return true;
+    }
+    return password.length;
   }, 'Password cannot be blank');
 
 // Validate email is not taken
@@ -253,37 +255,60 @@ UserSchema
   .path('email')
   .validate(function(value, respond) {
     var self = this;
-    this.constructor.findOne({email: value}, function(err, user) {
-      if(err) throw err;
-      if(user) {
-        if(self.id === user.id) return respond(true);
-        return respond(false);
-      }
-      respond(true);
-    });
-}, 'The specified email address is already in use.');
+    return this.constructor.findOneAsync({ email: value })
+      .then(function(user) {
+        if (user) {
+          if (self.id === user.id) {
+            return respond(true);
+          }
+          return respond(false);
+        }
+        return respond(true);
+      })
+      .catch(function(err) {
+        throw err;
+      });
+  }, 'The specified email address is already in use.');
 
 var validatePresenceOf = function(value) {
   return value && value.length;
 };
 
 /**
- * Pre-save hook
- */
+* Pre-save hook
+*/
 UserSchema
-  .pre('save', function(next) {
-    if (!this.isNew) return next();
-
-    if (!validatePresenceOf(this.hashedPassword))
-      next(new Error('Invalid password'));
-    else
-      next();
-  });
+.pre('save', function(next) {
+    // Handle new/update passwords
+    if (!this.isModified('password')) {
+        return next();
+    }
+    if (validatePresenceOf(this.hashedPassword) ) {
+      this.hashedPassword = undefined;
+    }
+    if (!(validatePresenceOf(this.password) )&& authTypes.indexOf(this.provider) === -1) {
+        next(new Error('Invalid password'));
+    }
+    // Make salt with a callback
+    this.makeSalt((saltErr, salt) => {
+        if (saltErr) {
+            next(saltErr);
+        }
+        this.salt = salt;
+        this.encryptPassword(this.password, (encryptErr, hashedPassword) => {
+            if (encryptErr) {
+                next(encryptErr);
+            }
+            this.password = hashedPassword;
+            next();
+        });
+    });
+});
 
 
 function loadUserProjects(user, callback){
     // If the user doesn't have any projects, return
-    if (user.projects.length == 0){
+    if (user.projects.length === 0){
         return callback([]);
     }
     // Otherwise load all the user projects
@@ -293,7 +318,7 @@ function loadUserProjects(user, callback){
         Project.findById(user.projects[i], function(err, project){
             loadedProjects ++;
             if (!err) fullProjects.push(project);
-            if (loadedProjects == user.projects.length){
+            if (loadedProjects === user.projects.length){
                 return callback(fullProjects);
             }
         });
@@ -305,14 +330,44 @@ function loadUserProjects(user, callback){
  */
 UserSchema.methods = {
   /**
-   * Authenticate - check if the passwords are the same
-   *
-   * @param {String} plainText
-   * @return {Boolean}
-   * @api public
-   */
-  authenticate: function(plainText) {
-    return this.encryptPassword(plainText) === this.hashedPassword;
+  * Authenticate - check if the passwords are the same
+  * Also changes save method of the password if using an outdated one
+  * @param {String} password
+  * @param {Function} callback
+  * @return {Boolean}
+  * @api public
+  */
+  authenticate(password, callback) {
+    if (!validatePresenceOf(this.password) && validatePresenceOf(this.hashedPassword)){
+      if (this.hashedPassword === this.encryptPasswordOld(password)){
+        // Update passord in DB to new ecryption method
+
+        this.hashedPassword = undefined;
+        this.password = password; // Set the password field
+        this.save(); //Call the save pre-hooks (and re-encrypt the password)
+
+        if (!callback) {
+          return true;
+        }
+        else{
+          return callback(null, true);
+        }
+      }
+    }
+    if (!callback) {
+      return (this.password === this.encryptPassword(password));
+    }
+    this.encryptPassword(password, (err, pwdGen) => {
+      if (err) {
+        return callback(err);
+      }
+
+      if (this.password === pwdGen) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    });
   },
 
   /**
@@ -328,24 +383,78 @@ UserSchema.methods = {
   /**
    * Make salt
    *
+   * @param {Number} byteSize Optional salt byte size, default to 16
+   * @param {Function} callback
    * @return {String}
    * @api public
    */
-  makeSalt: function() {
-    return crypto.randomBytes(16).toString('base64');
+  makeSalt(byteSize, callback) {
+    var defaultByteSize = 16;
+
+    if (typeof arguments[0] === 'function') {
+      callback = arguments[0];
+      byteSize = defaultByteSize;
+    } else if (typeof arguments[1] === 'function') {
+      callback = arguments[1];
+    }
+
+    if (!byteSize) {
+      byteSize = defaultByteSize;
+    }
+
+    if (!callback) {
+      return crypto.randomBytes(byteSize).toString('base64');
+    }
+
+    return crypto.randomBytes(byteSize, (err, salt) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, salt.toString('base64'));
+      }
+    });
   },
 
   /**
-   * Encrypt password
+   * Encrypt password (Old method)
    *
    * @param {String} password
    * @return {String}
    * @api public
    */
-  encryptPassword: function(password) {
+  encryptPasswordOld: function(password) {
     if (!password || !this.salt) return '';
     var salt = new Buffer(this.salt, 'base64');
     return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+  },
+
+ /**
+  * Encrypt password
+  *
+  * @param {String} password
+  * @param {Function} callback
+  * @return {String}
+  * @api public
+  */
+ encryptPassword: function(password, callback) {
+   if (!password || !this.salt) {
+     return null;
+   }
+    var defaultIterations = 10000;
+    var defaultKeyLength = 64;
+
+   var salt = new Buffer(this.salt, 'base64');
+   if (!callback) {
+     return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength).toString('base64');
+   }
+
+    return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, (err, key) => {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, key.toString('base64'));
+      }
+    });
   },
 
   /**
@@ -355,7 +464,7 @@ UserSchema.methods = {
    *        have been loaded
    * @api public
    */
-  getFullProfile: function(callback){
+  getFullProfile: function(callback) {
      var user = this;
      loadUserProjects(user, function(fullProjects){
          callback({
@@ -363,6 +472,7 @@ UserSchema.methods = {
            'name': user.name,
            'role': user.role,
            'avatar': user.avatar,
+           'active': user.active,
            'email': user.email,
            'semesters': user.semesterCount,
            'projects': fullProjects,
@@ -374,5 +484,4 @@ UserSchema.methods = {
   }
 };
 
-
-module.exports = mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);
