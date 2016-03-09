@@ -21,11 +21,11 @@ angular.module('observatory3App')
     }
 
     $scope.updateUserRole = function(user) {
-      
+
       $http.post('/api/users/' + user._id + '/role', {
             role: user.role
         }).success(function() {
-          notify('Updated user role.')
+          notify('Updated user role.');
         }).error(function() {
           notify('Unable to set user role');
         });

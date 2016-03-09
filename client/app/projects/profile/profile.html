@@ -22,11 +22,11 @@
 
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
             <a class="btn btn-info" href="{{project.repositories[0]}}" title="" ng-show="project.repositories.length == 1">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
-            <div class="btn-group" ng-show="project.repositories.length > 1">
-                <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <div class="btn-group" uib-dropdown is-open="repositoryMenu"  ng-show="project.repositories.length > 1">
+                <a class="btn btn-info dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
                     Repositories <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" uib-dropdown-menu>
                     <li><a href="{{repo}}" ng-repeat="repo in project.repositories">{{repo}} <span class="glyphicon glyphicon-menu-right"></span></a></li>
                 </ul>
             </div>

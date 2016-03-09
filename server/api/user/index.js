@@ -1,11 +1,9 @@
 'use strict';
 
-var express = require('express');
-var controller = require('./user.controller');
-var config = require('../../config/environment');
-var auth = require('../../auth/auth.service');
-
-var router = express.Router();
+import {Router} from 'express';
+import * as controller from './user.controller';
+import * as auth from '../../auth/auth.service';
+var router = new Router();
 
 router.get('/',  controller.list);
 router.get('/past', controller.past);
@@ -36,4 +34,4 @@ router.post('/resetPassword', controller.resetPassword);
 router.put('/:id/removeUser',controller.deleteUser); 
 
 
-module.exports = router;
+export default router;
