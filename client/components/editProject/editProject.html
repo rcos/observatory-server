@@ -1,4 +1,4 @@
-<div ng-controller="ProjectModalCtrl">
+<div>
     <form class="form" name="editProjectForm" ng-submit="submit(editProjectForm)" novalidate>
         <label>Your project's github repository</label>
         <div class="input-group">
@@ -6,13 +6,13 @@
 
             <div class="form-group" ng-class="{ 'has-success': editProjectForm.githubUsername.$valid && submitted,
                 'has-error': editProjectForm.githubUsername.$invalid && submitted }">
-                <input type="text" name="githubUsername" class="form-control" ng-model="projectToEdit.githubUsername" required/>
+                <input type="text" name="githubUsername" class="form-control" ng-model="project.githubUsername" required/>
             </div>
             <span class="input-group-addon">/</span>
 
             <div class="form-group" ng-class="{ 'has-success': editProjectForm.githubProjectName.$valid && submitted,
                 'has-error': editProjectForm.githubProjectName.$invalid && submitted }">
-                <input type="text" name="githubProjectName" id="githubProjectName" class="form-control" ng-model="projectToEdit.githubProjectName" required/>
+                <input type="text" name="githubProjectName" id="githubProjectName" class="form-control" ng-model="project.githubProjectName" required/>
             </div>
         </div>
 
@@ -37,7 +37,7 @@
         'has-error': editProjectForm.name.$invalid && submitted }">
             <label>Name of the project</label>
 
-            <input type="text" name="name" class="form-control" ng-model="projectToEdit.name" required/>
+            <input type="text" name="name" class="form-control" ng-model="project.name" required/>
             <p class="help-block" ng-show="editProjectForm.name.$error.required && submitted">
             A name is required
             </p>
@@ -47,7 +47,7 @@
         'has-error': editProjectForm.websiteUrl.$invalid && submitted }">
             <label>Your project's homepage</label>
 
-            <input type="url" name="websiteUrl" class="form-control" ng-model="projectToEdit.websiteUrl" required />
+            <input type="url" name="websiteUrl" class="form-control" ng-model="project.websiteUrl" required />
             <p class="help-block" ng-show="editProjectForm.websiteUrl.$error.url && submitted">
             Doesn't look like a valid url.
             </p>
@@ -60,8 +60,8 @@
             <label>Additional repositories</label>
             <button class="btn btn-xs btn-success" type="button" ng-click="addRepository()">+</button>
 
-            <div ng-repeat="repo in projectToEdit.repositories track by $id($index)" ng-if="$index >= 1">
-                <input type="text" name="repository" class="form-control repo" ng-model="projectToEdit.repositories[$index]" />
+            <div ng-repeat="repo in project.repositories track by $id($index)" ng-if="$index >= 1">
+                <input type="text" name="repository" class="form-control repo" ng-model="project.repositories[$index]" />
                 <button class="btn btn-danger repoButton" type="button" ng-click="removeRepository($index)">-</button>
             </div>
         </div>
@@ -70,7 +70,7 @@
         'has-error': editProjectForm.description.$invalid && submitted }">
             <label>Describe your project</label>
 
-            <textarea name="description" class="form-control" ng-model="projectToEdit.description" required></textarea>
+            <textarea name="description" class="form-control" ng-model="project.description" required></textarea>
             <p class="help-block" ng-show="editProjectForm.description.$error.required && submitted">
             The project's description is required
             </p>
@@ -78,9 +78,10 @@
 
         <div class="form-group">
             <label>Is this project active?</label>
-            <input id="active" type="checkbox" class="form-control" ng-model="projectToEdit.active">
+            <input id="active" type="checkbox" class="form-control" ng-model="project.active">
         </div>
 
+        <button ng-click="log()"> click me</button>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Submit</button>

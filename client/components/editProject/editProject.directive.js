@@ -1,20 +1,19 @@
 'use strict';
 
-angular.module('observatory3App')
-
-.controller('ProjectModalCtrl', function ($scope, $location, $http, Auth) {
+var projectEditController = function($scope, $location, $http, Auth){
     $scope.projectToEdit = {active: true, repositories: [""]};
-    console.log($scope.editProject);
+    if ($scope.project) {
+        $scope.projectToEdit = $scope.project;
+    }
 
     $scope.getInfo = function() {
-        console.log($scope.projectToEdit.githubUsername);
         if($scope.projectToEdit.githubUsername && $scope.projectToEdit.githubProjectName) {
             $scope.projectToEdit.name = $scope.projectToEdit.githubProjectName;
             $.getJSON('https://api.github.com/repos/' + $scope.projectToEdit.githubUsername + '/' + $scope.projectToEdit.githubProjectName, function(response) {
-                $scope.projectToEdit.websiteURL = response.homepage;
-                $scope.projectToEdit.description = response.description;
-                $scope.$apply();
-            });
+                    $scope.projectToEdit.websiteURL = response.homepage;
+                    $scope.projectToEdit.description = response.description;
+                    $scope.$apply();
+                    });
         }
     };
 
@@ -45,4 +44,21 @@ angular.module('observatory3App')
             }, 200);
         }
     };
+}
+
+angular.module('observatory3App')
+.directive('editProject', function() {
+    return {
+        restrict: "E",
+        templateUrl: "components/editProject/editProject.html",
+        controller: projectEditController,
+        scope: {
+            project: '='
+        },
+    };
+
 });
+
+/* function ($scope, $location, $http, Auth) {
+   });
+   */

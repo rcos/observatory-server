@@ -4,10 +4,12 @@
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
     $scope.userOnProject = false;
-    
+    $scope.editProject = {};
+
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
             $scope.project = result.data;
+            angular.copy($scope.project, $scope.editProject);
             initializeSlides($scope.project.photos);
             getAuthors();
             Auth.isLoggedInAsync(function(loggedIn){
@@ -154,12 +156,12 @@ angular.module('observatory3App')
         }).error(function(){
             notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
-    };  
+    };
 
     $scope.markPast = function(){
         $http.put('api/projects/'+$scope.project._id+'/markPast').success(function(){
-            notify("Project marked as past project"); 
-            updateProject(); 
+            notify("Project marked as past project");
+            updateProject();
         }).error(function(){
             notify("Project not marked as a past project")
         });
@@ -167,8 +169,8 @@ angular.module('observatory3App')
 
     $scope.markActive =  function(){
         $http.put('api/projects/'+$scope.project._id+'/markActive').success(function(){
-            notify("Project marked as a current project"); 
-            updateProject(); 
+            notify("Project marked as a current project");
+            updateProject();
         }).error(function(){
             notify("ERROR: Project not marked as a current project")
         });
