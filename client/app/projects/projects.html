@@ -65,7 +65,7 @@
             </div>
         </div>
         <div class="col-md-4 col-sm-5">
-            <button type="button" class="btn btn-primary pull-right top-group" data-toggle="modal" data-target="#addProject" ng-show="user">
+            <button type="button" class="btn btn-primary pull-right top-group" data-toggle="modal" data-target="#editProject" ng-show="user">
                 Add a Project
             </button>
             <button type="button" class="btn btn-primary pull-right top-group" ng-click="getCurrentProjects()" ng-show="past">
@@ -95,7 +95,7 @@
     </div>
     <br/><br/>
 
-    <div class="modal fade" id="addProject" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
+    <div class="modal fade" id="editProject" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -103,93 +103,7 @@
                     <h4 class="modal-title" id="addProjectLabel">Add a Project</h4>
                 </div>
                 <div class="modal-body" >
-                    <form class="form" name="addProjectForm" ng-submit="submit(addProjectForm)" novalidate>
-                        <label>Your project's github repository</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">https://github.com/</span>
-
-                            <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
-                            'has-error': addProjectForm.githubUsername.$invalid && submitted }">
-                                <input type="text" name="githubUsername" class="form-control" ng-model="projectToAdd.githubUsername" required/>
-                            </div>
-                            <span class="input-group-addon">/</span>
-
-                            <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
-                            'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
-                                <input type="text" name="githubProjectName" id="githubProjectName" class="form-control" ng-model="projectToAdd.githubProjectName" required/>
-                            </div>
-                        </div>
-
-                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubUsername.$valid && submitted,
-                        'has-error': addProjectForm.githubUsername.$invalid && submitted }">
-                            <p class="help-block" ng-show="addProjectForm.githubUsername.$error.required && submitted">
-                            The project owner's github username is required
-                            </p>
-                        </div>
-                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.githubProjectName.$valid && submitted,
-                        'has-error': addProjectForm.githubProjectName.$invalid && submitted }">
-                            <p class="help-block" ng-show="addProjectForm.githubProjectName.$error.required && submitted">
-                            The project's github name is required
-                            </p>
-                        </div>
-
-                        <div id="getInfo" align="right">
-                            <button type="button" class="btn btn-default" ng-click="getInfo()" >Auto-complete info via github</button>
-                        </div>
-
-                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.name.$valid && submitted,
-                        'has-error': addProjectForm.name.$invalid && submitted }">
-                            <label>Name of the project</label>
-
-                            <input type="text" name="name" class="form-control" ng-model="projectToAdd.name" required/>
-                            <p class="help-block" ng-show="addProjectForm.name.$error.required && submitted">
-                            A name is required
-                            </p>
-                        </div>
-
-                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.websiteUrl.$valid && submitted,
-                        'has-error': addProjectForm.websiteUrl.$invalid && submitted }">
-                            <label>Your project's homepage</label>
-
-                            <input type="url" name="websiteUrl" class="form-control" ng-model="projectToAdd.websiteUrl" required />
-                            <p class="help-block" ng-show="addProjectForm.websiteUrl.$error.url && submitted">
-                            Doesn't look like a valid url.
-                            </p>
-                            <p class="help-block" ng-show="addProjectForm.websiteUrl.$error.required && submitted">
-                            Project homepage is required
-                            </p>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Additional repositories</label>
-                            <button class="btn btn-xs btn-success" type="button" ng-click="addRepository()">+</button>
-
-                            <div ng-repeat="repo in projectToAdd.repositories track by $id($index)" ng-if="$index >= 1">
-                                <input type="text" name="repository" class="form-control repo" ng-model="projectToAdd.repositories[$index]" />
-                                <button class="btn btn-danger repoButton" type="button" ng-click="removeRepository($index)">-</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group" ng-class="{ 'has-success': addProjectForm.description.$valid && submitted,
-                        'has-error': addProjectForm.description.$invalid && submitted }">
-                            <label>Describe your project</label>
-
-                            <textarea name="description" class="form-control" ng-model="projectToAdd.description" required></textarea>
-                            <p class="help-block" ng-show="addProjectForm.description.$error.required && submitted">
-                            The project's description is required
-                            </p>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Is this project active?</label>
-                            <input id="active" type="checkbox" class="form-control" ng-model="projectToAdd.active">
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
+                    <edit-project></edit-project>
                 </div>
             </div>
         </div>
