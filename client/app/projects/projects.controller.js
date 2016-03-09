@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('observatory3App')
-
-.controller('ProjectsCtrl', function ($scope, $location, $http, Auth) {
+.controller('ProjectsCtrl', function ($scope, $location, $http, Auth, focus) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
     $scope.loggedIn = false;
+    focus('searchProjectsInput');
 
     Auth.isLoggedInAsync(function(loggedIn){
         if (loggedIn){
