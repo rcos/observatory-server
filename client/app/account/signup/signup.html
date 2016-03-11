@@ -1,107 +1,123 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-sm-12 col-md-6 col-md-offset-3 text-center">
-      <h1>Sign up</h1>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-md-offset-3 text-center">
+            <h1>Sign up</h1>
+        </div>
     </div>
-    <div class="col-sm-12 col-md-6 col-md-offset-3">
-      <form class="form" name="form" ng-submit="register(form)" novalidate>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form" name="form" ng-submit="register(form)" novalidate>
 
-        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
-            ng-class="{ 'has-success': form.name.$valid && (submitted || form.name.$dirty),
-                        'has-error': form.name.$invalid && (submitted || form.name.$dirty) }">
-          <label>Name</label>
+                        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                                                ng-class="{ 'has-success': form.name.$valid && (submitted || form.name.$dirty),
+                                                'has-error': form.name.$invalid && (submitted || form.name.$dirty) }">
+                            <label>Name</label>
 
-          <input type="text" name="name" class="form-control" ng-model="user.name" required/>
-          <p class="help-block" ng-show="form.name.$error.required && (submitted || form.name.$dirty)">
-            A name is required
-          </p>
+                            <input id="name" type="text" name="name" class="form-control" ng-model="user.name" autofocus required/>
+                            <p class="help-block" ng-show="form.name.$error.required && (submitted || form.name.$dirty)">
+                            A name is required
+                            </p>
+                        </div>
+
+                        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                                                ng-class="{ 'has-success': form.email.$valid && (submitted || form.email.$dirty),
+                                                'has-error': form.email.$invalid && (submitted || form.email.$dirty) }">
+                            <label>Email</label>
+
+                            <input type="email" name="email" class="form-control" ng-model="user.email"
+                                                                                  required
+                                                                                  mongoose-error/>
+                            <p class="help-block" ng-show="form.email.$error.email && (submitted || form.email.$dirty)">
+                            Doesn't look like a valid email.
+                            </p>
+                            <p class="help-block" ng-show="form.email.$error.required && (submitted || form.email.$dirty)">
+                            What's your email address?
+                            </p>
+                            <p class="help-block" ng-show="form.email.$error.mongoose">
+                            {{ errors.email }}
+                            </p>
+                        </div>
+
+                        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                                                ng-class="{ 'has-success': form.github.$valid && (submitted || form.github.$dirty),
+                                                'has-error': form.github.$invalid && (submitted || form.github.$dirty) }">
+                            <label>Github User Name</label>
+                            <input type="text" name="github" class="form-control" ng-model="user.githubLogin"
+                                                                                  required>
+                            <p class="help-block" ng-show="form.github.$error.required && (submitted || form.github.$dirty)">
+                            What's your github username?
+                            </p>
+                            <p class="help-block" ng-show="form.github.$error.mongoose">
+                            {{ errors.github }}
+                            </p>
+                        </div>
+
+                        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                                                ng-class="{ 'has-success': form.password.$valid && (submitted || form.password.$dirty),
+                                                'has-error': form.password.$invalid && (submitted || form.password.$dirty) }">
+                            <label>Password</label>
+
+                            <input type="password" name="password" class="form-control" ng-model="user.password"
+                                                                                        ng-minlength="3"
+                                                                                        required
+                                                                                        mongoose-error/>
+                            <p class="help-block"
+                               ng-show="(form.password.$error.minlength || form.password.$error.required) && (submitted || form.password.$dirty)">
+                            Password must be at least 3 characters.
+                            </p>
+                            <p class="help-block" ng-show="form.password.$error.mongoose">
+                            {{ errors.password }}
+                            </p>
+                        </div>
+                        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                                                ng-class="{ 'has-success': form.passwordverify.$valid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)),
+                                                'has-error': form.passwordverify.$invalid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)) }">
+                            <label>Re-type Password</label>
+
+                            <input type="password" name="passwordverify" class="form-control" ng-model="user.passwordverify"
+                                                                                              ng-minlength="3"
+                                                                                              required
+                                                                                              match-field="password"
+                                                                                              />
+                            <p class="help-block"
+                               ng-show="(form.passwordverify.$error.minlength || form.passwordverify.$error.required) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
+                            Password must be at least 3 characters.
+                            </p>
+                            <p class="help-block"
+                               ng-show="(form.passwordverify.$error.matchField) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
+                            Passwords must match
+                            </p>
+
+                        </div>
+
+                        <div class="text-center">
+                            <button class="btn btn-lg btn-success btn-login" ng-class="{'disabled': !form.$valid}" type="submit">
+                                Sign up
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
-            ng-class="{ 'has-success': form.email.$valid && (submitted || form.email.$dirty),
-                        'has-error': form.email.$invalid && (submitted || form.email.$dirty) }">
-          <label>Email</label>
-
-          <input type="email" name="email" class="form-control" ng-model="user.email"
-                 required
-                 mongoose-error/>
-          <p class="help-block" ng-show="form.email.$error.email && (submitted || form.email.$dirty)">
-            Doesn't look like a valid email.
-          </p>
-          <p class="help-block" ng-show="form.email.$error.required && (submitted || form.email.$dirty)">
-            What's your email address?
-          </p>
-          <p class="help-block" ng-show="form.email.$error.mongoose">
-            {{ errors.email }}
-          </p>
-        </div>
-
-        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
-            ng-class="{ 'has-success': form.github.$valid && (submitted || form.github.$dirty),
-                        'has-error': form.github.$invalid && (submitted || form.github.$dirty) }">
-          <label>Github User Name</label>
-          <input type="text" name="github" class="form-control" ng-model="user.githubLogin"
-                 required>
-          <p class="help-block" ng-show="form.github.$error.required && (submitted || form.github.$dirty)">
-           What's your github username?
-          </p>
-          <p class="help-block" ng-show="form.github.$error.mongoose">
-           {{ errors.github }}
-          </p>
-        </div>
-
-        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
-            ng-class="{ 'has-success': form.password.$valid && (submitted || form.password.$dirty),
-                        'has-error': form.password.$invalid && (submitted || form.password.$dirty) }">
-          <label>Password</label>
-
-          <input type="password" name="password" class="form-control" ng-model="user.password"
-                 ng-minlength="3"
-                 required
-                 mongoose-error/>
-          <p class="help-block"
-             ng-show="(form.password.$error.minlength || form.password.$error.required) && (submitted || form.password.$dirty)">
-            Password must be at least 3 characters.
-          </p>
-          <p class="help-block" ng-show="form.password.$error.mongoose">
-            {{ errors.password }}
-          </p>
-        </div>
-        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
-            ng-class="{ 'has-success': form.passwordverify.$valid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)),
-                        'has-error': form.passwordverify.$invalid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)) }">
-          <label>Re-type Password</label>
-
-          <input type="password" name="passwordverify" class="form-control" ng-model="user.passwordverify"
-                 ng-minlength="3"
-                 required
-                 match-field="password"
-                 />
-          <p class="help-block"
-             ng-show="(form.passwordverify.$error.minlength || form.passwordverify.$error.required) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
-            Password must be at least 3 characters.
-          </p>
-          <p class="help-block"
-             ng-show="(form.passwordverify.$error.matchField) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
-            Passwords must match
-          </p>
-
-        </div>
-
-        <div>
-          <button class="btn btn-lg btn-inverse btn-login" ng-class="{'disabled': !form.$valid}" type="submit">
-            Sign up
-          </button>
-          <a class="btn btn-default btn-lg btn-register" href="/login">
-            Login
-          </a>
-        </div>
-
-      </form>
     </div>
-  </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="text-center" >
+                        Have an Account?
+                        <a class="" href="/login">
+                            Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <div ng-include="'components/footer/footer.html'"></div>
