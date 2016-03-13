@@ -30,7 +30,7 @@
       "should": false,
       "expect": true
     },
-    "generatorVersion": "3.3.0",
+    "generatorVersion": "3.4.0",
     "endpointDirectory": "server/api/",
     "insertModels": true,
     "registerModelsFile": "server/sqldb/index.js",
