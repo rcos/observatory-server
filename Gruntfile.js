@@ -1,4 +1,4 @@
-// Generated on 2016-03-01 using generator-angular-fullstack 3.3.0
+// Generated on 2016-03-12 using generator-angular-fullstack 3.4.0
 'use strict';
 
 module.exports = function (grunt) {
@@ -291,8 +291,7 @@ module.exports = function (grunt) {
       dist: {
         src: [
           '<%= yeoman.dist %>/<%= yeoman.client %>/!(bower_components){,*/}*.{js,css}',
-          '<%= yeoman.dist %>/<%= yeoman.client %>/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-          '<%= yeoman.dist %>/<%= yeoman.client %>/assets/fonts/*'
+          '<%= yeoman.dist %>/<%= yeoman.client %>/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
     },
@@ -319,6 +318,9 @@ module.exports = function (grunt) {
         ],
         // This is so we update image references in our ng-templates
         patterns: {
+          css: [
+            [/(assets\/images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the CSS to reference our revved images']
+          ],
           js: [
             [/(assets\/images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the JS to reference our revved images']
           ]
@@ -337,6 +339,7 @@ module.exports = function (grunt) {
         }]
       }
     },
+
     // Allow the use of non-minsafe AngularJS files. Automatically makes it
     // minsafe compatible so Uglify does not destroy the ng references
     ngAnnotate: {
@@ -349,6 +352,7 @@ module.exports = function (grunt) {
         }]
       }
     },
+
     // Dynamically generate angular constant `appConfig` from
     // `server/config/environment/shared.js`
     ngconstant: {
@@ -515,6 +519,7 @@ module.exports = function (grunt) {
         src: ['<%= yeoman.server %>/**/*.integration.js']
       }
     },
+
     mocha_istanbul: {
       unit: {
         options: {
@@ -598,7 +603,10 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.server %>',
-          src: ['**/*.js'],
+          src: [
+            '**/*.js',
+            '!config/local.env.sample.js'
+          ],
           dest: '<%= yeoman.dist %>/<%= yeoman.server %>'
         }]
       }
@@ -613,7 +621,6 @@ module.exports = function (grunt) {
       }
     },
 
-
     injector: {
       options: {},
       // Inject application script files into index.html (doesn't include bower)
@@ -626,7 +633,7 @@ module.exports = function (grunt) {
             return '<script src="' + filePath + '"></script>';
           },
           sort: function(a, b) {
-            var module = /\.module\.js$/;
+            var module = /\.module\.(js|ts)$/;
             var aMod = module.test(a);
             var bMod = module.test(b);
             // inject *.module.js first
@@ -774,6 +781,7 @@ module.exports = function (grunt) {
     }
 
     else if (target === 'e2e') {
+
       if (option === 'prod') {
         return grunt.task.run([
           'build',
@@ -799,6 +807,7 @@ module.exports = function (grunt) {
         ]);
       }
     }
+
     else if (target === 'coverage') {
 
       if (option === 'unit') {
