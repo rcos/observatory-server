@@ -18,6 +18,7 @@ export default function(app) {
   app.use('/api/users', require('./api/user'));
   app.use('/api/classyear', require('./api/classyear'));
   app.use('/api/smallgroup', require('./api/smallgroup'));
+  app.use('/api/attendance', require('./api/attendance'));
 
   app.use('/uploads', express.static(config.imageUploadPath));
 

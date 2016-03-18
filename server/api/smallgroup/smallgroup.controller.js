@@ -1,15 +1,26 @@
 /**
- * Small Group Controller
- */
+* Small Group Controller
+*/
 
 'use strict';
 
 var SmallGroup = require('./smallgroup.model');
 var ClassYear = require('../classyear/classyear.model');
+var Attendance = require('../attendance/attendance.model');
 var User = require('../user/user.model');
 var Project = require('../project/project.model');
 
-// Get current class year
+// Convert dates to midnight
+function isoDateToTime(isoDate){
+    var date = new Date(isoDate);
+    date.setHours(0,0,0,0);
+    return date.getTime();
+}
+
+// Get all smallgroups
+// Restricted to authenticated users
+// router.get('/', auth.isAuthenticated(), controller.index);
+// TODO: only return smallgroups for this year
 exports.index = function(req, res) {
     SmallGroup.find({}, function(err, smallgroups){
         if (err) { return handleError(res, err); }
@@ -17,13 +28,16 @@ exports.index = function(req, res) {
     });
 };
 
+// Create a new smallgroup for the current class year
+// Restricted to mentors
+// router.post('/', auth.hasRole('mentor'), controller.create);
 exports.create = function(req, res){
     var user = req.user;
     ClassYear.getCurrent(function(err, currentClassYear){
         if (err) return handleError(res, err);
         var smallgroup = new SmallGroup({
             "name": "New Small Group",
-            "semester": currentClassYear.semester,
+            "classYear": currentClassYear._id,
             "enabled": true,
             "students":[user._id],
             "dayCodes": []
@@ -35,6 +49,9 @@ exports.create = function(req, res){
     });
 };
 
+// Modify the smallgroup
+// Restricted to mentors
+// router.put('/:id', auth.hasRole('mentor'), controller.modify);
 exports.modify = function(req, res){
     var id = req.params.id;
     SmallGroup.update({'_id': id}, req.body.smallgroup, function(err){
@@ -43,6 +60,9 @@ exports.modify = function(req, res){
     });
 };
 
+// Delete the smallgroup
+// Restricted to mentors
+// router.put('/:id', auth.hasRole('mentor'), controller.modify);
 exports.delete = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
@@ -52,6 +72,10 @@ exports.delete = function(req, res){
     });
 };
 
+// Get the smallgroup for the user
+// Restricted to authenticated users
+// Only return daycode is the user is a mentor
+// router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
 exports.getSmallGroup = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
@@ -72,8 +96,9 @@ exports.getSmallGroup = function(req, res){
     });
 };
 
-// Generate a daycode or return the current day code for the
-// current class year
+// Generate a daycode or return the current day code for the smallgroups
+// Restricted to mentors
+// router.post('/:id/daycode', auth.hasRole('mentor'), controller.daycode);
 exports.daycode = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
@@ -88,22 +113,51 @@ exports.daycode = function(req, res){
     });
 };
 
-function getFullMember(memberId, mentor, callback){
-    User.findById(memberId, function(err, member){
+// Returns the user profile for a userId
+// Only returns private information if the user is a mentor
+function getFullUserProfile(userId, mentor, callback){
+    User.findById(userId)
+    .select('-salt -hashedPassword')
+    .populate('projects')
+    .exec(function(err, user){
         if (err) return callback("Could not find user", null);
-        member.getFullProfile(function(fullProfile){
+        if (!user) return callback("Could not find user", null);
             // Add the user's attendance
-            fullProfile.presence = member.presence;
-            callback(null, fullProfile);
+        var profile = {};
+        if (mentor){
+            profile = user.privateProfile;
 
-        });
+            ClassYear.getCurrent(function(err, classYear){
+                var classYearId = classYear._id;
+                var date = isoDateToTime(new Date());
+
+                Attendance.find({classYear:classYearId, date:date, smallgroup:true, user:userId})
+                .exec(function(err, attendance){
+                    profile.attendance = attendance;
+                    callback(null, profile);
+
+                })
+
+            });
+        }
+        else{
+            profile = user.profile;
+            callback(null, profile);
+
+        }
     });
 }
 
+// Get the members of a smallgroup
+// Only returns private information if the user is a mentor
+// Restricted to mentors
+// router.get('/:id/members', auth.isAuthenticated(), controller.getSmallGroupMembers);
 exports.getSmallGroupMembers = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
         if (err) return handleError(res, err);
+        if (!smallgroup) return handleError(res, err);
+
         var members = [];
         var loadedMembers = 0;
 
@@ -111,7 +165,7 @@ exports.getSmallGroupMembers = function(req, res){
 
         smallgroup.students.forEach(function(studentId){
 
-            getFullMember(studentId, req.user && req.user.isMentor, function(err, member){
+            getFullUserProfile(studentId, req.user && req.user.isMentor, function(err, member){
                 loadedMembers ++;
                 if (member){
                     members.push(member);
@@ -126,22 +180,47 @@ exports.getSmallGroupMembers = function(req, res){
     });
 };
 
+// Add a member to a smallgroup
+// Restricted to mentors
+// router.put('/:id/member', auth.hasRole('mentor'), controller.addMember);
 exports.addMember = function(req, res){
     var memberId = req.body.memberId;
     var smallGroupId = req.params.id;
-	   SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
-	      $addToSet: { students : memberId }
-	    }, function(err, smallgroup){
-		     if (err) return handleError(res, err);
-		     User.findById(memberId, function(err, user){
-		         if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
-		         user.smallgroup = smallGroupId
-		         user.save();
-		         res.send(200);
-		     });
-		 });
+    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+        $addToSet: { students : memberId }
+    }, function(err, smallgroup){
+        if (err) return handleError(res, err);
+        User.findById(memberId,  '-salt -hashedPassword', function(err, user){
+            if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
+            user.smallgroup = smallGroupId
+            user.save();
+            res.send(200);
+        });
+    });
 };
 
+// Delete a member from a smallgroup
+// Restricted to mentors
+// router.delete('/:id/member/:memberId', auth.hasRole('mentor'), controller.deleteMember);
+exports.deleteMember = function(req, res){
+    var memberId = req.params.memberId;
+    var smallGroupId = req.params.id;
+    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+        $pull: { students : memberId }
+    }, function(err, smallgroup){
+        if (err) return handleError(res, err);
+        User.findById(memberId, function(err, user){
+            if (err) return handleError(res,err);
+            user.smallgroup = undefined
+            user.save();
+            return res.send(200);
+        });
+    });
+};
+
+// Change ths name of a smallgroup
+// Restricted to mentors
+// router.put('/:id/name', auth.isAuthenticated(), controller.changeName);
 exports.changeName = function(req,res){
   var id = req.params.id;
   var newName = String(req.body.smallGroupName);
@@ -155,26 +234,12 @@ exports.changeName = function(req,res){
   });
 };
 
-exports.deleteMember = function(req, res){
-    var memberId = req.params.memberId;
-    var smallGroupId = req.params.id;
-       SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
-          $pull: { students : memberId }
-        }, function(err, smallgroup){
-             if (err) return handleError(res, err);
-		     User.findById(memberId, function(err, user){
-		         if (err) return handleError(res,err);
-		         user.smallgroup = undefined
-		         user.save();
-		         return res.send(200);
-		     });
-        });
-};
-
+// Return a standard error
 function handleError(res, err) {
-  return res.send(500, err);
+    return res.send(500, err);
 }
 
+// Return a validation error
 function validationError(res, err) {
-  return res.json(422, err);
-};
+    return res.json(422, err);
+}

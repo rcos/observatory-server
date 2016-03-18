@@ -1,6 +1,6 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class='container'>
+<div class='container profile'>
     <div class='row'>
         <div class='col-md-3 profile-sidebar'>
             <img width='75%' ng-src='{{user.avatar}}&s=256px'/>
@@ -23,7 +23,7 @@
             </div>
             <div class='sidebar-text box'>
               <div class='row'> <div class='col-xs-3'>  <a href='http://github.com/{{user.githubProfile}}'>Github</a> </div>
-                <div ng-show='isuser' class='col-xs-9 text-right'>
+                <div ng-show='canEdit()' class='col-xs-9 text-right'>
                     <div class="btn-group">
                         <button type="button" class='btn btn-default btn-sm' ng-click='editGithub()'>Edit</button>
                         <button type="button" class='btn btn-default btn-sm' ng-click='saveGithub()'>Save</button>
@@ -33,30 +33,30 @@
                 <br/>
                 {{user.email}}
         </div>
-            <div ng-show='isuser && user.active'>
+            <div ng-show='canEdit() && user.active'>
                  <button class="btn btn-primary" ng-click="pastUser(user)" type="button">Make Past User</button>
             </div>
-            <div ng-show='isuser && !user.active'>
+            <div ng-show='canEdit() && !user.active'>
                  <button class="btn btn-primary" ng-click="currentUser(user)" type="button">Make Current User</button>
             </div>
         </div>
         <div class='col-md-6'>
-        <div ng-show="!user.tech.length">User has not input any tags</div>
+        <div ng-show="!user.tech.length">No tags yet</div>
             <div class='tech-boxes'>
                 <div ng-repeat="tech in user.tech track by $index">
                     {{tech}}
-                    <button ng-show='isuser' class='btn btn-default btn-xs' ng-click='removeTech(tech)'>x</button>
+                    <button ng-show='canEdit()' class='btn btn-default btn-xs' ng-click='removeTech(tech)'>x</button>
                 </div>
-                <div ng-show='isuser'>
+                <div ng-show='canEdit()'>
                     <input ng-enter="addTech()" ng-model="insertTechContent" size='4' type='text'/>
                     <button ng-click="addTech()" class='btn btn-default btn-xs'>+</button>
                 </div>
             </div>
-            <div ng-show="!user.bio">User has not written a bio</div>
-            <div ng-show='isuser || user.bio' class='content-box'>
+            <div ng-hide="user.bio">User has not written a bio</div>
+            <div ng-show="canEdit() || user.bio" class='content-box'>
                 <div class='content-title row'>
                     <div class='col-xs-6'>Bio</div>
-                    <div ng-show='isuser' class='col-xs-6 text-right'>
+                    <div ng-show='canEdit()' class='col-xs-6 text-right'>
                         <div class="btn-group" style='margin-bottom:8px'>
                             <button type="button" class='btn btn-default btn-sm' ng-click='editBio()'>Edit</button>
                             <button type="button" class='btn btn-default btn-sm' ng-click='saveBio()'>Save</button>
@@ -83,17 +83,37 @@
             </div>
         </div>
         <div class='col-md-3'>
-            <div ng-hide='!isuser' class='content-box'>
+            <div ng-hide='!canEdit()' class='content-box'>
                 <div class='content-title'>
-                    Attendance <span class='attendance-score'>{{user.attendanceScore}}% +{{user.attendanceBonus}}%</span>
+                    Attendance
                 </div>
-                <div id='attendance-box-container'>
-                    <div ng-repeat='day in user.attendance' class='good'></div>
+                <div>
+                    <div class='content-subtitle'>
+                        Large group <span class='attendance-score'>{{user.full.normal}} / {{user.full.all}} days + {{user.full.bonus}} bonus</span>
+                    </div>
+                    <div id='attendance-box-container'>
+                        <div ng-style="{ 'width' : user.full.greyWidth+'%'}" class='grey'></div>
+                        <div ng-style="{ 'width' : user.full.goodWidth+'%'}" class='good'></div>
+                        <div ng-style="{ 'width' : (100-user.full.greyWidth-user.full.goodWidth)+'%'}" class='bad'></div>
+
+                    </div>
+                </div>
+                <br>
+                <div ng-show="user.smallgroup">
+                    <div class='content-subtitle'>
+                        Small group <span class='attendance-score'>{{user.small.normal}} / {{user.small.all}} days + {{user.small.bonus}} bonus</span>
+                    </div>
+                    <div id='attendance-box-container'>
+                        <div ng-style="{ 'width' : user.small.greyWidth+'%'}" class='grey'></div>
+                        <div ng-style="{ 'width' : user.small.goodWidth+'%'}" class='good'></div>
+                        <div ng-style="{ 'width' : (100-user.small.greyWidth-user.small.goodWidth)+'%'}" class='bad'></div>
+
+                    </div>
                 </div>
             </div>
             <div class='content-box'>
                 <div class='content-title'>Commits</div>
-                <div ng-show="user.commits.length == 0">User has not committed anything yet</div>
+                <div ng-show="user.commits.length == 0">No commits yet...</div>
                 <div ng-repeat='event in user.github.events' class='commit'>
                     <a href='{{event.url}}'>{{event.message}}</a>
                 </div>

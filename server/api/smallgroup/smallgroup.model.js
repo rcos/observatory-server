@@ -4,11 +4,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var SmallGroupSchema = new Schema({
-  semester: String,
+  classYear: {type : Schema.Types.ObjectId, ref: 'ClassYear'},
   name: String,
   enabled: Boolean,
   students: [{type : Schema.Types.ObjectId, ref: 'User'}],
-  dayCodes: [{date:Date, code:String}]
+  dayCodes: [{date:Date, code:String, bonusDay:{type:Boolean, default:false}}]
 });
 
 /*
@@ -41,6 +41,48 @@ SmallGroupSchema
         }
         this.save();
     });
+
+SmallGroupSchema
+    .virtual('days')
+	.get(function(){
+        var total = this.dayCodes.reduce(function(previousValue, currentValue, index, array) {
+            return previousValue + (currentValue.bonusDay? 0 : 1);
+        }, 0) ;
+		return total;
+	});
+SmallGroupSchema
+    .virtual('bonusDays')
+	.get(function(){
+        var total = this.dayCodes.reduce(function(previousValue, currentValue, index, array) {
+            return previousValue + (currentValue.bonusDay? 1 : 0);
+        }, 0) ;
+		return total;
+	});
+
+SmallGroupSchema
+    .virtual('dates')
+	.get(function(){
+        var all = this.dayCodes.filter(function(value) {
+            return !value.bonusDay;
+        })
+        .map(function(value) {
+            return value.date;
+        });
+		return all;
+	});
+
+SmallGroupSchema
+    .virtual('bonusDates')
+	.get(function(){
+        var all = this.dayCodes.filter(function(value) {
+            return value.bonusDay;
+        })
+        .map(function(value) {
+            return value.date;
+        });
+		return all;
+	});
+
 
 var SmallGroup = mongoose.model('SmallGroup', SmallGroupSchema);
 module.exports = SmallGroup;
