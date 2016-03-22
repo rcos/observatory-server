@@ -218,18 +218,17 @@ while(users.hasNext()){
         }
         //If not all the attendance entries were copied over, don't delete them from the user object
         //Otherwise, remove the attendance and unverifiedAttendance arrays
+        db.users.update(
+            { "_id": user._id },
+            {
+                $unset: { attendance: 1, unverifiedAttendance: 1 }
+            }
+        );
         if (allfound){
-            db.users.update(
-                { "_id": user._id },
-                {
-                    $unset: { attendance: 1, unverifiedAttendance: 1 }
-                }
-            );
-            print("Migrated attendance for "+user.name+", attendance unset");
+            print("Migrated attendance for "+user.name);
         }
         else{
-            print("Failed to migrated all attendance for "+user.name+", attendance not unset");
-
+            print("Failed to migrated all attendance for "+user.name);
         }
     });
 }
