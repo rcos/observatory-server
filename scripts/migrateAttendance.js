@@ -33,6 +33,7 @@ while(smallgroups.hasNext()) {
 
 var users = db.users.find({});
 var classyear = db.classyears.findOne({current:true});
+var lastyear = db.classyears.findOne({semester:"2015fall"});
 
 while(users.hasNext()){
     //Get all the users
@@ -46,7 +47,7 @@ while(users.hasNext()){
         }
         var allfound = true;
         //Loop through all the attendance entries
-        if (attendance){
+        if (attendance && attendance.length){
             for (var a = 0; a < attendance.length ; a++){
                 var date = attendance[a];
                 var found  = false;
@@ -73,6 +74,29 @@ while(users.hasNext()){
                         break;
                     }
                 }
+                for (var b = 0; b < lastyear.dayCodes.length ; b++){
+                    if (sameDate(lastyear.dayCodes[b].date, date)){
+                        var daycode = lastyear.dayCodes[b];
+                        db.attendances.insert(
+                            {
+                                classYear: lastyear._id,
+                                user: user._id,
+
+                                date: standardDate(date),
+                                datetime: date,
+
+                                bonusDay: daycode.bonusDay||false,
+                                smallgroup: false,
+
+                                verified: true,
+                                code: daycode.code,
+                            }
+                        );
+                        found = true;
+                        break;
+                    }
+                }
+
                 //If not found, find the correct attendance code in the smallgroup
                 //Check to make sure there is a smallgroup for the user with daycodes
                 if (!found && user.smallgroup && smallgroup && smallgroup.dayCodes){
@@ -101,11 +125,13 @@ while(users.hasNext()){
                 }
                 if (!found){
                     allfound = false
+                    print("Missed")
+                    printjson(date)
                 }
             }
         }
         //Loop through all the unverifiedAttendance entries
-        if (unverifiedAttendance){
+        if (unverifiedAttendance && unverifiedAttendance.length){
             for (var a = 0; a < unverifiedAttendance.length ; a++){
                 var date = unverifiedAttendance[a];
                 var found  = false;
@@ -117,6 +143,29 @@ while(users.hasNext()){
                         db.attendances.insert(
                             {
                                 classYear: classyear._id,
+                                user: user._id,
+
+                                date: standardDate(date),
+                                datetime: date,
+
+                                bonusDay: daycode.bonusDay||false,
+                                smallgroup: false,
+
+                                verified: false,
+                                code: daycode.code,
+                            }
+                        );
+                        found = true;
+                        break;
+                    }
+                }
+                //Find the correct attendance code in the classyear
+                for (var b = 0; b < lastyear.dayCodes.length ; b++){
+                    if (sameDate(lastyear.dayCodes[b].date,date)){
+                        var daycode = lastyear.dayCodes[b];
+                        db.attendances.insert(
+                            {
+                                classYear: lastyear._id,
                                 user: user._id,
 
                                 date: standardDate(date),
@@ -163,6 +212,8 @@ while(users.hasNext()){
             }
             if (!found){
                 allfound = false
+                print("Missed")
+                printjson(date)
             }
         }
         //If not all the attendance entries were copied over, don't delete them from the user object
@@ -178,6 +229,7 @@ while(users.hasNext()){
         }
         else{
             print("Failed to migrated all attendance for "+user.name+", attendance not unset");
+
         }
     });
 }
