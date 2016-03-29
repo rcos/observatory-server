@@ -3,17 +3,27 @@
 <div class="container">
   <p>The delete user and user index api routes are restricted to users with the 'admin' role.</p>
   <div class="table-responsive">
-      <table class="table table-hover">
+      <table class="table table-hover text-center table-bordered">
       <thead>
         <tr>
-            <td ng-click="setSortOrder('name')">Name</td>
-            <td ng-click="setSortOrder('email')">Email</td>
-            <td ng-click="setSortOrder('role')">Role</td>
-            <td ng-click="setSortOrder('github.login')">Github</td>
-            <td ng-click="setSortOrder('attendence')">Attendence</td>
-            <td ng-click="setSortOrder('github.events.length')">Events</td>
-            <td ng-click="setSortOrder('commits.length')">Commits</td>
-            <td ng-click="setSortOrder('active')">Active</td>
+            <td colspan="4">Info</td>
+            <td colspan="2">Full Group</td>
+            <td colspan="2">Small Group</td>
+            <td colspan="2">Contributions</td>
+            <td>Info</td>
+        </tr>
+        <tr>
+            <td sort-arrow sortby='"name"' text='"Name"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"email"' text='"Email"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"role"' text='"Role"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"githubProfile"' text='"Github"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"full.normal"' text='"Attendance"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"full.bonus"' text='"Bonus"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"small.normal"' text='"Attendance"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"small.bonus"' text='"Bonus"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"github.events.length"' text='"Events"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"commits.length"' text='"Commits"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"active"' text='"Active"' sortorder='sortorder'></td>
         </tr>
       </thead>
       <tbody>
@@ -27,9 +37,12 @@
                     <option value="admin">Admin</option>
                 </select>
               </td>
-              <td><a href="http://github.com/{{user.github.login}}">{{user.github.login}}</a></td>
-              <td>{{ user.attendance }}</td>
-              <td>{{ user.github.events.length }}</td>
+              <td><a ng-href="http://github.com/{{user.githubProfile}}">{{user.githubProfile}}</a></td>
+              <td>{{ user.full.normal }}</td>
+              <td>{{ user.full.bonus }}</td>
+              <td>{{ user.small.normal }}</td>
+              <td>{{ user.small.bonus }}</td>
+              <td>{{ user.github.events.length || 0  }}</td>
               <td>{{ user.commits.length }}</td>
               <td><a class="btn btn-warning" href="#" role="button" ng-click="toggle( user )">{{ user.active }}</a></td>
           </tr>

@@ -8,7 +8,14 @@ var crypto = require('crypto');
 var email = require("../../components/email");
 var Commit = require('../commit/commit.model');
 var ClassYear = require('../classyear/classyear.model');
+var Attendance = require('../attendance/attendance.model');
 var SmallGroup = require('../smallgroup/smallgroup.model');
+
+function isoDateToTime(isoDate){
+  var date = new Date(isoDate);
+  date.setHours(0,0,0,0);
+  return date.getTime();
+}
 
 
 
@@ -20,7 +27,7 @@ var validationError = function(res, err) {
  * Get list of users
  */
 exports.index = function(req, res) {
-  User.find({}, '-salt -password', function (err, users) {
+  User.find({}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, users) {
     if(err) return res.send(500, err);
     res.json(200, users);
   });
@@ -35,7 +42,7 @@ exports.index = function(req, res) {
 exports.search = function(req, res){
     if (!req.query.query) return res.send(400, "No query supplied");
     var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
-    User.findOne({name: query},function(err, user){
+    User.findOne({name: query},  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err, user){
         if (err) return res.send(500, err);
         if (!user){
             if (req.query.single){
@@ -59,7 +66,7 @@ exports.search = function(req, res){
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -password' ).exec(function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration' ).exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
@@ -98,48 +105,55 @@ exports.stats = function(req, res) {
 * restriction: 'admin'
  */
 exports.allStats = function(req, res) {
-  // Only return users who are active and have a github login
-  User.find({'github.login': {$exists: true}}, '-salt -password' ).exec(function (err, users) {
-    if(err) return res.send(500, err);
-    var twoWeeks = new Date();
-    twoWeeks.setDate(twoWeeks.getDate()-14);
-    var userInfo = [];
-    var count = users.length;
+    // Only return users who have a github login
+    User.find({'github.login': {$exists: true}}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration' ).exec(function (err, users) {
+        if(err) return res.send(500, err);
+        var twoWeeks = new Date();
+        twoWeeks.setDate(twoWeeks.getDate()-14);
+        var userInfo = [];
+        var count = users.length;
 
-    var getCommits = function(user){
-      Commit.find()
-            .where('author.login').equals(String(user.github.login))
-            .where('date').gt(twoWeeks)
-            .exec(function(err, commits){
-                if(err){
-                    user.commits = [] ;
-                    count--;
-                    userInfo.push(user);
-                    if (count === 0){
-                      res.json(200, userInfo);
-                    }
-                }
-                else{
-                    var commitList = [];
-                    commits.forEach(function (c){
-                        commitList.push(c.toObject());
-                      }
-                    )
-                    user.commits = commitList ;
-                    count--;
-                    userInfo.push(user);
-                    if (count === 0){
-                      res.json(200, userInfo);
-                    }
-                }
-
+        var getCommits = function(u){
+            var user = u.privateProfile;
+            ClassYear.getCurrent(function(err, classYear){
+                var classYearId = classYear._id;
+                Attendance.find({classYear:classYearId, user: u._id})
+                .exec(function (err, attendance) {
+                    if(err) { return handleError(res, err); }
+                    user.attendance = attendance;
+                    Commit.find()
+                    .where('author.login').equals(String(user.githubProfile))
+                    .where('date').gt(twoWeeks)
+                    .lean()
+                    .exec(function(err, commits){
+                        if(err){
+                            user.commits = [] ;
+                            count--;
+                            userInfo.push(user);
+                            if (count === 0){
+                                res.json(200, userInfo);
+                            }
+                        }
+                        else{
+                            var commitList = [];
+                            commits.forEach(function (c){
+                                commitList.push(c.toObject());
+                            });
+                            user.commits = commitList;
+                            count--;
+                            userInfo.push(user);
+                            if (count === 0){
+                                res.json(200, userInfo);
+                            }
+                        }
+                    });
+                });
             });
-    }
-
-    for (var i = 0; i < users.length; i++){
-      var u = users[i].stats;
-      getCommits(u);
-      }
+        };
+        for (var i = 0; i < users.length; i++){
+            var u = users[i];
+            getCommits(u);
+        }
     });
 };
 
@@ -148,7 +162,7 @@ exports.allStats = function(req, res) {
  */
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -password', function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, users) {
     if(err) return res.send(500, err);
     var userInfo = [];
 
@@ -163,7 +177,7 @@ exports.list = function(req, res) {
  * Get list of all past users
  */
 exports.past = function(req, res) {
-  User.find({active: false}, '-salt -password', function (err, users) {
+  User.find({active: false}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, users) {
     if(err) return res.send(500, err);
       var userInfo = [];
 
@@ -206,12 +220,54 @@ exports.create = function (req, res, next) {
 exports.show = function (req, res, next) {
   var userId = req.params.id;
 
-  User.findById(userId, function (err, user) {
-    if (err) return next(err);
-    if (!user) return res.send(404);
-    res.json(user.profile);
+  User.findById(userId)
+  .select( '-salt -hashedPassword -passwordResetToken -passwordResetExpiration')
+  .populate('smallgroup')
+  .exec(function (err, user) {
+    if (err) {return next(err);}
+    if (!user) {return res.send(404);}
+    var profile = user.profile;
+    ClassYear.getCurrent(function (err, classYear) {
+        return res.json(profile);
+    });
   });
 };
+
+/**
+ * Get a single user
+ */
+exports.privateProfile = function (req, res, next) {
+  var userId = req.params.id;
+  User.findById(userId)
+  .select( '-salt -hashedPassword -passwordResetToken -passwordResetExpiration')
+  .populate('smallgroup')
+  .populate('projects')
+  .exec(function (err, user) {
+    if (err) {return next(err);}
+    if (!user) {return res.send(404);}
+    var profile = user.privateProfile;
+    ClassYear.getCurrent(function(err, classYear){
+        var classYearId = classYear._id;
+
+        // Get how many total attendance days there have been
+        var data = user.getTotalDays(classYear);
+        profile.totalDates = data.totalDates;
+        profile.totalBonusDates = data.totalBonusDates;
+        profile.totalSmallDates = data.totalSmallDates;
+        profile.totalBonusSmallDates = data.totalBonusSmallDates;
+
+        Attendance.find({classYear:classYearId, user: userId})
+        .exec(function (err, attendance) {
+            if(err) { return handleError(res, err); }
+            profile.attendance = attendance;
+
+            return res.json(profile);
+        });
+    });
+  });
+};
+
+
 
 /**
  * Get a single user's avatar
@@ -219,10 +275,10 @@ exports.show = function (req, res, next) {
 exports.avatar = function (req, res, next) {
   var userId = req.params.id;
 
-  User.findById(userId, function (err, user) {
+  User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function (err, user) {
     if (err) return next(err);
     if (!user) return res.send(404);
-    res.json(user.avatar);
+    return res.json(user.avatar);
   });
 };
 
@@ -250,7 +306,7 @@ exports.role = function(req, res) {
     if (roles.indexOf(newRole) === -1){
         res.send(400, {error: "Role does not exist."});
     }
-    User.findById(userId, function(err,user){
+    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -275,7 +331,7 @@ exports.changePassword = function(req, res, next) {
   var token   = String(req.body.token);
   var newPass = String(req.body.newPassword);
 
-  User.findById(userId, function (err, user) {
+  User.findById(userId,function (err, user) {
     if(user.authenticate(oldPass) || user.validResetToken(token)) {
       user.password = newPass;
       user.passwordResetToken = '';
@@ -310,12 +366,12 @@ exports.deactivate = function(req,res) {
 exports.changeBio = function(req,res){
     var userId = req.user._id;
     var newBio = String(req.body.bio);
-    User.findById(userId, function(err,user){
+    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err,user){
         user.bio = newBio;
-        res.json({bio:user.bio});
         user.save(function(err){
             if (err) return validationError(res,err);
-            res.send(200);
+            return res.json({bio:user.bio});
+
         })
 
     });
@@ -327,7 +383,7 @@ exports.changeBio = function(req,res){
  exports.changeGithub = function(req,res){
    var userId = req.user._id;
    var newGithubProfile = String(req.body.github);
-   User.findById(userId, function(err,user){
+   User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err,user){
      user.github.login = newGithubProfile;
      res.json({githubProfile:user.github.login});
      user.save(function(err){
@@ -338,11 +394,28 @@ exports.changeBio = function(req,res){
  };
 
 /**
+ * Deactivates a user
+ */
+exports.deactivate = function(req, res, next) {
+  var userId = String(req.params.id);
+
+  User.findOne({ '_id': userId},  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err, user){
+    if (err) return res.send(500, err);
+
+    user.active = false;
+    user.save(function(err){
+    if (err) return res.send(500, err);
+      res.json(200, {success: true});
+    })
+  });
+};
+
+/**
  * Activates a user
  */
 exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
-  User.findOne({ '_id': userId}, function(err, user){
+  User.findOne({ '_id': userId},  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err, user){
     if (err) return res.send(500, err);
     user.active = true;
     user.save(function(err){
@@ -359,7 +432,7 @@ exports.me = function(req, res, next) {
   var userId = req.user._id;
   User.findOne({
     _id: userId
-  }, '-salt -password', function(err, user) { // don't ever give out the password or salt
+}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);
@@ -374,92 +447,12 @@ exports.authCallback = function(req, res, next) {
 };
 
 /**
- * Mark attendance for specified user
- */
-exports.attend = function(req,res){
-    var userId = req.params.id;
-    var user = req.user;
-    var code = req.body.dayCode;
-    if (!code) return res.send(400, "No Code Submitted");
-    // Uppercase code from client so it is case-insensitive. This must happen
-    // after the above check, otherwise toUpperCase() might not exist.
-    code = code.toUpperCase();
-    if (req.user.presence !== "absent") return res.send(400, "Attendance already recorded: " + req.user.presence);
-    // Check code against current class year
-    ClassYear.getCurrent(function(err, classYear){
-      if (err) return res.send(500, err);
-      if (classYear.dayCode === code){
-        var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
-        if (!needsVerification){
-          user.presence = "present";
-        }else{
-          user.presence = "unverified";
-        }
-        if (user.presence === "unverified"){
-          res.send(200, {"unverified": true});
-        }else if (user.presence === "present"){
-          res.send(200, {"unverified": false});
-        }
-      }else{
-          // Classyear attendance code was incorrect, try small group
-          if (!user.smallgroup){
-              res.send(400, "Incorrect day code");
-              return;
-          }
-          SmallGroup.findById(user.smallgroup, function(err, smallgroup){
-              if (err) return res.send(500, err);
-              if (code === smallgroup.dayCode){
-                  user.presence = "present";
-                  res.send(200);
-              }else{
-                  res.send(400, "Incorrect day code");
-              }
-          });
-      }
-    });
-};
-
-/**
- * Gets all users with unverifed attendance for today
- */
-exports.getUnverifiedAttendanceUsers = function(req,res){
-  User.find({
-    active: true
-  }, function(err, users){
-    if (err) res.send(500, err);
-
-    var unverifiedUsers = [];
-    for (var i = 0;i < users.length;i++){
-      if (users[i].presence == "unverified"){
-        unverifiedUsers.push(users[i].profile);
-      }
-    }
-    res.json(200,unverifiedUsers);
-  });
-};
-
-/**
- * Verify users attendance, available only to mentors
- */
-exports.verifyAttendance = function(req,res){
-  var userId = req.params.id;
-  User.findById(userId, function(err, user){
-    if (err) return res.send(500, err);
-    if (!user) return res.send(400, "No User with Id");
-    if (user.presence === "unverified"){
-      user.presence = "present";
-    }
-    res.send(200);
-  });
-};
-
-/**
  * Add an item to the tech array for a user
  */
 exports.addTech = function(req,res){
     var userId = req.params.id;
     var newTech = req.body.tech;
-    User.findById(userId, function(err,user){
+    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -479,7 +472,7 @@ exports.addTech = function(req,res){
 exports.removeTech = function(req,res){
     var userId = req.params.id;
     var tech = req.body.tech;
-    User.findById(userId, function(err,user){
+    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -500,7 +493,7 @@ exports.resetPassword = function(req, res){
     var userEmail = req.body.email;
     User.findOne({
         email: userEmail.toLowerCase()
-    }, function (err, user){
+    },  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, user){
         if (err) return res.json(401, err);
         if (!user) return res.send(200);
 
@@ -539,7 +532,7 @@ exports.resetPassword = function(req, res){
 exports.addProject = function(req,res){
     var userId = req.params.id;
     var newProject = req.body.project;
-    User.findById(userId, function(err,user){
+    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -560,7 +553,7 @@ exports.addProject = function(req,res){
 exports.removeProject = function(req,res){
     var userId = req.params.id;
     var project = req.body.project;
-    User.findById(userId, function(err,user){
+    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err,user){
         if (err){
             res.send(500, err);
         }else{

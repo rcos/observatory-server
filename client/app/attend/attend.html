@@ -13,15 +13,42 @@
             </form>
         </div>
     </div>
-    <div class="row" ng-show='unverified'>
-        <div class="col-sm-12">
-            <div class='alert alert-info unverified'>
-                Your attendance needs to be verified by a mentor, this occurs randomly to make sure that nobody is dishonestly
-                logging attendance. Simply ask a mentor to verify your presence to log your attendance.<br/><br/>
-                If you do not log your attendance with a mentor, your unverified attendance will be recorded.
-            </div>
+    <div class="row">
+      <div class="col-sm-12" ng-show='unverified'>
+        <div class='alert alert-info unverified'>
+          Your attendance needs to be verified by a mentor, this occurs randomly to make sure that nobody is dishonestly
+          logging attendance. Simply ask a mentor to verify your presence to log your attendance.<br/><br/>
+          If you do not log your attendance with a mentor, your unverified attendance will be recorded.
         </div>
+      </div>
+      <div class="col-sm-8 col-sm-offset-2" ng-show='unverified'>
+        <hr />
+      </div>
+      <div class="col-sm-12">
+        <h3>Previous Attendance:</h3>
+      </div>
+      <div class="col-sm-12">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <td sort-arrow sortby='"datetime"' text='"Date"' sortorder='sortorder'></td>
+              <td sort-arrow sortby='"bonusDay"' text='"Type"' sortorder='sortorder'></td>
+              <td sort-arrow sortby='"smallgroup"' text='"Group"' sortorder='sortorder'></td>
+              <td sort-arrow sortby='"verified"' text='"Verified"' sortorder='sortorder'></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="submission in previousSubmissions | orderBy:sortorder">
+              <td>{{ submission.date | date:"MMM dd" }}</a></td>
+              <td>{{ submission.bonusDay?"Bonus":"Regular" }}</td>
+              <td>{{ submission.smallgroup?"Smallgroup":"Full" }}</td>
+              <td><i class="fa" ng-class="{'fa-check':submission.verified, 'fa-times':!submission.verified}"></i> &nbsp;{{ submission.verified?"Yes":"No" }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
     </div>
-</div>
+  </div>
 
 <div ng-include="'components/footer/footer.html'"></div>

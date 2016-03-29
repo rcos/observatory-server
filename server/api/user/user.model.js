@@ -24,12 +24,8 @@ var UserSchema = new Schema({
   tech: [String],
   projects: [{type : Schema.Types.ObjectId, ref: 'Project'}], // project id
   bio: {type:String},
-  attendance: [Date],
-  unverifiedAttendance: [Date],
-  semesterCount: Number,
   passwordResetToken: String,
   passwordResetExpiration: Date,
-
 
   // field for what user is currently enrolled as (pay, credit, experience)
   rcosStyle: String,
@@ -54,6 +50,7 @@ var UserSchema = new Schema({
 /**
  * Virtuals
  */
+
 
 /**
 * Get gravatar url
@@ -88,13 +85,13 @@ UserSchema
   .get(function(){
     var today = new Date();
     today.setHours(0,0,0,0);
-
-    for (var i = 0;i < this.attendance.length;i++){
+    var i = 0;
+    for (i = 0;i < this.attendance.length;i++){
       if (isoDateToTime(this.attendance[i]) === today.getTime()){
         return "present";
       }
     }
-    for (var i = 0;i < this.unverifiedAttendance.length;i++){
+    for (i = 0;i < this.unverifiedAttendance.length;i++){
       if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
         return "unverified";
       }
@@ -104,16 +101,16 @@ UserSchema
   .set(function(status){
     var today = new Date();
     today.setHours(0,0,0,0);
+    var i = 0;
     if (status === "present"){
       // Make sure user is not unverified for today
-      for (var i = this.unverifiedAttendance.length-1;i >= 0;i--){
+      for (i = this.unverifiedAttendance.length-1;i >= 0;i--){
         if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
            this.unverifiedAttendance.splice(i,1);
         }
       }
-
       // If user already has attendance don't change anything
-      for (var i = 0;i < this.attendance.length;i++){
+      for (i = 0;i < this.attendance.length;i++){
         if (isoDateToTime(this.attendance[i]) === today.getTime()){
           return;
         }
@@ -121,14 +118,14 @@ UserSchema
       this.attendance.push(today);
     }else if (status === "unverified"){
       // If user already has attendance remove their attendance
-      for (var i = this.attendance.length-1;i >= 0;i--){
+      for (i = this.attendance.length-1;i >= 0;i--){
         if (isoDateToTime(this.attendance[i]) === today.getTime()){
           this.attendance.splice(i,1);
         }
       }
 
       // See if user already is unverifed
-      for (var i = 0;i < this.unverifiedAttendance.length;i++){
+      for (i = 0;i < this.unverifiedAttendance.length;i++){
         if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
           return;
         }
@@ -137,12 +134,12 @@ UserSchema
       this.unverifiedAttendance.push(today);
     }else if (status === "absent"){
       // Remove attendance from unverified and attendance
-      for (var i = this.attendance.length-1;i >= 0;i--){
+      for (i = this.attendance.length-1;i >= 0;i--){
         if (isoDateToTime(this.attendance[i]) === today.getTime()){
           this.attendance.splice(i,1);
         }
       }
-      for (var i = this.unverifiedAttendance.length-1;i >= 0;i--){
+      for (i = this.unverifiedAttendance.length-1;i >= 0;i--){
         if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
            this.unverifiedAttendance.splice(i,1);
         }
@@ -152,37 +149,50 @@ UserSchema
   });
 
 // Public profile information
-// TODO this is redundant with getFullProfile- can it be deleted?
 UserSchema
   .virtual('profile')
   .get(function() {
-    var twoWeeks = new Date();
-    twoWeeks.setDate(twoWeeks.getDate()-14);
     return {
       '_id':this._id.toString('binary'),
       'name': this.name,
       'role': this.role,
-      'avatar': this.avatar,
       'active': this.active,
+      'avatar': this.avatar,
       'email': this.email,
       'semesters': this.semesterCount,
-      'attendance': this.attendance,
-      "attendanceScore": 0,
-      "attendanceBonus": 0,
       'projects': this.projects,
       'tech': this.tech,
       'bio': this.bio,
+      'smallgroup': this.smallgroup,
       'githubProfile': this.github.login
     };
   });
 
-// User list information
+ UserSchema
+   .virtual('privateProfile')
+   .get(function() {
+     return {
+       '_id':this._id.toString('binary'),
+       'name': this.name,
+       'email': this.email,
+       'active': this.active,
+       'role': this.role,
+       'smallgroup': this.smallgroup,
+       'tech': this.tech,
+       'avatar': this.avatar,
+       'projects': this.projects,
+       'bio': this.bio,
+       'semesters': this.semesterCount,
+       'rcosStyle': this.rcosStyle,
+       'githubProfile': this.github.login
+     };
+   });
+
 UserSchema
   .virtual('stats')
   .get(function() {
     var data = this.toObject();
     data.avatar = this.avatar;
-    data.attendance = 0;
     delete data.password ;
     delete data.hashedPassword ;
     delete data.salt ;
@@ -458,6 +468,7 @@ UserSchema.methods = {
   },
 
   /**
+   * Populating projects is preferred
    * Gets the full user profile (includes full projects, instead of just ids)
    *
    * @param {Function(JSON)} callback - Called when all full profile properties
@@ -481,7 +492,29 @@ UserSchema.methods = {
            'githubProfile': user.github.login
        });
      });
-  }
+  },
+    /**
+     * Gets the number of days there has been attendance for the user
+     *
+     * @param classYear object
+     * @api public
+     */
+    getTotalDays: function(classYear){
+        var user = this;
+        var res = {};
+        res.totalDates = classYear.dates;
+        res.totalBonusDates = classYear.bonusDates;
+        if ('smallgroup' in user && user.smallgroup && user.smallgroup.dates){
+            res.totalSmallDates = user.smallgroup.dates;
+            res.totalBonusSmallDates = user.smallgroup.bonusDates;
+        }
+        else{
+            res.totalSmallDates = [];
+            res.currentSmallAttendance = [];
+        }
+        return res;
+    }
 };
+
 
 export default mongoose.model('User', UserSchema);

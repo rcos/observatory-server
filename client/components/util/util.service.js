@@ -53,6 +53,30 @@ function UtilService($window) {
           url.protocol === o.protocol;
       });
       return (origins.length >= 1);
+    },
+
+    parseAttendance(u){
+      u.full={normal:0, bonus:0};
+      u.small={normal:0, bonus:0};
+      u.unverified = 0;
+      for (var b = 0; b < u.attendance.length; b++){
+          var submission = u.attendance[b];
+          if (!submission.verified){
+              u.unverified +=1;
+          }
+          else if (submission.smallgroup && !submission.bonus){
+              u.small.normal +=1;
+          }
+          else if (submission.smallgroup){
+              u.small.bonus +=1;
+          }
+          else if(submission.bonus){
+              u.full.bonus +=1;
+          }
+          else{
+              u.full.normal +=1;
+          }
+      }
     }
   };
 

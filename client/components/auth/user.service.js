@@ -35,6 +35,9 @@ function UserResource($resource) {
         id:'me'
       }
     },
+    info: {
+      method: 'GET',
+    },
     past: {
       method: 'GET',
       params: {
@@ -55,6 +58,12 @@ function UserResource($resource) {
         controller:'allstats'
       },
       isArray:true
+    },
+    privateInfo: {
+      method: 'GET',
+      params: {
+        controller:'private'
+      }
     }
   });
 }

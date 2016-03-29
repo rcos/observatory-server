@@ -65,8 +65,8 @@
         <div class='students'>
           <div ng-repeat='student in leaders' class='block col-sm-3'>
             <div class='student' ng-class='{
-                  present: student.presence != "absent"
-                }'>
+                   present: student.attendance.length
+                 }'>
               <div class='photo'>
                 <img ng-src='{{ student.avatar}}&s=72px'/>
               </div>
@@ -97,8 +97,8 @@
         <div class='students'>
           <div ng-repeat='student in members' class='block col-sm-3'>
             <div class='student' ng-class='{
-                  present: student.presence != "absent"
-                }'>
+                   present: student.attendance.length
+                 }'>
               <div class='photo'>
                 <img ng-src='{{student.avatar}}&s=72px'/>
               </div>
