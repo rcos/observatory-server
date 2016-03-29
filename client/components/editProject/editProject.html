@@ -1,5 +1,5 @@
 <div>
-    <form class="form" name="editProjectForm" ng-submit="submit(editProjectForm)" novalidate>
+    <form class="form" name="editProjectForm" ng-submit="submit(editProjectForm)" ng-controller="projectEditController" novalidate>
         <label>Your project's github repository</label>
         <div class="input-group">
             <span class="input-group-addon">https://github.com/</span>
@@ -81,7 +81,6 @@
             <input id="active" type="checkbox" class="form-control" ng-model="project.active">
         </div>
 
-        <button ng-click="log()"> click me</button>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Submit</button>

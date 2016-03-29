@@ -1,10 +1,12 @@
 'use strict';
 
-var projectEditController = function($scope, $location, $http, Auth){
+angular.module('observatory3App')
+.controller('projectEditController', function($scope, $location, $http, Auth){
     $scope.projectToEdit = {active: true, repositories: [""]};
     if ($scope.project) {
         $scope.projectToEdit = $scope.project;
     }
+    $scope.editing=$scope.path!="/projects";
 
     $scope.getInfo = function() {
         if($scope.projectToEdit.githubUsername && $scope.projectToEdit.githubProjectName) {
@@ -18,6 +20,7 @@ var projectEditController = function($scope, $location, $http, Auth){
     };
 
     $scope.submit = function(form) {
+console.log($location, Auth, $scope);
         $scope.submitted = true;
 
         if(form.$valid) {
@@ -28,7 +31,12 @@ var projectEditController = function($scope, $location, $http, Auth){
             // use setTimeout because hiding the modal takes longer than the post request
             // and results in the modal disappearing but the overlay staying if not used
             setTimeout(function() {
-                $http.post('/api/projects', $scope.projectToEdit);
+                var redirectUsername = $scope.projectToEdit.githubUsername;
+                var redirectProjectName = $scope.projectToEdit.githubProjectName;
+                if ($scope.editing)
+                    console.log($http.put('/api/projects/' + $scope.projectToEdit._id, $scope.projectToEdit));
+                else
+                    $http.post('/api/projects', $scope.projectToEdit);
 
                 if ($scope.past){
                     $scope.getPastProjects();
@@ -36,29 +44,19 @@ var projectEditController = function($scope, $location, $http, Auth){
                 else{
                     $scope.getCurrentProjects();
                 }
-                var redirectUsername = $scope.projectToEdit.githubUsername;
-                var redirectProjectName = $scope.projectToEdit.githubProjectName;
                 $scope.projectToEdit = {active: true};
 
                 $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
             }, 200);
         }
     };
-}
-
-angular.module('observatory3App')
+})
 .directive('editProject', function() {
     return {
         restrict: "E",
         templateUrl: "components/editProject/editProject.html",
-        controller: projectEditController,
         scope: {
             project: '='
-        },
+        }
     };
-
 });
-
-/* function ($scope, $location, $http, Auth) {
-   });
-   */
