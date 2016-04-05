@@ -14,6 +14,9 @@
         <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
             <a ng-href="{{item.link}}">{{item.title}}</a>
         </li>
+        <li ng-show="isLoggedIn() && !isMentor() && hasSmallGroup()">
+            <a ng-href='/smallgroup'>Small Group</a>
+        </li>
         <li ng-show="isLoggedIn()" ng-class="{active: isActive('/attend')}"><a href="/attend">Attend</a></li>
         <li ng-show="displayURP"><a href='http://urp.rcos.xyz/'>URP Form</a></li>
         <li ng-show="isMentor()" uib-dropdown is-open="mentorMenu">

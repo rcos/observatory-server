@@ -8,6 +8,14 @@
     </div>
   </div>
 </div>
+<div ng-show='!smallgroup && !isMentor()' class='container smallgroup'>
+  <div class="row">
+    <div class="col-sm-12 text-center">
+      <h2> You do not have a small group yet.</h2>
+      <h4> If you already have a mentor, ask them to add you!</h4>
+    </div>
+  </div>
+</div>
 
 <div ng-show="smallgroup" class="container smallgroup">
   <div class="row">
