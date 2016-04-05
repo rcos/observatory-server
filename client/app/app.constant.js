@@ -3,7 +3,7 @@
 
 angular.module('observatory3App.constants', [])
 
-.constant('appConfig', {userRoles:['guest','user','admin']})
+.constant('appConfig', {userRoles:['guest','user','mentor','admin']})
 
 ;
 })(angular);
