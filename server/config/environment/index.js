@@ -51,7 +51,7 @@ var all = {
   sendgridApiKey: process.env.SENDGRID_API_KEY || '',
 
   // List of user roles
-  userRoles: ['guest', 'user', 'admin'],
+  userRoles: ['guest', 'user', 'mentor', 'admin'],
 
   // MongoDB connection options
   mongo: {
