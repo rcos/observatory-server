@@ -95,7 +95,11 @@ angular.module('observatory3App')
         }
       };
       var getCommits = function(){
-         $http.get('/api/commits/user/' + user.githubProfile).success(function(commits){
+        if (!$scope.user){
+          $scope.user.commits = [];
+          return;
+        }
+         $http.get('/api/commits/user/' + $scope.user.githubProfile).success(function(commits){
              $scope.user.commits = commits;
          });
       };
