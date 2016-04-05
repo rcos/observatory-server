@@ -2,9 +2,13 @@
 
 <div class="container">
 	<h3>Unverified Users</h3>
-  <div ng-repeat='user in unverifiedUsers'>
-    <button ng-click='verifyAttendance(user)' class='btn btn-primary'>Verify Attendance</button>
-    <span>{{ user.name }}</span>
+  <div ng-repeat='submissions in unverifiedSubmissions'>
+    <button ng-click='verifyAttendance(submissions)' class='btn btn-primary'>Verify Attendance</button>
+    <span>{{ submissions.user.name }}</span>
   </div>
+<div ng-hide='unverifiedSubmissions.length'>
+  <span>No unverified users</span>
+</div>
+
 </div>
 <div ng-include="'components/footer/footer.html'"></div>

@@ -2,11 +2,13 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, $stateParams, $location, $uibModal, Auth, Upload, Project, notify) {
     $scope.userOnProject = false;
-    
+    $scope.project = {};
+    console.log($scope.project);
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
+            console.log(result.data);
             $scope.project = result.data;
             initializeSlides($scope.project.photos);
             getAuthors();
@@ -17,9 +19,42 @@ angular.module('observatory3App')
                     $scope.checkUserProject();
                 }
             });
+        },function(){
+          $location.path('/projects');
         });
     };
     updateProject();
+
+    $scope.editProject = function() {
+      $scope.editedProject = angular.copy($scope.project);
+
+      var modalInstance = $uibModal.open({
+        templateUrl: 'components/editProject/editProject.html',
+        controller: 'projectEditController',
+
+        resolve: {
+          editProject: function () {
+            return  $scope.editedProject;
+          },
+        }
+      });
+
+      modalInstance.result.then(function (projectAdded) {
+        // $window.location.reload();
+        var redirectUsername = projectAdded.githubUsername;
+        var redirectProjectName = projectAdded.githubProjectName;
+        if (redirectUsername === $stateParams.username && redirectProjectName === $stateParams.project){
+          $scope.project=projectAdded;
+          updateProject();
+        }
+        else{
+          $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
+        }
+
+      }, function(){
+
+      });
+    };
 
     var getAuthors = function() {
         var project = $scope.project;
@@ -154,12 +189,12 @@ angular.module('observatory3App')
         }).error(function(){
             notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
-    };  
+    };
 
     $scope.markPast = function(){
         $http.put('api/projects/'+$scope.project._id+'/markPast').success(function(){
-            notify("Project marked as past project"); 
-            updateProject(); 
+            notify("Project marked as past project");
+            updateProject();
         }).error(function(){
             notify("Project not marked as a past project")
         });
@@ -167,8 +202,8 @@ angular.module('observatory3App')
 
     $scope.markActive =  function(){
         $http.put('api/projects/'+$scope.project._id+'/markActive').success(function(){
-            notify("Project marked as a current project"); 
-            updateProject(); 
+            notify("Project marked as a current project");
+            updateProject();
         }).error(function(){
             notify("ERROR: Project not marked as a current project")
         });

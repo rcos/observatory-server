@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <base href="/">
     <title>Rensselaer Center for Open Source</title>
     <meta name="description" content="">
@@ -18,23 +18,15 @@
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
-    <link rel="stylesheet" href="app/app.css">
+      <link rel="stylesheet" href="app/app.css">
       <!-- injector:css -->
       <!-- endinjector -->
     <!-- endbuild -->
 	<link href="/assets/images/favicon.ico" rel="shortcut icon"></link>
   </head>
   <body ng-app="observatory3App">
-    <noscript>
-      <h1 style="margin-left:10px;">Javascript required</h1>
-      <h5 style="margin-left:10px;">
-        We're sorry, but your browser does not appear to support javascript.<br/>
-        Due to the nature of this site, javascript is required.<br/>
-        Please upgrade your browser or enable javascript to view this page.
-      </h5>
-    </noscript>
     <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
@@ -43,9 +35,9 @@
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
       ga('create', 'UA-35949221-4', 'auto');
       ga('send', 'pageview');
@@ -59,56 +51,73 @@
       <!-- bower:js -->
       <script src="bower_components/jquery/dist/jquery.js"></script>
       <script src="bower_components/angular/angular.js"></script>
-      <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
       <script src="bower_components/angular-resource/angular-resource.js"></script>
       <script src="bower_components/angular-cookies/angular-cookies.js"></script>
       <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-      <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+      <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+      <script src="bower_components/angular-socket-io/socket.js"></script>
+      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+      <script src="bower_components/angular-validation-match/dist/angular-validation-match.min.js"></script>
       <script src="bower_components/codemirror/lib/codemirror.js"></script>
       <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
       <script src="bower_components/showdown/src/showdown.js"></script>
       <script src="bower_components/angular-markdown-directive/markdown.js"></script>
       <script src="bower_components/angular-notify/dist/angular-notify.js"></script>
       <!-- endbower -->
+      <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
-
-        <!-- build:js({.tmp,client}) app/app.js -->
-        <script src="app/app.js"></script>
-          <!-- injector:js -->
-          <script src="app/account/account.js"></script>
-          <script src="app/account/forgot-password/forgot-password.controller.js"></script>
-          <script src="app/account/login/login.controller.js"></script>
-          <script src="app/account/settings/settings.controller.js"></script>
-          <script src="app/account/signup/signup.controller.js"></script>
-          <script src="app/admin/admin.controller.js"></script>
-          <script src="app/admin/admin.js"></script>
-          <script src="app/admin/classcontrol/classcontrol.controller.js"></script>
-          <script src="app/attend/attend.controller.js"></script>
-          <script src="app/attend/attend.js"></script>
-          <script src="app/main/main.controller.js"></script>
-          <script src="app/main/main.js"></script>
-          <script src="app/mentor/mentor.controller.js"></script>
-          <script src="app/mentor/mentor.js"></script>
-          <script src="app/projectchooser/projectchooser.controller.js"></script>
-          <script src="app/projectchooser/projectchooser.js"></script>
-          <script src="app/projects/blog/blog.controller.js"></script>
-          <script src="app/projects/profile/profile.controller.js"></script>
-          <script src="app/projects/projects.controller.js"></script>
-          <script src="app/projects/projects.js"></script>
-          <script src="app/smallgroup/smallgroup.controller.js"></script>
-          <script src="app/smallgroup/smallgroup.js"></script>
-          <script src="app/user/profile/profile.controller.js"></script>
-          <script src="app/user/profile/profile.js"></script>
-          <script src="app/user/user.controller.js"></script>
-          <script src="app/user/user.js"></script>
-          <script src="components/auth/auth.service.js"></script>
-          <script src="components/auth/user.service.js"></script>
-          <script src="components/mongoose-error/mongoose-error.directive.js"></script>
-          <script src="components/navbar/navbar.controller.js"></script>
-          <script src="components/project/project.service.js"></script>
-          <!-- endinjector -->
-        <!-- endbuild -->
-</body>
+    <!-- build:js(.tmp) app/app.js -->
+      <script src="app/app.js"></script>
+      <!-- injector:js -->
+      <script src="app/admin/admin.module.js"></script>
+      <script src="components/auth/auth.module.js"></script>
+      <script src="components/util/util.module.js"></script>
+      <script src="app/smallgroup/smallgroup.js"></script>
+      <script src="app/account/signup/signup.controller.js"></script>
+      <script src="app/admin/admin.controller.js"></script>
+      <script src="app/account/account.js"></script>
+      <script src="app/admin/admin.router.js"></script>
+      <script src="app/admin/classcontrol/classcontrol.controller.js"></script>
+      <script src="app/app.constant.js"></script>
+      <script src="app/attend/attend.controller.js"></script>
+      <script src="app/attend/attend.js"></script>
+      <script src="app/main/main.controller.js"></script>
+      <script src="app/main/main.js"></script>
+      <script src="app/mentor/mentor.controller.js"></script>
+      <script src="app/mentor/mentor.js"></script>
+      <script src="app/projectchooser/projectchooser.controller.js"></script>
+      <script src="app/projectchooser/projectchooser.js"></script>
+      <script src="app/projects/blog/blog.controller.js"></script>
+      <script src="app/projects/profile/profile.controller.js"></script>
+      <script src="app/projects/projects.controller.js"></script>
+      <script src="app/projects/projects.js"></script>
+      <script src="app/smallgroup/smallgroup.controller.js"></script>
+      <script src="app/account/forgot-password/forgot-password.controller.js"></script>
+      <script src="app/user/profile/profile.controller.js"></script>
+      <script src="app/user/profile/profile.js"></script>
+      <script src="app/user/user.controller.js"></script>
+      <script src="app/user/user.js"></script>
+      <script src="app/account/login/login.controller.js"></script>
+      <script src="components/auth/auth.service.js"></script>
+      <script src="components/auth/interceptor.service.js"></script>
+      <script src="components/auth/router.decorator.js"></script>
+      <script src="components/auth/user.service.js"></script>
+      <script src="components/editProject/editProject.directive.js"></script>
+      <script src="components/factories/focusMe.factory.js"></script>
+      <script src="components/footer/footer.directive.js"></script>
+      <script src="components/modal/modal.service.js"></script>
+      <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+      <script src="components/navbar/navbar.controller.js"></script>
+      <script src="components/navbar/navbar.directive.js"></script>
+      <script src="components/oauth-buttons/oauth-buttons.controller.js"></script>
+      <script src="components/oauth-buttons/oauth-buttons.directive.js"></script>
+      <script src="components/project/project.service.js"></script>
+      <script src="components/socket/socket.service.js"></script>
+      <script src="components/sortArrow/sortArrow.directive.js"></script>
+      <script src="app/account/settings/settings.controller.js"></script>
+      <script src="components/util/util.service.js"></script>
+      <!-- endinjector -->
+    <!-- endbuild -->
+  </body>
 </html>

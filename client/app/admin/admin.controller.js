@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('AdminCtrl', function ($scope, $http, Auth, User, notify, $location) {
+  .controller('AdminCtrl', function ($scope, $http, Auth, User, Util, notify, $location) {
 
     if (Auth.isLoggedIn()){
       var loggedInUser = Auth.getCurrentUser();
@@ -13,7 +13,15 @@ angular.module('observatory3App')
             // Use the User $resource to fetch all users
 
             $scope.users = [];
-            $scope.users = User.allstats();
+            User.allstats({},function(users){
+                $scope.users = users;
+
+                for (var a = 0; a < $scope.users.length; a++){
+                  Util.parseAttendance($scope.users[a]);
+                }
+            }, function(){
+            });
+
           }
     }
     else{
@@ -21,11 +29,11 @@ angular.module('observatory3App')
     }
 
     $scope.updateUserRole = function(user) {
-      
+
       $http.post('/api/users/' + user._id + '/role', {
             role: user.role
         }).success(function() {
-          notify('Updated user role.')
+          notify('Updated user role.');
         }).error(function() {
           notify('Unable to set user role');
         });
@@ -70,11 +78,4 @@ angular.module('observatory3App')
 
     $scope.sortorder = 'name';
 
-    $scope.setSortOrder = function(field){
-      if (field === $scope.sortorder){
-        $scope.sortorder = '-' + field;
-      } else{
-        $scope.sortorder = field;
-      }
-    };
   });

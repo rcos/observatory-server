@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('observatory3App')
-
-.controller('ProjectsCtrl', function ($scope, $location, $http, Auth) {
+.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, focus) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
     $scope.loggedIn = false;
+    focus('searchProjectsInput');
 
     Auth.isLoggedInAsync(function(loggedIn){
         if (loggedIn){
@@ -28,15 +28,28 @@ angular.module('observatory3App')
         $scope.past = true;
     };
 
-    $scope.getInfo = function() {
-        if($scope.projectToAdd.githubUsername && $scope.projectToAdd.githubProjectName) {
-            $scope.projectToAdd.name = $scope.projectToAdd.githubProjectName;
-            $.getJSON('https://api.github.com/repos/' + $scope.projectToAdd.githubUsername + '/' + $scope.projectToAdd.githubProjectName, function(response) {
-                $scope.projectToAdd.websiteURL = response.homepage;
-                $scope.projectToAdd.description = response.description;
-                $scope.$apply();
-            });
+    $scope.addProject = function() {
+      var modalInstance = $uibModal.open({
+        templateUrl: 'components/editProject/editProject.html',
+        controller: 'projectEditController',
+        backdrop : 'static',
+
+        resolve: {
+          editProject: function () {
+            return  null;
+          },
         }
+      });
+
+      modalInstance.result.then(function (projectAdded) {
+        // $window.location.reload();
+        var redirectUsername = projectAdded.githubUsername;
+        var redirectProjectName = projectAdded.githubProjectName;
+        $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
+
+      }, function(){
+        
+      });
     };
 
     $scope.addRepository = function() {
@@ -46,33 +59,6 @@ angular.module('observatory3App')
     $scope.removeRepository = function(index) {
         $scope.projectToAdd.repositories.splice(index, 1);
     }
-
-    $scope.submit = function(form) {
-        $scope.submitted = true;
-
-        if(form.$valid) {
-            $scope.submitted = false;
-            $scope.projectToAdd.repositories[0] = "https://github.com/" + $scope.projectToAdd.githubUsername + "/" + $scope.projectToAdd.githubProjectName;
-            $('#addProject').modal('hide');
-            // use setTimeout because hiding the modal takes longer than the post request
-            // and results in the modal disappearing but the overlay staying if not used
-            setTimeout(function() {
-                $http.post('/api/projects', $scope.projectToAdd);
-
-                if ($scope.past){
-                    $scope.getPastProjects();
-                }
-                else{
-                    $scope.getCurrentProjects();
-                }
-                var redirectUsername = $scope.projectToAdd.githubUsername;
-                var redirectProjectName = $scope.projectToAdd.githubProjectName;
-                $scope.projectToAdd = {active: true};
-
-                $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
-            }, 200);
-        }
-    };
 
     $scope.getCurrentProjects(); // update the webpage when connecting the controller
 })

@@ -4,7 +4,7 @@ var path = require('path');
 var _ = require('lodash');
 
 function requiredProcessEnv(name) {
-  if(!process.env[name]) {
+  if (!process.env[name]) {
     throw new Error('You must set the ' + name + ' environment variable');
   }
   return process.env[name];
@@ -20,6 +20,9 @@ var all = {
 
   // Server port
   port: process.env.PORT || 9000,
+
+  // Server IP
+  ip: process.env.IP || '0.0.0.0',
 
   // Attendance verification ratio
   attendanceVerificationRatio: .1,
@@ -48,7 +51,7 @@ var all = {
   sendgridApiKey: process.env.SENDGRID_API_KEY || '',
 
   // List of user roles
-  userRoles: ['guest', 'user', 'admin'],
+  userRoles: ['guest', 'user', 'mentor', 'admin'],
 
   // MongoDB connection options
   mongo: {
@@ -59,10 +62,23 @@ var all = {
     }
   },
 
+  facebook: {
+    clientID:     process.env.FACEBOOK_ID || 'id',
+    clientSecret: process.env.FACEBOOK_SECRET || 'secret',
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/facebook/callback'
+  },
+
+  google: {
+    clientID:     process.env.GOOGLE_ID || 'id',
+    clientSecret: process.env.GOOGLE_SECRET || 'secret',
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
+  }
+
 };
 
 // Export the config object based on the NODE_ENV
 // ==============================================
 module.exports = _.merge(
   all,
+  require('./shared'),
   require('./' + process.env.NODE_ENV + '.js') || {});

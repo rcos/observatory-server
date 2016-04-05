@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('SettingsCtrl', function ($scope, $location, User, Auth) {
+  .controller('SettingsCtrl', function ($scope, $location, User, Auth,$stateParams, $http,notify) {
     $scope.errors = {};
     $scope.token = $location.search().token;
+    $scope.passwords = {};
+    $scope.delete_errors = {};
 
     $scope.changePassword = function(form) {
       $scope.submitted = true;
@@ -30,4 +32,21 @@ angular.module('observatory3App')
         }
       }
 		};
+
+    $scope.deleteUser = function(user,df){
+      $scope.dismiss = false;
+      if(df.$valid){
+        Auth.deleteUser($scope.pass.currpass)
+          .then(function(){
+             $location.path('/main');
+             df.Password.$setValidity('mongoose',false);
+             Auth.logout();
+             notify({message: "Account deleted"});
+        })
+        .catch(function(){
+            df.Password.$setValidity('mongoose',false);
+            $scope.delete_errors.other = 'Incorrect password'
+        });
+      }
+    }
   });

@@ -1,36 +1,40 @@
-$icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
-$fa-font-path: "/bower_components/font-awesome/fonts";
+@import '../bower_components/bootstrap/less/bootstrap.less';
+@import '../bower_components/bootstrap-social/bootstrap-social.less';
+@import '../bower_components/font-awesome/less/font-awesome.less';
 
-@import 'bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
-@import 'font-awesome/scss/font-awesome';
+@icon-font-path: '../bower_components/bootstrap/fonts/';
+@fa-font-path: '../bower_components/font-awesome/fonts';
 
 /**
  * App-wide Styles
  */
 
-.browsehappy {
-    margin: 0.2em 0;
-    background: #ccc;
-    color: #000;
-    padding: 0.2em 0;
+.browserupgrade {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
 }
 
-// Component styles are injected through grunt
 // injector
-@import 'account/login/login.scss';
-@import 'account/settings/settings.scss';
-@import 'admin/admin.scss';
-@import 'admin/classcontrol/classcontrol.scss';
-@import 'attend/attend.scss';
-@import 'main/main.scss';
-@import 'mentor/mentor.scss';
-@import 'projectchooser/projectchooser.scss';
-@import 'projects/blog/blog.scss';
-@import 'projects/profile/profile.scss';
-@import 'projects/projects.scss';
-@import 'smallgroup/smallgroup.scss';
-@import 'user/profile/profile.scss';
-@import 'user/user.scss';
+@import 'account/login/login.less';
+@import 'account/settings/settings.less';
+@import 'admin/admin.less';
+@import 'admin/classcontrol/classcontrol.less';
+@import 'attend/attend.less';
+@import 'main/main.less';
+@import 'mentor/mentor.less';
+@import 'projectchooser/projectchooser.less';
+@import 'projects/blog/blog.less';
+@import 'projects/profile/profile.less';
+@import 'projects/projects.less';
+@import 'smallgroup/smallgroup.less';
+@import 'user/profile/profile.less';
+@import 'user/user.less';
+@import '../components/footer/footer.less';
+@import '../components/modal/modal.less';
+@import '../components/oauth-buttons/oauth-buttons.less';
+@import '../components/sortArrow/sortArrow.less';
 // endinjector
 
 

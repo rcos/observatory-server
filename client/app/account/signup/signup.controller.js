@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('SignupCtrl', function ($scope, Auth, $location) {
+  .controller('SignupCtrl', function ($scope, Auth, $location, focus) {
     $scope.user = {};
     $scope.errors = {};
+
+    focus('name');
 
     $scope.register = function(form) {
       $scope.submitted = true;

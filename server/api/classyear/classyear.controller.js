@@ -27,6 +27,22 @@ exports.getClassYear = function(req, res) {
   })
 };
 
+// Get a specific class year's attendance bonus days
+exports.countBonusDays = function(req, res) {
+  ClassYear.findOne({
+    "current": true
+  }, function (err, classYear){
+    if(err) { return handleError(res, err); }
+    if (!classYear) return res.send(404);
+    var bonusDays  = classYear.dayCodes.reduce(function(previousValue, currentValue) {
+      return previousValue + (currentValue.bonusDay? 1 : 0); // Add 1 to the count for each bonusday in classYear.dayCodes
+    }, 0);
+    res.json(bonusDays);
+  });
+};
+
+
+
 // Creates new class year
 exports.create = function(req, res) {
   var semester = req.body.semester;
@@ -60,7 +76,10 @@ exports.create = function(req, res) {
           }
         }
       });
-      res.send(204);
+      ClassYear.getCurrent(function(err, currentClassYear){
+          global.currentClassYear = currentClassYear;
+          res.send(204);
+      });
     });
 
   })
@@ -74,7 +93,12 @@ exports.update = function(req, res) {
     if(err) { return handleError(res, err); }
     classYear.update(req.body, function(err){
       if(err) { return handleError(res, err); }
-      res.send(204);
+      ClassYear.getCurrent(function(err, currentClassYear){
+          global.currentClassYear = currentClassYear;
+          res.send(204);
+
+      });
+
     });
   });
 };

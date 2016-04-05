@@ -1,0 +1,80 @@
+.smallgroup{
+  .attendance {
+    padding: 10px 0px;
+  }
+  .edit-name {
+    display: none;
+    font-size: 15px;
+    padding: 3px;
+    cursor: pointer;
+  }
+  .group-name:hover .edit-name {
+    display: inline-block;
+  }
+  .edit-name:hover {
+    background-color: rgb(153, 153, 153);
+  }
+  .dayCodeForm{
+    // margin-top:40px;
+  }
+  .students {
+    text-align: center;
+    font-size:14px;
+    .blokc {
+      padding: 5px;
+    }
+    .student {
+      text-align: left;
+      opacity:.8;
+      height:80px;
+      background-color:#ccc;
+      overflow:hidden;
+      .photo {
+        margin-top:4px;
+        margin-bottom:4px;
+        margin-left:4px;
+        float: left;
+      }
+      .text {
+        margin:0;
+        padding: 4px 8px 4px 84px;
+        width:100%;
+        .icon {
+          margin:0;
+          padding: 0;
+          width:10%;
+          float: left;
+        }
+        .details {
+          margin:0;
+          padding: 0;
+          width:90%;
+          height:72px;
+          float: left;
+          overflow:hidden;
+        }
+      }
+    }
+    .student:hover {
+      cursor:pointer;
+      opacity:1;
+    }
+    .student.present {
+      background-color:#59FF59;
+    }
+  }
+  .big-attendance {
+    text-align:center;
+    cursor: pointer;
+    .small-text {
+      font-size:64px;
+      font-size: 5vw;
+    }
+    .big-text {
+      font-size: 20vw;
+    }
+  }
+  .description-buttons {
+    margin: 8px 0px;
+  }
+}
