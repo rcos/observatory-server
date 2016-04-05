@@ -15,10 +15,10 @@ angular.module('observatory3App')
             $http({ url: 'https://api.github.com/repos/' + $scope.project.githubUsername + '/' + $scope.project.githubProjectName}).then(
               function(response) {
                 if (response.data.homepage){
-                  $scope.project.websiteURL = response.data.homepage;
+                  $scope.project.websiteUrl = response.data.homepage;
                 }
                 else{
-                  $scope.project.websiteURL = response.data.html_url;
+                  $scope.project.websiteUrl = response.data.html_url;
                 }
                 $scope.project.description = response.data.description;
               }, function(){
@@ -42,11 +42,9 @@ angular.module('observatory3App')
             // and results in the modal disappearing but the overlay staying if not used
             if ($scope.editing)
                 $http.put('/api/projects/' + $scope.project._id, $scope.project).then(function(response){
-                  console.log(response);
                   $uibModalInstance.close(response.data);
 
                 },function(err){
-                  console.log(err);
                   err = err.data;
                   $scope.errors = {};
 
@@ -60,11 +58,9 @@ angular.module('observatory3App')
             else{
                 $http.post('/api/projects', $scope.project)
                 .then(function(response){
-                  console.log(response);
                   $uibModalInstance.close($scope.project);
 
                 },function(err){
-                  console.log(err);
                   err = err.data;
                   $scope.errors = {};
 

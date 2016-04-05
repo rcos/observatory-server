@@ -7,18 +7,8 @@
             <p>
                 <pname></pname>
             </p>
-            <div class="btn-group description-buttons" data-toggle="modal" data-target="#editProject"  ng-show="userOnProject">
-                <button type="button" class='btn btn-default btn-sm'>Edit Project</button>
-            </div>
         </div>
         <div class="col-sm-9 text-right header-buttons">
-            <div ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</div>
-            <div ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</div>
-            <div ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</div>
-            <div ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</div>
-            <div ng-show='isLoggedIn() && userOnProject && project.active' class="btn btn-primary" ng-click='markPast()'>Mark Past Project </div>
-            <div ng-show='isLoggedIn() && userOnProject && !project.active' class="btn btn-primary" ng-click='markActive()'>Mark Active Project </div>
-
             <a class="btn btn-info" href="{{project.websiteUrl}}" title="">Website</a>
             <a class="btn btn-info" href="{{project.repositories[0]}}" title="" ng-show="project.repositories.length == 1">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
             <div class="btn-group" uib-dropdown is-open="repositoryMenu"  ng-show="project.repositories.length > 1">
@@ -32,6 +22,18 @@
             <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
 
         </div>
+        <div class="col-sm-9 text-right header-buttons">
+            <button type="button" ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</button>
+            <button type="button" ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</button>
+            <button type="button" ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</button>
+            <button type="button" ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</button>
+            <button type="button" ng-show='isLoggedIn() && userOnProject && project.active' class="btn btn-warning" ng-click='markPast()'>Mark Past Project </button>
+            <button type="button" ng-show='isLoggedIn() && userOnProject && !project.active' class="btn btn-warning" ng-click='markActive()'>Mark Active Project </button>
+            <button type="button" class="btn btn-primary" ng-click="editProject()" ng-show="userOnProject">
+              Edit Project
+            </button>
+        </div>
+
     </div>
     <div class="row">
         <div class="col-sm-7 project-image">
@@ -97,19 +99,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="modal fade" id="editProject" tabindex="-1" role="dialog" aria-labelledby="editProjectLabel" aria-hidden="true">
-    <div class="modal-dialog">
-	<div class="modal-content">
-	    <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-               	<h4 class="modal-title" id="editProjectLabel">Edit Project</h4>
-	    </div>
-            <div class="modal-body">
-                <edit-project project="editProject"></edit-project>
-            </div>
-	</div>
-    </div>
-</div>
+  </div>
 </div>
 <div ng-include="'components/footer/footer.html'"></div>

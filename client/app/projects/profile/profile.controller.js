@@ -2,15 +2,14 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, $location, Upload, Project, notify) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, $stateParams, $location, $uibModal, Auth, Upload, Project, notify) {
     $scope.userOnProject = false;
-    $scope.editProject = {};
-    $scope.editing=true;
-
+    $scope.project = {};
+    console.log($scope.project);
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
+            console.log(result.data);
             $scope.project = result.data;
-            angular.copy($scope.project, $scope.editProject);
             initializeSlides($scope.project.photos);
             getAuthors();
             Auth.isLoggedInAsync(function(loggedIn){
@@ -25,6 +24,37 @@ angular.module('observatory3App')
         });
     };
     updateProject();
+
+    $scope.editProject = function() {
+      $scope.editedProject = angular.copy($scope.project);
+
+      var modalInstance = $uibModal.open({
+        templateUrl: 'components/editProject/editProject.html',
+        controller: 'projectEditController',
+
+        resolve: {
+          editProject: function () {
+            return  $scope.editedProject;
+          },
+        }
+      });
+
+      modalInstance.result.then(function (projectAdded) {
+        // $window.location.reload();
+        var redirectUsername = projectAdded.githubUsername;
+        var redirectProjectName = projectAdded.githubProjectName;
+        if (redirectUsername === $stateParams.username && redirectProjectName === $stateParams.project){
+          $scope.project=projectAdded;
+          updateProject();
+        }
+        else{
+          $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
+        }
+
+      }, function(){
+
+      });
+    };
 
     var getAuthors = function() {
         var project = $scope.project;

@@ -47,15 +47,15 @@
             </p>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-success': editProjectForm.websiteURL.$valid && submitted,
-        'has-error': editProjectForm.websiteURL.$invalid && submitted }">
+        <div class="form-group" ng-class="{ 'has-success': editProjectForm.websiteUrl.$valid && submitted,
+        'has-error': editProjectForm.websiteUrl.$invalid && submitted }">
             <label>Your project's homepage</label>
 
-            <input type="url" name="websiteURL" class="form-control" ng-model="project.websiteURL" required />
-            <p class="help-block" ng-show="editProjectForm.websiteURL.$error.url && submitted">
+            <input type="url" name="websiteUrl" class="form-control" ng-model="project.websiteUrl" required />
+            <p class="help-block" ng-show="editProjectForm.websiteUrl.$error.url && submitted">
             Doesn't look like a valid url.
             </p>
-            <p class="help-block" ng-show="editProjectForm.websiteURL.$error.required && submitted">
+            <p class="help-block" ng-show="editProjectForm.websiteUrl.$error.required && submitted">
             Project homepage is required
             </p>
         </div>
@@ -86,7 +86,7 @@
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" ng-click="close">Close</button>
+            <button type="button" class="btn btn-default" ng-click="close()">Close</button>
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
