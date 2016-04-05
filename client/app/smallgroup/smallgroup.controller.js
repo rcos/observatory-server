@@ -14,8 +14,14 @@ angular.module('observatory3App')
   });
 
   var updateSmallGroup = function (callback) {
-    callback = callback || function () {
-    };
+    callback = callback || function () {};
+
+    if (!$scope.user.smallgroup){
+      $scope.loaded = true;
+      $scope.smallgroup = null;
+      return;
+    }
+
     $http.get('/api/smallgroup/' + $scope.user.smallgroup).success(function (smallgroup) {
       $scope.smallgroup = smallgroup;
       $scope.loaded = true;
