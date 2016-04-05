@@ -71,9 +71,9 @@ export default function(app) {
   if ('production' === env) {
     app.use(favicon(path.join(config.root, 'client', 'favicon.ico')));
     app.use(express.static(app.get('appPath')));
-    app.set('appPath', config.root + '/public');
     app.use(morgan('dev'));
   }
+
   if ('development' === env) {
     app.use(require('connect-livereload')());
   }
@@ -81,7 +81,6 @@ export default function(app) {
   if ('development' === env || 'test' === env) {
     app.use(express.static(path.join(config.root, '.tmp')));
     app.use(express.static(app.get('appPath')));
-    app.set('appPath', 'client');
     app.use(morgan('dev'));
     app.use(errorHandler()); // Error handler - has to be last
   }
