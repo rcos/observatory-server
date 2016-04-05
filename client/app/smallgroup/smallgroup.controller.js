@@ -6,6 +6,7 @@ angular.module('observatory3App')
   $scope.showAttendanceCodeFull = false;
   $scope.isMentor = Auth.isMentor;
 
+  $scope.loaded = false;
 
   Auth.getCurrentUser(function (user) {
     $scope.user = user;
@@ -17,6 +18,7 @@ angular.module('observatory3App')
     };
     $http.get('/api/smallgroup/' + $scope.user.smallgroup).success(function (smallgroup) {
       $scope.smallgroup = smallgroup;
+      $scope.loaded = true;
       if (!smallgroup) {
         $scope.smallgroup = false;
         return false;
