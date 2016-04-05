@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, Upload, Project, notify) {
+.controller('ProjectsProfileCtrl', function ($scope, $http, Auth, $stateParams, $location, Upload, Project, notify) {
     $scope.userOnProject = false;
     $scope.editProject = {};
     $scope.editing=true;
@@ -20,6 +20,8 @@ angular.module('observatory3App')
                     $scope.checkUserProject();
                 }
             });
+        },function(){
+          $location.path('/projects');
         });
     };
     updateProject();

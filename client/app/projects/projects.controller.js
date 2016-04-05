@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, $location, $http, Auth, focus) {
+.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, focus) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
     $scope.loggedIn = false;
@@ -26,6 +26,30 @@ angular.module('observatory3App')
             $scope.projects = projects;
         });
         $scope.past = true;
+    };
+
+    $scope.addProject = function() {
+      var modalInstance = $uibModal.open({
+        templateUrl: 'components/editProject/editProject.html',
+        controller: 'projectEditController',
+        backdrop : 'static',
+
+        resolve: {
+          editProject: function () {
+            return  null;
+          },
+        }
+      });
+
+      modalInstance.result.then(function (projectAdded) {
+        // $window.location.reload();
+        var redirectUsername = projectAdded.githubUsername;
+        var redirectProjectName = projectAdded.githubProjectName;
+        $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
+
+      }, function(){
+        
+      });
     };
 
     $scope.addRepository = function() {

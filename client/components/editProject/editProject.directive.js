@@ -1,62 +1,88 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('projectEditController', function($scope, $location, $http, Auth){
-    $scope.projectToEdit = {active: true, repositories: [""]};
-    if ($scope.project) {
-        $scope.projectToEdit = $scope.project;
+.controller('projectEditController', function($scope, $location, $http, $uibModalInstance, Auth, editProject){
+    $scope.project = {active: true, repositories: [""]};
+    if (editProject) {
+        $scope.project = editProject;
+        $scope.editing = true;
     }
-    $scope.editing=$scope.path!="/projects";
-
     $scope.getInfo = function() {
-        if($scope.projectToEdit.githubUsername && $scope.projectToEdit.githubProjectName) {
-            $scope.projectToEdit.name = $scope.projectToEdit.githubProjectName;
-            $.getJSON('https://api.github.com/repos/' + $scope.projectToEdit.githubUsername + '/' + $scope.projectToEdit.githubProjectName, function(response) {
-                    $scope.projectToEdit.websiteURL = response.homepage;
-                    $scope.projectToEdit.description = response.description;
-                    $scope.$apply();
-                    });
+        $scope.githubError = false;
+
+        if($scope.project.githubUsername && $scope.project.githubProjectName) {
+            $scope.project.name = $scope.project.githubProjectName;
+            $http({ url: 'https://api.github.com/repos/' + $scope.project.githubUsername + '/' + $scope.project.githubProjectName}).then(
+              function(response) {
+                if (response.data.homepage){
+                  $scope.project.websiteURL = response.data.homepage;
+                }
+                else{
+                  $scope.project.websiteURL = response.data.html_url;
+                }
+                $scope.project.description = response.data.description;
+              }, function(){
+                $scope.githubError = true;
+              });
+
+        }
+        else{
+          $scope.githubError = true;
         }
     };
 
     $scope.submit = function(form) {
-console.log($location, Auth, $scope);
         $scope.submitted = true;
 
         if(form.$valid) {
             $scope.submitted = false;
-            $scope.projectToEdit.repositories[0] = "https://github.com/" + $scope.projectToEdit.githubUsername + "/" + $scope.projectToEdit.githubProjectName;
+            $scope.project.repositories[0] = "https://github.com/" + $scope.project.githubUsername + "/" + $scope.project.githubProjectName;
 
-            $('#editProject').modal('hide');
             // use setTimeout because hiding the modal takes longer than the post request
             // and results in the modal disappearing but the overlay staying if not used
-            setTimeout(function() {
-                var redirectUsername = $scope.projectToEdit.githubUsername;
-                var redirectProjectName = $scope.projectToEdit.githubProjectName;
-                if ($scope.editing)
-                    console.log($http.put('/api/projects/' + $scope.projectToEdit._id, $scope.projectToEdit));
-                else
-                    $http.post('/api/projects', $scope.projectToEdit);
+            if ($scope.editing)
+                $http.put('/api/projects/' + $scope.project._id, $scope.project).then(function(response){
+                  console.log(response);
+                  $uibModalInstance.close(response.data);
 
-                if ($scope.past){
-                    $scope.getPastProjects();
-                }
-                else{
-                    $scope.getCurrentProjects();
-                }
-                $scope.projectToEdit = {active: true};
+                },function(err){
+                  console.log(err);
+                  err = err.data;
+                  $scope.errors = {};
 
-                $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
-            }, 200);
+                  // Update validity of form fields that match the mongoose errors
+                  angular.forEach(err.errors, function(error, field) {
+                    form[field].$setValidity('mongoose', false);
+                    $scope.errors[field] = error.message;
+                  });
+
+                });
+            else{
+                $http.post('/api/projects', $scope.project)
+                .then(function(response){
+                  console.log(response);
+                  $uibModalInstance.close($scope.project);
+
+                },function(err){
+                  console.log(err);
+                  err = err.data;
+                  $scope.errors = {};
+
+                  // Update validity of form fields that match the mongoose errors
+                  angular.forEach(err.errors, function(error, field) {
+                    form[field].$setValidity('mongoose', false);
+                    $scope.errors[field] = error.message;
+                  });
+
+                });
+
+            }
+
         }
     };
-})
-.directive('editProject', function() {
-    return {
-        restrict: "E",
-        templateUrl: "components/editProject/editProject.html",
-        scope: {
-            project: '='
-        }
+    $scope.close = function(){
+      // $uibModalInstance.close($scope.event);
+      $uibModalInstance.dismiss('cancel');
     };
+
 });
