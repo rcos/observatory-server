@@ -46,11 +46,9 @@
     <div class="row">
       <div class="col-sm-12 col-md-6 col-lg-5" ng-show="isMentor()">
         <h3>User Registration</h3>
+
         <form name="adduserform" ng-submit="addUser(input_user)" class="input-group dayCodeForm">
-          <input type="text" list="allUsers" ng-model='input_user' class="form-control" placeholder="User name" />
-          <datalist id="allUsers">
-            <option ng-repeat="user in allUsers" value="{{user.name}}" />
-          </datalist>
+          <input type="text" ng-model="input_user" uib-typeahead="user as user.name for user in allUsers |   filter:$viewValue | limitTo:8" class="form-control" placeholder="User name" typeahead-show-hint="true" typeahead-min-length="0">
           <span class="input-group-btn">
             <button class="btn btn-primary" multiple ng-click='addUser(input_user)' type="button">Add User</button>
           </span>

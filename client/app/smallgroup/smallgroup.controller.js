@@ -60,12 +60,7 @@ angular.module('observatory3App')
           };
 
           $scope.addUser = function (user) {
-            $http.get('/api/users/search', {
-              params: {
-                query: user,
-                single: true
-              }
-            }).success(function (user) {
+
               if (!user) {
                 return notify({message: 'User not found!', classes: ['alert-danger']});
               }
@@ -83,7 +78,6 @@ angular.module('observatory3App')
                     updateSmallGroup();
                   });
                 }
-              });
             });
           };
 
