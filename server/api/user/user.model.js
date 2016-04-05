@@ -1,8 +1,9 @@
 'use strict';
 
-import crypto from 'crypto';
+var crypto = require('crypto');
 var mongoose = require('bluebird').promisifyAll(require('mongoose'));
-import {Schema} from 'mongoose';
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 var md5 = require('md5');
@@ -516,5 +517,4 @@ UserSchema.methods = {
     }
 };
 
-
-export default mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);
