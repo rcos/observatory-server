@@ -202,6 +202,6 @@ angular.module('observatory3App')
     return {
       restrict:'E',
       template: '<div style=\'white-space:pre;\'></div> \
-                 <textarea ng-show=\'edittingGithub\' ng-model=\'user.githubProfile\' ></textarea>'
+                 <input type="text" ng-show=\'edittingGithub\' ng-model=\'user.githubProfile\' ></input>'
     }
   });
