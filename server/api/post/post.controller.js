@@ -37,8 +37,11 @@ exports.show = function(req, res) {
 
 // Creates a new post in the DB.
 exports.create = function(req, res) {
-
   req.body.author = req.user._id;
+
+  // remove date field if client tries to set it.
+  delete req.body['date'];
+
   if (!req.body.projectId){ return res.status(400).send("Project not set"); }
   Project.findOne({'_id': req.body.projectId }, function (err, project) {
     if(err) { return handleError(res, err); }
@@ -63,6 +66,9 @@ exports.create = function(req, res) {
 
 // Updates an existing post in the DB.
 exports.update = function(req, res) {
+  // remove date field if client tries to set it.
+  delete req.body['date'];
+
   if(req.body._id) { delete req.body._id; }
   Post.findById(req.params.id, function (err, post) {
     if (err) { return handleError(res, err); }
@@ -104,7 +110,7 @@ exports.destroy = function(req, res) {
       } else {
         return handleError(res, err);
       }
-      
+
     });
 
   });
