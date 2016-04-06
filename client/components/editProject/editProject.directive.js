@@ -35,12 +35,11 @@ angular.module('observatory3App')
         $scope.submitted = true;
 
         if(form.$valid) {
-            $scope.submitted = false;
             $scope.project.repositories[0] = "https://github.com/" + $scope.project.githubUsername + "/" + $scope.project.githubProjectName;
 
             // use setTimeout because hiding the modal takes longer than the post request
             // and results in the modal disappearing but the overlay staying if not used
-            if ($scope.editing)
+            if ($scope.editing){
                 $http.put('/api/projects/' + $scope.project._id, $scope.project).then(function(response){
                   $uibModalInstance.close(response.data);
 
@@ -55,10 +54,11 @@ angular.module('observatory3App')
                   });
 
                 });
+              }
             else{
                 $http.post('/api/projects', $scope.project)
                 .then(function(response){
-                  $uibModalInstance.close($scope.project);
+                  $uibModalInstance.close(response.data);
 
                 },function(err){
                   err = err.data;

@@ -1,0 +1,38 @@
+<div class="editModal">
+  <div class="modal-header">
+    <h3 ng-show="editing" class="modal-title">Editing Blog Post {{project.name}}</h3>
+    <h3 ng-hide="editing" class="modal-title">New Blog Post</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form" name="addPostForm" ng-submit="submit(addPostForm)" novalidate>
+      <div class="form-group" ng-class="{ 'has-success': addPostForm.title.$valid && submitted,
+      'has-error': addPostForm.title.$invalid && submitted }">
+        <label>Title</label>
+        <input type="text" name="title" class="form-control" ng-model="blog.title" placeholder="My Awesome Contribution" required/>
+        <p class="help-block" ng-show="addPostForm.title.$error.required && submitted">
+          What is the title of your blog post?
+        </p>
+      </div>
+      <div class="form-group" ng-class="{ 'has-success': addPostForm.content.$valid && submitted,
+      'has-error': addPostForm.content.$invalid && submitted }">
+        <label>Content</label>
+        <textarea name="content" class="form-control" rows="3" ng-model="blog.content" placeholder="Today I learned ...." required></textarea>
+        <p class="help-block" ng-show="addPostForm.content.$error.required && submitted">
+          What did you want to write about?
+        </p>
+      </div>
+      <br/><br/>
+      <div class="extra-content" ng-hide="!blog.title && !blog.content">
+          <h2 id="title" ng-hide="!blog.title" btf-markdown="blog.title"></h2>
+          <div class="clear"></div>
+          <div id="content" ng-hide="!blog.content" btf-markdown="blog.content"></div>
+          <div class="bottom-bar">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+        <button type="submit" class="btn btn-primary">Post</button>
+      </div>
+    </form>
+  </div>
+</div>
