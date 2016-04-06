@@ -10,7 +10,7 @@ angular.module('observatory3App')
     $scope.defaultPageSize = 48;
     $scope.pageSize = $scope.defaultPageSize;
 
-    $scope.currentView = 'Active Developers';
+    $scope.past = false;
 
     $scope.numberOfPages=function(){
         return Math.ceil($scope.users.length/$scope.pageSize);
@@ -39,12 +39,12 @@ angular.module('observatory3App')
     };
 
     $scope.changeView = function(view){
-        if (view === 'past'){
-            $scope.currentView = 'Past Developers';
-            $scope.users = $scope.pastUsers;
-        } else{
-            $scope.currentView = 'Active Developers';
+        if ($scope.past){
+            $scope.past = false;
             $scope.users = $scope.currentUsers;
+        } else{
+            $scope.past = true;
+            $scope.users = $scope.pastUsers;
         }
         $scope.currentPage = 0;
     };
