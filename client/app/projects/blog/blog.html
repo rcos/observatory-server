@@ -1,54 +1,39 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-    <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
-
-    <button ng-show="userInProject()" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#post" aria-expanded="false" aria-controls="post">
-        Add a post
-    </button>
-    <br/><br/>
-    <div class="collapse" id="post">
-        <form novalidate name="addPostForm" class="css-form">
-            <input ng-model="postToAdd.title" class="form-control addForm" placeholder="Title" required=""/><br/>
-            <textarea ng-model="postToAdd.content" class="form-control" placeholder="Content" required=""></textarea><br/>
-            <input type="submit" ng-click="addPostForm.$valid && submit(addPostForm)" class="btn btn-primary" value="Post"/>
-        </form>
-        <br/><br/>
+    <div class="col-xs-3">
+      <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
     </div>
-
-    <div class="extra-content" ng-hide="newPostIsEmpty()">
-        <h2 id="title" btf-markdown="post.title"></h2>
-        <div class="clear"></div>
-        <div id="content" btf-markdown="postToAdd.content"></div>
-        <div class="bottom-bar">
-        </div>
+    <div class="col-xs-9 text-right header-buttons">
+      <button ng-show="userInProject()" class="btn btn-primary" type="button" ng-click="addBlogPost()">
+          Add a post
+      </button>
     </div>
-    
-    <div ng-repeat="post in posts | orderBy:'-date'">
-        <div class="extra-content">
-            <div ng-show='userInProject()'>
-                <h2 ng-hide='edittingPost(post._id)' id="title" class="col-xs-6" btf-markdown="post.title"></h2>
-                <textarea ng-show='edittingPost(post._id)' id="titleEdit" class="col-xs-6" ng-model='post.title'></textarea>
-                <div ng-show="userOwnsPost(post)"class="col-xs-6 text-right">
-                    <div class="btn-group">
-                        <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post._id)'>Edit</button>
-                        <button type="button" class='btn btn-default btn-sm' ng-click='savePost(post._id)'>Save</button>
-                        <button type="button" class='btn btn-default btn-sm' ng-click='deletePost(post._id)'>Delete</button>
-                    </div>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <div ng-hide='edittingPost(post._id)' id="content" btf-markdown="post.content"></div>
-            <textarea ng-show='edittingPost(post._id)' id="contentEdit" ng-model='post.content'></textarea>
-            <div class="bottom-bar">
-                <div class="bottom-bar-left">
-                    <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
-                </div>
-                <div class="bottom-bar-right">
-                    {{ post.date | date:'MMM dd yyyy HH:mm:ss' }}
-                </div>
-            </div>
-        </div>
+    <div class="col-sm-12">
+      <div ng-repeat="post in posts | orderBy:'-date'">
+          <div class="extra-content">
+              <div ng-show='userInProject()'>
+                  <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
+                  <div ng-show="userOwnsPost(post)"class="col-xs-6 text-right">
+                      <div class="btn-group">
+                          <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post)'>Edit</button>
+                          <button type="button" class='btn btn-default btn-sm' ng-click='savePost(post)'>Save</button>
+                          <button type="button" class='btn btn-default btn-sm' ng-click='deletePost(post)'>Delete</button>
+                      </div>
+                  </div>
+              </div>
+              <div class="clear"></div>
+              <div  id="content" btf-markdown="post.content"></div>
+              <div class="bottom-bar">
+                  <div class="bottom-bar-left">
+                      <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
+                  </div>
+                  <div class="bottom-bar-right">
+                      {{ post.date | date:'MMM dd yyyy HH:mm:ss' }}
+                  </div>
+              </div>
+          </div>
+      </div>
     </div>
 
 

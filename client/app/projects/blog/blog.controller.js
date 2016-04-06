@@ -1,19 +1,12 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsBlogCtrl', function ($scope, $http, Auth, $stateParams, Project) {
+.controller('ProjectsBlogCtrl', function ($scope, $http, $stateParams, $uibModal, Auth, Project, notify) {
     $scope.isAuthor = false;
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
     $scope.getCurrentUser = Auth.getCurrentUser;
-    $scope.postToAdd = {};
-    $scope.postToDelete = {};
-    $scope.edittingPostId = -1;
     $scope.user = Auth.getCurrentUser();
-
-    $scope.newPostIsEmpty = function() {
-        return $.isEmptyObject($scope.postToAdd);
-    };
 
     $scope.userInProject = function() {
         return $scope.isAuthor;
@@ -24,50 +17,67 @@ angular.module('observatory3App')
         return ($scope.isAdmin() || $scope.getCurrentUser().role.toLowerCase() === 'mentor' || userId === post.author._id);
     };
 
-    $scope.editPost = function(postId) {
-        if ($scope.edittingPostId === postId){
-            $scope.edittingPostId = -1;
-        }else{
-            $scope.edittingPostId = postId;
+    $scope.editPost = function(post) {
+      var modalInstance = $uibModal.open({
+        templateUrl: 'components/editBlog/editBlog.html',
+        controller: 'blogEditController',
+        backdrop : 'static',
+
+        resolve: {
+          editBlog: function () {
+            return  post;
+          },
+          projectId: function() {
+            return $scope.project._id;
+          }
         }
+      });
+
+      modalInstance.result.then(function () {
+        // $window.location.reload();
+        $scope.load();
+      }, function(){
+        $scope.load();
+
+      });
+
     };
 
-    $scope.edittingPost = function(postId) {
-        return $scope.edittingPostId === postId;
+    $scope.addBlogPost = function(){
+      var modalInstance = $uibModal.open({
+        templateUrl: 'components/editBlog/editBlog.html',
+        controller: 'blogEditController',
+        backdrop : 'static',
+
+        resolve: {
+          editBlog: function () {
+            return  null;
+          },
+          projectId: function() {
+            return $scope.project._id;
+          }
+        }
+      });
+
+      modalInstance.result.then(function () {
+        // $window.location.reload();
+        $scope.load();
+      }, function(){
+        $scope.load();
+
+      });
     };
 
-    $scope.deletePost = function(postId) {
+    $scope.deletePost = function(post) {
         if (window.confirm("Are you sure you want to delete this post?")) {
-            $http.delete('/api/posts/' + postId).success(function(){
-                window.alert('Post deleted!');
+            $http.delete('/api/posts/' + post._id).success(function(){
+                notify('Post deleted!');
             }).error(function(){
-                window.alert('Could not delete Post!');
+                notify('Could not delete Post!');
             });
         }
 
         $scope.load();
-    };
-
-    var findPost = function(postId) {
-        for(var i = 0; i < $scope.posts.length; i++) {
-            if($scope.posts[i]._id === postId) {
-                return i;
-            }
-        }
-    };
-
-    $scope.savePost = function() {
-        if($scope.edittingPostId !== -1) {
-            $http.put('/api/posts/' + $scope.edittingPostId, {
-                'title': $scope.posts[findPost($scope.edittingPostId)].title,
-                'content': $scope.posts[findPost($scope.edittingPostId)].content
-            }).success(function(){
-                window.alert('Post updated!');
-            }).error(function(){
-                window.alert('Could not update Post!');
-            });
-            $scope.edittingPostId = -1;
-        }
     };
 
     $scope.load = function() {
@@ -91,19 +101,6 @@ angular.module('observatory3App')
           }
 
       });
-    };
-
-    $scope.submit = function(form) {
-        $('#post').collapse('hide');
-        if(form) {
-            form.$setPristine();
-            form.$setUntouched();
-        }
-        $scope.postToAdd.date = Date.now();
-        $scope.postToAdd.projectId = $scope.project._id;
-        $http.post('/api/posts', $scope.postToAdd);
-        $scope.postToAdd = {};
-        $scope.load();
     };
 
     $scope.load();
