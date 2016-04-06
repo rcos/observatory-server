@@ -45,7 +45,7 @@ exports.create = function(req, res){
         smallgroup.save();
         user.smallgroup = smallgroup._id;
         user.save();
-        res.send(200);
+        res.sendStatus(200);
     });
 };
 
@@ -56,7 +56,7 @@ exports.modify = function(req, res){
     var id = req.params.id;
     SmallGroup.update({'_id': id}, req.body.smallgroup, function(err){
         if (err) {return handleError(res, err);}
-        res.send(200);
+        res.sendStatus(200);
     });
 };
 
@@ -68,7 +68,7 @@ exports.delete = function(req, res){
     SmallGroup.findById(id, function(err, smallgroup){
         if (err) return handleError(res, err);
         smallgroup.remove();
-        res.send(200);
+        res.sendStatus(200);
     });
 };
 
@@ -194,7 +194,7 @@ exports.addMember = function(req, res){
             if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
             user.smallgroup = smallGroupId
             user.save();
-            res.send(200);
+            res.sendStatus(200);
         });
     });
 };
@@ -213,7 +213,7 @@ exports.deleteMember = function(req, res){
             if (err) return handleError(res,err);
             user.smallgroup = undefined
             user.save();
-            return res.send(200);
+            return res.sendStatus(200);
         });
     });
 };
@@ -224,19 +224,19 @@ exports.deleteMember = function(req, res){
 exports.changeName = function(req,res){
   var id = req.params.id;
   var newName = String(req.body.smallGroupName);
-  SmallGroup.findById(id, function(err,smallgroup){
+  return SmallGroup.findById(id, function(err,smallgroup){
     if (err) return handleError(res, err);
     smallgroup.name = newName;
-    smallgroup.save(function(err){
+    return smallgroup.save(function(err){
       if (err) return validationError(res,err);
-      return res.json({name:smallgroup.name}).send(200);
+      return res.status(200).json({name:smallgroup.name});
     })
   });
 };
 
 // Return a standard error
 function handleError(res, err) {
-    return res.send(500, err);
+    return res.sendStatus(500, err);
 }
 
 // Return a validation error

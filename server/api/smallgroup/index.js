@@ -8,7 +8,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 // Basic Access / Manipulation
-router.get('/', auth.isAuthenticated(), controller.index);
+router.get('/', auth.hasRole('mentor'), controller.index);
 router.post('/', auth.hasRole('mentor'), controller.create);
 router.put('/:id', auth.hasRole('mentor'), controller.modify);
 router.delete('/:id', auth.hasRole('mentor'), controller.delete);
@@ -23,6 +23,6 @@ router.put('/:id/member', auth.hasRole('mentor'), controller.addMember);
 router.delete('/:id/member/:memberId', auth.hasRole('mentor'), controller.deleteMember);
 
 // Change the smallgroup name
-router.put('/:id/name', auth.isAuthenticated(), controller.changeName);
+router.put('/:id/name', auth.hasRole('mentor'), controller.changeName);
 
 module.exports = router;
