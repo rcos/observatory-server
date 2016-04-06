@@ -5,6 +5,7 @@ angular.module('observatory3App')
     // put text focus on day code
     focus('dayCodeInput');
     $scope.sortorder = '-datetime';
+    $scope.userDayCode = '';
 
     var load = function(){
       $http.get('/api/attendance/present/me')
@@ -16,21 +17,23 @@ angular.module('observatory3App')
     };
 
     $scope.submitDayCode = function(){
-      var user = Auth.getCurrentUser();
-      $http.post('/api/attendance/attend', {
-        dayCode: $scope.userDayCode
-      }).success(function(info){
-        if (info.unverified){
-          $scope.unverified = true;
-        }else{
-          notify("Day code submitted successfully!");
-          $scope.userDayCode = '';
-        }
+      if ($scope.userDayCode) {
+        var user = Auth.getCurrentUser();
+        $http.post('/api/attendance/attend', {
+          dayCode: $scope.userDayCode
+        }).success(function(info){
+          if (info.unverified){
+            $scope.unverified = true;
+          } else{
+            notify("Day code submitted successfully!");
+            $scope.userDayCode = '';
+          }
           load();
-      }).error(function(err){
-        notify({ message: "Error: " + err, classes: ["alert-danger"] });
-        load();
-      });
+        }).error(function(err){
+          notify({ message: "Error: " + err, classes: ["alert-danger"] });
+        });
+
+      }
     };
 
     load();
