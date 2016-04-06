@@ -12,15 +12,19 @@
         <div class="row-height">
             <div class="col-sm-6 text-left col-bottom col-height">
                 <div class="inside">
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></span>
-                    {{ currentPage + 1 }} of {{ numberOfPages() }}
-                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></span>
-                    <button type="button" class="btn btn-default btn-link" data-toggle="dropdown" ng-show="numberOfPages() > 1" ng-click="toggleViewAll()">
-                        View all
-                    </button>
-                    <button type="button" class="btn btn-default btn-link" data-toggle="dropdown" ng-show="numberOfPages() <= 1" ng-click="toggleViewAll()">
-                        View less
-                    </button>
+                    <span ng-show='numberOfPages() > 1'>
+                      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
+                        page {{ currentPage + 1 }} of {{ numberOfPages() }}
+                      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
+
+                      <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all
+                      </button>
+
+                    </span>
+                    <span ng-hide='numberOfPages() > 1'>
+                      <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
+                      </button>
+                    </span>
                 </div>
             </div>
             <!-- Single button -->
