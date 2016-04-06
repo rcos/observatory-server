@@ -4,8 +4,12 @@
   <div class="row">
       <div class="col-xs-12">
         <h3>{{ past ? "Past" : "Active" }} Projects</h3>
+        <br>
+
       </div>
-      <div class="col-xs-12 col-sm-4 left">
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-4">
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
@@ -13,11 +17,11 @@
           </div>
         </form>
       </div>
-      <div class="col-xs-12 col-sm-8 right">
-        <button type="button" class="btn btn-primary" ng-click="getCurrentProjects()" ng-show="past">
+      <div class="col-xs-12 col-sm-8 text-right">
+        <button type="button" class="btn btn-default" ng-click="getCurrentProjects()" ng-show="past">
           Show Current Projects
         </button>
-        <button type="button" class="btn btn-primary" ng-click="getPastProjects()" ng-show="!past">
+        <button type="button" class="btn btn-default" ng-click="getPastProjects()" ng-show="!past">
           Show Past Projects
         </button>
         <button type="button" class="btn btn-primary" ng-click="addProject()" ng-show="user">
@@ -25,9 +29,10 @@
         </button>
       </div>
   </div>
+  <br/>
   <div class="row">
     <div class="col-md-12">
-      <div ng-repeat="project in projects| searchFor:searchString">
+      <div ng-repeat="project in projects | filter:searchString">
         <div class="extra-content" >
           <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a> </h2>
           <ul class="project-info">

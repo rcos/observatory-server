@@ -3,47 +3,57 @@
 
 <div class="container developers">
     <div class="row">
-        <div class="col-sm-12 text-left col-bottom col-height">
-            <h3>RCOS Developers</h3>
+        <div class="col-sm-12 text-left">
+            <h3>{{ past ? "Past " : "" }}RCOS Developers</h3>
             <br>
         </div>
     </div>
     <div class="row">
-        <div class="row-height">
-            <div class="col-sm-6 text-left col-bottom col-height">
-                <div class="inside">
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()'></span>
-                    {{ currentPage + 1 }} of {{ numberOfPages() }}
-                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()'></span>
-                    <button type="button" class="btn btn-default btn-link" data-toggle="dropdown" ng-show="numberOfPages() > 1" ng-click="toggleViewAll()">
-                        View all
-                    </button>
-                    <button type="button" class="btn btn-default btn-link" data-toggle="dropdown" ng-show="numberOfPages() <= 1" ng-click="toggleViewAll()">
-                        View less
-                    </button>
-                </div>
-            </div>
-            <!-- Single button -->
-            <div class="btn-group col-sm-6 text-right col-height">
-                <div class="inside" uib-dropdown is-open="developerMenu">
-                    <button type="button" class="btn btn-default pull-right" uib-dropdown-toggle aria-expanded="false">
-                        {{currentView}} <span class="caret"></span>
-                    </button>
-                    <ul class="pull-right" uib-dropdown-menu role="menu">
-                        <li><a href="#" ng-click="changeView('current')">Active Developers</a></li>
-                        <li><a href="#" ng-click="changeView('past')">Past Developers</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+      <div class="col-xs-12 col-sm-6">
+        <form class="form-inline" role="form">
+          <div class="left-inner-addon">
+            <i class="glyphicon glyphicon-search"></i>
+            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer..." ng-model="searchString">
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-6 text-right">
+        <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
+          Show Current Developers
+        </button>
+        <button type="button" class="btn btn-default" ng-click="changeView('past')" ng-show="!past">
+          Show Past Developers
+        </button>
+      </div>
     </div>
+    <br/>
+    <div class="row">
+      <div class="col-sm-6 text-left">
+          <div class="">
+              <span ng-show='numberOfPages() > 1'>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
+                  page {{ currentPage + 1 }} of {{ numberOfPages() }}
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
+
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all
+                </button>
+
+              </span>
+              <span ng-hide='numberOfPages() > 1'>
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
+                </button>
+              </span>
+          </div>
+      </div>
+    </div>
+
     <div class=row>
             </br>
     </div>
     <div class="row image-row">
-        <div ng-repeat="user in users | startFrom:currentPage*pageSize | limitTo:pageSize">
+        <div ng-repeat="user in users | filter:searchString | startFrom:currentPage*pageSize | limitTo:pageSize">
             <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 text-center user-box">
-                <a href="/users/{{ user._id}}/profile" class="thumbnail user-avatar">
+                <a href="/users/{{ user._id}}/profile" class="user-avatar">
                     <img class="profile-img img-responsive placeholder-img" ng-src='{{user.avatar}}&s=248px'>
                 </a>
                 <p class="user-name">
