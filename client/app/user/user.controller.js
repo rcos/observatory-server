@@ -29,8 +29,10 @@ angular.module('observatory3App')
     };
 
     $scope.toggleViewAll = function() {
-        if ($scope.pageSize == $scope.defaultPageSize)
-           $scope.pageSize = $scope.users.length;
+        if ($scope.pageSize == $scope.defaultPageSize) {
+            $scope.pageSize = $scope.users.length;
+            $scope.currentPage = 0;
+        }
         else
            $scope.pageSize = $scope.defaultPageSize;
     }
