@@ -48,7 +48,7 @@ angular.module('observatory3App')
         $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
 
       }, function(){
-        
+
       });
     };
 
@@ -61,28 +61,4 @@ angular.module('observatory3App')
     }
 
     $scope.getCurrentProjects(); // update the webpage when connecting the controller
-})
-
-.filter('searchFor',function(){
-  return function(arr,searchString){
-    if(!searchString){
-      return arr;
-    }
-    var result = [];
-    searchString = searchString.toLowerCase();
-    angular.forEach(arr,function(item){
-      if(item.name.toLowerCase().indexOf(searchString) !== -1){
-        result.push(item);
-      }
-      else{
-        for(var i=0; i<item.tech.length;i++){
-          if(item.tech[i].toLowerCase().indexOf(searchString) !== -1){
-            result.push(item);
-            break;
-          }
-        }
-      }
-    });
-    return result;
-  };
 });
