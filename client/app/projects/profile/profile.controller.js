@@ -3,12 +3,11 @@
 
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, $stateParams, $location, $uibModal, Auth, Upload, Project, notify) {
+    $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
     $scope.userOnProject = false;
     $scope.project = {};
-    console.log($scope.project);
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
-            console.log(result.data);
             $scope.project = result.data;
             initializeSlides($scope.project.photos);
             getAuthors();
@@ -65,7 +64,6 @@ angular.module('observatory3App')
     }
 
     $scope.getPic = function(user) {
-
         if (! ('avatar' in user)){
             user.avatar = "//www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid";
             $http.get('/api/users/' + user._id + '/avatar')            .success(function(avatar){
@@ -79,7 +77,9 @@ angular.module('observatory3App')
         var slides = [];
         for (var i = 0; i < photos.length; i++){
             slides.push({
+                id: i,
                 active: false,
+                image: $scope.imgPrefix + photos[i],
                 src: photos[i]
             });
             if (i === 0) {
@@ -89,16 +89,6 @@ angular.module('observatory3App')
         $scope.slides = slides;
     }
 
-    var setActiveSlide = function(photoName){
-        for (var i = 0; i < $scope.slides.length; i++){
-            if ($scope.slides[i].src === photoName){
-                $scope.slides[i].active = true;
-            } else {
-                $scope.slides[i].active = false;
-            }
-        }
-    };
-
     var getAuthors = function() {
         var project = $scope.project;
         $http.get('/api/projects/' + project._id + '/authors')
@@ -107,61 +97,9 @@ angular.module('observatory3App')
         });
     };
 
-    var addSlide = function(photoName){
-        $scope.slides.push({
-            active: false,
-            src: photoName
-        });
-        setActiveSlide(photoName);
-    };
-
-    var removeSlide = function(photoName){
-        for (var i = 0; i < $scope.slides.length; i++){
-            if ($scope.slides[i].src === photoName){
-                $scope.slides.splice(i, 1);
-            }
-        }
-    };
-
-
-    $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
-
-
-    $scope.edittingDesc = false;
-    $scope.edittingName = false;
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
 
-    $scope.editDesc = function(){
-        $scope.edittingDesc = !$scope.edittingDesc;
-    };
-
-    $scope.editName = function(){
-        $scope.edittingName = !$scope.edittingName;
-    };
-
-    // Function for saving the description
-    $scope.saveDesc = function(){
-        $scope.edittingDesc = false;
-        $http.put('/api/projects/' + $scope.project._id, {
-            'description': $scope.project.description
-        }).success(function(){
-            notify('Description updated!');
-        }).error(function(){
-            notify({message: 'Could not update description!', classes: ["alert-danger"]});
-        });
-    };
-
-    $scope.saveName = function(){
-        $scope.edittingName = false;
-        $http.put('/api/projects/' + $scope.project._id, {
-            'name': $scope.project.name
-        }).success(function(){
-            notify('Project Name updated!');
-        }).error(function(){
-            notify('Could not update project name!', {classes: ["alert-danger"] });
-        });
-    };
 
     $scope.joinProject = function(){
         $http.put('/api/users/' + $scope.user._id + '/project',{
@@ -236,7 +174,7 @@ angular.module('observatory3App')
             url: 'api/projects/'+$stateParams.username+'/'+$stateParams.project+'/upload',
             data: {file: $file}
         }).success(function (data) {
-            addSlide(data);
+            location.reload();
         }).error(function (data, status) {
             console.log('error status: ' + status);
         });
@@ -245,11 +183,11 @@ angular.module('observatory3App')
     $scope.deletePhoto = function(){
         var username = $scope.project.githubUsername;
         var projectName = $scope.project.githubProjectName;
-        var activePhoto = $scope.slides.filter(function (s) { return s.active; })[0];
+        var activePhoto = $scope.slides[$scope.active];
         if (activePhoto){
             $http.delete('/api/projects/' +  username + '/' + projectName + '/' + activePhoto.src)
             .success(function(){
-                removeSlide(activePhoto.src);
+                location.reload();
             });
         }
     };
