@@ -14,8 +14,6 @@ angular.module('observatory3App')
     $scope.submitted = true;
 
     if(form.$valid) {
-      console.log(editBlog,$scope.editing);
-
       if (!$scope.editing){
         $scope.blog.projectId = $scope.projectId;
 
