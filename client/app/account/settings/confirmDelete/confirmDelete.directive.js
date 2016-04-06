@@ -10,7 +10,7 @@ angular.module('observatory3App')
       Auth.deleteUser($scope.password)
       .then(function(response){
         $scope.submitted = false;
-        notify({message: "Account deleted"});
+        notify({message: 'Account deleted'});
         $uibModalInstance.close(response);
 
       },function(){

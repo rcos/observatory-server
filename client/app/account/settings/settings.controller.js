@@ -37,11 +37,6 @@ angular.module('observatory3App')
       var modalInstance = $uibModal.open({
         templateUrl: 'app/account/settings/confirmDelete/confirmDelete.html',
         controller: 'deleteUserController',
-        // resolve: {
-          // editProject: function () {
-          //   return  null;
-          // },
-        // }
       });
 
       modalInstance.result.then(function (userDeleted) {
