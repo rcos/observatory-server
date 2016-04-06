@@ -1,86 +1,97 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <h1>Change Password</h1>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-md-offset-3 text-center">
+            <h2>Change Password</h2>
+        </div>
     </div>
-    <div class="col-sm-12">
-      <form class="form" name="form" ng-submit="changePassword(form)" novalidate>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form class="form" name="form" ng-submit="changePassword(form)" novalidate>
+              <div ng-hide='token' class="form-group">
+                <label>Current Password</label>
 
-        <div ng-hide='token' class="form-group">
-          <label>Current Password</label>
+                <input type="password" name="password" class="form-control" ng-model="user.oldPassword"
+                       mongoose-error/>
+                <p class="help-block" ng-show="form.password.$error.mongoose">
+                    {{ errors.other }}
+                </p>
+              </div>
 
-          <input type="password" name="password" class="form-control" ng-model="user.oldPassword"
-                 mongoose-error/>
-          <p class="help-block" ng-show="form.password.$error.mongoose">
-              {{ errors.other }}
-          </p>
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                  ng-class="{ 'has-success': form.password.$valid && (submitted || form.password.$dirty),
+                              'has-error': form.password.$invalid && (submitted || form.password.$dirty) }">
+                <label>Password</label>
+
+                <input type="password" name="password" class="form-control" ng-model="user.password"
+                       ng-minlength="3"
+                       required
+                       mongoose-error/>
+                <p class="help-block"
+                   ng-show="(form.password.$error.minlength || form.password.$error.required) && (submitted || form.password.$dirty)">
+                  Password must be at least 3 characters.
+                </p>
+                <p class="help-block" ng-show="form.password.$error.mongoose">
+                  {{ errors.password }}
+                </p>
+              </div>
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                  ng-class="{
+                    'has-success': form.passwordverify.$valid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)),
+                    'has-error': form.passwordverify.$invalid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)) }">
+                <label>Re-type Password</label>
+
+                <input type="password" name="passwordverify" class="form-control" ng-model="user.passwordverify"
+                       ng-minlength="3"
+                       required
+                       match-field="password"
+                       />
+                <p class="help-block"
+                   ng-show="(form.passwordverify.$error.minlength || form.passwordverify.$error.required) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
+                  Password must be at least 3 characters.
+                </p>
+                <p class="help-block"
+                   ng-show="(form.passwordverify.$error.matchField) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
+                  Passwords must match
+                </p>
+
+              </div>
+
+              <p class="help-block"> {{ message }} </p>
+
+              <button class="btn btn-lg btn-login" ng-class="{'disabled': !form.$valid}" type="submit">
+                Save changes
+              </button>
+            </form>
+          </div>
         </div>
-
-        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
-            ng-class="{ 'has-success': form.password.$valid && (submitted || form.password.$dirty),
-                        'has-error': form.password.$invalid && (submitted || form.password.$dirty) }">
-          <label>Password</label>
-
-          <input type="password" name="password" class="form-control" ng-model="user.password"
-                 ng-minlength="3"
-                 required
-                 mongoose-error/>
-          <p class="help-block"
-             ng-show="(form.password.$error.minlength || form.password.$error.required) && (submitted || form.password.$dirty)">
-            Password must be at least 3 characters.
-          </p>
-          <p class="help-block" ng-show="form.password.$error.mongoose">
-            {{ errors.password }}
-          </p>
-        </div>
-        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
-            ng-class="{ 'has-success': form.passwordverify.$valid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)),
-                        'has-error': form.passwordverify.$invalid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)) }">
-          <label>Re-type Password</label>
-
-          <input type="password" name="passwordverify" class="form-control" ng-model="user.passwordverify"
-                 ng-minlength="3"
-                 required
-                 match-field="password"
-                 />
-          <p class="help-block"
-             ng-show="(form.passwordverify.$error.minlength || form.passwordverify.$error.required) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
-            Password must be at least 3 characters.
-          </p>
-          <p class="help-block"
-             ng-show="(form.passwordverify.$error.matchField) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
-            Passwords must match
-          </p>
-
-        </div>
-
-        <p class="help-block"> {{ message }} </p>
-
-         <button class="btn btn-lg btn-inverse btn-login" ng-class="{'disabled': !form.$valid}" type="submit">
-            Save changes
-         </button>
-      </form>
-    </div>
-
-    <div class="col-sm-12">
-      <h1>Delete User</h1>
-        <p style="font-size:18px">
-            Deleting your account is permanent. Please be sure you want to delete your account. If you will no longer be using your account you can also set your user account to inactive from your profile page.  
-        </p>           
-        <form name="deleteForm">
-            Enter password to delete account<br><input type="password" name="Password" ng-model="pass.currpass" required="" class="form-control" mongoose-error/><br>
-        </form>
-          <button class="btn btn-lg btn-inverse btn-danger" ng-click="deleteUser(user,deleteForm)">
-                  Delete account
-          </button>
-          <div class ="deleter" ng-class = "deleteForm.Password.$error.mongoose" data-dismiss ="modal"></div>
-
-          <p class="helper" ng-show="deleteForm.Password.$error.mongoose">
-            {{ delete_errors.other }}
-          </p>
       </div>
     </div>
-  </div> 
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-md-offset-3 text-center">
+          <h3>Delete your Account</h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h4> Are you sure you want to do this?</h4>
+            <b>Deleting your account is permanent</b><br/>
+            <i>
+                If you will no longer be using it, or are leaving RCOS, you should instead set your user account to inactive from your <a href="/me">profile page</a>.
+            </i>
+            <br/>
+            <br/>
+            <button class="btn btn-danger" ng-click="deleteUser()">
+              Delete account
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
 <div ng-include="'components/footer/footer.html'"></div>

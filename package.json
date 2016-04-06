@@ -67,6 +67,7 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-dom-munger": "^3.4.0",
     "grunt-env": "~0.4.1",
+    "grunt-execute": "^0.2.2",
     "grunt-express-server": "^0.5.1",
     "grunt-filerev": "^2.3.1",
     "grunt-google-cdn": "~0.4.0",

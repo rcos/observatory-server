@@ -292,6 +292,27 @@ exports.destroy = function(req, res) {
     if(err) return res.send(500, err);
     return res.send(204);
   });
+  var userId = req.params.id;
+  var adminUserId = req.user.id;
+  var pass = String(req.body.password);
+  var query = {students:{ $in: [userId]}};
+  User.findById(adminUserId, function (err, user, db) {
+    if(user.authenticate(pass)) {
+       SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
+        if(err) {
+         return res.status(500).json({'error' : 'error in deleting address'});
+        }
+        User.findByIdAndRemove(userId, function(err, user) {
+           if(err) return res.send(500, err);
+          return res.send(200);
+        });
+        //res.json(data);
+      });
+    } else {
+      res.send(403);
+    }
+  });
+
 };
 
 /**
@@ -570,8 +591,9 @@ exports.removeProject = function(req,res){
 Function that is called by removeUser api call
 */
 exports.deleteUser = function(req,res,next){
-  var userId = req.params.id;
-  var pass = String(req.body.oldPassword);
+
+  var userId = req.user.id;
+  var pass = String(req.body.password);
   var query = {students:{ $in: [userId]}};
   User.findById(userId, function (err, user,db) {
     if(user.authenticate(pass)) {
@@ -579,13 +601,12 @@ exports.deleteUser = function(req,res,next){
         if(err) {
          return res.status(500).json({'error' : 'error in deleting address'});
         }
-        User.findByIdAndRemove(req.params.id, function(err, user) {
+        User.findByIdAndRemove(userId, function(err, user) {
            if(err) return res.send(500, err);
           return res.send(200);
         });
         //res.json(data);
       });
-
     } else {
       res.send(403);
     }

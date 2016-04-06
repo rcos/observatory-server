@@ -207,14 +207,18 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
     * @param {Function} OPTIONAL callback NEED userinfo
     * @return {Object} user
     */
-   deleteUser: function(currpass,callback){
-     return User.deleteUser({ id: currentUser._id }, {
-       oldPassword: currpass
-     }, function(user) {
-       return safeCb(callback)(user);
-     }, function(err) {
-       return safeCb(callback)(err);
-     }).$promise;
+   deleteUser: function(pass,callback){
+     console.log( pass);
+     return  $http({
+       url: '/api/users/me',
+       method: 'DELETE',
+       data: {password: pass},
+       headers: {'Content-Type': 'application/json;charset=utf-8'}
+       }).then(function(user) {
+         return safeCb(callback)(user);
+       }, function(err) {
+         return safeCb(callback)(err);
+       });
    },
 
     /**
