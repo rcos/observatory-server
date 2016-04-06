@@ -7,7 +7,9 @@
         <br>
 
       </div>
-      <div class="col-xs-12 col-sm-4 left">
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-4">
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
@@ -15,7 +17,7 @@
           </div>
         </form>
       </div>
-      <div class="col-xs-12 col-sm-8 right">
+      <div class="col-xs-12 col-sm-8 text-right">
         <button type="button" class="btn btn-default" ng-click="getCurrentProjects()" ng-show="past">
           Show Current Projects
         </button>
@@ -27,6 +29,7 @@
         </button>
       </div>
   </div>
+  <br/>
   <div class="row">
     <div class="col-md-12">
       <div ng-repeat="project in projects | filter:searchString">
