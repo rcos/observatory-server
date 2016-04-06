@@ -52,9 +52,9 @@
                 No images uploaded yet.
             </p>
 
-            <uib-carousel>
-                <uib-slide ng-repeat="slide in slides" active="slide.active">
-                    <div style="background:url({{imgPrefix+slide.src}}) center center;" class="slide" alt=""></div>
+            <uib-carousel active="active" no-wrap="true">
+                <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id" active="slide.active">
+                  <img ng-src="{{ slide.image }}" index="slide.id" style="margin:auto;">
                 </uib-slide>
             </uib-carousel>
         </div>

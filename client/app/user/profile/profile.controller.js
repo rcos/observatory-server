@@ -47,7 +47,6 @@ angular.module('observatory3App')
                     });
                 // get all users projects information
                 $scope.projects = [];
-                console.log("api/projects non-private")
 
                 user.projects.forEach(function(projectId){
                   $http.get("/api/projects/" + projectId).success(function(project){
