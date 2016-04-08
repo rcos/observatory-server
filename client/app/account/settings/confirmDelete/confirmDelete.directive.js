@@ -25,7 +25,6 @@ angular.module('observatory3App')
     }
   };
   $scope.close = function(){
-    // $uibModalInstance.close($scope.event);
     $uibModalInstance.dismiss('cancel');
   };
 
