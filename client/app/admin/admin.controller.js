@@ -2,6 +2,15 @@
 
 angular.module('observatory3App')
   .controller('AdminCtrl', function ($scope, $http, Auth, User, Util, notify, $location) {
+    $scope.past = {active: true };
+
+    $scope.changeView = function(view){
+        if ($scope.past.active){
+            $scope.past.active = false;
+        } else{
+            $scope.past.active = true;
+        }
+    };
 
     if (Auth.isLoggedIn()){
       var loggedInUser = Auth.getCurrentUser();

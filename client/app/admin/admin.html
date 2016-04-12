@@ -1,12 +1,38 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container">
-  <p>The delete user and user index api routes are restricted to users with the 'admin' role.</p>
+<div class="container admin-users">
+  <div class="row">
+      <div class="col-sm-12 text-left">
+          <h3>{{ !past.active ? "Past " : "" }}RCOS Developers</h3>
+          <br>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <form class="form-inline" role="form">
+        <div class="left-inner-addon">
+          <i class="glyphicon glyphicon-search"></i>
+          <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer..." ng-model="searchString">
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-6 text-right">
+      <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="!past.active">
+        Show Current Developers
+      </button>
+      <button type="button" class="btn btn-default" ng-click="changeView('past')" ng-show="past.active">
+        Show Past Developers
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <br>
+  </div>
   <div class="table-responsive">
-      <table class="table table-hover text-center table-bordered">
+      <table class="table table-hover text-center table-striped table-bordered">
       <thead>
         <tr>
-            <td colspan="4">Info</td>
+            <td colspan="2">Info</td>
             <td colspan="2">Full Group</td>
             <td colspan="2">Small Group</td>
             <td colspan="2">Contributions</td>
@@ -14,22 +40,19 @@
         </tr>
         <tr>
             <td sort-arrow sortby='"name"' text='"Name"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"email"' text='"Email"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"role"' text='"Role"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"githubProfile"' text='"Github"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"full.normal"' text='"Attendance"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"full.bonus"' text='"Bonus"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"small.normal"' text='"Attendance"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"small.bonus"' text='"Bonus"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"role"' text='"User Role"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"full.normal"' text='"A"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"full.bonus"' text='"+"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"small.normal"' text='"A"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"small.bonus"' text='"+"' sortorder='sortorder'></td>
             <td sort-arrow sortby='"github.events.length"' text='"Events"' sortorder='sortorder'></td>
             <td sort-arrow sortby='"commits.length"' text='"Commits"' sortorder='sortorder'></td>
             <td sort-arrow sortby='"active"' text='"Active"' sortorder='sortorder'></td>
         </tr>
       </thead>
       <tbody>
-          <tr ng-repeat="user in users | orderBy:sortorder">
+          <tr ng-repeat="user in users | filter:searchString | filter:past | orderBy:sortorder">
               <td><a href="/users/{{user._id}}/profile">{{ user.name }}</a></td>
-              <td> {{ user.email }}</td>
               <td>
               <select class="form-control" ng-model="user.role" ng-change="updateUserRole(user)">
                     <option value="user">User</option>
@@ -37,14 +60,13 @@
                     <option value="admin">Admin</option>
                 </select>
               </td>
-              <td><a ng-href="http://github.com/{{user.githubProfile}}">{{user.githubProfile}}</a></td>
               <td>{{ user.full.normal }}</td>
               <td>{{ user.full.bonus }}</td>
               <td>{{ user.small.normal }}</td>
               <td>{{ user.small.bonus }}</td>
               <td>{{ user.github.events.length || 0  }}</td>
               <td>{{ user.commits.length }}</td>
-              <td><a class="btn btn-warning" href="#" role="button" ng-click="toggle( user )">{{ user.active }}</a></td>
+              <td><a class="btn" ng-class="{'btn-success':user.active, 'btn-warning':!user.active}" href="#" role="button" ng-click="toggle( user )">{{ user.active }}</a></td>
           </tr>
       </tbody>
     </table>
