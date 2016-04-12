@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('SettingsCtrl', function ($scope, $location, User, Auth,$stateParams, $http,notify) {
+  .controller('SettingsCtrl', function ($scope, $location, $stateParams, $http, $uibModal, notify, User, Auth) {
     $scope.errors = {};
     $scope.token = $location.search().token;
     $scope.passwords = {};
@@ -33,20 +33,18 @@ angular.module('observatory3App')
       }
 		};
 
-    $scope.deleteUser = function(user,df){
-      $scope.dismiss = false;
-      if(df.$valid){
-        Auth.deleteUser($scope.pass.currpass)
-          .then(function(){
-             $location.path('/main');
-             df.Password.$setValidity('mongoose',false);
-             Auth.logout();
-             notify({message: "Account deleted"});
-        })
-        .catch(function(){
-            df.Password.$setValidity('mongoose',false);
-            $scope.delete_errors.other = 'Incorrect password'
-        });
-      }
+    $scope.deleteUser = function(){
+      var modalInstance = $uibModal.open({
+        templateUrl: 'app/account/settings/confirmDelete/confirmDelete.html',
+        controller: 'deleteUserController',
+      });
+
+      modalInstance.result.then(function (userDeleted) {
+        Auth.logout();
+        $location.path( '/');
+
+      }, function(){
+
+      });
     }
   });

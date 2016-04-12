@@ -13,6 +13,7 @@ router.get('/allstats', auth.hasRole('admin'), controller.allStats);
 router.get('/:id/commits', controller.commits);
 router.get('/:id/avatar', controller.avatar);
 
+router.delete('/me', auth.isAuthenticated(), controller.deleteUser);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.post('/:id/role', auth.hasRole('admin'), controller.role);
 router.get('/me', auth.isAuthenticated(), controller.me);
@@ -29,7 +30,6 @@ router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);
 router.put('/:id/addTech', auth.canEdit(), controller.addTech);
 router.put('/:id/removeTech', auth.canEdit(), controller.removeTech);
 router.post('/resetPassword', controller.resetPassword);
-router.put('/:id/removeUser',controller.deleteUser); 
 
 
 export default router;
