@@ -12,8 +12,8 @@
     <div class="col-sm-12">
       <div ng-repeat="post in posts | orderBy:'-date'">
           <div class="extra-content">
+              <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
               <div ng-show='userInProject()'>
-                  <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
                   <div ng-show="userOwnsPost(post)"class="col-xs-6 text-right">
                       <div class="btn-group">
                           <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post)'>Edit</button>
