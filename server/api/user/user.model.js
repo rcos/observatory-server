@@ -11,22 +11,65 @@ var Project = require('../project/project.model');
 
 var UserSchema = new Schema({
   name: String,
-  email: { type: String, lowercase: true },
-  active: {type: Boolean, default: true},
+
+  email: {
+    type: String,
+    lowercase: true
+  },
+
+  active: {
+    type: Boolean,
+    default: true
+  },
+
   role: {
     type: String,
     default: 'user'
   },
-  smallgroup: {type : Schema.Types.ObjectId, ref: 'SmallGroup'},
-  password: String,
-  hashedPassword: String,
-  provider: String,
-  salt: String,
+
+  smallgroup: {
+    type : Schema.Types.ObjectId,
+    ref: 'SmallGroup'
+  },
+
   tech: [String],
-  projects: [{type : Schema.Types.ObjectId, ref: 'Project'}], // project id
-  bio: {type:String},
-  passwordResetToken: String,
-  passwordResetExpiration: Date,
+
+  projects: [{
+    type : Schema.Types.ObjectId,
+    ref: 'Project'
+  }], // project id
+
+  bio: String,
+
+  password: {
+    type: String,
+    select: false
+  },
+
+  hashedPassword: {
+    type: String,
+    select: false
+  },
+
+  provider: {
+    type: String,
+    select: false
+  },
+
+  salt: {
+    type: String,
+    select: false
+  },
+
+  passwordResetToken: {
+    type: String,
+    select: false
+  },
+
+  passwordResetExpiration: {
+    type: Date,
+    select: false
+  },
 
   // field for what user is currently enrolled as (pay, credit, experience)
   rcosStyle: String,
@@ -194,9 +237,6 @@ UserSchema
   .get(function() {
     var data = this.toObject();
     data.avatar = this.avatar;
-    delete data.password ;
-    delete data.hashedPassword ;
-    delete data.salt ;
   return data;
 });
 

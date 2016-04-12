@@ -2,10 +2,12 @@ import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
 
 function localAuthenticate(User, email, password, done) {
-  User.findOneAsync({
+  User.findOne({
     email: email.toLowerCase()
   })
-    .then(user => {
+  .select('_id email password provider salt passwordResetToken passwordResetExpiration')
+  .execAsync()
+  .then(user => {
       if (!user) {
         return done(null, false, {
           message: 'This email is not registered.'
