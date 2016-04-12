@@ -406,10 +406,9 @@ exports.changeBio = function(req,res){
    var newGithubProfile = String(req.body.github);
    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err,user){
      user.github.login = newGithubProfile;
-     res.json({githubProfile:user.github.login});
      user.save(function(err){
         if (err) return validationError(res,err);
-        res.send(200);
+        res.json(200, {githubProfile:user.github.login});
      })
    });
  };
