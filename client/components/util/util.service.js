@@ -64,13 +64,13 @@ function UtilService($window) {
           if (!submission.verified){
               u.unverified +=1;
           }
-          else if (submission.smallgroup && !submission.bonus){
+          else if (submission.smallgroup && !submission.bonusDay){
               u.small.normal +=1;
           }
           else if (submission.smallgroup){
               u.small.bonus +=1;
           }
-          else if(submission.bonus){
+          else if(submission.bonusDay){
               u.full.bonus +=1;
           }
           else{
