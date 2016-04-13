@@ -32,14 +32,15 @@
       <table class="table table-hover text-center table-striped table-bordered">
       <thead>
         <tr>
-            <td colspan="2">Info</td>
+            <td colspan="3">Info</td>
             <td colspan="2">Full Group</td>
             <td colspan="2">Small Group</td>
             <td colspan="2">Contributions</td>
-            <td>Info</td>
+            <td>Toggle</td>
         </tr>
         <tr>
             <td sort-arrow sortby='"name"' text='"Name"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='"Github"' text='"Git"' sortorder='sortorder'></td>
             <td sort-arrow sortby='"role"' text='"User Role"' sortorder='sortorder'></td>
             <td sort-arrow sortby='"full.normal"' text='"A"' sortorder='sortorder'></td>
             <td sort-arrow sortby='"full.bonus"' text='"+"' sortorder='sortorder'></td>
@@ -53,6 +54,7 @@
       <tbody>
           <tr ng-repeat="user in users | filter:searchString | filter:past | orderBy:sortorder">
               <td><a href="/users/{{user._id}}/profile">{{ user.name }}</a></td>
+              <td class="no-padding"><a class="btn btn-link large-text no-padding" role="button" ng-href="http://github.com/{{user.githubProfile}}"><i class="fa fa-github-square" aria-hidden="true" ></i></a></td>
               <td>
               <select class="form-control" ng-model="user.role" ng-change="updateUserRole(user)">
                     <option value="user">User</option>
@@ -66,7 +68,7 @@
               <td>{{ user.small.bonus }}</td>
               <td>{{ user.github.events.length || 0  }}</td>
               <td>{{ user.commits.length }}</td>
-              <td><a class="btn" ng-class="{'btn-success':user.active, 'btn-warning':!user.active}" href="#" role="button" ng-click="toggle( user )">{{ user.active }}</a></td>
+              <td><a class="btn" ng-class="{'btn-success':!user.active, 'btn-warning':user.active}" href="#" role="button" ng-click="toggle( user )">x</a></td>
           </tr>
       </tbody>
     </table>
