@@ -44,12 +44,11 @@ function UserResource($resource) {
       params: {
         controller:'stats'
       },
-      isArray:true
     },
     allstats: {
       method: 'GET',
       params: {
-        controller:'allstats'
+        controller:'adminstats'
       },
       isArray:true
     },
