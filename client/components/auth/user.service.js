@@ -29,6 +29,9 @@ function UserResource($resource) {
         id:'me'
       }
     },
+    update: {
+      method: 'PUT',
+    },
     info: {
       method: 'GET',
     },

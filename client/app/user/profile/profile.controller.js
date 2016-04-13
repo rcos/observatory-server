@@ -103,42 +103,6 @@ angular.module('observatory3App')
          });
       };
 
-      $scope.edittingBio = false;
-
-      $scope.editBio = function(){
-          $scope.edittingBio = !$scope.edittingBio;
-      };
-
-      $scope.saveBio = function(){
-          $scope.edittingBio = false;
-          $http.put('/api/users/' + $stateParams.id + '/bio', {
-              'bio': $scope.user.bio
-          }).success(function(data){
-              $scope.user.bio = data.bio;
-              notify({message: "Bio updated!", classes: []});
-          }).error(function(){
-              notify({message: "Could not update bio!", classes: ["alert-danger"]});
-          });
-      };
-
-      $scope.edittingGithub = false;
-
-      $scope.editGithub = function(){
-        $scope.edittingGithub = !$scope.edittingGithub;
-      };
-
-      $scope.saveGithub = function(){
-        $scope.edittingGithub = false;
-        $http.put('/api/users/' + $stateParams.id + '/github',{
-            'github': $scope.user.githubProfile
-        }).success(function(data){
-            $scope.user.githubProfile = data.githubProfile;
-            notify({message: "Github updated!", classes: []});
-        }).error(function(){
-          notify({message: "Could not update Github!", classes: ["alert-danger"]});
-        });
-      };
-
       $scope.addTech = function(){
         if($scope.insertTechContent){
           $http.put('/api/users/' + $stateParams.id + '/addTech', {
@@ -188,20 +152,4 @@ angular.module('observatory3App')
           $scope.originalRole = $scope.user.role;
         });
       }
-  })
-
-  .directive('bio', function(){
-
-      return {
-          restrict:'E',
-          template: '<div style=\'white-space:pre;\' btf-markdown=\'user.bio\'></div> \
-                     <textarea ng-show=\'edittingBio\' ng-model=\'user.bio\' ></textarea>'
-      };
-  })
-  .directive('github', function(){
-    return {
-      restrict:'E',
-      template: '<div style=\'white-space:pre;\'></div> \
-                 <input type="text" ng-show=\'edittingGithub\' ng-model=\'user.githubProfile\' ></input>'
-    }
   });

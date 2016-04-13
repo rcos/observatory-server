@@ -6,6 +6,7 @@ angular.module('observatory3App')
     $scope.token = $location.search().token;
     $scope.passwords = {};
     $scope.delete_errors = {};
+    $scope.user = Auth.getCurrentUser();
 
     $scope.changePassword = function(form) {
       $scope.submitted = true;
@@ -33,6 +34,17 @@ angular.module('observatory3App')
       }
 		};
 
+    $scope.toggleActive = function(){
+      $scope.user.active = !$scope.user.active;
+    }
+
+    $scope.editProfile = function(){
+      User.update($scope.user, function(user){
+        notify({ message: "Saved user profile"});
+        $scope.user = user;
+      });
+    }
+
     $scope.deleteUser = function(){
       var modalInstance = $uibModal.open({
         templateUrl: 'app/account/settings/confirmDelete/confirmDelete.html',
@@ -42,7 +54,6 @@ angular.module('observatory3App')
       modalInstance.result.then(function (userDeleted) {
         Auth.logout();
         $location.path( '/');
-
       }, function(){
 
       });

@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
@@ -222,6 +223,24 @@ exports.create = function (req, res, next) {
 };
 
 /**
+ * Update an existing user
+ */
+exports.update = function (req, res, next) {
+  if(req.body._id) { delete req.body._id; }
+
+  User.findById(req.params.id, function(err, user){
+    if (err) { return handleError(res, err); }
+    if(!user) { return res.send(404); }
+
+    var updated = _.merge(user, req.body);
+    updated.save(function(err) {
+      if (err) { return handleError(res, err); }
+      return res.json(200, updated);
+    });
+  });
+}
+
+/**
  * Get a single user
  */
 exports.show = function (req, res, next) {
@@ -391,38 +410,6 @@ exports.deactivate = function(req,res) {
   };
 
 /**
- * Changes a user's bio
- */
-exports.changeBio = function(req,res){
-    var userId = req.user._id;
-    var newBio = String(req.body.bio);
-    User.findById(userId, function(err,user){
-        user.bio = newBio;
-        user.save(function(err){
-            if (err) return validationError(res,err);
-            return res.json({bio:user.bio});
-
-        })
-
-    });
-};
-
-/**
- * Changes a user's Github profile
- */
- exports.changeGithub = function(req,res){
-   var userId = req.user._id;
-   var newGithubProfile = String(req.body.github);
-   User.findById(userId, function(err,user){
-     user.github.login = newGithubProfile;
-     user.save(function(err){
-        if (err) return validationError(res,err);
-        res.json(200, {githubProfile:user.github.login});
-     })
-   });
- };
-
-/**
  * Deactivates a user
  */
 exports.deactivate = function(req, res, next) {
@@ -462,7 +449,7 @@ exports.me = function(req, res, next) {
   User.findOne({
     _id: userId
   })
-  .exec(function(err, user) { // don't ever give out the password or salt
+  .exec(function(err, user) {
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);

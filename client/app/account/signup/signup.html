@@ -51,7 +51,7 @@
                             'has-success': form.github.$valid && (submitted || form.github.$dirty),
                             'has-error': form.github.$invalid && (submitted || form.github.$dirty) }">
                             <label>Github User Name</label>
-                            <input type="text" name="github" class="form-control" ng-model="user.githubLogin" required>
+                            <input type="text" name="github" id="github"  class="form-control" ng-model="user.githubLogin" ng-pattern="/^[a-zA-Z0-9-]+$/" required>
                             <p class="help-block" ng-show="form.github.$error.required && (submitted || form.github.$dirty)">
                             What's your github username?
                             </p>
