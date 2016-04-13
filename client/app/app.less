@@ -5,9 +5,19 @@
 @icon-font-path: '../bower_components/bootstrap/fonts/';
 @fa-font-path: '../bower_components/font-awesome/fonts';
 
+@rpi-red: rgb(218, 41, 28);
+@rpi-grey: rgb(112, 115, 114);
+@link-color: #406fac;
+@link-hover-color: #e2231b;
+@navigation-background:  #424242;
+@navigation-secondary-background: #767676;
+@navigation-link:  white;
+
 /**
  * App-wide Styles
  */
+
+@import 'variables.less';
 
 .browserupgrade {
   margin: 0.2em 0;
@@ -15,6 +25,7 @@
   color: #000;
   padding: 0.2em 0;
 }
+
 
 // injector
 @import 'account/login/login.less';
@@ -31,6 +42,7 @@
 @import 'smallgroup/smallgroup.less';
 @import 'user/profile/profile.less';
 @import 'user/user.less';
+@import 'variables.less';
 @import '../components/footer/footer.less';
 @import '../components/oauth-buttons/oauth-buttons.less';
 @import '../components/sortArrow/sortArrow.less';
@@ -51,6 +63,14 @@
 */
 
 /* content styles */
+
+a {
+  color: @link-color;
+}
+
+a:hover {
+  color: @link-hover-color;
+}
 
 .inside {
 }
