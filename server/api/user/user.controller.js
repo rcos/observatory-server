@@ -154,7 +154,6 @@ exports.allStats = function(req, res) {
     User.find({'github.login': {$exists: true}})
     .exec(function (err, users) {
         if(err) return res.status(500).json(err);
-
         var twoWeeks = new Date();
         twoWeeks.setDate(twoWeeks.getDate()-14);
         var userInfo = [];
@@ -551,7 +550,11 @@ exports.resetPassword = function(req, res){
     var userEmail = req.body.email;
     User.findOne({
         email: userEmail.toLowerCase()
+<<<<<<< de851852d30e54dafcbb4da9af11d032d2db7df0
     }, function (err, user){
+=======
+    },  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, user){
+>>>>>>> Fixes #296, #214
         if (err) return res.status(401).json(err);
         if (!user) return res.send(200);
 
