@@ -5,7 +5,7 @@ angular.module('observatory3App')
     $scope.currentUsers = User.query();
     $scope.pastUsers = User.past();
     $scope.users = $scope.currentUsers;
-
+    $scope.searchString = {name:""};
     $scope.currentPage = 0;
     $scope.defaultPageSize = 48;
     $scope.pageSize = $scope.defaultPageSize;
