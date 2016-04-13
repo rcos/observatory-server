@@ -23,7 +23,7 @@ function handleError(res, err) {
 }
 
 var validationError = function(res, err) {
-  return res.json(422, err);
+  return res.status(422).json(err);
 };
 
 /**
@@ -32,7 +32,7 @@ var validationError = function(res, err) {
 exports.index = function(req, res) {
   User.find({}, function (err, users) {
     if(err) return res.send(500, err);
-    res.json(200, users);
+    res.status(200).json(users);
   });
 };
 
@@ -49,15 +49,15 @@ exports.search = function(req, res){
         if (err) return res.send(500, err);
         if (!user){
             if (req.query.single){
-                return res.send(200, null);
+                return res.status(200).json(null);
             }else{
-                return res.send(200, []);
+                return res.status(200).json([]);
             }
         }
         if (req.query.single){
-            return res.send(200, user.profile);
+            return res.status(200).json(user.profile);
         }else{
-            return res.send(200, [user.profile]);
+            return res.status(200).json([user.profile]);
         }
     });
 };
@@ -91,7 +91,7 @@ exports.stats = function(req, res) {
                 count--;
                 userInfo.push(user);
                 if (count === 0){
-                  res.json(200, userInfo);
+                  res.status(200).json(userInfo);
                 }
             });
     }
@@ -112,7 +112,8 @@ exports.allStats = function(req, res) {
     // Only return users who have a github login
     User.find({'github.login': {$exists: true}})
     .exec(function (err, users) {
-        if(err) return res.send(500, err);
+        if(err) return res.status(500).json(err);
+
         var twoWeeks = new Date();
         twoWeeks.setDate(twoWeeks.getDate()-14);
         var userInfo = [];
@@ -136,7 +137,7 @@ exports.allStats = function(req, res) {
                             count--;
                             userInfo.push(user);
                             if (count === 0){
-                                res.json(200, userInfo);
+                                res.status(200).json(userInfo);
                             }
                         }
                         else{
@@ -148,7 +149,7 @@ exports.allStats = function(req, res) {
                             count--;
                             userInfo.push(user);
                             if (count === 0){
-                                res.json(200, userInfo);
+                                res.status(200).json(userInfo);
                             }
                         }
                     });
@@ -175,7 +176,7 @@ exports.list = function(req, res) {
     for (var i = 0; i < users.length; i++){
       userInfo.push(users[i].listInfo);
     }
-    res.json(200, userInfo);
+    res.status(200).json(userInfo);
   });
 };
 
@@ -191,7 +192,7 @@ exports.past = function(req, res) {
       for (var i = 0; i < users.length; i++){
         userInfo.push(users[i].listInfo);
       }
-      res.json(200, userInfo);
+      res.status(200).json(userInfo);
   });
 };
 
@@ -203,7 +204,7 @@ exports.commits = function(req, res) {
 
   Commit.find({ userId: userId}, function(err, commits){
     if (err) return res.send(500, err);
-    res.json(200, commits);
+    res.status(200).json(commits);
   });
 };
 
@@ -385,7 +386,7 @@ exports.deactivate = function(req,res) {
           user.active = false;
           user.save(function(err){
           if (err) return res.send(500, err);
-          res.json(200, {success: true});
+          res.status(200).json({success: true});
         })
       });
   };
@@ -435,7 +436,7 @@ exports.deactivate = function(req, res, next) {
     user.active = false;
     user.save(function(err){
     if (err) return res.send(500, err);
-      res.json(200, {success: true});
+      res.status(200).json({success: true});
     })
   });
 };
@@ -450,7 +451,7 @@ exports.activate = function(req, res, next) {
     user.active = true;
     user.save(function(err){
     if (err) return res.send(500, err);
-      res.json(200, {success: true});
+      res.status(200).json({success: true});
     })
   });
 };
@@ -525,7 +526,7 @@ exports.resetPassword = function(req, res){
     User.findOne({
         email: userEmail.toLowerCase()
     }, function (err, user){
-        if (err) return res.json(401, err);
+        if (err) return res.status(401).json(err);
         if (!user) return res.send(200);
 
         crypto.randomBytes(12, function(ex, buf) {
