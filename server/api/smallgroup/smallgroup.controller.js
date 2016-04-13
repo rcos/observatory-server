@@ -117,7 +117,6 @@ exports.daycode = function(req, res){
 // Only returns private information if the user is a mentor
 function getFullUserProfile(userId, mentor, callback){
     User.findById(userId)
-    .select('-salt -hashedPassword')
     .populate('projects')
     .exec(function(err, user){
         if (err) return callback("Could not find user", null);
@@ -190,7 +189,7 @@ exports.addMember = function(req, res){
         $addToSet: { students : memberId }
     }, function(err, smallgroup){
         if (err) return handleError(res, err);
-        User.findById(memberId,  '-salt -hashedPassword', function(err, user){
+        User.findById(memberId, function(err, user){
             if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
             user.smallgroup = smallGroupId
             user.save();
