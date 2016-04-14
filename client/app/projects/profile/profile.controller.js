@@ -24,7 +24,7 @@ angular.module('observatory3App')
     };
     updateProject();
 
-    $scope.uploadImage = function() {
+    $scope.selectImage = function() {
       angular.element('#uploadImage').trigger('click');
     };
     $scope.editProject = function() {

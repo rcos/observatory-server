@@ -43,7 +43,7 @@
   <div class="row row-eq-height">
     <div class="col-xs-12 col-sm-7">
       <div class="project-image">
-        <button class="btn btn-sm btn-default" ng-click="uploadImage()" ng-show="userOnProject">Upload Images</button>
+        <button class="btn btn-sm btn-default" ng-click="selectImage()" ng-show="userOnProject">Upload Images</button>
         <input id="uploadImage" type="file" ngf-select="upload($file)" />
         <div class="remove-photo btn btn-sm btn-default" ng-show="userOnProject && project && !slides[0].placeholder" ng-click="deletePhoto()">
           <span>X</span>
