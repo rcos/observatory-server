@@ -23,13 +23,11 @@ router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.get('/:id', controller.show);
 router.get('/:id/private', auth.canEdit(), controller.privateProfile);
 router.post('/', controller.create);
-router.put('/:id/bio', auth.canEdit(), controller.changeBio);
-router.put('/:id/github', auth.canEdit(), controller.changeGithub);
+router.put('/:id', auth.canEdit(), controller.update);
 router.put('/:id/project', auth.isAuthenticated(), controller.addProject);
 router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);
 router.put('/:id/addTech', auth.canEdit(), controller.addTech);
 router.put('/:id/removeTech', auth.canEdit(), controller.removeTech);
 router.post('/resetPassword', controller.resetPassword);
-
 
 export default router;
