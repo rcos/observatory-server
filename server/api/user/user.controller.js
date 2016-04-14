@@ -6,6 +6,7 @@ var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
+var async = require('async');
 var email = require("../../components/email");
 var Commit = require('../commit/commit.model');
 var ClassYear = require('../classyear/classyear.model');
@@ -34,6 +35,45 @@ exports.index = function(req, res) {
   User.find({}, function (err, users) {
     if(err) return res.send(500, err);
     res.status(200).json(users);
+  });
+};
+
+/**
+ * Get user stats
+ */
+exports.publicStats = function(req, res) {
+  async.parallel([
+        // Count active users
+        function(callback) {
+          User.count({active:true}, function (err, aCount) {
+            if (err) return callback(err);
+            callback(null, aCount);
+          });
+        },
+        // Count past users
+        function(callback) {
+          User.count({active:false}, function (err, pCount) {
+            if (err) return callback(err);
+            callback(null, pCount);
+          });
+        },
+      ],
+      function(err, results){
+        if (err) {
+          console.log(err);
+          return res.send(400);
+        }
+
+        if (results == null) {
+          return res.send(400);
+        }
+
+        //results contains [activeProjectCount, pastProjectCount]
+        var stats = {};
+        stats.activeUsers = results[0] || 0;
+        stats.pastUsers = results[1] || 0;
+
+        return res.status(200).send(stats);
   });
 };
 

@@ -9,41 +9,69 @@
   </div>
 </header>
 
-<!--Current Body Code-->
-<div class="text-area" id="body-text">
-	<div class="container">
-		<h2>Mission Statement</h2><p>
-			To provide a creative, intellectual and entrepreneurial outlet for
-	students to use the latest open-source software platforms to develop
-	applications that solve societal problems.
-		</p>
-        <h2>Description</h2><p>
-        RCOS is a group of RPI students who work on open source projects. During the semester, meeting times are as follows:
-        <ul><li>Tuesday(4-5:15)  Meeting with individual mentors <a target="_blank" href="https://docs.google.com/spreadsheets/d/17zsTufmlryzPQGGkgfArOs1i_pWGypTY_sn1B-9gnqI/edit?usp=sharing"> Rooms </a></li><li>Friday(4-5:15) Meeting in DCC 318
-	</li></ul></br>
-	Our members work on a variety of projects, as can be seen
-	 <a href="http://rcos.io/projects">here</a>. For the link to project presentations, click <a href="https://docs.google.com/spreadsheets/d/1A6naU2lG5ALS7RELFpeG__QHaUjLbwXmCGIyzGJum7s/edit#gid=0" title="Presentations Link">here</a>.
-	 The projects page is part of our dashboard to help us keep up with
-	 the status of the projects!</a></p>
-		</p>
-		<h2>Benefits of being an RCOS member</h2><p>
-			<ul><li>The opportunity to help society by creating useful software.</li><li>An excellent environment to share your skills with your peers and
-		learn from them as well</li><li>Great practice in the code review process, a very important skill
-		for your software career!</li><li>Practice giving and receiving feedback. Learning how to discuss
-		technical and non-technical aspects of a project in a constructive
-		fashion is a critical skill that employers look for!</li></ul>
-		</p>
-		<h2>Details</h2><p>
-			Students can participate in RCOS for course credit or for a stipend.
-	At the beginning of each semester, the Internal Advisory Board will
-	review project proposals and decide which projects should receive
-	financial support.
-		</p>
-		<h2>Follow this <a href="https://securelb.imodules.com/s/1225/giving/index.aspx?sid=1225&gid=1&pgid=1947&cid=4524&appealcode=WGAFP&_ga=1.191668650.1206279174.1408978267" title="RPI Donate Link">link</a> if you would like to donate! </h2>
+<div class="container">
+  <div class="row text-area">
+    <div class="col-md-8">
+      <h2>Mission Statement</h2><p>
+      To provide a creative, intellectual and entrepreneurial outlet for
+      students to use the latest open-source software platforms to develop
+      applications that solve societal problems.
+      </p>
+      <h2>Description</h2><p>
+      RCOS is a group of RPI students who work on open source projects.
+      Our members work on a variety of projects, which can be seen on the <a ng-href="/projects">projects</a> page. To see the presentation schedule look <a target="_blank" href="https://docs.google.com/spreadsheets/d/1A6naU2lG5ALS7RELFpeG__QHaUjLbwXmCGIyzGJum7s/edit#gid=0" title="Presentations Link">here</a>.
+      </p>
+      </p>
+      <h2>Benefits of being an RCOS member</h2><p>
+      <ul><li>The opportunity to help society by creating useful software.</li><li>An excellent environment to share your skills with your peers and
+          learn from them as well</li><li>Great practice in the code review process, a very important skill
+          for your software career!</li><li>Practice giving and receiving feedback. Learning how to discuss
+          technical and non-technical aspects of a project in a constructive
+          fashion is a critical skill that employers look for!</li></ul>
+      </p>
+      <h2>Details</h2><p>
+      Students can participate in RCOS for course credit or for a stipend.
+      At the beginning of each semester, the Internal Advisory Board will
+      review project proposals and decide which projects should receive
+      financial support.
+      </p>
+      <h2>Donations</h2>
+      RCOS uses funds to financially support open source software development. Follow this <a href="https://securelb.imodules.com/s/1225/giving/index.aspx?sid=1225&gid=1&pgid=1947&cid=4524&appealcode=WGAFP&_ga=1.191668650.1206279174.1408978267" title="RPI Donate Link">link</a> if you can help us out by donating!
+    </div>
 
-	</div>
+    <div class="col-md-4 statistics">
+      <!-- Statistics Panel --!>
+      <div class="panel panel-default">
+        <div class="panel-heading">Statistics</div>
+        <div class="panel-body">
+          <dl class="dl-horizontal">
+            <dt>Active Projects</dt>
+            <dd><a ng-href="/projects">{{ projectStats.activeProjects }}</a></dd>
+            <dt>Past Projects</dt>
+            <dd><a ng-href="/projects">{{ projectStats.pastProjects }}</a></dd>
+            <dt>Active Developers</dt>
+            <dd><a ng-href="/users">{{ userStats.activeUsers }}</a></dd>
+            <dt>Past Developers</dt>
+            <dd><a ng-href="/users">{{ userStats.pastUsers }}</a></dd>
+          </dl>
+        </div>
+      </div>
+      <!-- End Statistics Panel --!>
+      <!-- Meeting Times Panel --!>
+      <div class="panel panel-default">
+        <div class="panel-heading">Meeting Times</div>
+        <div class="panel-body">
+          <dl class="dl-horizontal">
+            <dt>Tuesday (4:00-5:15)</dt>
+            <dd>Small group meetings in <a target="_blank" href="https://docs.google.com/spreadsheets/d/17zsTufmlryzPQGGkgfArOs1i_pWGypTY_sn1B-9gnqI/edit?usp=sharing">these rooms</a></dd>
+            <dt>Friday (4:00-5:15)</dt>
+            <dd>Large group meetings in DCC 318</dd>
+          </dl>
+        </div>
+      </div>
+      <!-- End Meeting Times Panel --!>
+    </div>
+  </div>
 </div>
 
 <div ng-include="'components/footer/footer.html'"></div>
-
-
