@@ -1,19 +1,32 @@
+div[class*="row"] {
+  padding: 10px 0px;
+  //border: 1px solid black;
+}
+
+div[class*="col"] {
+  //border: 1px solid blue;
+}
+
+figure {
+  text-align: center;
+  img {
+    margin: 0px auto;
+  }
+}
+
 .project-image{
     background-color: #eee;
-    clear: both;
-    padding: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    position: relative;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+
+    button {
+      margin-bottom: 10px;
+    }
 }
 
 .contributors{
     background-color: #eee;
-    margin-top: 20px;
-    padding: 0 20px 20px 40px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -52,7 +65,7 @@
 }
 
 .project-image {
-    padding-bottom: 50px;
+  padding: 2%;
 }
 
 .slide {
@@ -99,42 +112,16 @@
     }
 }
 
-// hide the file upload input
-#upload {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-}
-
-.fileUpload {
-    position: relative;
-    overflow: hidden;
-    margin-top: -10px;
-    margin-bottom: 5px;
-    margin-left: -10px;
-}
-
 .remove-photo {
     float: right;
     position: relative;
     overflow: hidden;
-    margin-top: -10px;
-    margin-bottom: 5px;
-    margin-left: -10px;
 }
 
 desc textarea{
     width:100%;
     height:300px;
 }
-
-
 
 .description-buttons {
     margin-top: -10px;
@@ -153,7 +140,17 @@ desc textarea{
 .tech-tags {
     background-color: #eee;
     padding: 10px 10px 10px 10px;
+    text-align: justify;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+
+    span {
+      display: inline-block;
+      margin-right: 5px;
+    }
+}
+
+input[type="file"] {
+  display: none;
 }
