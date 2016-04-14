@@ -13,7 +13,7 @@ angular.module('observatory3App')
         if (!$scope.token){
           Auth.changePassword( $scope.user.oldPassword, $scope.user.password )
           .then( function() {
-            $scope.message = 'Password successfully changed.';
+            $scope.message = 'Password successfully changed';
           })
           .catch( function() {
             form.password.$setValidity('mongoose', false);
@@ -23,7 +23,7 @@ angular.module('observatory3App')
         }else{
           Auth.changePasswordWithToken($scope.token, $scope.user.password)
             .then( function() {
-              $scope.message = 'Password changed successfully';
+              $scope.message = 'Password successfully changed';
             })
             .catch (function(){
               $scope.errors.other = 'An error occurred';
