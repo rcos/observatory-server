@@ -1,10 +1,17 @@
 div[class*="row"] {
-  padding: 10px 0px;
   //border: 1px solid black;
 }
 
-div[class*="col"] {
+.page div[class*="col"] {
+  padding: 10px;
   //border: 1px solid blue;
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 figure {
@@ -33,6 +40,13 @@ figure {
 }
 
 .description{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    text-align: justify;
+    overflow-y: auto;
     background-color: #eee;
     padding: 20px;
     -webkit-border-radius: 5px;
@@ -138,17 +152,22 @@ desc textarea{
 }
 
 .tech-tags {
-    background-color: #eee;
     padding: 10px 10px 10px 10px;
-    text-align: justify;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
 
     span {
+      padding: 10px;
       display: inline-block;
+      background-color: #eee;
       margin-right: 5px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 10px;
     }
+}
+
+.tech-boxes {
+  white-space: nowrap;
+  overflow-x: auto;
 }
 
 input[type="file"] {

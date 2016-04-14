@@ -1,6 +1,6 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container">
+<div class="container page">
   <div class="row text-left">
     <div class="col-sm-3">
       <h1 ng-hide="edittingName">{{project.name}}</h1>
@@ -40,12 +40,12 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-8">
+  <div class="row row-eq-height">
+    <div class="col-xs-12 col-sm-7">
       <div class="project-image">
         <button class="btn btn-sm btn-default" ng-click="uploadImage()" ng-show="userOnProject">Upload Images</button>
         <input id="uploadImage" type="file" ngf-select="upload($file)" />
-        <div class="remove-photo btn btn-sm btn-default text-right" ng-show="userOnProject && project && !slides[0].placeholder" ng-click="deletePhoto()">
+        <div class="remove-photo btn btn-sm btn-default" ng-show="userOnProject && project && !slides[0].placeholder" ng-click="deletePhoto()">
           <span>X</span>
         </div>
 
@@ -56,7 +56,7 @@
         </uib-carousel>
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-xs-12 col-sm-5">
       <div class="description">
         <div btf-markdown="project.description"></div>
       </div>
@@ -72,7 +72,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-4 col-sm-3 col-md-2" ng-repeat="user in authors">
+            <div class="col-xs-2 col-sm-2 col-md-1" ng-repeat="user in authors">
               <figure>
                 <a href="/users/{{ user._id }}/profile" title="" class="contributor-name">
                   <img ng-src="{{getPic(user)}}&s=128px" class="img-responsive img-circle" alt=""><br />
