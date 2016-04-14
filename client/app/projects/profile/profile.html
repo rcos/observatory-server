@@ -32,7 +32,7 @@
         <div class="tech-boxes">
           <span ng-repeat="tech in project.tech track by $index">
             {{tech}}
-            <button ng-show='isLoggedIn() && userOnProject' class='btn btn=default btn-xs' ng-click='removeTech(tech)'>x</button>
+            <g class="glyphicon glyphicon-remove" ng-show='isLoggedIn() && userOnProject' class='btn btn=default btn-xs' ng-click='removeTech(tech)' aria-hidden="true"></g>
           </span>
           <input ng-show='isLoggedIn() && userOnProject' ng-enter="addTechBubble()" ng-model="insertTechContent" size='4' type='text' />
           <button ng-show='isLoggedIn() && userOnProject' ng-click="addTechBubble()" class="btn btn-default btn-xs">+</button>
@@ -45,9 +45,7 @@
       <div class="project-image">
         <button class="btn btn-sm btn-default" ng-click="selectImage()" ng-show="userOnProject">Upload Images</button>
         <input id="uploadImage" type="file" ngf-select="upload($file)" />
-        <div class="remove-photo btn btn-sm btn-default" ng-show="userOnProject && project && !slides[0].placeholder" ng-click="deletePhoto()">
-          <span>X</span>
-        </div>
+        <g class="glyphicon glyphicon-remove remove-photo btn btn-sm btn-default" ng-show="userOnProject && project && !slides[0].placeholder" ng-click="deletePhoto()"></g>
 
         <uib-carousel active="active" no-wrap="true">
           <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id" active="slide.active">
