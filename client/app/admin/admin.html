@@ -50,10 +50,10 @@
             <td sort-arrow sortby='name' text='Name' sortorder='sortorder'></td>
             <td sort-arrow sortby='Github' text='Git' sortorder='sortorder'></td>
             <td sort-arrow sortby='role' text='User Role' sortorder='sortorder'></td>
-            <td sort-arrow sortby='full.normal' text='' icon="fa fa-calendar-check-o" sortorder='sortorder'></td>
-            <td sort-arrow sortby='full.bonus' text='+' sortorder='sortorder'></td>
-            <td sort-arrow sortby='small.normal' text='' icon="fa fa-calendar-check-o" sortorder='sortorder'></td>
-            <td sort-arrow sortby='small.bonus' text='+' sortorder='sortorder'></td>
+            <td sort-arrow sortby='full.normal' text='' icon="fa fa-calendar-check-o" sortorder='sortorder' title="Full Group Attendance"></td>
+            <td sort-arrow sortby='full.bonus' text='+' sortorder='sortorder' title="Bonus Full Group Attendance"></td>
+            <td sort-arrow sortby='small.normal' text='' icon="fa fa-calendar-check-o" sortorder='sortorder' title="Small Group Attendance"></td>
+            <td sort-arrow sortby='small.bonus' text='+' sortorder='sortorder' title="Bonus Small Group Attendance"></td>
             <td sort-arrow sortby='github.events.length' text='Events' sortorder='sortorder'></td>
             <td sort-arrow sortby='commits.length' text='Commits' sortorder='sortorder'></td>
             <td sort-arrow sortby='active' text='Active' sortorder='sortorder'></td>
@@ -62,7 +62,7 @@
       <tbody>
           <tr ng-repeat="user in users | filter:searchString | orderBy:sortorder">
               <td><a href="/users/{{user._id}}/profile">{{ user.name }}</a></td>
-              <td class="no-padding"><a class="btn btn-link large-text no-padding" role="button" ng-href="http://github.com/{{user.githubProfile}}"><i class="fa fa-github-square" ></i></a></td>
+              <td class="no-padding"><a class="btn btn-link large-text no-padding" role="button" ng-href="http://github.com/{{user.githubProfile}}" target="_blank"><i class="fa fa-github-square" ></i></a></td>
               <td>
               <select class="form-control" ng-model="user.role" ng-change="updateUserRole(user)">
                     <option value="user">User</option>
