@@ -6,6 +6,7 @@ angular.module('observatory3App')
     $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
     $scope.userOnProject = false;
     $scope.project = {};
+    console.log(Auth);
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
             $scope.project = result.data;
@@ -79,7 +80,6 @@ angular.module('observatory3App')
 
     var initializeSlides = function(photos) {
         var slides = [];
-        console.log(photos);
         if(photos.length > 0) {
           for (var i = 0; i < photos.length; i++){
               slides.push({
@@ -182,7 +182,7 @@ angular.module('observatory3App')
     };
 
     $scope.checkUserProject = function() {
-        $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
+        $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1 || Auth.isMentor($scope.user);
     };
 
     $scope.upload = function($file) {
