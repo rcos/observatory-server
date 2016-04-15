@@ -6,8 +6,9 @@ angular.module('observatory3App')
       templateUrl: 'components/sortArrow/sortArrow.html',
       scope: {
         sortorder: '=',
-        sortby: '=',
-        text: '='
+        sortby: '@',
+        text: '@',
+        icon: '@'
       },
       restrict: 'A',
       controller: function ($scope, $element) {

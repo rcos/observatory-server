@@ -23,9 +23,6 @@
       <button type="button" class="btn btn-default" ng-click="viewActive(false)" ng-show="past.active">
         Show Past Developers
       </button>
-      <button type="button" class="btn btn-warning" ng-click="submitAll()">
-        Submit
-      </button>
     </div>
   </div>
   <div class="row">
@@ -50,22 +47,22 @@
             <td>Toggle</td>
         </tr>
         <tr>
-            <td sort-arrow sortby='"name"' text='"Name"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"Github"' text='"Git"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"role"' text='"User Role"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"full.normal"' text='"A"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"full.bonus"' text='"+"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"small.normal"' text='"A"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"small.bonus"' text='"+"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"github.events.length"' text='"Events"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"commits.length"' text='"Commits"' sortorder='sortorder'></td>
-            <td sort-arrow sortby='"active"' text='"Active"' sortorder='sortorder'></td>
+            <td sort-arrow sortby='name' text='Name' sortorder='sortorder'></td>
+            <td sort-arrow sortby='Github' text='Git' sortorder='sortorder'></td>
+            <td sort-arrow sortby='role' text='User Role' sortorder='sortorder'></td>
+            <td sort-arrow sortby='full.normal' text='' icon="fa fa-calendar-check-o" sortorder='sortorder'></td>
+            <td sort-arrow sortby='full.bonus' text='+' sortorder='sortorder'></td>
+            <td sort-arrow sortby='small.normal' text='' icon="fa fa-calendar-check-o" sortorder='sortorder'></td>
+            <td sort-arrow sortby='small.bonus' text='+' sortorder='sortorder'></td>
+            <td sort-arrow sortby='github.events.length' text='Events' sortorder='sortorder'></td>
+            <td sort-arrow sortby='commits.length' text='Commits' sortorder='sortorder'></td>
+            <td sort-arrow sortby='active' text='Active' sortorder='sortorder'></td>
         </tr>
       </thead>
       <tbody>
           <tr ng-repeat="user in users | filter:searchString | orderBy:sortorder">
               <td><a href="/users/{{user._id}}/profile">{{ user.name }}</a></td>
-              <td class="no-padding"><a class="btn btn-link large-text no-padding" role="button" ng-href="http://github.com/{{user.githubProfile}}"><i class="fa fa-github-square" aria-hidden="true" ></i></a></td>
+              <td class="no-padding"><a class="btn btn-link large-text no-padding" role="button" ng-href="http://github.com/{{user.githubProfile}}"><i class="fa fa-github-square" ></i></a></td>
               <td>
               <select class="form-control" ng-model="user.role" ng-change="updateUserRole(user)">
                     <option value="user">User</option>
@@ -79,11 +76,9 @@
               <td>{{ user.small.bonus }}</td>
               <td>{{ user.github.events.length || 0  }}</td>
               <td>{{ user.commits.length }}</td>
-              <td class="link-container" ng-class="{'color-inactive':!user.active, 'color-active':user.active}" ng-click="user.activeChange = !user.activeChange">
-                <input class="center-link" type="checkbox" ng-model="user.activeChange"></input>
-                <div>
-                  <a href="#" class="bottom-link" role="button" ng-click="toggle( user )">{{user.active?"deactivate":"activate"}}</a>
-                </div>
+              <td class="small-padding" ng-class="{'color-inactive':!user.active, 'color-active':user.active}" ng-click="toggle( user )">
+                <a class="btn btn-link md-text no-padding" role="button" ng-href="#" ><i class="fa"  ng-class="{'fa-minus-square-o':!user.active, 'fa-check-square-o':user.active}" ></i></a>
+                <!-- <input class="center-link" type="checkbox" ng-model="user.activeChange"></input> -->
               </td>
 
           </tr>
