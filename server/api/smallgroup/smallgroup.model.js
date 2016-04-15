@@ -4,11 +4,25 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var SmallGroupSchema = new Schema({
-  classYear: {type : Schema.Types.ObjectId, ref: 'ClassYear'},
+  classYear: {
+    type : Schema.Types.ObjectId,
+    ref: 'ClassYear',
+    index: true
+  },
   name: String,
-  enabled: Boolean,
+  enabled: {
+    type: Boolean,
+    default: true
+  },
   students: [{type : Schema.Types.ObjectId, ref: 'User'}],
-  dayCodes: [{date:Date, code:String, bonusDay:{type:Boolean, default:false}}]
+  dayCodes: [{
+    date:Date,
+    code:String,
+    bonusDay:{
+      type:Boolean,
+      default:false,
+    },
+  }]
 });
 
 /*
