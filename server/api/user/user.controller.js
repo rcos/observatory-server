@@ -209,14 +209,9 @@ exports.allStats = function(req, res) {
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
+  .select('_id name role avatar email github.login')
   .exec(function (err, users) {
-    if(err) return res.send(500, err);
-    var userInfo = [];
-
-    for (var i = 0; i < users.length; i++){
-      userInfo.push(users[i].listInfo);
-    }
-    res.status(200).json(userInfo);
+    res.status(200).json(users);
   });
 };
 
