@@ -18,16 +18,26 @@ angular.module('observatory3App')
             $scope.allUsers = [];
             User.allstats({},function(users){
                 $scope.allUsers = users;
-                $scope.users = $scope.getUsersActive(true);
+                $http.get('/api/attendance/')
+                .success(function(attendance){
+                    $scope.attendance = attendance;
+                    $scope.users = $scope.getUsersActive(true);
 
-                var a = 0;
-                for (a = 0; a < $scope.allUsers.length; a++){
-                  Util.parseAttendance($scope.allUsers[a]);
-                }
-                for (a = 0; a < $scope.allUsers.length; a++){
-                  $scope.allUsers[a].activeChange = $scope.allUsers[a].active;
-                }
-            }, function(){
+                    var a = 0;
+                    for (a = 0; a < $scope.allUsers.length; a++){
+                      Util.parseAttendanceFromAll($scope.allUsers[a],$scope.attendance);
+                    }
+                    for (a = 0; a < $scope.allUsers.length; a++){
+                      $scope.allUsers[a].activeChange = $scope.allUsers[a].active;
+                    }
+
+                }).error(function(err){
+                    $scope.attendance = [];
+                    console.log(err)
+                });
+
+            }, function(err){
+              console.log(err);
             });
 
           }
