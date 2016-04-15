@@ -21,10 +21,32 @@
 .large-text{
 	font-size: 2.5em;
 }
+.table > tbody > tr > td.no-padding{
+	padding: 0;
+}
 .no-padding{
-	padding: 0 !important;
+	padding: 0;
+}
+.center-link{
+	margin-top: 10px;
+}
+.bottom-link{
+	bottom: 0;
+	font-size: .8em;
+}
+.table > tbody > tr > td.link-container{
 	padding-bottom: 0;
-	padding-left: 0;
-	padding-right: 0;
-	padding-top: 0;
+}
+.table-striped > tbody > tr > td.color-inactive{
+	background-color: #ededed;
+}
+.table-striped > tbody > tr:nth-child(odd) > td.color-inactive{
+	background-color: #e6e6e6;
+}
+
+.table-striped > tbody > tr > td.color-active{
+	background-color: #e1f4dc;
+}
+.table-striped > tbody > tr:nth-child(odd) > td.color-active{
+	background-color: #d8f0d1;
 }

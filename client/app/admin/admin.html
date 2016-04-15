@@ -17,16 +17,27 @@
       </form>
     </div>
     <div class="col-sm-6 text-right">
-      <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="!past.active">
+      <button type="button" class="btn btn-default" ng-click="viewActive(true)" ng-show="!past.active">
         Show Current Developers
       </button>
-      <button type="button" class="btn btn-default" ng-click="changeView('past')" ng-show="past.active">
+      <button type="button" class="btn btn-default" ng-click="viewActive(false)" ng-show="past.active">
         Show Past Developers
+      </button>
+      <button type="button" class="btn btn-warning" ng-click="submitAll()">
+        Submit
       </button>
     </div>
   </div>
   <div class="row">
-    <br>
+    <div class="col-xs-12 text-right">
+      <button type="button" class="btn btn-link btn-sm" ng-click="activateAll(true)" ng-show="!past.active">
+        Activate all
+      </button>
+      <button type="button" class="btn btn-link btn-sm" ng-click="activateAll(false)" ng-show="past.active">
+        Deactivate all
+      </button>
+
+    </div>
   </div>
   <div class="table-responsive">
       <table class="table table-hover text-center table-striped table-bordered">
@@ -52,7 +63,7 @@
         </tr>
       </thead>
       <tbody>
-          <tr ng-repeat="user in users | filter:searchString | filter:past | orderBy:sortorder">
+          <tr ng-repeat="user in users | filter:searchString | orderBy:sortorder">
               <td><a href="/users/{{user._id}}/profile">{{ user.name }}</a></td>
               <td class="no-padding"><a class="btn btn-link large-text no-padding" role="button" ng-href="http://github.com/{{user.githubProfile}}"><i class="fa fa-github-square" aria-hidden="true" ></i></a></td>
               <td>
@@ -68,7 +79,13 @@
               <td>{{ user.small.bonus }}</td>
               <td>{{ user.github.events.length || 0  }}</td>
               <td>{{ user.commits.length }}</td>
-              <td><a class="btn" ng-class="{'btn-success':!user.active, 'btn-warning':user.active}" href="#" role="button" ng-click="toggle( user )">x</a></td>
+              <td class="link-container" ng-class="{'color-inactive':!user.active, 'color-active':user.active}" ng-click="user.activeChange = !user.activeChange">
+                <input class="center-link" type="checkbox" ng-model="user.activeChange"></input>
+                <div>
+                  <a href="#" class="bottom-link" role="button" ng-click="toggle( user )">{{user.active?"deactivate":"activate"}}</a>
+                </div>
+              </td>
+
           </tr>
       </tbody>
     </table>
