@@ -15,7 +15,6 @@ exports.index = function(req, res) {
   Project.find({active:true},function (err, projects) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(projects);
-<<<<<<< de851852d30e54dafcbb4da9af11d032d2db7df0
   });
 };
 
@@ -53,8 +52,6 @@ exports.stats = function(req, res) {
         stats.pastProjects = results[1] || 0;
 
         return res.status(200).send(stats);
-=======
->>>>>>> Fixes #296, #214
   });
 };
 
