@@ -115,7 +115,7 @@ angular.module('observatory3App')
 
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
-
+    $scope.isMentor = Auth.isMentor;
 
     $scope.joinProject = function(){
         $http.put('/api/users/' + $scope.user._id + '/project',{
