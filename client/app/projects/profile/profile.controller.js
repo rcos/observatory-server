@@ -182,7 +182,7 @@ angular.module('observatory3App')
     };
 
     $scope.checkUserProject = function() {
-        $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1 || Auth.isMentor($scope.user);
+        $scope.userOnProject = $scope.user.projects.indexOf($scope.project._id) !== -1;
     };
 
     $scope.upload = function($file) {

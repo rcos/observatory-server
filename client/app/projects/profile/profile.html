@@ -23,8 +23,8 @@
       <button type="button" ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</button>
       <button type="button" ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</button>
       <button type="button" ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</button>
-      <button type="button" ng-show="isLoggedIn() && userOnProject && project.active" class="btn btn-warning" ng-click="markPast()">Mark Past Project</button>
-      <button type="button" ng-show="isLoggedIn() && userOnProject && !project.active" class="btn btn-warning ng-hide" ng-click="markActive()">Mark Active Project</button>
+      <button type="button" ng-show="isMentor() && userOnProject && project.active" class="btn btn-warning" ng-click="markPast()">Mark Past Project</button>
+      <button type="button" ng-show="isMentor() && userOnProject && !project.active" class="btn btn-warning ng-hide" ng-click="markActive()">Mark Active Project</button>
       <button type="button" class="btn btn-primary" ng-click="editProject()" ng-show="userOnProject">Edit Project</button>
     </div>
   </div>
