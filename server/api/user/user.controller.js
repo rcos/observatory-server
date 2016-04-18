@@ -154,7 +154,6 @@ exports.allStats = function(req, res) {
     User.find({'github.login': {$exists: true}})
     .exec(function (err, users) {
         if(err) return res.status(500).json(err);
-
         var twoWeeks = new Date();
         twoWeeks.setDate(twoWeeks.getDate()-14);
         var userInfo = [];
