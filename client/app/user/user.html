@@ -1,4 +1,3 @@
-
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container developers">
@@ -18,12 +17,16 @@
         </form>
       </div>
       <div class="col-sm-6 text-right">
-        <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
-          Show Current Developers
-        </button>
-        <button type="button" class="btn btn-default" ng-click="changeView('past')" ng-show="!past">
-          Show Past Developers
-        </button>
+        <a ng-href="/users/">
+          <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
+            Show Current Developers
+          </button>
+        </a>
+        <a ng-href="/users/past">
+          <button type="button" class="btn btn-default" ng-show="!past">
+            Show Past Developers
+          </button>
+        </a>
       </div>
     </div>
     <br/>

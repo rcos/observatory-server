@@ -7,7 +7,7 @@ angular.module('observatory3App')
       'link': '/projects'
     },{
       'title': 'Developers',
-      'link': '/users'
+      'link': '/users/'
     }];
 
     $scope.isCollapsed = true;
@@ -16,17 +16,21 @@ angular.module('observatory3App')
     $scope.isMentor = Auth.isMentor;
     $scope.getCurrentUser = Auth.getCurrentUser;
 
-	$scope.logout = function() {
+    $scope.logout = function() {
       Auth.logout();
       $location.path('/login');
     };
 
     $scope.isActive = function(route) {
+      var currentLocation = $location.path();
+      if (currentLocation.substring(0, route.length) === route) {
+        return true;
+      }
       return route === $location.path();
     };
 
     $scope.hasSmallGroup = function(){
-        return $scope.getCurrentUser().smallgroup != null;
+      return $scope.getCurrentUser().smallgroup != null;
     };
 
     // Toggles the display of URP form

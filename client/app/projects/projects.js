@@ -8,6 +8,11 @@ angular.module('observatory3App')
         templateUrl: 'app/projects/projects.html',
         controller: 'ProjectsCtrl'
       })
+      .state('projectsState', {
+        url: '/projects/:state',
+        templateUrl: 'app/projects/projects.html',
+        controller: 'ProjectsCtrl'
+      })
       .state('projectsprofile', {
         url: '/projects/:username/:project/profile',
         templateUrl: 'app/projects/profile/profile.html',
