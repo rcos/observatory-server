@@ -1,184 +1,222 @@
-h3 {
-  margin-top: 0px;
-}
+.project-profile{
+  // h3 {
+  //   margin-top: 0px;
+  // }
 
-.page div[class*="col"] {
-  padding: 10px;
-}
-
-.row-eq-height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-figure {
-  text-align: center;
-  img {
-    margin: 0px auto;
+  div[class*="col"] {
+    padding: 10px;
   }
-}
 
-.project-image{
-    background-color: #eee;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+  .row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
 
-    button {
-      margin-bottom: 10px;
+  figure {
+    text-align: center;
+    img {
+      margin: 0px auto;
     }
-}
+  }
 
-.contributors{
-    padding: 20px;
-    background-color: #eee;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-.description{
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    text-align: justify;
-    overflow-y: auto;
-    background-color: #eee;
-    padding: 20px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-.contributor-name{
-    margin-top: 20px;
-}
-
-.header-buttons{
-    padding-top: 20px;
-}
-
-.carousel-indicators li {
-    border: 1px solid #444;
-}
-
-.carousel-indicators {
-    bottom: -45px;
-}
-
-.carousel-control {
-    background-image: none !important; /* remove background gradients on controls */
-}
-
-.carousel-indicators .active {
-    background-color: #444;
-}
-
-.project-image {
-  padding: 2%;
-}
-
-.slide {
-    height: 350px;
-    margin: 0 auto;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-}
-
-//change carousel transition to fade instead of slide
-.carousel {
-    margin-bottom: 10px;
-    .carousel-inner {
-        .item {
-            opacity: 0;
-            -webkit-transition-property: opacity;
-            -moz-transition-property: opacity;
-            -o-transition-property: opacity;
-            transition-property: opacity;
-            -webkit-transition-duration: 300ms;
-            -moz-transition-duration: 300ms;
-            -o-transition-duration: 300ms;
-            transition-duration: 300ms;
-        }
-
-        .active {
-            opacity: 1;
-        }
-
-        .active.left,
-        .active.right {
-            left: 0;
-            opacity: 0;
-            z-index: 1;
-        }
-
-        .next.left,
-        .prev.right {
-            opacity: 1;
-        }
-    }
-
-    .carousel-control {
-        z-index: 2;
-    }
-}
-
-.remove-photo {
-    float: right;
-    position: relative;
-    overflow: hidden;
-}
-
-.glyphicon-remove {
-  cursor: pointer;
-}
-
-desc textarea{
-    width:100%;
-    height:300px;
-}
-
-.description-buttons {
-    margin-top: -10px;
-    margin-bottom: 8px;
-    margin-left: -10px;
-}
-
-#nameDiv {
-    margin-top: 30px
-}
-
-#repos {
-    display: block;
-}
-
-.tech-tags {
-    padding: 10px 10px 10px 10px;
-
-    span {
-      padding: 10px;
-      display: inline-block;
+  .project-image{
       background-color: #eee;
-      margin-right: 5px;
       -webkit-border-radius: 5px;
       -moz-border-radius: 5px;
-      border-radius: 10px;
-    }
-}
+      border-radius: 5px;
+      margin-bottom: 15px;
+  }
 
-.tech-boxes {
-  white-space: nowrap;
-  overflow-x: auto;
-}
+  .contributors{
+      padding: 20px;
+      background-color: #eee;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+  }
 
-g {
-  padding: 3px;
-}
+  .description{
+      // position: absolute;
+      padding-top: 0;
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-bottom: 15px;
+      text-align: justify;
+      overflow-y: auto;
+      word-wrap: break-word;
+      background-color: #eee;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+  }
 
-input[type="file"] {
-  display: none;
+  .contributor-name{
+      margin-top: 20px;
+  }
+
+  .header-buttons{
+      padding-top: 20px;
+  }
+
+  .carousel-indicators li {
+      border: 1px solid #444;
+  }
+
+  .carousel-indicators {
+      bottom: -45px;
+  }
+
+  .carousel-control {
+      background-image: none !important; /* remove background gradients on controls */
+  }
+
+  .carousel-indicators .active {
+      background-color: #444;
+  }
+
+  .project-image {
+    padding: 2%;
+  }
+
+  .slide {
+      height: 350px;
+      margin: 0 auto;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+  }
+
+  //change carousel transition to fade instead of slide
+  .carousel {
+      margin-bottom: 10px;
+      .carousel-inner {
+          .item {
+              opacity: 0;
+              -webkit-transition-property: opacity;
+              -moz-transition-property: opacity;
+              -o-transition-property: opacity;
+              transition-property: opacity;
+              -webkit-transition-duration: 300ms;
+              -moz-transition-duration: 300ms;
+              -o-transition-duration: 300ms;
+              transition-duration: 300ms;
+          }
+
+          .active {
+              opacity: 1;
+          }
+
+          .active.left,
+          .active.right {
+              left: 0;
+              opacity: 0;
+              z-index: 1;
+          }
+
+          .next.left,
+          .prev.right {
+              opacity: 1;
+          }
+      }
+
+      .carousel-control {
+          z-index: 2;
+      }
+  }
+
+  .remove-photo {
+      float: right;
+      position: relative;
+      overflow: hidden;
+      padding: 5px;
+  }
+
+  .glyphicon-remove {
+    cursor: pointer;
+  }
+
+  desc textarea{
+      width:100%;
+      height:300px;
+  }
+
+  .description-buttons {
+      margin-top: -10px;
+      margin-bottom: 8px;
+      margin-left: -10px;
+  }
+
+  #nameDiv {
+      margin-top: 30px
+  }
+
+  #repos {
+      display: block;
+  }
+
+  .tech-tags {
+      padding: 10px 10px 10px 10px;
+
+      span {
+        padding: 10px;
+        display: inline-block;
+        background-color: #eee;
+        margin-right: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 10px;
+      }
+  }
+
+  .tech-boxes {
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+
+  g {
+    padding: 3px;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  .image-row{
+      padding-top: 10px;
+  }
+
+  .profile-img{
+      display: inline;
+  }
+  .user-box{
+      overflow:hidden;
+      word-break: normal;
+      -webkit-hyphens: auto;
+      -moz-hyphens: auto;
+      -ms-hyphens: auto;
+      hyphens: auto;
+      margin-bottom: 10px;
+      padding-left:  1%;
+      padding-right: 1%;
+  }
+  .user-name{
+      height: 2em;
+      line-height: 1em;
+      margin-top: 5%;
+  }
+
+  .user-avatar{
+    padding-bottom:100%;
+    height:0;
+    position:relative;
+    display: block;
+    line-height: 1.42857143;
+    transition: all 0.2s ease-in-out;
+  }
+
+  p{
+      margin: 0 0 0px;
+  }
+
 }

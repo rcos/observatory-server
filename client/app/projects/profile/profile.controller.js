@@ -6,7 +6,6 @@ angular.module('observatory3App')
     $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
     $scope.userOnProject = false;
     $scope.project = {};
-    console.log(Auth);
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
             $scope.project = result.data;
