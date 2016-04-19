@@ -114,6 +114,21 @@ exports.daycode = function(req, res){
     });
 };
 
+// Delete a day code from a smallgroup
+// Restricted to mentors
+// router.delete('/:id/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
+exports.deleteDay = function(req, res){
+    var dayCode = req.params.dayCode;
+    var smallGroupId = req.params.id;
+    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+        $pull: { dayCodes: {code : dayCode }}
+    }, function(err, smallgroup){
+        if (err) return handleError(res, err);
+
+        return res.status(200).json(smallgroup);
+    });
+};
+
 // Returns the user profile for a userId
 // Only returns private information if the user is a mentor
 function getFullUserProfile(userId, mentor, callback){

@@ -71,8 +71,8 @@
         <div class='students'>
           <div ng-repeat='student in leaders' class='block col-sm-3'>
             <div class='student' ng-class='{
-                   present: student.attendance.length
-                 }'>
+            present: student.attendance.length
+            }'>
               <div class='photo'>
                 <img ng-src='{{ student.avatar}}&s=72px'/>
               </div>
@@ -103,8 +103,8 @@
         <div class='students'>
           <div ng-repeat='student in members' class='block col-sm-3'>
             <div class='student' ng-class='{
-                   present: student.attendance.length
-                 }'>
+            present: student.attendance.length
+            }'>
               <div class='photo'>
                 <img ng-src='{{student.avatar}}&s=72px'/>
               </div>
@@ -130,18 +130,42 @@
   </div>
 </div>
 
+<div class="row" ng-show="isMentor()">
+  <div class="col-sm-12">
+    <h3>Attendance Days:</h3>
+  </div>
+  <div class="col-sm-12">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
+          <td sort-arrow sortby='bonusDay' text='Type' sortorder='sortorder'></td>
+          <td text='Delete'>Delete</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="day in smallgroup.dayCodes | orderBy:sortorder">
+          <td>{{ day.date | date:"MMM dd" }}</a></td>
+          <td>{{ day.bonusDay?"Bonus":"Regular" }}</td>
+          <td><a ng-click="deleteDay(day)"><i class="fa fa-times"></i> Delete</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <div class="container-fluid smallgroup" ng-show='showAttendanceCode'>
   <div class='big-attendance text-center' ng-click='showAttendanceCode=false;'>
-      <div class="row">
-          <div class="col-sm-12">
-              <div class='small-text'>
-                  The Attendance Code is...
-              </div>
-              <div class='big-text'>
-                  {{ dayCode }}
-              </div>
-          </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class='small-text'>
+          The Attendance Code is...
+        </div>
+        <div class='big-text'>
+          {{ dayCode }}
+        </div>
       </div>
+    </div>
   </div>
 </div>
 
