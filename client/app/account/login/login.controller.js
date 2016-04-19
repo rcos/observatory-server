@@ -5,7 +5,6 @@ angular.module('observatory3App')
     $scope.user = {};
     $scope.errors = {};
 
-
     focus('email');
 
     $scope.login = function(form) {
