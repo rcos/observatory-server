@@ -14,29 +14,34 @@ var UserSchema = new Schema({
 
   email: {
     type: String,
-    lowercase: true
+    lowercase: true,
+    index: true
   },
 
   active: {
     type: Boolean,
-    default: true
+    default: true,
+    index: true
   },
 
   role: {
     type: String,
-    default: 'user'
+    default: 'user',
+    index: true
   },
 
   smallgroup: {
     type : Schema.Types.ObjectId,
-    ref: 'SmallGroup'
+    ref: 'SmallGroup',
+    index: true
   },
 
   tech: [String],
 
   projects: [{
     type : Schema.Types.ObjectId,
-    ref: 'Project'
+    ref: 'Project',
+    index: true
   }], // project id
 
   bio: String,
@@ -82,13 +87,19 @@ var UserSchema = new Schema({
       url: String,
       date: Date
     }],
-    login: {type: String, lowercase: true},
+    login: {type: String, lowercase: true, index: true},
     profile: String,
 },
   facebookLogin: {},
   googleLogin: {},
   githubLogin: {}
 
+},{ timestamps: true});
+UserSchema.set('toJSON', {
+  transform: function(doc, ret, options) {
+      ret.avatar = doc.avatar;
+      return ret;
+  }
 });
 
 /**
@@ -106,7 +117,7 @@ var makeAvatar = function(email) {
   if (email){
     return '//www.gravatar.com/avatar/'+md5(email.trim().toLowerCase())+"?d=identicon";
   }
-  return  '//www.gravatar.com/avatar/00000000000000000000000000000000+"?d=identicon"';
+  return  '//www.gravatar.com/avatar/00000000000000000000000000000000?d=identicon';
 
 };
 

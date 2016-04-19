@@ -4,33 +4,28 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var ClassSchema = new Schema({
-  semester: String,
-  current: false,
+  semester: {
+    type: String,
+    index: true
+  },
+  current: {
+    type: Boolean,
+    default: false,
+    index: true,
+  },
   displayURP:{
     type: Boolean,
     default: false
   },
-  mentors: [{
-    type : Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  students: [{
-    type : Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  projects: [{
-    type : Schema.Types.ObjectId,
-    ref: 'Project'
-  }],
   dayCodes: [{
     date:Date,
     code:String,
     bonusDay:{
       type:Boolean,
-      default:false
+      default:false,
     }
   }]
-});
+},{ timestamps: true});
 
 /*
 	Virtuals

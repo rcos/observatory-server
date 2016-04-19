@@ -151,56 +151,14 @@ exports.stats = function(req, res) {
  */
 exports.allStats = function(req, res) {
     // Only return users who have a github login
-    User.find({'github.login': {$exists: true}})
+  ClassYear.getCurrent(function(err, classYear){
+    var classYearId = classYear._id;
+    User.find({})
     .exec(function (err, users) {
         if(err) return res.status(500).json(err);
-        var twoWeeks = new Date();
-        twoWeeks.setDate(twoWeeks.getDate()-14);
-        var userInfo = [];
-        var count = users.length;
-
-        var getCommits = function(u){
-            var user = u.privateProfile;
-            ClassYear.getCurrent(function(err, classYear){
-                var classYearId = classYear._id;
-                Attendance.find({classYear:classYearId, user: u._id})
-                .exec(function (err, attendance) {
-                    if(err) { return handleError(res, err); }
-                    user.attendance = attendance;
-                    Commit.find()
-                    .where('author.login').equals(String(user.githubProfile))
-                    .where('date').gt(twoWeeks)
-                    .lean()
-                    .exec(function(err, commits){
-                        if(err){
-                            user.commits = [] ;
-                            count--;
-                            userInfo.push(user);
-                            if (count === 0){
-                                res.status(200).json(userInfo);
-                            }
-                        }
-                        else{
-                            var commitList = [];
-                            commits.forEach(function (c){
-                                commitList.push(c.toObject());
-                            });
-                            user.commits = commitList;
-                            count--;
-                            userInfo.push(user);
-                            if (count === 0){
-                                res.status(200).json(userInfo);
-                            }
-                        }
-                    });
-                });
-            });
-        };
-        for (var i = 0; i < users.length; i++){
-            var u = users[i];
-            getCommits(u);
-        }
+        res.status(200).json(users);
     });
+  });
 };
 
 /**
@@ -209,14 +167,9 @@ exports.allStats = function(req, res) {
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
+  .select('_id name role avatar email github.login')
   .exec(function (err, users) {
-    if(err) return res.send(500, err);
-    var userInfo = [];
-
-    for (var i = 0; i < users.length; i++){
-      userInfo.push(users[i].listInfo);
-    }
-    res.status(200).json(userInfo);
+    res.status(200).json(users);
   });
 };
 

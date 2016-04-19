@@ -81,10 +81,15 @@ var setAttendance = function(classYearId, userId, date, code, needsVerification,
 // Restricted to mentors
 // router.get('/', auth.isAuthenticated(), controller.index);
 exports.index = function(req, res) {
-  Attendance.find(function (err, attendance) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, attendance);
-  });
+    return ClassYear.getCurrent(function(err, classYear){
+      if (err) {return handleError(err)}
+      var classYearId = classYear._id;
+
+      return Attendance.find({classYear:classYearId}).exec(function (err, attendance) {
+        if(err) { return handleError(res, err); }
+        return res.json(200, attendance);
+      });
+    });
 };
 // *******************************************************
 
