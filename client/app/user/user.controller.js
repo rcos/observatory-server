@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('UserCtrl', function ($scope, User) {
+  .controller('UserCtrl', function ($scope, $stateParams, $location, User) {
     $scope.currentUsers = User.query();
     $scope.pastUsers = User.past();
     $scope.users = $scope.currentUsers;
@@ -11,6 +11,14 @@ angular.module('observatory3App')
     $scope.pageSize = $scope.defaultPageSize;
 
     $scope.past = false;
+
+    if ($stateParams.state === 'past') {
+      $scope.past = true;
+      $scope.users = $scope.pastUsers;
+    } else {
+      $scope.past = false;
+      $scope.users = $scope.currentUsers;
+    }
 
     $scope.numberOfPages=function(){
         return Math.ceil($scope.users.length/$scope.pageSize);

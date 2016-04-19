@@ -1,11 +1,10 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, focus) {
+.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
     $scope.loggedIn = false;
-    focus('searchProjectsInput');
 
     Auth.isLoggedInAsync(function(loggedIn){
         if (loggedIn){
@@ -60,5 +59,11 @@ angular.module('observatory3App')
         $scope.projectToAdd.repositories.splice(index, 1);
     }
 
-    $scope.getCurrentProjects(); // update the webpage when connecting the controller
+    if ($stateParams.state === 'past') {
+      $scope.past = true;
+      $scope.getPastProjects();
+    } else {
+      $scope.past = false;
+      $scope.getCurrentProjects();
+    }
 });

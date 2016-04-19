@@ -16,12 +16,16 @@
         </form>
       </div>
       <div class="col-xs-12 col-sm-8 text-right">
-        <button type="button" class="btn btn-default" ng-click="getCurrentProjects()" ng-show="past">
-          Show Current Projects
-        </button>
-        <button type="button" class="btn btn-default" ng-click="getPastProjects()" ng-show="!past">
-          Show Past Projects
-        </button>
+        <a ng-href="/projects/">
+          <button type="button" class="btn btn-default" ng-click="getCurrentProjects()" ng-show="past">
+            Show Current Projects
+          </button>
+        </a>
+        <a ng-href="/projects/past">
+          <button type="button" class="btn btn-default" ng-click="getPastProjects()" ng-show="!past">
+            Show Past Projects
+          </button>
+        </a>
         <button type="button" class="btn btn-primary" ng-click="addProject()" ng-show="user">
           Add a Project
         </button>

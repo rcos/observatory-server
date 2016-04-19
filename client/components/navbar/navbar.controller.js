@@ -7,7 +7,7 @@ angular.module('observatory3App')
       'link': '/projects'
     },{
       'title': 'Developers',
-      'link': '/users'
+      'link': '/users/'
     }];
 
     $scope.isCollapsed = true;
