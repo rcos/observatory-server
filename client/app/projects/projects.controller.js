@@ -5,7 +5,6 @@ angular.module('observatory3App')
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
     $scope.loggedIn = false;
-    focus('searchProjectsInput');
 
     Auth.isLoggedInAsync(function(loggedIn){
         if (loggedIn){
