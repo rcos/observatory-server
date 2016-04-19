@@ -6,7 +6,6 @@ angular.module('observatory3App')
     $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
     $scope.userOnProject = false;
     $scope.project = {};
-    console.log(Auth);
     var updateProject = function(){
         Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
             $scope.project = result.data;
@@ -25,9 +24,6 @@ angular.module('observatory3App')
     };
     updateProject();
 
-    $scope.selectImage = function() {
-      angular.element('#uploadImage').trigger('click');
-    };
     $scope.editProject = function() {
       $scope.editedProject = angular.copy($scope.project);
 
@@ -70,37 +66,25 @@ angular.module('observatory3App')
     $scope.getPic = function(user) {
         if (! ('avatar' in user)){
             user.avatar = "//www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid";
-            $http.get('/api/users/' + user._id + '/avatar').success(function(avatar){
+            $http.get('/api/users/' + user._id + '/avatar')            .success(function(avatar){
                 user.avatar = avatar;
-            });
-        } else {
+            })
         }
         return user.avatar
     }
 
     var initializeSlides = function(photos) {
         var slides = [];
-        if(photos.length > 0) {
-          for (var i = 0; i < photos.length; i++){
-              slides.push({
-                  id: i,
-                  active: false,
-                  image: $scope.imgPrefix + photos[i],
-                  src: photos[i]
-              });
-              if (i === 0) {
-                  slides[0].active = true;
-              }
-          }
-        }
-        else {
-          slides.push({
-            id: 0,
-            active: true,
-            placeholder: true,
-            image: '../../assets/images/projectplaceholder.png',
-            src: '../../assets/images/projectplaceholder.png'
-          });
+        for (var i = 0; i < photos.length; i++){
+            slides.push({
+                id: i,
+                active: false,
+                image: $scope.imgPrefix + photos[i],
+                src: photos[i]
+            });
+            if (i === 0) {
+                slides[0].active = true;
+            }
         }
         $scope.slides = slides;
     }
@@ -115,7 +99,7 @@ angular.module('observatory3App')
 
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
-    $scope.isMentor = Auth.isMentor;
+
 
     $scope.joinProject = function(){
         $http.put('/api/users/' + $scope.user._id + '/project',{
@@ -228,4 +212,18 @@ angular.module('observatory3App')
       };
 
 //end tech bubble code
-});
+
+
+})
+.directive('desc', function() {
+    return {
+        restrict:'E',
+        template: '<div btf-markdown=\'project.description\'></div> \
+        <textarea ng-show=\'edittingDesc && userOnProject\' ng-model=\'project.description\' ></textarea>'
+    };
+}).directive('pname', function() {
+    return {
+        restrict:'E',
+        template: '<input type=\'text\' maxlength="50" ng-show=\'edittingName && userOnProject\' ng-model=\'project.name\'><br>'
+    };
+})
