@@ -7,6 +7,9 @@ angular.module('observatory3App')
     $scope.isAdmin = Auth.isAdmin;
     $scope.getCurrentUser = Auth.getCurrentUser;
     $scope.user = Auth.getCurrentUser();
+    $scope.viewAll = true;
+    $scope.semester = "Spring";
+    $scope.year = 2016;
 
     $scope.userInProject = function() {
         return $scope.isAuthor;
@@ -102,6 +105,32 @@ angular.module('observatory3App')
 
       });
     };
+
+    $scope.toggleViewAll = function() {
+        $scope.viewAll = !$scope.viewAll;          
+    };
+
+    $scope.decrement = function() {
+        if $scope.semester == "Spring" {
+            $scope.semester = "Fall";
+            $scope.year = toString(parseInt($scope.year))--;
+        }
+        else if $scope.semester == "Fall"
+            $scope.semester = "Summer";
+        else if $scope.semester == "Summer"
+            $scope.semester = "Spring";
+    }
+
+    $scope.increment = function() {
+        if $scope.semester == "Spring" 
+            $scope.semester = "Summer";
+        else if $scope.semester == "Summer"
+            $scope.semester = "Fall";
+        else if $scope.semester == "Fall" {
+            $scope.semester = "Spring";
+            $scope.year = toString(parseInt($scope.year))++;
+        }
+    }
 
     $scope.load();
 

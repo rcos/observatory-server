@@ -5,6 +5,15 @@
       <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
     </div>
     <div class="col-xs-9 text-right header-buttons">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='!viewAll'></span>
+        <span>text{{ semester }} </span>
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='!viewAll'></span>
+      <button class="btn btn-primary" type="button" ng-click='toggleViewAll()' ng-show='!viewAll'>
+          View all
+      </button>
+      <button class="btn btn-primary" type="button" ng-click='toggleViewAll()' ng-show='viewAll'>
+          View by semester
+      </button>
       <button ng-show="userInProject()" class="btn btn-primary" type="button" ng-click="addBlogPost()">
           Add a post
       </button>
