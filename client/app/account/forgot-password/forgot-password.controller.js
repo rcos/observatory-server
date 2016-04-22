@@ -14,7 +14,7 @@ angular.module('observatory3App')
           $scope.success = true;
         }
         else {
-          notify({ message: "Error: Problem Sending Password Reset Email", classes: ["alert-danger"] });
+          notify({ message: "Error: Problem sending password reset email", classes: ["alert-danger"] });
         }
       });
     }
