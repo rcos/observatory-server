@@ -505,7 +505,7 @@ exports.resetPassword = function(req, res){
         email: userEmail.toLowerCase()
     }, function (err, user){
         if (err) return res.status(401).json(err);
-        if (!user) return res.send(200);
+        if (!user) return res.status(200).json({success: true});
 
         crypto.randomBytes(12, function(ex, buf) {
             var token = buf.toString('hex');
@@ -518,16 +518,28 @@ exports.resetPassword = function(req, res){
             user.passwordResetExpiration = tomorrow;
 
             user.save(function(err){
-                if (err) return validationError(res,err);
-                res.send(200);
+              if (err) return validationError(res,err);
 
-                // email token to user
-                email.send(userEmail,
-                    "Observatory3 password reset",
-                    "Please go to the following url to reset your password\n\n\
-                    " + config.addr + "/login?token=" + user.passwordResetToken + "\n\n\
-                    The token will expire after 24 hours\n\n\
-                    If you did not initiate this action, please ignore this email");
+              var sub = {
+                ":name": [user.name],
+                "[%address%]": [config.addr + "/login?token=" + user.passwordResetToken],
+              }
+
+              var filter = {
+                "templates": {
+                  "settings": {
+                    "enable": 1,
+                    "template_id": "2f31a6c8-770e-4da0-a71c-dc71385d549f"
+                  }
+                }
+              }
+
+              // email token to user
+              email.sendEmail(user.email, "RCOS.IO Forgot Password", sub, '<br>', filter, function(err, success){
+                if (err) return res.status(500).json(err);
+
+                return res.status(200).json(success);
+              });
             });
 
         });

@@ -40,7 +40,9 @@ var all = {
   // Should we populate the DB with sample data?
   seedDB: false,
 
-  serverEmail: process.env.SERVER_EMAIL || "test@example.com",
+  serverEmail: process.env.SERVER_EMAIL || "no-reply@rcos.io",
+
+  addr: process.env.SERVER_ADDRESS || "https://rcos.io",
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {

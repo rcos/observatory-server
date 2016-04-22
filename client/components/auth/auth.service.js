@@ -305,7 +305,7 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
         return $http.post('/api/users/resetPassword', {
             email: email
         }).then(res => {
-          return safeCb(callback)(res);
+          return safeCb(callback)(null, res);
         }).catch(err => {
           return safeCb(callback)(err);
         });
