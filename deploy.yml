@@ -24,4 +24,4 @@
       args:
         chdir: "{{ server_dir }}"
 
-    - shell: "NODE_ENV=production PORT={{ port }} forever -a -l {{ log_file }} start -c "node --harmony" {{ server_dir }}dist/server/app.js"
+    - shell: "NODE_ENV=production PORT={{ port }} forever -a -l {{ log_file }} start {{ server_dir }}dist/server/app.js"
