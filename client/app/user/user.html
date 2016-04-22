@@ -48,7 +48,7 @@
     </div>
     <div class="row image-row">
         <div ng-repeat="user in users | filter:searchString | startFrom:currentPage*pageSize | limitTo:pageSize">
-            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 text-center user-box">
+            <div class="col-md-2 col-sm-3 col-xs-4 text-center user-box">
                 <a href="/users/{{ user._id}}/profile" class="user-avatar">
                     <img class="profile-img img-responsive placeholder-img" ng-src='{{user.avatar}}&s=248px'>
                 </a>
