@@ -3,9 +3,9 @@
 angular.module('observatory3App')
 .controller('SmallGroupCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify) {
   $scope.allUsers = User.query();
-  $scope.showAttendanceCodeFull = false;
+  $scope.showAttendanceCode = false;
   $scope.isMentor = Auth.isMentor;
-
+  $scope.dayCode = false;
   $scope.loaded = false;
 
   Auth.getCurrentUser(function (user) {
@@ -30,9 +30,7 @@ angular.module('observatory3App')
         return false;
       }
       if ('dayCode' in smallgroup && smallgroup.dayCode) {
-        $scope.showAttendanceCode = true;
-      } else {
-        $scope.showAttendanceCode = false;
+        $scope.dayCode = smallgroup.dayCode;
       }
       $http.get('/api/smallgroup/' + $scope.user.smallgroup + '/members').success(function (members) {
         $scope.leaders = [];
@@ -108,14 +106,14 @@ angular.module('observatory3App')
 
 
   $scope.generateAttendanceCode = function () {
-    if ($scope.showAttendanceCode) { //TODO call api to generate code
-      $scope.showAttendanceCodeFull = true;
+    if ($scope.dayCode) {
+      $scope.showAttendanceCode = true;
     } else {
       $http.post('/api/smallgroup/' + $scope.smallgroup._id + '/daycode')
-              .success(function (code) {
-                $scope.smallgroup.dayCode = code;
-                $scope.showAttendanceCode = true;
-              });
+      .success(function (code) {
+        $scope.dayCode = code;
+        $scope.showAttendanceCode = true;
+      });
     }
   };
 
