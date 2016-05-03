@@ -18,3 +18,4 @@ describe('GET /api/commits', function() {
       });
   });
 });
+
