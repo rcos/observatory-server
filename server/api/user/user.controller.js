@@ -1,10 +1,12 @@
 'use strict';
 
+var _ = require('lodash');
 var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
+var async = require('async');
 var email = require("../../components/email");
 var Commit = require('../commit/commit.model');
 var ClassYear = require('../classyear/classyear.model');
@@ -17,19 +19,61 @@ function isoDateToTime(isoDate){
   return date.getTime();
 }
 
-
+// Return a standard error
+function handleError(res, err) {
+    return res.sendStatus(500, err);
+}
 
 var validationError = function(res, err) {
-  return res.json(422, err);
+  return res.status(422).json(err);
 };
 
 /**
  * Get list of users
  */
 exports.index = function(req, res) {
-  User.find({}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, users) {
+  User.find({}, function (err, users) {
     if(err) return res.send(500, err);
-    res.json(200, users);
+    res.status(200).json(users);
+  });
+};
+
+/**
+ * Get user stats
+ */
+exports.publicStats = function(req, res) {
+  async.parallel([
+        // Count active users
+        function(callback) {
+          User.count({active:true}, function (err, aCount) {
+            if (err) return callback(err);
+            callback(null, aCount);
+          });
+        },
+        // Count past users
+        function(callback) {
+          User.count({active:false}, function (err, pCount) {
+            if (err) return callback(err);
+            callback(null, pCount);
+          });
+        },
+      ],
+      function(err, results){
+        if (err) {
+          console.log(err);
+          return res.send(400);
+        }
+
+        if (results == null) {
+          return res.send(400);
+        }
+
+        //results contains [activeProjectCount, pastProjectCount]
+        var stats = {};
+        stats.activeUsers = results[0] || 0;
+        stats.pastUsers = results[1] || 0;
+
+        return res.status(200).send(stats);
   });
 };
 
@@ -42,19 +86,19 @@ exports.index = function(req, res) {
 exports.search = function(req, res){
     if (!req.query.query) return res.send(400, "No query supplied");
     var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
-    User.findOne({name: query},  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err, user){
+    User.findOne({name: query}, function(err, user){
         if (err) return res.send(500, err);
         if (!user){
             if (req.query.single){
-                return res.send(200, null);
+                return res.status(200).json(null);
             }else{
-                return res.send(200, []);
+                return res.status(200).json([]);
             }
         }
         if (req.query.single){
-            return res.send(200, user.profile);
+            return res.status(200).json(user.profile);
         }else{
-            return res.send(200, [user.profile]);
+            return res.status(200).json([user.profile]);
         }
     });
 };
@@ -66,7 +110,8 @@ exports.search = function(req, res){
  */
 exports.stats = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration' ).exec(function (err, users) {
+  User.find({active: true, 'github.login': {$exists: true}})
+  .exec(function (err, users) {
     if(err) return res.send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
@@ -87,7 +132,7 @@ exports.stats = function(req, res) {
                 count--;
                 userInfo.push(user);
                 if (count === 0){
-                  res.json(200, userInfo);
+                  res.status(200).json(userInfo);
                 }
             });
     }
@@ -106,55 +151,14 @@ exports.stats = function(req, res) {
  */
 exports.allStats = function(req, res) {
     // Only return users who have a github login
-    User.find({'github.login': {$exists: true}}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration' ).exec(function (err, users) {
-        if(err) return res.send(500, err);
-        var twoWeeks = new Date();
-        twoWeeks.setDate(twoWeeks.getDate()-14);
-        var userInfo = [];
-        var count = users.length;
-
-        var getCommits = function(u){
-            var user = u.privateProfile;
-            ClassYear.getCurrent(function(err, classYear){
-                var classYearId = classYear._id;
-                Attendance.find({classYear:classYearId, user: u._id})
-                .exec(function (err, attendance) {
-                    if(err) { return handleError(res, err); }
-                    user.attendance = attendance;
-                    Commit.find()
-                    .where('author.login').equals(String(user.githubProfile))
-                    .where('date').gt(twoWeeks)
-                    .lean()
-                    .exec(function(err, commits){
-                        if(err){
-                            user.commits = [] ;
-                            count--;
-                            userInfo.push(user);
-                            if (count === 0){
-                                res.json(200, userInfo);
-                            }
-                        }
-                        else{
-                            var commitList = [];
-                            commits.forEach(function (c){
-                                commitList.push(c.toObject());
-                            });
-                            user.commits = commitList;
-                            count--;
-                            userInfo.push(user);
-                            if (count === 0){
-                                res.json(200, userInfo);
-                            }
-                        }
-                    });
-                });
-            });
-        };
-        for (var i = 0; i < users.length; i++){
-            var u = users[i];
-            getCommits(u);
-        }
+  ClassYear.getCurrent(function(err, classYear){
+    var classYearId = classYear._id;
+    User.find({})
+    .exec(function (err, users) {
+        if(err) return res.status(500).json(err);
+        res.status(200).json(users);
     });
+  });
 };
 
 /**
@@ -162,14 +166,10 @@ exports.allStats = function(req, res) {
  */
 exports.list = function(req, res) {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, users) {
-    if(err) return res.send(500, err);
-    var userInfo = [];
-
-    for (var i = 0; i < users.length; i++){
-      userInfo.push(users[i].listInfo);
-    }
-    res.json(200, userInfo);
+  User.find({active: true, 'github.login': {$exists: true}})
+  .select('_id name role avatar email github.login')
+  .exec(function (err, users) {
+    res.status(200).json(users);
   });
 };
 
@@ -177,14 +177,15 @@ exports.list = function(req, res) {
  * Get list of all past users
  */
 exports.past = function(req, res) {
-  User.find({active: false}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, users) {
+  User.find({active: false})
+  .exec(function (err, users) {
     if(err) return res.send(500, err);
       var userInfo = [];
 
       for (var i = 0; i < users.length; i++){
         userInfo.push(users[i].listInfo);
       }
-      res.json(200, userInfo);
+      res.status(200).json(userInfo);
   });
 };
 
@@ -196,7 +197,7 @@ exports.commits = function(req, res) {
 
   Commit.find({ userId: userId}, function(err, commits){
     if (err) return res.send(500, err);
-    res.json(200, commits);
+    res.status(200).json(commits);
   });
 };
 
@@ -215,13 +216,30 @@ exports.create = function (req, res, next) {
 };
 
 /**
+ * Update an existing user
+ */
+exports.update = function (req, res, next) {
+  if(req.body._id) { delete req.body._id; }
+
+  User.findById(req.params.id, function(err, user){
+    if (err) { return handleError(res, err); }
+    if(!user) { return res.send(404); }
+
+    var updated = _.merge(user, req.body);
+    updated.save(function(err) {
+      if (err) { return handleError(res, err); }
+      return res.json(200, updated);
+    });
+  });
+}
+
+/**
  * Get a single user
  */
 exports.show = function (req, res, next) {
   var userId = req.params.id;
 
   User.findById(userId)
-  .select( '-salt -hashedPassword -passwordResetToken -passwordResetExpiration')
   .populate('smallgroup')
   .exec(function (err, user) {
     if (err) {return next(err);}
@@ -239,7 +257,6 @@ exports.show = function (req, res, next) {
 exports.privateProfile = function (req, res, next) {
   var userId = req.params.id;
   User.findById(userId)
-  .select( '-salt -hashedPassword -passwordResetToken -passwordResetExpiration')
   .populate('smallgroup')
   .populate('projects')
   .exec(function (err, user) {
@@ -275,7 +292,7 @@ exports.privateProfile = function (req, res, next) {
 exports.avatar = function (req, res, next) {
   var userId = req.params.id;
 
-  User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function (err, user) {
+  User.findById(userId, function (err, user) {
     if (err) return next(err);
     if (!user) return res.send(404);
     return res.json(user.avatar);
@@ -296,7 +313,9 @@ exports.destroy = function(req, res) {
   var adminUserId = req.user.id;
   var pass = String(req.body.password);
   var query = {students:{ $in: [userId]}};
-  User.findById(adminUserId, function (err, user, db) {
+  User.findById(adminUserId)
+  .select('_id email password provider salt')
+  .exec(function (err, user, db) {
     if(user.authenticate(pass)) {
        SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
         if(err) {
@@ -327,7 +346,7 @@ exports.role = function(req, res) {
     if (roles.indexOf(newRole) === -1){
         res.send(400, {error: "Role does not exist."});
     }
-    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err,user){
+    User.findById(userId, function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -352,7 +371,9 @@ exports.changePassword = function(req, res, next) {
   var token   = String(req.body.token);
   var newPass = String(req.body.newPassword);
 
-  User.findById(userId,function (err, user) {
+  User.findById(userId)
+  .select('_id email password provider salt passwordResetToken passwordResetExpiration')
+  .exec(function (err, user) {
     if(user.authenticate(oldPass) || user.validResetToken(token)) {
       user.password = newPass;
       user.passwordResetToken = '';
@@ -376,43 +397,10 @@ exports.deactivate = function(req,res) {
           user.active = false;
           user.save(function(err){
           if (err) return res.send(500, err);
-          res.json(200, {success: true});
+          res.status(200).json({success: true});
         })
       });
   };
-
-/**
- * Changes a user's bio
- */
-exports.changeBio = function(req,res){
-    var userId = req.user._id;
-    var newBio = String(req.body.bio);
-    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err,user){
-        user.bio = newBio;
-        user.save(function(err){
-            if (err) return validationError(res,err);
-            return res.json({bio:user.bio});
-
-        })
-
-    });
-};
-
-/**
- * Changes a user's Github profile
- */
- exports.changeGithub = function(req,res){
-   var userId = req.user._id;
-   var newGithubProfile = String(req.body.github);
-   User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err,user){
-     user.github.login = newGithubProfile;
-     res.json({githubProfile:user.github.login});
-     user.save(function(err){
-        if (err) return validationError(res,err);
-        res.send(200);
-     })
-   });
- };
 
 /**
  * Deactivates a user
@@ -420,13 +408,13 @@ exports.changeBio = function(req,res){
 exports.deactivate = function(req, res, next) {
   var userId = String(req.params.id);
 
-  User.findOne({ '_id': userId},  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err, user){
+  User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
 
     user.active = false;
     user.save(function(err){
     if (err) return res.send(500, err);
-      res.json(200, {success: true});
+      res.status(200).json({success: true});
     })
   });
 };
@@ -436,12 +424,12 @@ exports.deactivate = function(req, res, next) {
  */
 exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
-  User.findOne({ '_id': userId},  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration',function(err, user){
+  User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
     user.active = true;
     user.save(function(err){
     if (err) return res.send(500, err);
-      res.json(200, {success: true});
+      res.status(200).json({success: true});
     })
   });
 };
@@ -453,7 +441,8 @@ exports.me = function(req, res, next) {
   var userId = req.user._id;
   User.findOne({
     _id: userId
-}, '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err, user) { // don't ever give out the password or salt
+  })
+  .exec(function(err, user) {
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);
@@ -473,7 +462,7 @@ exports.authCallback = function(req, res, next) {
 exports.addTech = function(req,res){
     var userId = req.params.id;
     var newTech = req.body.tech;
-    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err,user){
+    User.findById(userId, function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -493,7 +482,7 @@ exports.addTech = function(req,res){
 exports.removeTech = function(req,res){
     var userId = req.params.id;
     var tech = req.body.tech;
-    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err,user){
+    User.findById(userId, function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -514,8 +503,8 @@ exports.resetPassword = function(req, res){
     var userEmail = req.body.email;
     User.findOne({
         email: userEmail.toLowerCase()
-    },  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function (err, user){
-        if (err) return res.json(401, err);
+    }, function (err, user){
+        if (err) return res.status(401).json(err);
         if (!user) return res.send(200);
 
         crypto.randomBytes(12, function(ex, buf) {
@@ -553,7 +542,7 @@ exports.resetPassword = function(req, res){
 exports.addProject = function(req,res){
     var userId = req.params.id;
     var newProject = req.body.project;
-    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err,user){
+    User.findById(userId, function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -574,7 +563,7 @@ exports.addProject = function(req,res){
 exports.removeProject = function(req,res){
     var userId = req.params.id;
     var project = req.body.project;
-    User.findById(userId,  '-salt -hashedPassword -passwordResetToken -passwordResetExpiration', function(err,user){
+    User.findById(userId, function(err,user){
         if (err){
             res.send(500, err);
         }else{
@@ -595,7 +584,9 @@ exports.deleteUser = function(req,res,next){
   var userId = req.user.id;
   var pass = String(req.body.password);
   var query = {students:{ $in: [userId]}};
-  User.findById(userId, function (err, user,db) {
+  User.findById(userId)
+  .select('_id email password provider salt passwordResetToken passwordResetExpiration')
+  .exec(function (err, user,db) {
     if(user.authenticate(pass)) {
        SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
         if(err) {

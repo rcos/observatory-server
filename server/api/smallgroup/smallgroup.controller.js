@@ -24,7 +24,7 @@ function isoDateToTime(isoDate){
 exports.index = function(req, res) {
     SmallGroup.find({}, function(err, smallgroups){
         if (err) { return handleError(res, err); }
-        return res.json(200, smallgroups);
+        return res.status(200).json(smallgroups);
     });
 };
 
@@ -85,14 +85,15 @@ exports.getSmallGroup = function(req, res){
         // If user is not a mentor or not authenticated, don't give dayCode
         if (!req.user || !req.user.isMentor){
             responseObject.dayCodes = null;
-        }else{
+        }
+        else{
             // Mentors should get a day code
             // Generate a day code if one does not already exist
             if (smallgroup.dayCode){
                 responseObject.dayCode = smallgroup.dayCode;
             }
         }
-        res.json(200, responseObject);
+        res.status(200).json(responseObject);
     });
 };
 
@@ -109,7 +110,7 @@ exports.daycode = function(req, res){
             var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
             smallgroup.dayCode = code;
         }
-        res.json(200, smallgroup.dayCode);
+        res.status(200).json(smallgroup.dayCode);
     });
 };
 
@@ -117,7 +118,6 @@ exports.daycode = function(req, res){
 // Only returns private information if the user is a mentor
 function getFullUserProfile(userId, mentor, callback){
     User.findById(userId)
-    .select('-salt -hashedPassword')
     .populate('projects')
     .exec(function(err, user){
         if (err) return callback("Could not find user", null);
@@ -173,7 +173,7 @@ exports.getSmallGroupMembers = function(req, res){
 
                 // Check if we're done loading members
                 if (loadedMembers == smallgroup.students.length){
-                    return res.json(200, members);
+                    return res.status(200).json(members);
                 }
             })
         });
@@ -190,7 +190,7 @@ exports.addMember = function(req, res){
         $addToSet: { students : memberId }
     }, function(err, smallgroup){
         if (err) return handleError(res, err);
-        User.findById(memberId,  '-salt -hashedPassword', function(err, user){
+        User.findById(memberId, function(err, user){
             if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
             user.smallgroup = smallGroupId
             user.save();
@@ -241,5 +241,5 @@ function handleError(res, err) {
 
 // Return a validation error
 function validationError(res, err) {
-    return res.json(422, err);
+    return res.status(422).json(err);
 }

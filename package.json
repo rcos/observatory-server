@@ -4,6 +4,7 @@
   "main": "server/app.js",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "babel-runtime": "^5.8.20",
     "bluebird": "^2.9.34",
     "body-parser": "^1.13.3",

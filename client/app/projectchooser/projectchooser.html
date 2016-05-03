@@ -12,25 +12,25 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-6 col-md-5 col-lg-4">
                     <div ng-show="project.photos.length === 0">
                     No images uploaded yet.
                     </div>
 
                     <div ng-show="project.photos.length > 0">
                         <!-- <div style="background:url({{getImagePrefix(project)+url}}) center center;" class="slide" alt="{{url}}"></div> -->
-                    <img ng-src="{{project.photos.length > 0 && getImagePrefix(project)+project.photos[0]}}" height="200" width="200">
+                    <img class="project-image" ng-src="{{project.photos.length > 0 && getImagePrefix(project)+project.photos[0]}}" >
                     </div>
 
                 </div>
-                <div class="col-sm-9" id="description" btf-markdown="project.description"></div>
-            </div> 
+                <div class="col-sm-6 col-md-7 col-lg-8" id="description" btf-markdown="project.description"></div>
+            </div>
             <ul class="project-info">
                 <li><a href="{{ project.websiteUrl }}">Website</a></li>
                 <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
                 <li><a href="{{ project.repositoryUrl }}">Repository</a></li>
             </ul>
-            
+
         </div>
     </div>
 </div>

@@ -6,7 +6,7 @@
     </div>
     <div class="col-xs-9 text-right header-buttons">
       <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='!viewAll'></span>
-        <span>text{{ semester }} </span>
+        <span ng-show='!viewAll'>{{ semester + " " + year }}</span>
       <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='!viewAll'></span>
       <button class="btn btn-primary" type="button" ng-click='toggleViewAll()' ng-show='!viewAll'>
           View all
@@ -19,7 +19,7 @@
       </button>
     </div>
     <div class="col-sm-12">
-      <div ng-repeat="post in posts | orderBy:'-date'">
+      <div ng-repeat="post in posts | orderBy:'-date' | filter:filterBySem">
           <div class="extra-content">
               <div ng-show='userInProject()'>
                   <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
@@ -32,7 +32,7 @@
                   </div>
               </div>
               <div class="clear"></div>
-              <div  id="content" btf-markdown="post.content"></div>
+              <div id="content" btf-markdown="post.content"></div>
               <div class="bottom-bar">
                   <div class="bottom-bar-left">
                       <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
@@ -42,9 +42,10 @@
                   </div>
               </div>
           </div>
+        </div>
       </div>
     </div>
-
-
+  </div>
 </div>
+
 <div ng-include="'components/footer/footer.html'"></div>

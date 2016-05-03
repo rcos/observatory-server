@@ -13,7 +13,7 @@
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
-            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer..." ng-model="searchString">
+            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer..." ng-model="searchString.name">
           </div>
         </form>
       </div>
@@ -34,10 +34,7 @@
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
                   page {{ currentPage + 1 }} of {{ numberOfPages() }}
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
-
-                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all
-                </button>
-
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all</button>
               </span>
               <span ng-hide='numberOfPages() > 1'>
                 <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
@@ -45,10 +42,6 @@
               </span>
           </div>
       </div>
-    </div>
-
-    <div class=row>
-            </br>
     </div>
     <div class="row image-row">
         <div ng-repeat="user in users | filter:searchString | startFrom:currentPage*pageSize | limitTo:pageSize">
@@ -61,6 +54,24 @@
                 </p>
             </div>
         </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 text-left">
+          <div class="">
+              <span ng-show='numberOfPages() > 1'>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
+                  page {{ currentPage + 1 }} of {{ numberOfPages() }}
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
+
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all</button>
+
+              </span>
+              <span ng-hide='numberOfPages() > 1'>
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
+                </button>
+              </span>
+          </div>
+      </div>
     </div>
 </div>
 

@@ -64,20 +64,45 @@ function UtilService($window) {
           if (!submission.verified){
               u.unverified +=1;
           }
-          else if (submission.smallgroup && !submission.bonus){
+          else if (submission.smallgroup && !submission.bonusDay){
               u.small.normal +=1;
           }
           else if (submission.smallgroup){
               u.small.bonus +=1;
           }
-          else if(submission.bonus){
+          else if(submission.bonusDay){
               u.full.bonus +=1;
           }
           else{
               u.full.normal +=1;
           }
       }
-    }
+    },
+    parseAttendanceFromAll(u,attendance){
+        u.full={normal:0, bonus:0};
+        u.small={normal:0, bonus:0};
+        u.unverified = 0;
+        for (var b = 0; b < attendance.length; b++){
+          if (attendance[b].user === u._id){
+            var submission = attendance[b];
+            if (!submission.verified){
+                u.unverified +=1;
+            }
+            else if (submission.smallgroup && !submission.bonusDay){
+                u.small.normal +=1;
+            }
+            else if (submission.smallgroup){
+                u.small.bonus +=1;
+            }
+            else if(submission.bonusDay){
+                u.full.bonus +=1;
+            }
+            else{
+                u.full.normal +=1;
+            }
+          }
+        }
+      },
   };
 
   return Util;

@@ -12,7 +12,7 @@ exports.index = function(req, res) {
   	"current": true
   }, function (err, classYear) {
   	if(err) { return handleError(res, err); }
-   	return res.json(200, classYear);
+   	return res.status(200).json(classYear);
   });
 };
 
@@ -35,7 +35,7 @@ exports.countBonusDays = function(req, res) {
     if(err) { return handleError(res, err); }
     if (!classYear) return res.send(404);
     var bonusDays  = classYear.dayCodes.reduce(function(previousValue, currentValue) {
-      return previousValue + (currentValue.bonusDay? 1 : 0); // Add 1 to the count for each bonusday in classYear.dayCodes
+      return previousValue + (currentValue.bonusDay ? 1 : 0); // Add 1 to the count for each bonusday in classYear.dayCodes
     }, 0);
     res.json(bonusDays);
   });
@@ -173,5 +173,5 @@ function handleError(res, err) {
 }
 
 function validationError(res, err) {
-  return res.json(422, err);
+  return res.status(422).json(err);
 };

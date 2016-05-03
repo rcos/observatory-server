@@ -22,26 +22,32 @@
                 </div>
             </div>
             <div class='sidebar-text box'>
-              <div class='row'> <div class='col-xs-3'>  <a href='http://github.com/{{user.githubProfile}}'>Github</a> </div>
-                <div ng-show='canEdit()' class='col-xs-9 text-right'>
-                    <div class="btn-group">
-                        <button type="button" class='btn btn-default btn-sm' ng-click='editGithub()'>Edit</button>
-                        <button type="button" class='btn btn-default btn-sm' ng-click='saveGithub()'>Save</button>
-                    </div>
-                </div> </div>
-                <github></github>
-                <br/>
-                {{user.email}}
-        </div>
-            <div ng-show='canEdit() && user.active'>
-                 <button class="btn btn-primary" ng-click="pastUser(user)" type="button">Make Past User</button>
-            </div>
-            <div ng-show='canEdit() && !user.active'>
-                 <button class="btn btn-primary" ng-click="currentUser(user)" type="button">Make Current User</button>
+
+              <div class='row'>
+                <div class='col-xs-12'>
+                  <p>
+                  <i class="fa fa-github"></i> <a target="_blank" href='http://github.com/{{user.githubProfile}}'>{{ user.githubProfile }}</a>
+                  </p>
+                </div>
+              </div>
+              <div class='row'>
+                <div class='col-xs-12'>
+                  <i class="fa fa-envelope"></i>
+                  <a ng-href="mailto:{{user.email}}">{{ user.email }}</a>
+                </div>
+              </div>
+              <div class='row'>
+                <div class='col-xs-12'>
+                  <div ng-show='canEdit()'>
+                    <br/>
+                    <a ng-href="/settings" class="btn btn-primary" type="button">Edit Profile</a>
+                  </div>
+                </div>
+              </div>
             </div>
         </div>
         <div class='col-md-6'>
-        <div ng-show="!user.tech.length">No tags yet</div>
+            <div ng-show="!user.tech.length">Add a new tech tag: </div>
             <div class='tech-boxes'>
                 <div ng-repeat="tech in user.tech track by $index">
                     {{tech}}
@@ -56,14 +62,8 @@
             <div ng-show="canEdit() || user.bio" class='content-box'>
                 <div class='content-title row'>
                     <div class='col-xs-6'>Bio</div>
-                    <div ng-show='canEdit()' class='col-xs-6 text-right'>
-                        <div class="btn-group" style='margin-bottom:8px'>
-                            <button type="button" class='btn btn-default btn-sm' ng-click='editBio()'>Edit</button>
-                            <button type="button" class='btn btn-default btn-sm' ng-click='saveBio()'>Save</button>
-                        </div>
-                    </div>
                 </div>
-                <bio></bio>
+                <div style="white-space:pre;" btf-markdown="user.bio"></div>
             </div>
             <div class='content-box' ng-repeat='project in projects'>
                 <div class='project row'>

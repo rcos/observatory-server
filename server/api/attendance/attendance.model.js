@@ -53,6 +53,6 @@ var AttendanceSchema = new Schema({
       index: true
     },
 
-});
+},{ timestamps: true});
 
 module.exports = mongoose.model('Attendance', AttendanceSchema);

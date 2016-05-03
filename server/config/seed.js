@@ -21,13 +21,14 @@ var Promise = require('promise');
 var User = require('../api/user/user.model');
 var Project = require('../api/project/project.model');
 var ClassYear = require('../api/classyear/classyear.model')
-
+var Post = require('../api/post/post.model');
 
 // Seed the database with the original sample data
 var seed = function(cb) {
     // load list of users
     var users = require('./seed/users.json');
     var projects = require('./seed/projects.json');
+    var posts = require('./seed/posts.json');
 
     var user = User.remove({}).exec()
         .then(function() {
@@ -57,7 +58,15 @@ var seed = function(cb) {
                 console.log('finished populating class years')
             })
 
-    Promise.all([user, project, classYear]).then(function(res){
+    var post = Post.remove({}).exec()
+        .then(function(){
+            return Post.create(projects)
+        })
+        .then(function() {
+            console.log('finished populating posts')
+        });
+
+    Promise.all([user, project, classYear, post]).then(function(res){
         cb();
     });
 }

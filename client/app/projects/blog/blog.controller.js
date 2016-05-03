@@ -9,7 +9,7 @@ angular.module('observatory3App')
     $scope.user = Auth.getCurrentUser();
     $scope.viewAll = true;
     $scope.semester = "Spring";
-    $scope.year = 2016;
+    $scope.year = "2016";
 
     $scope.userInProject = function() {
         return $scope.isAuthor;
@@ -111,27 +111,41 @@ angular.module('observatory3App')
     };
 
     $scope.decrement = function() {
-        if $scope.semester == "Spring" {
+        if ($scope.semester === "Spring") {
             $scope.semester = "Fall";
-            $scope.year = toString(parseInt($scope.year))--;
+            $scope.year = parseInt($scope.year)-1;
         }
-        else if $scope.semester == "Fall"
+        else if ($scope.semester === "Fall")
             $scope.semester = "Summer";
-        else if $scope.semester == "Summer"
+        else if ($scope.semester === "Summer")
             $scope.semester = "Spring";
     }
 
     $scope.increment = function() {
-        if $scope.semester == "Spring" 
+        if ($scope.semester === "Spring") 
             $scope.semester = "Summer";
-        else if $scope.semester == "Summer"
+        else if ($scope.semester === "Summer") {
             $scope.semester = "Fall";
-        else if $scope.semester == "Fall" {
+        }
+        else if ($scope.semester === "Fall") {
             $scope.semester = "Spring";
-            $scope.year = toString(parseInt($scope.year))++;
+            $scope.year = parseInt($scope.year)+1;
         }
     }
 
-    $scope.load();
+    $scope.filterBySem = function(value) {
+        var dateval = new Date(value.date);
+console.log(value);
+        return ($scope.viewAll ||
+            (($scope.semester === "Spring" &&
+                dateval.getMonth() < 5) ||
+            ($scope.semester === "Summer" &&
+                dateval.getMonth() >= 5 &&
+                dateval.getMonth() < 8) ||
+            ($scope.semester === "Fall" &&
+                dateval.getMonth() >= 8)) &&
+            parseInt($scope.year) === dateval.getFullYear());
+    }
 
+    $scope.load();
   });
