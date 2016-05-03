@@ -6,6 +6,7 @@ var User = require('../user/user.model');
 var multiparty = require('multiparty');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var async = require('async');
 var config = require('../../config/environment');
 
 
@@ -13,7 +14,44 @@ var config = require('../../config/environment');
 exports.index = function(req, res) {
   Project.find({active:true},function (err, projects) {
     if(err) { return handleError(res, err); }
-    return res.json(200, projects);
+    return res.status(200).json(projects);
+  });
+};
+
+// Gets various stats for projects
+exports.stats = function(req, res) {
+  async.parallel([
+        // Count active projects
+        function(callback) {
+          Project.count({active:true}, function (err, aCount) {
+            if (err) return callback(err);
+            callback(null, aCount);
+          });
+        },
+        // Count past projects
+        function(callback) {
+          Project.count({active:false}, function (err, pCount) {
+            if (err) return callback(err);
+            callback(null, pCount);
+          });
+        },
+      ],
+      function(err, results){
+        if (err) {
+          console.log(err);
+          return res.send(400);
+        }
+
+        if (results == null) {
+          return res.send(400);
+        }
+
+        //results contains [activeProjectCount, pastProjectCount]
+        var stats = {};
+        stats.activeProjects = results[0] || 0;
+        stats.pastProjects = results[1] || 0;
+
+        return res.status(200).send(stats);
   });
 };
 
@@ -21,7 +59,7 @@ exports.index = function(req, res) {
 exports.defaults = function(req, res) {
   Project.find({markedDefault: true}, function (err, projects) {
     if(err) { return handleError(res, err); }
-    return res.json(200, projects);
+    return res.status(200).json(projects);
   });
 };
 
@@ -29,7 +67,7 @@ exports.defaults = function(req, res) {
 exports.indexOld = function(req, res) {
   Project.find({active:false},function (err, projects) {
     if(err) { return handleError(res, err); }
-    return res.json(200, projects);
+    return res.status(200).json(projects);
   });
 };
 
@@ -55,7 +93,7 @@ exports.authors = function(req, res) {
     var projectId = req.params.id;
     User.find({projects: projectId}, 'name email', function(err, authors) {
         if (err) { return handleError(res, err); }
-        return res.json(200, authors);
+        return res.status(200).json(authors);
     });
 }
 
@@ -74,8 +112,8 @@ exports.create = function(req, res) {
         if (user.projects.indexOf(project) !== -1) return;
         user.projects.push(project);
         user.save(function(err) {
-          if (err) return res.json(422, err);
-          return res.json(201, project);
+          if (err) return res.status(422).json(err);
+          return res.status(201).json(project);
         });
       }
     });
@@ -209,12 +247,12 @@ exports.markPast = function(req,res){
             project.update({ active: false }, function(err) {
               if(err) { return handleError(res, err); }
               return res.send(200);
-            });      
+            });
       } else {
         return handleError(res, err);
       }
-    }); 
-  }); 
+    });
+  });
 };
 
 exports.markActive = function(req,res){
@@ -229,11 +267,11 @@ exports.markActive = function(req,res){
             project.update({ active: true }, function(err) {
               if(err) { return handleError(res, err); }
               return res.send(200);
-            });      
+            });
       } else {
         return handleError(res, err);
       }
-    }); 
+    });
   });
 };
 

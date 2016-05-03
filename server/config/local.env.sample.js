@@ -15,6 +15,9 @@ module.exports = {
   GOOGLE_ID:        'app-id',
   GOOGLE_SECRET:    'secret',
 
+  SERVER_ADDRESS: 'http://localhost:9000',
+  SENDGRID_API_KEY: 'YOUR_KEY',
+
   // Control debug level for modules using visionmedia/debug
   DEBUG: ''
 };

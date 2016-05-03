@@ -1,4 +1,3 @@
-
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container developers">
@@ -13,17 +12,21 @@
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
-            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer..." ng-model="searchString">
+            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer..." ng-model="searchString.name" tabindex="1">
           </div>
         </form>
       </div>
       <div class="col-sm-6 text-right">
-        <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
-          Show Current Developers
-        </button>
-        <button type="button" class="btn btn-default" ng-click="changeView('past')" ng-show="!past">
-          Show Past Developers
-        </button>
+        <a ng-href="/users/">
+          <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
+            Show Current Developers
+          </button>
+        </a>
+        <a ng-href="/users/past">
+          <button type="button" class="btn btn-default" ng-show="!past">
+            Show Past Developers
+          </button>
+        </a>
       </div>
     </div>
     <br/>
@@ -34,10 +37,7 @@
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
                   page {{ currentPage + 1 }} of {{ numberOfPages() }}
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
-
-                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all
-                </button>
-
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all</button>
               </span>
               <span ng-hide='numberOfPages() > 1'>
                 <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
@@ -46,13 +46,9 @@
           </div>
       </div>
     </div>
-
-    <div class=row>
-            </br>
-    </div>
     <div class="row image-row">
         <div ng-repeat="user in users | filter:searchString | startFrom:currentPage*pageSize | limitTo:pageSize">
-            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 text-center user-box">
+            <div class="col-md-2 col-sm-3 col-xs-4 text-center user-box">
                 <a href="/users/{{ user._id}}/profile" class="user-avatar">
                     <img class="profile-img img-responsive placeholder-img" ng-src='{{user.avatar}}&s=248px'>
                 </a>
@@ -61,6 +57,24 @@
                 </p>
             </div>
         </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 text-left">
+          <div class="">
+              <span ng-show='numberOfPages() > 1'>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
+                  page {{ currentPage + 1 }} of {{ numberOfPages() }}
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
+
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all</button>
+
+              </span>
+              <span ng-hide='numberOfPages() > 1'>
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
+                </button>
+              </span>
+          </div>
+      </div>
     </div>
 </div>
 

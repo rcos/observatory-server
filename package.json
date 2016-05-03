@@ -4,6 +4,7 @@
   "main": "server/app.js",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "babel-runtime": "^5.8.20",
     "bluebird": "^2.9.34",
     "body-parser": "^1.13.3",
@@ -67,6 +68,7 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-dom-munger": "^3.4.0",
     "grunt-env": "~0.4.1",
+    "grunt-execute": "^0.2.2",
     "grunt-express-server": "^0.5.1",
     "grunt-filerev": "^2.3.1",
     "grunt-google-cdn": "~0.4.0",

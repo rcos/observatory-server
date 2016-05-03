@@ -7,6 +7,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.get('/', controller.index);
+router.get('/stats', controller.stats);
 router.get('/defaults', controller.defaults)
 router.get('/past', controller.indexOld);
 router.get('/:id/authors', controller.authors);

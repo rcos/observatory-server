@@ -4,8 +4,6 @@
   <div class="row">
       <div class="col-xs-12">
         <h3>{{ past ? "Past" : "Active" }} Projects</h3>
-        <br>
-
       </div>
     </div>
     <div class="row">
@@ -13,17 +11,21 @@
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
-            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for project..." ng-model="searchString">
+            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for project..." tabindex="1" ng-model="searchString">
           </div>
         </form>
       </div>
       <div class="col-xs-12 col-sm-8 text-right">
-        <button type="button" class="btn btn-default" ng-click="getCurrentProjects()" ng-show="past">
-          Show Current Projects
-        </button>
-        <button type="button" class="btn btn-default" ng-click="getPastProjects()" ng-show="!past">
-          Show Past Projects
-        </button>
+        <a ng-href="/projects/">
+          <button type="button" class="btn btn-default" ng-click="getCurrentProjects()" ng-show="past">
+            Show Current Projects
+          </button>
+        </a>
+        <a ng-href="/projects/past">
+          <button type="button" class="btn btn-default" ng-click="getPastProjects()" ng-show="!past">
+            Show Past Projects
+          </button>
+        </a>
         <button type="button" class="btn btn-primary" ng-click="addProject()" ng-show="user">
           Add a Project
         </button>
@@ -36,9 +38,9 @@
         <div class="extra-content" >
           <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a> </h2>
           <ul class="project-info">
-            <li><a href="{{project.websiteUrl}}">Website</a></li>
+            <li><a href="{{project.websiteUrl}}" target="_blank">Website</a></li>
             <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
-            <li><a href="{{project.repositories[0]}}">Repository</a></li>
+            <li><a href="{{project.repositories[0]}}" target="_blank">Repository</a></li>
           </ul>
           <div class="clear"></div>
           <div id="description" btf-markdown="project.description"></div>
@@ -46,5 +48,6 @@
       </div>
     </div>
   </div>
+</div>
 
 <div ng-include="'components/footer/footer.html'"></div>

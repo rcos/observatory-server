@@ -29,20 +29,19 @@ router.post('/token', function(req, res, next){
   }
 	User.findOne({
 		passwordResetToken: req.body.token
-	}, function(err, user){
+	}, { passwordResetExpiration: 1 }, function(err, user){
     if (!user || err){
-        res.send(401, "Invalid reset token");
-        return;
+        return res.status(401).json({error: "Invalid reset token"});
     }
 
-	if (new Date() < user.passwordResetExpiration){
-    var token = signToken(user._id, user.role);
-      res.json({token: token});
+    if (new Date() < user.passwordResetExpiration){
+      var token = signToken(user._id, user.role);
+      return res.status(200).json({token: token});
     }else{
       // TODO make a page
-      res.send(401, "Password reset token expired");
+      return res.status(401).json({error: "Password reset token expired"});
     }
-	});
+  });
 });
 
 export default router;

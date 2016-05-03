@@ -5,12 +5,6 @@ function UserResource($resource) {
   return $resource('/api/users/:id/:controller', {
     id: '@_id'
   }, {
-    deleteUser: {
-      method: 'PUT',
-      params: {
-        controller:'removeUser'
-      }
-    },
     pastUser: {
       method: 'PUT',
       params: {
@@ -35,6 +29,9 @@ function UserResource($resource) {
         id:'me'
       }
     },
+    update: {
+      method: 'PUT',
+    },
     info: {
       method: 'GET',
     },
@@ -50,12 +47,11 @@ function UserResource($resource) {
       params: {
         controller:'stats'
       },
-      isArray:true
     },
     allstats: {
       method: 'GET',
       params: {
-        controller:'allstats'
+        controller:'adminstats'
       },
       isArray:true
     },

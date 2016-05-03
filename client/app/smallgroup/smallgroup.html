@@ -1,6 +1,6 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div ng-show='loaded && !smallgroup && isMentor()' class='container smallgroup'>
+<div class='container smallgroup' ng-show='loaded && !smallgroup && isMentor()'>
   <div class="row">
     <div class="col-sm-12">
       <h3> You do not have a small group </h3>
@@ -8,7 +8,7 @@
     </div>
   </div>
 </div>
-<div ng-show='loaded && !smallgroup && !isMentor()' class='container smallgroup'>
+<div class='container smallgroup' ng-show='loaded && !smallgroup && !isMentor()'>
   <div class="row">
     <div class="col-sm-12 text-center">
       <h2> You do not have a small group yet.</h2>
@@ -17,12 +17,12 @@
   </div>
 </div>
 
-<div ng-show="smallgroup" class="container smallgroup">
+<div class="container smallgroup" ng-show="smallgroup">
   <div class="row">
     <div class="col-sm-12" ng-hide="edittingSmallGroupName">
       <h2 class="group-name">
         Small Group: {{smallgroup.name}}
-        <i class="glyphicon glyphicon-edit edit-name" aria-hidden="true" ng-click="editSmallGroupName()" ng-show="isMentor()"></i>
+        <i class="glyphicon glyphicon-edit edit-name" aria-hidden="true" ng-click="editSmallGroupName()" ng-show="isMentor() && !showAttendanceCode"></i>
       </h2>
     </div>
     <div class="col-sm-4" ng-show="edittingSmallGroupName">
@@ -40,12 +40,12 @@
       </form>
     </div>
   </div>
-  <div class="info" ng-hide='showAttendanceCodeFull'>
+  <div class="info" ng-hide='showAttendanceCode'>
     <div class="row attendance" ng-show="isMentor()">
       <div class="col-sm-12">
-        <p ng-show='showAttendanceCode' >The Attendance Code is {{smallgroup.dayCode}}</p>
-        <button ng-hide='showAttendanceCode' class='btn btn-primary' ng-show='isMentor()' ng-click='generateAttendanceCode()'> Generate Attendance Code </button>
-        <button ng-show='showAttendanceCode' class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendanceCodeFull = true;'> Show Code Full Screen </button>
+        <p ng-show='dayCode' >The Attendance Code is {{dayCode}}</p>
+        <button ng-hide='dayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='generateAttendanceCode()'> Generate Attendance Code </button>
+        <button ng-show='dayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendanceCode = true;'> Show Code Full Screen </button>
         <div ng-show='isPresent()'>
           Your attendance has been taken!
         </div>
@@ -128,16 +128,21 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class='row big-attendance' ng-show='showAttendanceCodeFull' ng-click='showAttendanceCodeFull = false;'>
-    <div class="col-sm-12 text-center">
-      <div class='small-text'>
-        The Attendance Code is...
+<div class="container-fluid smallgroup" ng-show='showAttendanceCode'>
+  <div class='big-attendance text-center' ng-click='showAttendanceCode=false;'>
+      <div class="row">
+          <div class="col-sm-12">
+              <div class='small-text'>
+                  The Attendance Code is...
+              </div>
+              <div class='big-text'>
+                  {{ dayCode }}
+              </div>
+          </div>
       </div>
-      <div class='big-text'>
-        {{smallgroup.dayCode}}
-      </div>
-    </div>
   </div>
 </div>
+
 <div ng-include="'components/footer/footer.html'"></div>

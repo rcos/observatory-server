@@ -2,8 +2,6 @@
 
 angular.module('observatory3App')
   .controller('AttendCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify, focus) {
-    // put text focus on day code
-    focus('dayCodeInput');
     $scope.sortorder = '-datetime';
 
     var load = function(){

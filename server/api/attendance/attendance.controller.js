@@ -62,7 +62,7 @@ var checkAttendanceForDate = function(user, classYear, date, cb){
 };
 
 var setAttendance = function(classYearId, userId, date, code, needsVerification, bonusDay, smallgroup,cb){
-  Attendance.create({
+  return Attendance.create({
     classYear: classYearId,
     user: userId,
 
@@ -81,10 +81,15 @@ var setAttendance = function(classYearId, userId, date, code, needsVerification,
 // Restricted to mentors
 // router.get('/', auth.isAuthenticated(), controller.index);
 exports.index = function(req, res) {
-  Attendance.find(function (err, attendance) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, attendance);
-  });
+    return ClassYear.getCurrent(function(err, classYear){
+      if (err) {return handleError(err)}
+      var classYearId = classYear._id;
+
+      return Attendance.find({classYear:classYearId}).exec(function (err, attendance) {
+        if(err) { return handleError(res, err); }
+        return res.json(200, attendance);
+      });
+    });
 };
 // *******************************************************
 
@@ -354,7 +359,7 @@ exports.attend = function(req,res){
             });
           }
           // Small group & bonus day
-          else if (smallgroup.bonuDayCode === code){
+          else if (smallgroup.bonusDayCode === code){
             // Check if the user already submitted a small group & bonus attendance
             if (submitted.smallBonus){
               // if it is already submitted, return
@@ -365,6 +370,9 @@ exports.attend = function(req,res){
               if (err) {return handleError(err)}
               return res.send(200, {'type':'Small group bonus attendance', 'unverified': needsVerification});
             });
+          }
+          else {
+            return res.send(400, 'Incorrect Day Code!');
           }
         });
       }

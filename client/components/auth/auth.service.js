@@ -174,7 +174,6 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
      * @return {Object|Promise}
      */
     pastUser: function(user,callback){
-      console.log("user",user)
       return User.pastUser({ id: user._id }, {
       }, function(user) {
         return safeCb(callback)(user);
@@ -192,7 +191,6 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
      * @return {Object|Promise}
      */
     currentUser: function(user,callback){
-      console.log("user",user)
       return User.currentUser({ id: user._id }, {
       }, function(user) {
         return safeCb(callback)(user);
@@ -204,17 +202,16 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
     /**
     * Deletes a user
     *
-    * @param {Function} OPTIONAL callback NEED userinfo
+    * @param {String} pass
     * @return {Object} user
     */
-   deleteUser: function(currpass,callback){
-     return User.deleteUser({ id: currentUser._id }, {
-       oldPassword: currpass
-     }, function(user) {
-       return safeCb(callback)(user);
-     }, function(err) {
-       return safeCb(callback)(err);
-     }).$promise;
+   deleteUser: function(pass){
+     return  $http({
+       url: '/api/users/me',
+       method: 'DELETE',
+       data: {password: pass},
+       headers: {'Content-Type': 'application/json;charset=utf-8'}
+     });
    },
 
     /**
@@ -308,7 +305,7 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
         return $http.post('/api/users/resetPassword', {
             email: email
         }).then(res => {
-          return safeCb(callback)(res);
+          return safeCb(callback)(null, res);
         }).catch(err => {
           return safeCb(callback)(err);
         });
