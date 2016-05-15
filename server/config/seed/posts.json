@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "5738cedfffd7ec3b75f3349c",
+    "title": "My awesome post",
+    "content": "This is great!",
+    "projectId": "5738cebdffd7ec3b75f3349b",
+    "author": "5738ce217328682a75cc0a79",
+    "date": "2016-05-15T19:32:47.647Z"
+  },
+  {
+    "_id": "5738cefdffd7ec3b75f3349d",
+    "title": "Also noted this",
+    "content": "_**in markdown**_",
+    "projectId": "5738cebdffd7ec3b75f3349b",
+    "author": "5738ce217328682a75cc0a79",
+    "date": "2016-05-15T19:33:17.838Z"
+  },
+  {
+    "_id": "5738cf0effd7ec3b75f3349e",
+    "title": "*And this is fun*",
+    "content": "To use **markdown**",
+    "projectId": "5738cebdffd7ec3b75f3349b",
+    "author": "5738ce217328682a75cc0a79",
+    "date": "2016-05-15T19:33:34.946Z"
+  }
+]

@@ -13,6 +13,65 @@
     "repositoryType": "github",
     "githubUsername": "aosdict",
     "githubProjectName": "yacs"
+},
+{
+    "_id": "5738cebdffd7ec3b75f3349b",
+    "name": "smoothie",
+    "githubUsername": "joewalnes",
+    "githubProjectName": "smoothie",
+    "websiteUrl": "http:\/\/smoothiecharts.org",
+    "description": "Smoothie Charts: smooooooth JavaScript charts for realtime streaming data",
+    "tech": [
+
+    ],
+    "markedDefault": false,
+    "active": true,
+    "photos": [
+
+    ],
+    "repositories": [
+      "https:\/\/github.com\/joewalnes\/smoothie"
+    ],
+    "repositoryType": "github"
+},
+{
+    "_id": "5738cfa6ffd7ec3b75f3349f",
+    "githubUsername": "raywenderlich",
+    "githubProjectName": "swift-algorithm-club",
+    "name": "swift-algorithm-club",
+    "websiteUrl": "https:\/\/github.com\/raywenderlich\/swift-algorithm-club",
+    "description": "Algorithms and data structures in Swift, with explanations!",
+    "tech": [
+
+    ],
+    "markedDefault": false,
+    "active": true,
+    "photos": [
+
+    ],
+    "repositories": [
+      "https:\/\/github.com\/raywenderlich\/swift-algorithm-club"
+    ],
+    "repositoryType": "github"
+},
+{
+    "_id": "5738cff4ffd7ec3b75f334a0",
+    "githubUsername": "bbriggs",
+    "githubProjectName": "legobot",
+    "name": "Legobot",
+    "websiteUrl": "https:\/\/github.com\/bbriggs\/Legobot",
+    "description": "Legobot is a platform which makes interactive IRC bots easy to build. The bot provides connectivity and the ability to listen and respond to users. The bot provides user functions a usable \"message\" object when needed, eliminating the need to parse raw IRC strings.",
+    "tech": [
+
+    ],
+    "markedDefault": false,
+    "active": true,
+    "photos": [
+
+    ],
+    "repositories": [
+      "https:\/\/github.com\/bbriggs\/Legobot"
+    ],
+    "repositoryType": "github"
 }
 ]
-
