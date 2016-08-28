@@ -1,0 +1,19 @@
+[{
+  "_id": "5738d047ffd7ec3b75f334a1",
+  "name": "New Small Group",
+  "classYear": "5738ce217328682a75cc0a7d",
+  "dayCodes": [
+    {
+      "date": "2016-05-15T19:38:50.235Z",
+      "code": "GDYK9P",
+      "bonusDay": false
+    }
+  ],
+  "students": [
+    "5738ce217328682a75cc0a78",
+    "5738ce217328682a75cc0a7c",
+    "5738ce217328682a75cc0a7a",
+    "5738ce217328682a75cc0a79"
+  ],
+  "enabled": true
+}]

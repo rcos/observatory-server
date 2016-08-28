@@ -20,6 +20,8 @@ var Promise = require('promise');
 
 var User = require('../api/user/user.model');
 var Project = require('../api/project/project.model');
+var Post = require('../api/post/post.model');
+var Smallgroup = require('../api/smallgroup/smallgroup.model');
 var ClassYear = require('../api/classyear/classyear.model')
 
 
@@ -28,6 +30,8 @@ var seed = function(cb) {
     // load list of users
     var users = require('./seed/users.json');
     var projects = require('./seed/projects.json');
+    var posts = require('./seed/posts.json');
+    var smallgroups = require('./seed/smallgroups.json');
 
     var user = User.remove({}).exec()
         .then(function() {
@@ -45,19 +49,43 @@ var seed = function(cb) {
             console.log('finished populating projects')
         });
 
+    var post = Post.remove({}).exec()
+        .then(function(){
+            return Post.create(posts)
+        })
+        .then(function() {
+            console.log('finished populating posts')
+        });
+
+    var smallgroup = Smallgroup.remove({}).exec()
+        .then(function(){
+            return Smallgroup.create(smallgroups)
+        })
+        .then(function() {
+            console.log('finished populating smallgroups')
+        });
+
     var classYear = ClassYear.remove({}).exec()
         .then(function(){
             return ClassYear.create({
-                semester: '1970fall',
+                semester: '2016Spring',
                 current: true,
-                displayURP: false
+                displayURP: false,
+                dayCodes: [
+                  {
+                    date: "2016-05-15T04:00:00.000Z",
+                    code: "1W2O8J",
+                    bonusDay: false
+                  }
+                ],
+
             })
         })
         .then(function() {
                 console.log('finished populating class years')
             })
 
-    Promise.all([user, project, classYear]).then(function(res){
+    Promise.all([user, project, post, smallgroup, classYear]).then(function(res){
         cb();
     });
 }
