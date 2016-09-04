@@ -8,23 +8,23 @@
         </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-6">
+      <div class="col-xs-9 col-sm-6">
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
-            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer..." ng-model="searchString.name" tabindex="1">
+            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer" ng-model="searchString.name" tabindex="1">
           </div>
         </form>
       </div>
-      <div class="col-sm-6 text-right">
+      <div class="col-xs-3 col-sm-6">
         <a ng-href="/users/">
           <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
-            Show Current Developers
+            Current
           </button>
         </a>
         <a ng-href="/users/past">
           <button type="button" class="btn btn-default" ng-show="!past">
-            Show Past Developers
+            Past
           </button>
         </a>
       </div>
