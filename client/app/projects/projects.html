@@ -7,23 +7,23 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-4">
+      <div class="col-xs-9 col-sm-4">
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
-            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for project..." tabindex="1" ng-model="searchString">
+            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search projects" tabindex="1" ng-model="searchString">
           </div>
         </form>
       </div>
-      <div class="col-xs-12 col-sm-8 text-right">
+      <div class="col-xs-3 col-sm-8 text-right">
         <a ng-href="/projects/">
           <button type="button" class="btn btn-default" ng-click="getCurrentProjects()" ng-show="past">
-            Show Current Projects
+            Current
           </button>
         </a>
         <a ng-href="/projects/past">
           <button type="button" class="btn btn-default" ng-click="getPastProjects()" ng-show="!past">
-            Show Past Projects
+            Past
           </button>
         </a>
         <button type="button" class="btn btn-primary" ng-click="addProject()" ng-show="user">
