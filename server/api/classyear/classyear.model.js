@@ -8,6 +8,12 @@ var ClassSchema = new Schema({
     type: String,
     index: true
   },
+  year: {
+    type: Number
+  },
+  season: {
+    type: String
+  },
   current: {
     type: Boolean,
     default: false,

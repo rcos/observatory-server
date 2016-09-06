@@ -12,14 +12,19 @@
                         <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
                         ng-class="{ 'has-success': form.semester.$valid && (submitted || form.semester.$dirty),
                         'has-error': form.semester.$invalid && (submitted || form.semester.$dirty) }">
-                        <input type="text" class="form-control" id="semester" placeholder="{{todaySemester.semester}}" ng-model="newSemester.semester">
+                        <select class="form-control" ng-model="newSemester.semester" ng-options="o as o for o in semesterOptions" required></select>
+
                         </div>
                         <div class="form-group"  ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
                             ng-class="{ 'has-success': form.year.$valid && (submitted || form.year.$dirty),
                             'has-error': form.year.$invalid && (submitted || form.year.$dirty) }">
-                            <input type="text" class="form-control" id="year" placeholder="{{todaySemester.year}}" ng-model="newSemester.year">
+                            <input type="Number" name="year" class="form-control" id="year" ng-model="newSemester.year" required>
                         </div>
                         <button type="submit" class="btn btn-default">Create new semester</button>
+                        <p class="help-block" ng-show="form.year.$error && (submitted || form.year.$dirty)">
+                        A year is required
+                        </p>
+
                     </form>
                 </div>
             </div>

@@ -34,6 +34,9 @@ module.exports = function(config) {
       'client/bower_components/angular-markdown-directive/markdown.js',
       'client/bower_components/angular-notify/dist/angular-notify.js',
       'client/bower_components/github.commits.widget/js/github.commits.widget.js',
+      'client/bower_components/pdfjs-dist/build/pdf.js',
+      'client/bower_components/pdfjs-dist/build/pdf.worker.js',
+      'client/bower_components/angular-pdf/dist/angular-pdf.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'node_modules/socket.io-client/socket.io.js',

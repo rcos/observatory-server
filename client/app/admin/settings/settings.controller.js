@@ -41,42 +41,31 @@ angular.module('observatory3App')
         var today = new Date();
         var semester = '';
         if (today.getMonth() < 5){
-            semester = 'spring';
+            semester = 'Spring';
         }
         else if (today.getMonth() < 8){
-            semester = 'summer';
+            semester = 'Summer';
         }
         else{
-            semester = 'fall';
+            semester = 'Fall';
         }
-        return {year: String(today.getFullYear()), semester: semester};
+        return {year: today.getFullYear(), semester: semester};
     };
 
     $scope.createNewSemester = function(form){
         $scope.submitted = true;
-        var thisSemester = '';
-        if ($scope.newSemester.semester !== ''){
-            thisSemester += $scope.newSemester.semester;
-        }
-        else{
-            thisSemester += $scope.todaySemester.semester;
-        }
-        if (thisSemester !== ''){
-          thisSemester += ' ';
-        }
-        if ($scope.newSemester.year !== ''){
-            thisSemester += $scope.newSemester.year;
-        }
-        else{
-            thisSemester += $scope.todaySemester.year;
-        }
+        var thisSemester = $scope.newSemester.semester + ' ' + String($scope.newSemester.year);
+        $scope.submitted = true;
+
         if(form.$valid) {
             $http.post('/api/classyear/', {
                 semester: thisSemester
             }).success(function(){
                 updateClassYear();
-                $scope.newSemester = {year:'', semester:''};
+                $scope.newSemester = getSemesterToday();
                 $scope.showNewSemester = false;
+                $scope.submitted = false;
+
             })
             .error(function(err){
                 console.error('Error creating new semester', err);
@@ -84,8 +73,8 @@ angular.module('observatory3App')
         }
     };
 
-    $scope.todaySemester = getSemesterToday();
-    $scope.newSemester = {year:'', semester:''};
+    $scope.semesterOptions = ["Spring" , "Summer", "Fall"];
+    $scope.newSemester = getSemesterToday();
     updateClassYear();
 
 });
