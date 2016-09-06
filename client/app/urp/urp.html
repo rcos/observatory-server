@@ -1,0 +1,76 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container urp">
+  <div class="row">
+    <div class="col-sm-12 text-left">
+      <h2>URP Form</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 text-left">
+      <h3>Review Data</h3>
+      <p>All fields are required</p>
+      <form class="form-inline" name="form" ng-submit="createURP(form)" novalidate>
+        <table class="table table-hover">
+          <tr>
+              <td class="text-right label-width">Student name</td>
+              <td><input class="form-control text-width" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.name.$valid && (submitted || form.name.$dirty),
+              'has-error': form.name.$invalid && (submitted || form.name.$dirty) }" type="text" ng-model="data.name" name="name" required/></td>
+          </tr>
+          <tr>
+              <td class="text-right label-width">Date of Birth</td>
+              <td class="input-group">
+                <input name="DOB" type="text" class="form-control" uib-datepicker-popup="MM/dd/yy" ng-model="data.DOB" is-open="DOBopen" required/>
+
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="DOBopen = !DOBopen"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </td>
+          </tr>
+          <tr>
+              <td class="text-right label-width">Email</td>
+              <td><input class="form-control text-width" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.email.$valid && (submitted || form.email.$dirty),
+              'has-error': form.email.$invalid && (submitted || form.email.$dirty) }" type="text" ng-model="data.email" name="email" required/></td>
+          </tr>
+          <tr>
+              <td class="text-right label-width">RIN #</td>
+              <td><input class="form-control text-width" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.rin.$valid && (submitted || form.rin.$dirty),
+              'has-error': form.rin.$invalid && (submitted || form.rin.$dirty) }" type="text" ng-model="data.rin" name="rin" required/></td>
+          </tr>
+          <tr>
+              <td class="text-right label-width">Degree Program</td>
+              <td><input class="form-control text-width" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.degree.$valid && (submitted || form.degree.$dirty),
+              'has-error': form.degree.$invalid && (submitted || form.degree.$dirty) }" type="text" ng-model="data.degree" name="degree" required/></td>
+          </tr>
+          <tr>
+              <td class="text-right label-width">Class Year</td>
+              <td>
+                <select class="form-control" ng-model="data.year" ng-options="o as o for o in yearOptions" required></select>
+              </td>
+          </tr>
+          <tr>
+              <td class="text-right label-width">Semester</td>
+              <td>
+                <select class="form-control" ng-model="data.semester.season" ng-options="o as o for o in semesterOptions" required></select>
+
+                <div class="form-group"  ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                    ng-class="{ 'has-success': form.semesteryear.$valid && (submitted || form.semesteryear.$dirty),
+                    'has-error': form.semesteryear.$invalid && (submitted || form.semesteryear.$dirty) }">
+                    <input type="Number" name="semesteryear" class="form-control" ng-model="data.semester.year" required>
+                </div>
+          </tr>
+          <tr>
+              <td class="text-right label-width">RCOS Style</td>
+              <td>
+                <select class="form-control" ng-model="data.rcosStyle" ng-options="o as o for o in rcosStyleOptions" required></select>
+              </td>
+          </tr>
+      </table>
+    </form>
+
+    </div>
+  </div>
+
+</div>
+
+<div ng-include="'components/footer/footer.html'"></div>
