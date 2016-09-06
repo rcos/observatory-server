@@ -7,20 +7,27 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-6 text-left">
+    <div class="col-md-6 text-left">
       <h3>Review Data</h3>
       <p>All fields are required</p>
       <form class="form-inline" name="form" ng-submit="createURP(form)" novalidate>
         <table class="table table-hover">
           <tr>
               <td class="text-right label-width">Student name</td>
-              <td><input class="form-control text-width" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.name.$valid && (submitted || form.name.$dirty),
-              'has-error': form.name.$invalid && (submitted || form.name.$dirty) }" type="text" ng-model="data.name" name="name" required/></td>
+              <td
+                ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.name.$valid && (submitted || form.name.$dirty),
+                'has-error': form.name.$invalid && (submitted || form.name.$dirty) }">
+
+                <input class="form-control text-width" type="text" ng-model="data.name" name="name" required/>
+              </td>
           </tr>
           <tr>
               <td class="text-right label-width">Date of Birth</td>
-              <td class="input-group">
-                <input name="DOB" type="text" class="form-control" uib-datepicker-popup="MM/dd/yy" ng-model="data.DOB" is-open="DOBopen" required/>
+              <td class="input-group"
+                ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.DOB.$valid && (submitted || form.DOB.$dirty),
+                'has-error': form.DOB.$invalid && (submitted || form.DOB.$dirty) }">
+
+                <input name="DOB" type="text" class="form-control" placeholder = "09/01/95" uib-datepicker-popup="MM/dd/yy" init-date="initDate" ng-model="data.DOB" is-open="DOBopen" required/>
 
                 <span class="input-group-btn">
                   <button type="button" class="btn btn-default" ng-click="DOBopen = !DOBopen"><i class="glyphicon glyphicon-calendar"></i></button>
@@ -29,23 +36,35 @@
           </tr>
           <tr>
               <td class="text-right label-width">Email</td>
-              <td><input class="form-control text-width" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.email.$valid && (submitted || form.email.$dirty),
-              'has-error': form.email.$invalid && (submitted || form.email.$dirty) }" type="text" ng-model="data.email" name="email" required/></td>
+              <td
+              ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.email.$valid && (submitted || form.email.$dirty),
+              'has-error': form.email.$invalid && (submitted || form.email.$dirty) }" >
+
+              <input class="form-control text-width" type="email" ng-model="data.email" name="email" required/></td>
           </tr>
           <tr>
               <td class="text-right label-width">RIN #</td>
-              <td><input class="form-control text-width" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.rin.$valid && (submitted || form.rin.$dirty),
-              'has-error': form.rin.$invalid && (submitted || form.rin.$dirty) }" type="text" ng-model="data.rin" name="rin" required/></td>
+              <td
+               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.rin.$valid && (submitted || form.rin.$dirty),
+               'has-error': form.rin.$invalid && (submitted || form.rin.$dirty) }" >
+
+                <input class="form-control text-width" type="number" placeholder="660900000" ng-model="data.rin" name="rin" required/></td>
           </tr>
           <tr>
               <td class="text-right label-width">Degree Program</td>
-              <td><input class="form-control text-width" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.degree.$valid && (submitted || form.degree.$dirty),
-              'has-error': form.degree.$invalid && (submitted || form.degree.$dirty) }" type="text" ng-model="data.degree" name="degree" required/></td>
+              <td
+                ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.degree.$valid && (submitted || form.degree.$dirty),
+                'has-error': form.degree.$invalid && (submitted || form.degree.$dirty) }" >
+
+              <input class="form-control text-width" type="text" placeholder="CSCI" ng-model="data.degree" name="degree" required/></td>
           </tr>
           <tr>
               <td class="text-right label-width">Class Year</td>
-              <td>
-                <select class="form-control" ng-model="data.year" ng-options="o as o for o in yearOptions" required></select>
+              <td
+                ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.year.$valid && (submitted || form.year.$dirty),
+                'has-error': form.year.$invalid && (submitted || form.year.$dirty) }" >
+
+                <select class="form-control" name="year" ng-model="data.year" ng-options="o as o for o in yearOptions" required></select>
               </td>
           </tr>
           <tr>
@@ -61,12 +80,29 @@
           </tr>
           <tr>
               <td class="text-right label-width">RCOS Style</td>
-              <td>
-                <select class="form-control" ng-model="data.rcosStyle" ng-options="o as o for o in rcosStyleOptions" required></select>
+              <td
+                ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.style.$valid && (submitted || form.style.$dirty),
+                'has-error': form.style.$invalid && (submitted || form.style.$dirty) }" >
+
+                <select class="form-control" name="style" ng-model="data.rcosStyle" ng-options="o as o for o in rcosStyleOptions" required></select>
               </td>
           </tr>
       </table>
+
+      <p>Project Description & timeline</p>
+      <div ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.description.$valid && (submitted || form.description.$dirty),
+                      'has-error': form.description.$invalid && (submitted || form.description.$dirty) }" >
+
+        <textarea class="textarea-large"
+          ng-model="data.description" name="description"
+          required>
+        </textarea>
+
+      </div>
     </form>
+    <button class="btn btn-lg btn-success" ng-class="{'disabled': !form.$valid}" type="submit">
+        Generate URP
+    </button>
 
     </div>
   </div>

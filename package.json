@@ -30,6 +30,7 @@
     "passport-facebook": "^2.0.0",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
+    "pdffiller": "^0.4.0",
     "promise": "^7.1.1",
     "sendgrid": "^2.0.0",
     "serve-favicon": "^2.3.0",

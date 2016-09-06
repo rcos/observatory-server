@@ -7,10 +7,11 @@ angular.module('observatory3App')
         DOB: '',
         email: '',
         rin: '',
-        degree: 'CSCI',
+        degree: '',
         year: 'Senior',
         semester: {season: '', year: 2016},
-        rcosStyle: 'Credit'
+        rcosStyle: 'Credit',
+        description: ''
       }
       Auth.getCurrentUser(function(user){
         $scope.user = user;
@@ -30,5 +31,5 @@ angular.module('observatory3App')
       $scope.rcosStyleOptions = ["Credit" , "Experience", "Pay"];
       $scope.yearOptions = ["Freshman" , "Sophomore", "Junior", "Senior"];
       $scope.DOBopen = false;
-
+      $scope.initDate = new Date(1995,8,1);
   });
