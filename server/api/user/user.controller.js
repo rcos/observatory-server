@@ -536,11 +536,7 @@ exports.resetPassword = function(req, res){
 
               // email token to user
               email.sendEmail(user.email, "RCOS.IO Forgot Password", sub, '<br>', filter, function(err, success){
-
                 if (err) return res.status(500).json(err);
-        
-
-
                 return res.status(200).json(success);
               });
             });
