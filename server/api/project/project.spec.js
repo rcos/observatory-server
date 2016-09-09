@@ -3,7 +3,7 @@
 var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
-var superagent = superagent.agent();
+var superagent = require('superagent');
 var agent = request.agent(app);
 
 describe('GET /api/projects', function() {
@@ -39,29 +39,30 @@ describe('GET /api/projects/past', function() {
 describe('POST /api/projects/', function() {
   it('Should create a session', function(done) {
     agent.post('/api/users')
-    .send({ username: 'varunkrishrao@yahoo.com', password: '123' })
+    .set({ username: 'admin', password: 'admin','submit':'LOGIN',})
     .end(function(err, res) {
       expect(res.status).to.equal(200);
       done();
     });
   });
-
-  it('should return a 200 for adding a project', function(done){
+  
+   it('should return a 200 for adding a project', function(done){
     agent
       .post('/api/projects/')
-      .send({'name':'Observe','description':'cool project'})
+      .send({'name':'Observe','description':'cool project','websiteUrl': 'https://rcos.io','githubUsername':'rcos','githubProjectName':'Observatory3', 
+})
       .expect(200)
       .end(function(err,res){
          if(err) return done(err);
      });
   });
-
-  it('Should return the current session', function(done) {
+   it('Should return the current session', function(done) {
     agent.get('/api/projects').end(function(err, res) {
       expect(res.status).to.equal(200);
       done();
     });
   });
+
 });
 
 function loginUser(){
