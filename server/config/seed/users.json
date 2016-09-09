@@ -6,7 +6,7 @@
     "github": {
         "login": "test"
     }
-}, 
+},
 {
     "provider": "local",
     "role": "admin",
@@ -22,5 +22,38 @@
     "password": "mentor",
     "github": {
         "login": "mentorguy"
+    }
+},{
+    "provider": "local",
+    "name": "Jane Eagle",
+    "email": "jane@school.edu",
+    "password": "Jane",
+    "github": {
+        "login": "jane"
+    },
+    "_id": "5738ce217328682a75cc0a79"
+},{
+    "provider": "local",
+    "name": "Samuel Door",
+    "email": "door@school.edu",
+    "password": "Samuel",
+    "github": {
+        "login": "doors"
+    }
+},{
+    "provider": "local",
+    "name": "Forest Meer",
+    "email": "meerf@school.edu",
+    "password": "Forest",
+    "github": {
+        "login": "meerf"
+    }
+},{
+    "provider": "local",
+    "name": "Darwin Oswald",
+    "email": "oswald@school.edu",
+    "password": "Darwin",
+    "github": {
+        "login": "darwin"
     }
 }]
