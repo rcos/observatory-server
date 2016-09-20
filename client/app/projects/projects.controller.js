@@ -5,6 +5,7 @@ angular.module('observatory3App')
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
     $scope.loggedIn = false;
+    $scope.sortOrder = 'name';
 
     Auth.isLoggedInAsync(function(loggedIn){
         if (loggedIn){
@@ -12,6 +13,14 @@ angular.module('observatory3App')
             $scope.user = user;
         }
     });
+
+    $scope.toggleSortOrder = function(){
+      if($scope.sortOrder === '-name'){
+        $scope.sortOrder = 'name';
+      }else if($scope.sortOrder === 'name'){
+        $scope.sortOrder = '-name';
+      }
+    };
 
     $scope.getCurrentProjects = function() {
         $http.get('/api/projects').success(function(projects) {
