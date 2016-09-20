@@ -112,10 +112,22 @@ angular.module('observatory3App')
       $http.post('/api/smallgroup/' + $scope.smallgroup._id + '/daycode')
       .success(function (code) {
         $scope.dayCode = code;
+        submitDayCode(code);
         $scope.showAttendanceCode = true;
       });
     }
   };
+
+  var submitDayCode = function(code){
+      var user = Auth.getCurrentUser();
+      $http.post('/api/attendance/attend', {
+        dayCode: code
+      }).success(function(info){
+        updateSmallGroup();
+        }).error(function(err){
+        notify({ message: "Error: " + err, classes: ["alert-danger"] });
+      });
+    };
 
   $scope.isPresent = function () {
     return false;
