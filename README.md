@@ -36,7 +36,7 @@ npm install -g grunt-cli grunt bower
 
     > if you have errors running the above, try:
     > ```
-    > sudo chown $USER -R ~/.npm`
+    > sudo chown -R $USER ~/.npm
     > ```
 
 2. Run `bower install` to install front-end dependencies.
