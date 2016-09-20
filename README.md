@@ -55,6 +55,9 @@ npm install -g grunt-cli grunt bower
 ## Build & preview
 Run `grunt build` for building and `grunt serve` for preview.
 
+## Seeding the Database
+Run `grunt seed` to seed (populate) your mongoDB with dummy data
+
 ## Testing
 Running `npm test` will run the unit tests with karma.
 
