@@ -21,11 +21,11 @@ Key Features Include
 ## Getting Started
 ### Prerequisites
 - [Git](https://git-scm.com/)
-- [Node.js and npm](nodejs.org) Node ^4.2.3, npm ^2.14.7  (nodejs-legacy for debian-based distributions)
+- [Node.js and npm](https://nodejs.org/) Node ^4.2.3, npm ^2.14.7  (nodejs-legacy for debian-based distributions)
 - [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
 
 
-- [Bower](bower.io) (`npm install --global bower`)
+- [Bower](https://bower.io/) (`npm install --global bower`)
 - [Grunt](http://gruntjs.com/) (`npm install --global grunt-cli`)
 ```
 npm install -g grunt-cli grunt bower
