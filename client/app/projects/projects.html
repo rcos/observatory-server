@@ -16,6 +16,10 @@
         </form>
       </div>
       <div class="col-xs-3 col-sm-8 text-right">
+        <button type="button" class="btn btn-default" ng-click="toggleSortOrder()">
+          <i class="fa fa-sort-alpha-desc" aria-hidden="true" ng-show="sortOrder === '-name'"></i>
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true" ng-show="sortOrder === 'name'"></i>
+        </button>
         <a ng-href="/projects/">
           <button type="button" class="btn btn-default" ng-click="getCurrentProjects()" ng-show="past">
             Current
@@ -34,7 +38,7 @@
   <br/>
   <div class="row">
     <div class="col-md-12">
-      <div ng-repeat="project in projects | filter:searchString">
+      <div ng-repeat="project in projects | filter:searchString | orderBy: sortOrder">
         <div class="extra-content" >
           <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a> </h2>
           <ul class="project-info">
