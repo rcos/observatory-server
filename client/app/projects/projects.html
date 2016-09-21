@@ -45,6 +45,7 @@
             <li><a href="{{project.websiteUrl}}" target="_blank">Website</a></li>
             <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
             <li><a href="https://github.com/{{project.githubUsername}}/{{project.githubProjectName}}" target="_blank">Repository</a></li>
+            <li><a ng-show='!isAdmin() && !past' ng-click="markPast(project._id)" > Mark Past Project</a> </li>
           </ul>
           <div class="clear"></div>
           <div id="description" btf-markdown="project.description"></div>

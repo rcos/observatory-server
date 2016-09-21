@@ -60,6 +60,18 @@ angular.module('observatory3App')
       });
     };
 
+    $scope.markPast = function(id){
+        console.log(id);
+        $http.put('api/projects/'+id+'/markPast').success(function(){
+            updateProjects();
+            notify("Project marked as past project");
+        }).error(function(){
+            notify("Project not marked as a past project")
+        });
+    };
+    var updateProjects =function(){
+        $scope.getCurrentProjects();
+    };
     $scope.addRepository = function() {
         $scope.projectToAdd.repositories[$scope.projectToAdd.repositories.length] = "";
     }
