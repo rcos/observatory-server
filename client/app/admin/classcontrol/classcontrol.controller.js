@@ -45,9 +45,18 @@ angular.module('observatory3App')
             bonusDay: bonusDay ? true : false
         }).success(function(dayCode){
             $scope.attendanceCode = dayCode;
+            submitDayCode(dayCode);
         });
     };
-    
+    var submitDayCode = function(code){
+      var user = Auth.getCurrentUser();
+      $http.post('/api/attendance/attend', {
+        dayCode: code
+      }).success(function(info){
+        }).error(function(err){
+        notify({ message: "Error: " + err, classes: ["alert-danger"] });
+      });
+    };
     // Toggles the display of URP form
     $scope.URPDisplay = function(){
         $scope.displayURP = !$scope.displayURP;
