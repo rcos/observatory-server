@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams) {
+.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams,notify) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
     $scope.loggedIn = false;
@@ -13,6 +13,7 @@ angular.module('observatory3App')
             $scope.user = user;
         }
     });
+    $scope.isAdmin = Auth.isAdmin;
 
     $scope.toggleSortOrder = function(){
       if($scope.sortOrder === '-name'){
@@ -61,7 +62,6 @@ angular.module('observatory3App')
     };
 
     $scope.markPast = function(id){
-        console.log(id);
         $http.put('api/projects/'+id+'/markPast').success(function(){
             updateProjects();
             notify("Project marked as past project");
@@ -69,9 +69,11 @@ angular.module('observatory3App')
             notify("Project not marked as a past project")
         });
     };
+
     var updateProjects =function(){
         $scope.getCurrentProjects();
     };
+
     $scope.addRepository = function() {
         $scope.projectToAdd.repositories[$scope.projectToAdd.repositories.length] = "";
     }
