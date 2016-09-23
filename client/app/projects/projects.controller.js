@@ -63,15 +63,20 @@ angular.module('observatory3App')
 
     $scope.markPast = function(id){
         $http.put('api/projects/'+id+'/markPast').success(function(){
-            updateProjects();
+            $scope.getCurrentProjects();
             notify("Project marked as past project");
         }).error(function(){
-            notify("Project not marked as a past project")
+            notify({ message: 'Error trying to mark as a past project', classes: ['alert-danger'] });
         });
     };
 
-    var updateProjects =function(){
-        $scope.getCurrentProjects();
+    $scope.markActive =  function(id){
+        $http.put('api/projects/'+id+'/markActive').success(function(){
+            $scope.getPastProjects();
+            notify("Project marked as a current project");
+        }).error(function(){
+            notify({ message: 'Error trying to mark as current project', classes: ['alert-danger'] });
+        });
     };
 
     $scope.addRepository = function() {
