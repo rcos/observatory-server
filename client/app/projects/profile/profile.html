@@ -7,7 +7,7 @@
     </div>
     <div class="col-sm-9 text-right header-buttons">
       <a class="btn btn-info" href="{{project.websiteUrl}}" title="" target="_blank">Website</a>
-      <a class="btn btn-info" href="{{project.repositories[0]}}" title="" ng-show="project.repositories.length === 1" target="_blank">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
+      <a class="btn btn-info" href="https://github.com/{{project.githubUsername}}/{{project.githubProjectName}}" title="" ng-show="project.repositories.length === 1" target="_blank">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
       <div class="btn-group" uib-dropdown is-open="repositoryMenu" ng-show="project.repositories.length > 1">
         <a class="btn btn-info dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
           Repositories <span class="caret"></span>
