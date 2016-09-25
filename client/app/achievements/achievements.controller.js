@@ -28,8 +28,8 @@ angular.module('observatory3App')
     $scope.submit = function() {
       Achievement.save($scope.achievement, function(){
           $scope.achievement = {};
+          $scope.achievements = Achievement.query();
         });
-      $scope.achievements = Achievement.query();
     };
 
     $scope.isAdmin = Auth.isAdmin();

@@ -13,8 +13,9 @@
   <div class="row text-area">
     <div class="col-md-8">
       <h2>Achievements</h2>
+      <hr>
       <div class="row" ng-repeat="ach in achievements| orderBy: '-date'">
-        <div class="col-sm-12 col-lg-4">
+        <div class="col-sm-12 col-lg-4 text-right">
           <h4>
             {{ ach.date | date: 'mediumDate' }}
           </h4>
@@ -62,7 +63,7 @@
             </div>
             <div class="form-group">
               <label>Date</label>
-              <input type="text" class="form-control" placeholder="2000/01/04" uib-datepicker-popup="yyyy/MM/dd" ng-model="achievement.date" />
+              <input type="text" class="form-control" placeholder="01/24/2001" uib-datepicker-popup="MM/dd/yyyy" ng-model="achievement.date" />
             </div>
             <button type="submit" class="btn btn-default" ng-click="submit()">Submit</button>
           </form>
