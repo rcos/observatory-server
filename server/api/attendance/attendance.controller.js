@@ -290,10 +290,6 @@ exports.presentMe = function(req, res) {
 };
 // *******************************************************
 
-function getUserSmallGroup(){
-
-}
-
 // *******************************************************
 // Mark attendance as present, subject to verification
 // router.post('/attend', auth.isAuthenticated(), controller.attend);
