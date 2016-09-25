@@ -12,6 +12,7 @@ import path from 'path';
 export default function(app) {
 
   // Insert routes below
+  app.use('/api/achievements', require('./api/achievement'));
   app.use('/api/posts', require('./api/post'));
   app.use('/api/projects', require('./api/project'));
   app.use('/api/commits', require('./api/commit'));
