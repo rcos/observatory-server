@@ -23,7 +23,18 @@
     "github": {
         "login": "mentorguy"
     }
-},{
+},
+{
+    "provider": "local",
+    "role": "student",
+    "name": "Student",
+    "email": "student@student.com",
+    "password": "student",
+    "github": {
+        "login": "student"
+    }
+},
+{
     "provider": "local",
     "name": "Jane Eagle",
     "email": "jane@school.edu",

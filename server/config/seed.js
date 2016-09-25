@@ -26,7 +26,7 @@ var ClassYear = require('../api/classyear/classyear.model')
 
 
 // Seed the database with the original sample data
-var seed = function(cb) {
+var seed = function() {
     // load list of users
     var users = require('./seed/users.json');
     var projects = require('./seed/projects.json');
@@ -85,14 +85,12 @@ var seed = function(cb) {
                 console.log('finished populating class years')
             })
 
-    Promise.all([user, project, post, smallgroup, classYear]).then(function(res){
-        cb();
-    });
+    return Promise.all([user, project, post, smallgroup, classYear]);
 }
 
 if (!module.parent) {
     if (args.length == 0) {
-        seed(function(){
+        seed().then(function(){
             db.disconnect()
         });
     }
