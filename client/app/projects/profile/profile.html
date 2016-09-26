@@ -8,6 +8,7 @@
     <div class="col-sm-9 text-right header-buttons">
       <a class="btn btn-info" href="{{project.websiteUrl}}" title="" target="_blank">Website</a>
       <a class="btn btn-info" href="https://github.com/{{project.githubUsername}}/{{project.githubProjectName}}" title="" ng-show="project.repositories.length === 1" target="_blank">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
+      <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
       <div class="btn-group" uib-dropdown is-open="repositoryMenu" ng-show="project.repositories.length > 1">
         <a class="btn btn-info dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
           Repositories <span class="caret"></span>
@@ -16,9 +17,10 @@
           <li><a href="{{repo}}" ng-repeat="repo in project.repositories">{{repo}}<span class="glyphicon glyphicon-menu-right"></span></a></li>
         </ul>
       </div>
-      <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
     </div>
-    <div class="col-sm-9 text-right header-buttons">
+  </div>
+  <div class="row">
+    <div class="col-sm-12 text-right">
       <button type="button" ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</button>
       <button type="button" ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</button>
       <button type="button" ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</button>
@@ -75,12 +77,12 @@
           <div class="row image-row">
             <div ng-repeat="user in authors | orderBy: '+name'">
               <div class="col-xs-4 col-sm-2 col-md-2 text-center user-box">
-                  <a href="/users/{{ user._id}}/profile" class="user-avatar">
-                      <img class="profile-img img-responsive img-circle placeholder-img" ng-src='{{user.avatar}}&s=248px'>
-                  </a>
-                  <p class="user-name">
-                  <a href="/users/{{ user._id}}/profile">{{ user.name }}</a>
-                  </p>
+                <a href="/users/{{ user._id}}/profile" class="user-avatar">
+                  <img class="profile-img img-responsive img-circle placeholder-img" ng-src='{{user.avatar}}&s=248px'>
+                </a>
+                <p class="user-name">
+                <a href="/users/{{ user._id}}/profile">{{ user.name }}</a>
+                </p>
 
               </div>
             </div>
