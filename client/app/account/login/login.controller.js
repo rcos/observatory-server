@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('LoginController', function ($scope, Auth, $location, focus) {
+  .controller('LoginController', function ($scope, Auth, $location, focus, $stateParams) {
     $scope.user = {};
     $scope.errors = {};
 
@@ -16,8 +16,16 @@ angular.module('observatory3App')
           password: $scope.user.password
         })
         .then( function() {
-          // Logged in, redirect to home
-          $location.path('/');
+          if ($stateParams.referrer) {
+            // go to the referral url
+            var ref = $stateParams.referrer;
+            $location.search('referrer', null);
+            $location.path(ref, null);
+          }
+          else {
+            // Logged in, redirect to home
+            $location.path('/');
+          }
         })
         .catch( function(err) {
           $scope.errors.other = err.message;
