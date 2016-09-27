@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams) {
+.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams,notify) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: [""]};
     $scope.loggedIn = false;
@@ -13,6 +13,7 @@ angular.module('observatory3App')
             $scope.user = user;
         }
     });
+    $scope.isAdmin = Auth.isAdmin;
 
     $scope.toggleSortOrder = function(){
       if($scope.sortOrder === '-name'){
@@ -58,6 +59,24 @@ angular.module('observatory3App')
       }, function(){
 
       });
+    };
+
+    $scope.markPast = function(id){
+        $http.put('api/projects/'+id+'/markPast').success(function(){
+            $scope.getCurrentProjects();
+            notify("Project marked as past project");
+        }).error(function(){
+            notify({ message: 'Error trying to mark as a past project', classes: ['alert-danger'] });
+        });
+    };
+
+    $scope.markActive =  function(id){
+        $http.put('api/projects/'+id+'/markActive').success(function(){
+            $scope.getPastProjects();
+            notify("Project marked as a current project");
+        }).error(function(){
+            notify({ message: 'Error trying to mark as current project', classes: ['alert-danger'] });
+        });
     };
 
     $scope.addRepository = function() {
