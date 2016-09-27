@@ -11,34 +11,11 @@
 
 <div class="container">
   <div class="row text-area">
-    <div class="col-md-8">
-      <h2>Achievements</h2>
-      <hr>
-      <div class="row" ng-repeat="ach in achievements| orderBy: '-date'">
-        <div class="col-sm-12 col-lg-4 text-right">
-          <h4>
-            {{ ach.date | date: 'mediumDate' }}
-          </h4>
-        </div>
-        <div class="col-sm-12 col-lg-8">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              {{ ach.title }}
-              <a href="#" class="pull-right" ng-click="delete(ach)" ng-show="isAdmin"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-            </div>
-            <div class="panel-body">
-              <div id="content" class="event-description" btf-markdown="ach.description"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 statistics">
+    <div class="col-md-4 col-md-push-8 side-bar">
       <p>
       <ul class="nav nav-pills nav-stacked">
-          <li role="presentation" ><a href="/">Home</a></li>
-          <li role="presentation" class="active"><a href="#">Achievements</a></li>
+        <li role="presentation" ><a href="/">Home</a></li>
+        <li role="presentation" class="active"><a href="#">Achievements</a></li>
       </ul>
       <p>
       <div class="panel panel-default">
@@ -70,6 +47,28 @@
         </div>
       </div>
       <!-- Add new achievement-->
+    </div>
+    <div class="col-md-8 col-md-pull-4">
+      <h2>Achievements</h2>
+      <hr>
+      <div class="row" ng-repeat="ach in achievements| orderBy: '-date'">
+        <div class="col-sm-12 col-lg-4 text-right">
+          <h4>
+            {{ ach.date | date: 'mediumDate' }}
+          </h4>
+        </div>
+        <div class="col-sm-12 col-lg-8">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              {{ ach.title }}
+              <a href="#" class="pull-right" ng-click="delete(ach)" ng-show="isAdmin"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+            </div>
+            <div class="panel-body">
+              <div id="content" class="event-description" btf-markdown="ach.description"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
