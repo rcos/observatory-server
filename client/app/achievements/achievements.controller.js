@@ -32,5 +32,5 @@ angular.module('observatory3App')
         });
     };
 
-    $scope.isAdmin = Auth.isAdmin();
+    $scope.isAdmin = Auth.isAdmin;
   });
