@@ -35,7 +35,7 @@
             </td>
           </tr>
           <tr>
-              <td class="text-right label-width">Email</td>
+              <td class="text-right label-width">Email (ending with @rpi.edu)</td>
               <td
               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.email.$valid && (submitted || form.email.$dirty),
               'has-error': form.email.$invalid && (submitted || form.email.$dirty) }" >
@@ -51,12 +51,12 @@
                 <input class="form-control text-width" type="number" placeholder="660900000" ng-model="data.rin" name="rin" required/></td>
           </tr>
           <tr>
-              <td class="text-right label-width">Degree Program</td>
+              <td class="text-right label-width">Degree Program(s)</td>
               <td
                 ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.degree.$valid && (submitted || form.degree.$dirty),
                 'has-error': form.degree.$invalid && (submitted || form.degree.$dirty) }" >
 
-              <input class="form-control text-width" type="text" placeholder="CSCI" ng-model="data.degree" name="degree" required/></td>
+              <input class="form-control text-width" type="text" placeholder="CSCI/MATH" ng-model="data.degree" name="degree" required/></td>
           </tr>
           <tr>
               <td class="text-right label-width">Class Year</td>
@@ -87,6 +87,25 @@
                 <select class="form-control" name="style" ng-model="data.rcosStyle" ng-options="o as o for o in rcosStyleOptions" required></select>
               </td>
           </tr>
+          <tr ng-show="data.rcosStyle == 'Credit'">
+              <td class="text-right label-width">Number of Credits (1-4)</td>
+              <td
+                ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.credits.$valid && (submitted || form.credits.$dirty),
+                'has-error': form.credits.$invalid && (submitted || form.credits.$dirty) }" >
+
+                <input class="form-control text-width" type="number" min="1" max="4" placeholder="1" ng-model="data.credits" name="credits" required/></td>
+              </td>
+          </tr>
+          <tr>
+              <td class="text-right label-width">Project Name</td>
+              <td
+                ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="{ 'has-success': form.projectName.$valid && (submitted || form.projectName.$dirty),
+                'has-error': form.projectName.$invalid && (submitted || form.projectName.$dirty) }" >
+
+                <input class="form-control text-width" type="text" placeholder="Observatory" ng-model="data.projectName" name="projectName" required/></td>
+              </td>
+          </tr>
+
       </table>
 
       <p>Project Description & timeline</p>
@@ -99,11 +118,11 @@
         </textarea>
 
       </div>
-    </form>
-    <button class="btn btn-lg btn-success" ng-class="{'disabled': !form.$valid}" type="submit">
-        Generate URP
-    </button>
+      <button class="btn btn-lg btn-success" ng-class="{'disabled': !form.$valid}" type="submit">
+          Generate URP
+      </button>
 
+    </form>
     </div>
   </div>
 

@@ -37,6 +37,9 @@ var all = {
   // Location of image uploads
   imageUploadPath: './uploads/',
 
+  // Location of urp pdfs
+  urpCreationPath: './uploads/urp',
+
   // Should we populate the DB with sample data?
   seedDB: false,
 

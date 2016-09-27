@@ -18,6 +18,11 @@ module.exports = {
   SERVER_ADDRESS: 'http://localhost:9000',
   SENDGRID_API_KEY: 'YOUR_KEY',
 
+  RCOS_Supervisor_Name: "Wes Turner",
+  RCOS_Supervisor_Department: "CSCI",
+  RCOS_Supervisor_Phone: "x8326",
+  RCOS_Supervisor_Email: "turnewe2@rpi.edu",
+
   // Control debug level for modules using visionmedia/debug
   DEBUG: ''
 };

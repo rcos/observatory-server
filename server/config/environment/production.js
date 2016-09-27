@@ -19,6 +19,9 @@ module.exports = {
 
   // Location of image uploads
   imageUploadPath: '/opt/uploads/images/',
+  
+  // Location of urp pdfs
+  urpCreationPath: '/opt/uploads/urp',
 
   // MongoDB connection options
   mongo: {

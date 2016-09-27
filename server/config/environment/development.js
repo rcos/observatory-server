@@ -14,6 +14,9 @@ module.exports = {
   // Location of image uploads
   imageUploadPath: './uploads/',
 
+  // Location of urp pdfs
+  urpCreationPath: './uploads/urp',
+
   // For testing verification
   // attendanceVerificationRatio: 1,
 
