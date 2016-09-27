@@ -30,6 +30,7 @@
 // injector
 @import 'account/login/login.less';
 @import 'account/settings/settings.less';
+@import 'achievements/achievements.less';
 @import 'admin/admin.less';
 @import 'admin/classcontrol/classcontrol.less';
 @import 'attend/attend.less';
@@ -70,6 +71,15 @@ a {
 
 a:hover {
   color: @link-hover-color;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover {
+  background-color: @rpi-red
+}
+
+.nav-pills > li > a:hover {
+  color: white;
+  background-color: @rpi-red;
 }
 
 .inside {
