@@ -16,7 +16,7 @@ angular.module('observatory3App')
     $scope.achievement = {
       title: '',
       description: '',
-      date: null
+      date: Date.now()
     };
 
     $scope.delete = function(ach) {
