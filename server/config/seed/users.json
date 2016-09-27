@@ -26,7 +26,6 @@
 },
 {
     "provider": "local",
-    "role": "user",
     "name": "Student",
     "email": "student@student.com",
     "password": "student",

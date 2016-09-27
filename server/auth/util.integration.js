@@ -92,7 +92,7 @@ describe("Login Tests", () => {
     studentSession.get('/api/users/me').end((err, res) => {
       expect(res.body).to.not.be.empty;
       expect(res.body).to.have.property('email');
-      expect(res.body.role).to.equal('student');
+      expect(res.body.role).to.equal('user');
       done(err);
     });
   });
