@@ -27,7 +27,7 @@
               <a href="#" class="pull-right" ng-click="delete(ach)" ng-show="isAdmin"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
             </div>
             <div class="panel-body">
-              {{ ach.description }}
+              <div id="content" class="event-description" btf-markdown="ach.description"></div>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
         </div>
       </div>
       <!-- Add new achievement-->
-      <div class="panel panel-default" ng-show="isAdmin">
+      <div class="panel panel-default" ng-show="isAdmin()">
         <div class="panel-heading">Add New Achievement</div>
         <div class="panel-body">
           <form>

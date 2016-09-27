@@ -16,7 +16,7 @@ angular.module('observatory3App')
     $scope.achievement = {
       title: '',
       description: '',
-      date: null
+      date: Date.now()
     };
 
     $scope.delete = function(ach) {
@@ -32,5 +32,5 @@ angular.module('observatory3App')
         });
     };
 
-    $scope.isAdmin = Auth.isAdmin();
+    $scope.isAdmin = Auth.isAdmin;
   });
