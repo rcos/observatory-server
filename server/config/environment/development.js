@@ -17,5 +17,5 @@ module.exports = {
   // For testing verification
   // attendanceVerificationRatio: 1,
 
-  seedDB: false
+  seedDB: true
 };

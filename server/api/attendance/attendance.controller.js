@@ -290,7 +290,6 @@ exports.presentMe = function(req, res) {
 };
 // *******************************************************
 
-
 // *******************************************************
 // Mark attendance as present, subject to verification
 // router.post('/attend', auth.isAuthenticated(), controller.attend);
@@ -338,7 +337,7 @@ exports.attend = function(req,res){
       else{
         // if the user has no smallgroup, they cannont submit smallgroup attendance
         if (!user.smallgroup || user.smallgroup === undefined || user.smallgroup === null){
-          return res.send(400, 'Incorrect day code');
+          return res.send(400, 'No small group found/incorrect daycode!');
         }
 
         return SmallGroup.findById(user.smallgroup, function(err, smallgroup){

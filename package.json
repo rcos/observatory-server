@@ -118,6 +118,7 @@
     "should": "^8.2.2",
     "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0",
+    "superagent": "^2.3.0",
     "supertest": "^1.1.0",
     "time-grunt": "^1.2.1"
   },

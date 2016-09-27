@@ -767,6 +767,14 @@ module.exports = function (grunt) {
       ]);
     }
 
+    else if (target === 'integration'){
+        return grunt.task.run([
+          'env:all',
+          'env:test',
+          'mochaTest:integration'
+        ]);
+    }
+
     else if (target === 'client') {
       return grunt.task.run([
         'clean:server',
