@@ -123,6 +123,16 @@ exports.destroy = function(req, res) {
 // *******************************************************
 
 // *******************************************************
+//Deletes all attendance submissions shared the same dayCode 
+exports.deleteCodeSubmit = function(req, res){
+  Attendance.deleteMany({smallgroup:true,"code":req.params.dayCode})
+  ,function (err){
+    if (err) return handleError(res, err);
+    return res.send(200);
+  }
+}
+
+// *******************************************************
 // Creates a new attendance submission in the DB.
 // NOT FOR NORMAL USE : does not generate required data for submission
 // Restricted to admins
