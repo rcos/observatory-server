@@ -139,6 +139,7 @@
           <tr>
             <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
             <td sort-arrow sortby='bonusDay' text='Type' sortorder='sortorder'></td>
+            <td text ='Attendees'>Attendees</td> 
             <td text='Delete'>Delete</td>
           </tr>
         </thead>
@@ -146,8 +147,9 @@
           <tr ng-repeat="day in smallgroup.dayCodes | orderBy:sortorder">
             <td>{{ day.date | date:"MMM dd" }}</a></td>
             <td>{{ day.bonusDay?"Bonus":"Regular" }}</td>
+            <td>{{ numOfattendend }}</td>
             <td><a ng-click="deleteDay(day)"><i class="fa fa-times"></i> Delete</a></td>
-          </tr>
+          </tr> 
         </tbody>
       </table>
     </div>
