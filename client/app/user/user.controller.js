@@ -8,9 +8,9 @@ angular.module('observatory3App')
     $scope.searchString = {name:""};
     $scope.currentPage = 0;
     if ($stateParams.page) {
-      $scope.currentPage = parseInt($stateParams.page);
+     $scope.currentPage = parseInt($stateParams.page, 10);
     }
-    $scope.defaultPageSize = 36;
+    $scope.defaultPageSize = 8;
     $scope.pageSize = $scope.defaultPageSize;
 
     $scope.past = false;
@@ -62,11 +62,16 @@ angular.module('observatory3App')
         $scope.currentPage = 0;
     };
 
-    $rootScope.$on('$locationChangeEnd', function() {
+    $rootScope.$on('$locationChangeSuccess', function() {
       if ($stateParams.page) {
-        $scope.currentPage = parseInt($stateParams.page);
+        $scope.currentPage = parseInt($stateParams.page, 10);
       }
-    })
+    });
+
+    $scope.init = function () {
+      $location.search("page", $scope.currentPage);
+    };
+    $scope.init();
 
     })
   .filter('startFrom', function() {
