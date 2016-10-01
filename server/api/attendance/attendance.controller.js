@@ -232,9 +232,7 @@ exports.getAttendees = function(req,res){
   Attendance.find({smallgroup:true,code:req.params.dateCode})
   .count()
   .exec(function (err,numOfAttend){
-    console.log(numOfAttend);
     return res.json(numOfAttend);
-
   });
 };
 
