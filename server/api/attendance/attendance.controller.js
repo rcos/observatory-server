@@ -335,15 +335,11 @@ exports.attend = function(req,res){
       }
       // Classyear attendance code and bonus code was incorrect, try small group
       else{
-        // if the user has no smallgroup, they cannont submit smallgroup attendance
-        if (!user.smallgroup || user.smallgroup === undefined || user.smallgroup === null){
-          return res.send(400, 'No small group found/incorrect daycode!');
-        }
-
-        return SmallGroup.findById(user.smallgroup, function(err, smallgroup){
+        return SmallGroup.findOne({"students":user._id, "classYear":classYear._id}, function(err, smallgroup){
+          console.log("smallgroup",smallgroup, smallgroup.dayCode, code)
           if (err) {return handleError(err)}
           // if the user has no smallgroup, they cannont submit smallgroup  attendance
-          if (!smallgroup){return res.send(400, 'Incorrect day code');}
+          if (!smallgroup){return res.send(400, 'No small group found or incorrect daycode!');}
           // Small group, and not a bonus day
           else if (smallgroup.dayCode === code){
             // Check if the user already submitted a small group, non-bonus attendance
