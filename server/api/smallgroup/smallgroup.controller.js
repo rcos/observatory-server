@@ -54,7 +54,7 @@ exports.create = function(req, res){
     var smallGroupId = req.params.id;
     return ClassYear.getCurrent(function(err, classYear){
         var classYearId = classYear._id;
-        return SmallGroup.findAndUpdate({"students": memberId, "classYear":classYearId}, {
+        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
             $pull: { students : memberId }
         }, function(err, smallgroup){
             if (err) return handleError(res, err);
@@ -222,7 +222,7 @@ exports.addMember = function(req, res){
     var smallGroupId = req.params.id;
     return ClassYear.getCurrent(function(err, classYear){
         var classYearId = classYear._id;
-        return SmallGroup.findAndUpdate({"students": memberId, "classYear":classYearId}, {
+        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
             $pull: { students : memberId }
         }, function(err, smallgroup){
             if (err) return handleError(res, err);

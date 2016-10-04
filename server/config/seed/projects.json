@@ -15,7 +15,7 @@
     "githubProjectName": "yacs"
 },
 {
-    "_id": "5738cebdffd7ec3b75f3349b",
+    "_id": "000000000000000000000010",
     "name": "smoothie",
     "githubUsername": "joewalnes",
     "githubProjectName": "smoothie",
@@ -35,7 +35,7 @@
     "repositoryType": "github"
 },
 {
-    "_id": "5738cfa6ffd7ec3b75f3349f",
+    "_id": "000000000000000000000020",
     "githubUsername": "raywenderlich",
     "githubProjectName": "swift-algorithm-club",
     "name": "swift-algorithm-club",
@@ -55,7 +55,7 @@
     "repositoryType": "github"
 },
 {
-    "_id": "5738cff4ffd7ec3b75f334a0",
+    "_id": "000000000000000000000030",
     "githubUsername": "bbriggs",
     "githubProjectName": "legobot",
     "name": "Legobot",

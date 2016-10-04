@@ -13,7 +13,6 @@ angular.module('observatory3App')
     return User.smallgroup({id:$scope.user._id})
     .$promise.then(function(smallgroup){
       $scope.smallgroup = smallgroup;
-      console.log('smallgroup',smallgroup);
       $scope.loaded = true;
       if (!$scope.smallgroup._id) {
         $scope.smallgroup = false;
