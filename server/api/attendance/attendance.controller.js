@@ -226,7 +226,7 @@ exports.verifySmallAttendance = function(req,res){
 };
 // *******************************************************
 
-//router.get('/attendees/:dateCode',controller.getattendees);  
+//router.get('/code/attendees/:dateCode',auth.hasRole('mentor'), controller.getAttendees);
 
 exports.getAttendees = function(req,res){
   Attendance.find({smallgroup:true,code:req.params.dateCode})

@@ -9,7 +9,7 @@ angular.module('observatory3App')
   $scope.loaded = false;
 
 var getAttendees = function(dayCode){
-    $http.get('/api/attendance/code/'+dayCode)
+    $http.get('/api/attendance/code/attendees/'+dayCode)
     .success(function (data){
       $scope.numOfattendend = data;
     }).error(function(err){
