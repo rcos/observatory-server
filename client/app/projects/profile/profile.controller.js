@@ -3,7 +3,7 @@
 
 angular.module('observatory3App')
 .controller('ProjectsProfileCtrl', function ($scope, $http, $stateParams, $location, $uibModal, Auth, Upload, Project, notify) {
-    $scope.imgPrefix = '/uploads/' + $stateParams.username + '/' + $stateParams.project + '/';
+    $scope.imgPrefix = '/uploads/';
     $scope.userOnProject = false;
     $scope.project = {};
     var updateProject = function(){
