@@ -185,6 +185,10 @@ angular.module('observatory3App')
     };
 
     $scope.upload = function($file) {
+        if($file.$error == "maxSize") {
+          notify({ message: "Error: This image is too large, please upload a smaller image.", classes: ["alert-danger"] });
+          return;
+        }
         Upload.upload({
             url: 'api/projects/'+$stateParams.username+'/'+$stateParams.project+'/upload',
             data: {file: $file}
