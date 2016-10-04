@@ -12,6 +12,7 @@ angular.module('observatory3App')
     }
     $scope.defaultPageSize = 36;
     $scope.pageSize = $scope.defaultPageSize;
+    $scope.sortOrder = 'name';
 
     $scope.past = false;
 
@@ -22,6 +23,14 @@ angular.module('observatory3App')
       $scope.past = false;
       $scope.users = $scope.currentUsers;
     }
+
+    $scope.toggleSortOrder = function(){
+      if($scope.sortOrder === '-name'){
+        $scope.sortOrder = 'name';
+      }else if($scope.sortOrder === 'name'){
+        $scope.sortOrder = '-name';
+      }
+    };
 
     $scope.numberOfPages=function(){
         return Math.ceil($scope.users.length/$scope.pageSize);
