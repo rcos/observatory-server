@@ -114,18 +114,21 @@ exports.daycode = function(req, res){
     });
 };
 
-// Delete a day code from a smallgroup
+// Delete a day code from a smallgroup and the corresponding daycode submission from attendance
 // Restricted to mentors
 // router.delete('/:id/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
     var smallGroupId = req.params.id;
-    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+    return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
         $pull: { dayCodes: {code : dayCode }}
     }, function(err, smallgroup){
         if (err) return handleError(res, err);
 
-        return res.status(200).json(smallgroup);
+        return Attendance.remove({code : dayCode}, function (err){
+            if(err) {console.log(err);}
+           return res.status(200).json(smallgroup);
+        });
     });
 };
 
