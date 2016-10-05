@@ -25,9 +25,9 @@ angular.module('observatory3App')
     }
 
     $scope.toggleSortOrder = function(){
-      if($scope.sortOrder === '-name'){
+      if ($scope.sortOrder === '-name'){
         $scope.sortOrder = 'name';
-      }else if($scope.sortOrder === 'name'){
+      } else if($scope.sortOrder === 'name'){
         $scope.sortOrder = '-name';
       }
     };
