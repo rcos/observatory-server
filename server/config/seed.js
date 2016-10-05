@@ -84,14 +84,12 @@ var seed = function(cb) {
                 console.log('finished populating class years')
             })
 
-    Promise.all([user, project, post, smallgroup, classYear, attendance]).then(function(res){
-        cb();
-    });
+    return Promise.all([user, project, post, smallgroup, classYear, attendance]);
 }
 
 if (!module.parent) {
     if (args.length == 0) {
-        seed(function(){
+        seed().then(function(){
             db.disconnect()
         });
     }
