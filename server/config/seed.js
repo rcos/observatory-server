@@ -27,7 +27,7 @@ var Attendance = require('../api/attendance/attendance.model')
 
 
 // Seed the database with the original sample data
-var seed = function(cb) {
+var seed = function() {
     // load list of users
     var users = require('./seed/users.json');
     var projects = require('./seed/projects.json');
@@ -81,10 +81,10 @@ var seed = function(cb) {
             return ClassYear.create(classyears)
         })
         .then(function() {
-                console.log('finished populating class years')
-            })
+            console.log('finished populating class years')
+        })
 
-    return Promise.all([user, project, post, smallgroup, classYear, attendance]);
+    return Promise.all([user, project, post, smallgroup, attendance, classYear]);
 }
 
 if (!module.parent) {
