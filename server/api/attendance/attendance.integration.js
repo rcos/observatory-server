@@ -32,7 +32,6 @@ describe('Attendance API:', () => {
           mentor = results[0];
           smallgroup = results[1];
           student = results[2];
-          console.log("smallgroup",smallgroup)
           smallgroup.students.push(mentor._id);
           smallgroup.students.push(student._id);
           return Promise.all([smallgroup.save(), student.save()]);
@@ -64,7 +63,6 @@ describe('Attendance API:', () => {
         "dayCode": dayCode
       })
       .end((err, res) => {
-        console.log(err,res);
         expect(res.status).to.equal(200);
         done(err);
       });

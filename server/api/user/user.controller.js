@@ -60,7 +60,6 @@ exports.publicStats = function(req, res) {
       ],
       function(err, results){
         if (err) {
-          console.log(err);
           return res.send(400);
         }
 
