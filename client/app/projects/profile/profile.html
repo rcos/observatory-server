@@ -2,44 +2,46 @@
 
 <div class="container project-profile">
   <div class="row text-left">
-    <div class="col-sm-3">
-      <h1 ng-hide="edittingName">{{project.name}}</h1>
+    <div class="col-sm-12">
+      <h1 >{{project.name}}</h1>
     </div>
-    <div class="col-sm-9 text-right header-buttons">
-      <a class="btn btn-info" href="{{project.websiteUrl}}" title="" target="_blank">Website</a>
-      <a class="btn btn-info" href="https://github.com/{{project.githubUsername}}/{{project.githubProjectName}}" title="" ng-show="project.repositories.length === 1" target="_blank">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
-      <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
-      <div class="btn-group" uib-dropdown is-open="repositoryMenu" ng-show="project.repositories.length > 1">
-        <a class="btn btn-info dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
-          Repositories <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu" uib-dropdown-menu>
-          <li><a href="{{repo}}" ng-repeat="repo in project.repositories">{{repo}}<span class="glyphicon glyphicon-menu-right"></span></a></li>
-        </ul>
+    <div class="header-buttons">
+      <div class="col-sm-6 text-left">
+        <button type="button" ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</button>
+        <button type="button" ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</button>
+        <button type="button" ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</button>
+        <button type="button" ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</button>
+        <button type="button" ng-show="isMentor() && userOnProject && project.active" class="btn btn-warning" ng-click="markPast()">Mark Past Project</button>
+        <button type="button" ng-show="isMentor() && userOnProject && !project.active" class="btn btn-warning" ng-click="markActive()">Mark Active Project</button>
+        <button type="button" class="btn btn-primary" ng-click="editProject()" ng-show="userOnProject">Edit Project</button>
+      </div>
+
+      <div class="col-sm-6 text-right">
+        <a class="btn btn-info" href="{{project.websiteUrl}}" title="" target="_blank">Website</a>
+        <a class="btn btn-info" href="https://github.com/{{project.githubUsername}}/{{project.githubProjectName}}" title="" ng-show="project.repositories.length === 1" target="_blank">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
+        <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
+        <div class="btn-group" uib-dropdown is-open="repositoryMenu" ng-show="project.repositories.length > 1">
+          <a class="btn btn-info dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+            Repositories <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" uib-dropdown-menu>
+            <li><a href="{{repo}}" ng-repeat="repo in project.repositories">{{repo}}<span class="glyphicon glyphicon-menu-right"></span></a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-12 text-right">
-      <button type="button" ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</button>
-      <button type="button" ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</button>
-      <button type="button" ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</button>
-      <button type="button" ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</button>
-      <button type="button" ng-show="isMentor() && userOnProject && project.active" class="btn btn-warning" ng-click="markPast()">Mark Past Project</button>
-      <button type="button" ng-show="isMentor() && userOnProject && !project.active" class="btn btn-warning ng-hide" ng-click="markActive()">Mark Active Project</button>
-      <button type="button" class="btn btn-primary" ng-click="editProject()" ng-show="userOnProject">Edit Project</button>
-    </div>
-  </div>
-  <div class="row">
     <div class="col-sm-12">
+      <div ng-show="!project.tech.length && canEdit()">Add a new tech tag: </div>
       <div class="tech-tags">
-        <div class="tech-boxes">
-          <span ng-repeat="tech in project.tech track by $index">
-            {{tech}}
-            <g class="glyphicon glyphicon-remove" ng-show='isLoggedIn() && userOnProject' class='btn btn=default btn-xs' ng-click='removeTech(tech)' aria-hidden="true"></g>
-          </span>
-          <input ng-show='isLoggedIn() && userOnProject' ng-enter="addTechBubble()" ng-model="insertTechContent" size='4' type='text' />
-          <button ng-show='isLoggedIn() && userOnProject' ng-click="addTechBubble()" class="btn btn-default btn-xs">+</button>
+        <div class='tech-boxes' ng-show="project.tech.length || canEdit()">
+            <span ng-repeat="tech in project.tech track by $index">
+              {{tech}}
+              <g class="glyphicon glyphicon-remove" ng-show='canEdit()' class='btn btn=default btn-xs' ng-click='removeTech(tech)' aria-hidden="true"></g>
+            </span>
+            <input ng-enter="addTechBubble()" ng-show='canEdit()' placeholder='html' ng-model="insertTechContent" size='4' type='text' />
+            <button ng-click="addTechBubble()" ng-show='canEdit()' class="btn btn-default btn-xs">+</button>
         </div>
       </div>
     </div>
