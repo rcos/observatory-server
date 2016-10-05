@@ -83,7 +83,7 @@ angular.module('observatory3App')
 
   $scope.saveSmallGroupName = function () {
     $scope.edittingSmallGroupName = false;
-    $http.put("/api/smallgroup/" + $scope.smallgroup + "/name", {
+    $http.put("/api/smallgroup/" + $scope.smallgroup._id + "/name", {
       'smallGroupName': $scope.smallgroup.name
     }).success(function () {
       notify('Small Group Name updated!');
