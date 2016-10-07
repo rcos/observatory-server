@@ -10,7 +10,7 @@ angular.module('observatory3App')
     if ($stateParams.page) {
      $scope.currentPage = parseInt($stateParams.page, 10);
     }
-    $scope.defaultPageSize = 6;
+    $scope.defaultPageSize = 36;
     $scope.pageSize = $scope.defaultPageSize;
     $scope.sortOrder = 'name';
     if ($stateParams.sort) {
