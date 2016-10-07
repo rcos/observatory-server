@@ -10,9 +10,13 @@ angular.module('observatory3App')
     if ($stateParams.page) {
      $scope.currentPage = parseInt($stateParams.page, 10);
     }
-    $scope.defaultPageSize = 36;
+    $scope.defaultPageSize = 6;
     $scope.pageSize = $scope.defaultPageSize;
     $scope.sortOrder = 'name';
+    if ($stateParams.sort) {
+     $scope.sortOrder = $stateParams.sort;
+    }
+
 
     $scope.past = false;
 
@@ -24,11 +28,13 @@ angular.module('observatory3App')
       $scope.users = $scope.currentUsers;
     }
 
-    $scope.toggleSortOrder = function(){
-      if ($scope.sortOrder === '-name'){
+    $scope.toggleSortOrder = function() {
+      if ($scope.sortOrder === '-name') {
         $scope.sortOrder = 'name';
-      } else if($scope.sortOrder === 'name'){
+        $location.search("sort", $scope.sortOrder);
+      } else if ($scope.sortOrder === 'name') {
         $scope.sortOrder = '-name';
+        $location.search("sort", $scope.sortOrder);
       }
     };
 
@@ -75,10 +81,14 @@ angular.module('observatory3App')
       if ($stateParams.page) {
         $scope.currentPage = parseInt($stateParams.page, 10);
       }
+      if ($stateParams.sort) {
+        $scope.sortOrder = $stateParams.sort;
+      }
     });
 
     $scope.init = function () {
       $location.search("page", $scope.currentPage);
+      $location.search("sort", $scope.sortOrder);
     };
     $scope.init();
 
