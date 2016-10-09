@@ -380,8 +380,10 @@ exports.attend = function(req,res){
           else {
               console.log("Incorrect Day Code");
               console.log("code",code );
+              console.log("classYear",classYear);
               console.log("classYear.dayCode",classYear.dayCode);
               console.log("classYear.bonusDayCode",classYear.bonusDayCode);
+              console.log("smallgroup",smallgroup);
               console.log("smallgroup.dayCode",smallgroup.dayCode);
               console.log("smallgroup.bonusDayCode",smallgroup.bonusDayCode);
             return res.send(400, 'Incorrect Day Code!');
