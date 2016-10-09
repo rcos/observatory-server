@@ -379,7 +379,7 @@ exports.attend = function(req,res){
           }
           else {
               console.log("Incorrect Day Code");
-              console.log("code",code);
+              console.log("code",code );
               console.log("classYear.dayCode",classYear.dayCode);
               console.log("classYear.bonusDayCode",classYear.bonusDayCode);
               console.log("smallgroup.dayCode",smallgroup.dayCode);
