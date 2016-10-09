@@ -296,13 +296,15 @@ exports.presentMe = function(req, res) {
 exports.attend = function(req,res){
   var user = req.user;
   var code = req.body.dayCode;
-  if (!code) {return res.send(400, 'No Code Submitted');}
+  if (!code) {
+    console.log("No code");
+    return res.send(400, 'No Code Submitted');}
   // Uppercase code from client so it is case-insensitive. This must happen
   // after the above check, otherwise toUpperCase() might not exist.
   code = code.toUpperCase();
   // Check code against current class year
   return ClassYear.getCurrent(function(err, classYear){
-    if (err) {return res.send(500, err);}
+    if (err) {return handleError(err)}
     return checkAttendanceForDate(user,classYear,new Date(),function(err, submitted){
       if (err) {return handleError(err)}
       // Check if the user needs to verify, with config.attendanceVerificationRatio chance
@@ -312,7 +314,9 @@ exports.attend = function(req,res){
         // Check if the user already submitted a full group, non bonus attendance
         if (submitted.full){
           // if it is already submitted, return
-          return res.send(400, 'Full group attendance already recorded: ' + submitted.full.verified);
+          console.log("Full group attendance already recorded");
+
+          return res.send(409, 'Full group attendance already recorded: ' + submitted.full.verified);
         }
         // if not, create the attendance object
         return setAttendance(classYear._id, user._id, new Date(), code, needsVerification, false, false, function(err,submission){
@@ -325,7 +329,9 @@ exports.attend = function(req,res){
         // Check if the user already submitted a full group, bonus attendance
         if (submitted.fullBonus){
           // if it is already submitted, return
-          return res.send(400, 'Full group bonus attendance already recorded: ' + submitted.fullBonus.verified);
+                    console.log("Full group bonus attendance already recorded");
+
+          return res.send(409, 'Full group bonus attendance already recorded: ' + submitted.fullBonus.verified);
         }
         // if not, create the attendance object
         return setAttendance(classYear._id, user._id, new Date(), code, needsVerification, true, false, function(err,submission){
@@ -338,14 +344,18 @@ exports.attend = function(req,res){
         return SmallGroup.findOne({"students":user._id, "classYear":classYear._id}, function(err, smallgroup){
           if (err) {return handleError(err)}
           // if the user has no smallgroup, they cannont submit smallgroup  attendance
-          if (!smallgroup){return res.send(400, 'No small group found or incorrect daycode!');}
+          if (!smallgroup){
+              console.log("No small group found or incorrect daycode");
+              return res.send(400, 'No small group found or incorrect daycode!');
+            }
 
           // Small group, and not a bonus day
           if (smallgroup.dayCode === code){
             // Check if the user already submitted a small group, non-bonus attendance
             if (submitted.small){
               // if it is already submitted, return
-              return res.send(400, 'Small group attendance already recorded: ' + submitted.small.verified);
+              console.log("Small group attendance already recorded");
+              return res.send(409, 'Small group attendance already recorded: ' + submitted.small.verified);
             }
             // if not, create the attendance object
             return setAttendance(classYear._id, user._id, new Date(), code, needsVerification, false, true, function(err,submission){
@@ -358,7 +368,8 @@ exports.attend = function(req,res){
             // Check if the user already submitted a small group & bonus attendance
             if (submitted.smallBonus){
               // if it is already submitted, return
-              return res.send(400, 'Small group bonus attendance already recorded: ' + submitted.smallBonus.verified);
+              console.log("Small group bonus attendance already recorded");
+              return res.send(409, 'Small group bonus attendance already recorded: ' + submitted.smallBonus.verified);
             }
             // if not, create the attendance object
             return setAttendance(classYear._id, user._id, new Date(), code, needsVerification, true, true, function(err,submission){
@@ -367,6 +378,12 @@ exports.attend = function(req,res){
             });
           }
           else {
+              console.log("Incorrect Day Code");
+              console.log("code",code);
+              console.log("classYear.dayCode",classYear.dayCode);
+              console.log("classYear.bonusDayCode",classYear.bonusDayCode);
+              console.log("smallgroup.dayCode",smallgroup.dayCode);
+              console.log("smallgroup.bonusDayCode",smallgroup.bonusDayCode);
             return res.send(400, 'Incorrect Day Code!');
           }
         });
