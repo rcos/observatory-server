@@ -53,7 +53,7 @@
           </uib-carousel>
 
           <button class="btn btn-sm btn-default" ng-click="selectImage()" ng-show="userOnProject">Upload Images</button>
-          <input id="uploadImage" type="file" ngf-select="upload($file)" />
+          <input id="uploadImage" type="file" ngf-max-size="4MB" ngf-select="upload($file)" />
           <g class="glyphicon glyphicon-remove remove-photo btn btn-default" ng-show="userOnProject && project && !slides[0].placeholder" ng-click="deletePhoto()"></g>
         </div>
       </div>
