@@ -12,6 +12,11 @@ angular.module('observatory3App')
     }
     $scope.defaultPageSize = 36;
     $scope.pageSize = $scope.defaultPageSize;
+    $scope.sortOrder = 'name';
+    if ($stateParams.sort) {
+     $scope.sortOrder = $stateParams.sort;
+    }
+
 
     $scope.past = false;
 
@@ -22,6 +27,16 @@ angular.module('observatory3App')
       $scope.past = false;
       $scope.users = $scope.currentUsers;
     }
+
+    $scope.toggleSortOrder = function() {
+      if ($scope.sortOrder === '-name') {
+        $scope.sortOrder = 'name';
+        $location.search("sort", $scope.sortOrder);
+      } else if ($scope.sortOrder === 'name') {
+        $scope.sortOrder = '-name';
+        $location.search("sort", $scope.sortOrder);
+      }
+    };
 
     $scope.numberOfPages=function(){
         return Math.ceil($scope.users.length/$scope.pageSize);
@@ -66,10 +81,14 @@ angular.module('observatory3App')
       if ($stateParams.page) {
         $scope.currentPage = parseInt($stateParams.page, 10);
       }
+      if ($stateParams.sort) {
+        $scope.sortOrder = $stateParams.sort;
+      }
     });
 
     $scope.init = function () {
       $location.search("page", $scope.currentPage);
+      $location.search("sort", $scope.sortOrder);
     };
     $scope.init();
 
