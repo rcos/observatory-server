@@ -4,7 +4,7 @@ angular.module('observatory3App')
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('user', {
-        url: '/users/:state?page',
+        url: '/users/:state?page&sort',
         templateUrl: 'app/user/user.html',
         controller: 'UserCtrl',
         reloadOnSearch: false
