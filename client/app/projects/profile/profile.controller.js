@@ -10,6 +10,33 @@ angular.module('observatory3App')
   $scope.selectImage = function() {
     angular.element('#uploadImage').trigger('click');
   };
+
+  var updateProject = function(){
+    Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
+      $scope.project = result.data;
+      initializeSlides($scope.project.photos);
+      getAuthors();
+      Auth.isLoggedInAsync(function(loggedIn){
+        if (loggedIn){
+          var user = Auth.getCurrentUser();
+          $scope.user = user;
+          $scope.checkUserProject();
+        }
+      });
+      $('#github-commits').githubInfoWidget({ user: $scope.project.githubUsername, repo: $scope.project.githubProjectName, branch: 'master', last: 15 },
+          function() {
+            console.log($('.github-user'));
+            $('.github-user').each(function(index, user) {
+              $(user).find(".github-avatar").attr('src', $(user).find('a').attr('href')+".png");
+            });
+          });
+
+    },function(){
+      $location.path('/projects');
+    });
+  };
+  updateProject();
+
   $scope.editProject = function() {
     $scope.editedProject = angular.copy($scope.project);
 
