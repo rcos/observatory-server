@@ -17,7 +17,7 @@ function runThread(func){
 }
 
 
-module.exports.getCommitStrings = function(githubRepo, callback){
+module.exports.getCommitsForRepository = function(githubRepo, callback){
     runThread(function(){
         /* 
             githubRepo needs to be in the format <username>/<repository>
