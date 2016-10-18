@@ -22,6 +22,10 @@ angular.module('observatory3App')
           $location.path('/projects');
         });
     };
+    $scope.canEdit = function(){
+      return $scope.isLoggedIn() || $scope.userOnProject;
+    };
+
     updateProject();
 
     $scope.selectImage = function() {
