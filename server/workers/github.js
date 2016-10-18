@@ -1,5 +1,8 @@
 var octo = require('octonode');
-var token = "459827cd6419a8cc6974258c9c6864e64bab1605";
+/* 
+  @TODO: IMPORT TOKEN FROM AN UNTRACKED/PRIVATE CONFIG FILE 
+*/
+var token = "INSERT GITHUB API TOKEN HERE";
 var octoclient = octo.client(token);
 
 // Concurrency Variables
@@ -26,6 +29,7 @@ module.exports.getCommitsForRepository = function(githubRepo, callback){
         var ghrepo = octoclient.repo(githubRepo);
         var commits = ghrepo.commits(function(err, data, headers) {
             //@TODO: add logic to create a commit model & save it to DB
+        
         });
         // @TODO: remove/cleanup; just using this as a reference for now...
     // 	var pushEvents = ghuser.events(['PushEvent'], function(ignore, pushEvents){
