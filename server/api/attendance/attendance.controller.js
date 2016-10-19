@@ -226,15 +226,21 @@ exports.verifySmallAttendance = function(req,res){
 };
 // *******************************************************
 
+// *******************************************************
+//get the list of attending students on a date
 //router.get('/code/attendees/:dateCode',auth.hasRole('mentor'), controller.getAttendees);
-
 exports.getAttendees = function(req,res){
-  Attendance.find({smallgroup:true,code:req.params.dateCode})
-  .count()
-  .exec(function (err,numOfAttend){
-    return res.json(numOfAttend);
-  });
-};
+  return Attendance.find({code:req.params.dateCode})
+    .exec(function (err,results){
+        var userIds = results.map(function(e){ return e.user } );
+        console.log(userIds);
+        User.find({_id : {$in : userIds } },{"name" : 1}, function(err, users){
+        console.log("users",users);
+        res.json(users);
+        })
+    })
+}
+// *******************************************************
 
 // *******************************************************
 // Get all attendance for a specific user (or current user) in the current classyear
