@@ -34,11 +34,9 @@ var seed = function() {
     var projects = require('./seed/projects.json');
     var posts = require('./seed/posts.json');
     var smallgroups = require('./seed/smallgroups.json');
-var d = GithubWorker.getCommitsForRepository(projects[0].githubUsername, projects[0].githubProjectName, function(data) {
-    console.error('1',data)
-    return data;
-});
-console.error('d',d);
+// var d = 
+// console.error('d',d);
+var promises = [];
     var user = User.remove({}).exec()
         .then(function() {
             return User.create(users);
@@ -46,7 +44,7 @@ console.error('d',d);
         .then(function(){
             console.log('finished populating users');
         });
-
+    promises.push(user);
     var project = Project.remove({}).exec()
         .then(function(){
             return Project.create(projects)
@@ -54,10 +52,25 @@ console.error('d',d);
         .then(function() {
             console.log('finished populating projects')
         });
-    var commit = Commit.remove({}).exec()
+    promises.push(project);
+     Commit.remove({}).exec()
         .then(function(){
-
-        })
+            // var allCommitPromises = [];
+         for (var i = 0;i<projects.length;i++) {
+            var projectCommitPromise = GithubWorker.getCommitsForRepository(projects[i].githubUsername, 
+            projects[i].githubProjectName, function(data) {
+                var x = Commit.create(data);
+                console.error('???????',x);
+                promises.push(x);
+                return x;
+        });
+            console.error('1',projects[i].githubProjectName,projectCommitPromise);
+            // allCommitPromises.push(projectCommitPromise);
+        }
+        // console.error('psize',allCommitPromises.length);
+        // return allCommitPromises;
+    });
+        // promises.push(commit);
     var post = Post.remove({}).exec()
         .then(function(){
             return Post.create(posts)
@@ -65,6 +78,7 @@ console.error('d',d);
         .then(function() {
             console.log('finished populating posts')
         });
+    promises.push(post);
 
     var smallgroup = Smallgroup.remove({}).exec()
         .then(function(){
@@ -73,6 +87,7 @@ console.error('d',d);
         .then(function() {
             console.log('finished populating smallgroups')
         });
+    promises.push(smallgroup);
 
     var classYear = ClassYear.remove({}).exec()
         .then(function(){
@@ -93,8 +108,8 @@ console.error('d',d);
         .then(function() {
                 console.log('finished populating class years')
             })
-
-    return Promise.all([user, project, post, smallgroup, classYear]);
+    promises.push(classYear);
+    return Promise.all(promises);
 }
 
 if (!module.parent) {
