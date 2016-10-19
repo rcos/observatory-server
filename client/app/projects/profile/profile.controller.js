@@ -25,7 +25,6 @@ angular.module('observatory3App')
       });
       $('#github-commits').githubInfoWidget({ user: $scope.project.githubUsername, repo: $scope.project.githubProjectName, branch: 'master', last: 15 },
           function() {
-            console.log($('.github-user'));
             $('.github-user').each(function(index, user) {
               $(user).find(".github-avatar").attr('src', $(user).find('a').attr('href')+".png");
             });
