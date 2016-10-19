@@ -22,7 +22,9 @@ var User = require('../api/user/user.model');
 var Project = require('../api/project/project.model');
 var Post = require('../api/post/post.model');
 var Smallgroup = require('../api/smallgroup/smallgroup.model');
-var ClassYear = require('../api/classyear/classyear.model')
+var ClassYear = require('../api/classyear/classyear.model');
+var Commit = require('../api/commit/commit.model');
+var GithubWorker = require('../workers/github');
 
 
 // Seed the database with the original sample data
@@ -32,7 +34,11 @@ var seed = function() {
     var projects = require('./seed/projects.json');
     var posts = require('./seed/posts.json');
     var smallgroups = require('./seed/smallgroups.json');
-
+var d = GithubWorker.getCommitsForRepository(projects[0].githubUsername, projects[0].githubProjectName, function(data) {
+    console.error('1',data)
+    return data;
+});
+console.error('d',d);
     var user = User.remove({}).exec()
         .then(function() {
             return User.create(users);
@@ -48,7 +54,10 @@ var seed = function() {
         .then(function() {
             console.log('finished populating projects')
         });
+    var commit = Commit.remove({}).exec()
+        .then(function(){
 
+        })
     var post = Post.remove({}).exec()
         .then(function(){
             return Post.create(posts)

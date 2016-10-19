@@ -2,7 +2,7 @@ var octo = require('octonode');
 /* 
   @TODO: IMPORT TOKEN FROM AN UNTRACKED/PRIVATE CONFIG FILE 
 */
-var token = "INSERT GITHUB API TOKEN HERE";
+var token = "26a687eb6476756cedf8951316c9542f3011378c";
 var octoclient = octo.client(token);
 
 // Concurrency Variables
@@ -20,17 +20,25 @@ function runThread(func){
 }
 
 
-module.exports.getCommitsForRepository = function(githubRepo, callback){
+module.exports.getCommitsForRepository = function(repoOwner, repoName, callback){
     runThread(function(){
         /* 
-            githubRepo needs to be in the format <username>/<repository>
-            example: rcos/Observatory3
+        	ex: github.com/<repoOwner>/<repoName>
+        	repoOwner: github username for owner of github repo 
+        	repoName: github repo name
+
+            example: 
+            	repoOwner: rcos
+            	repoName: Observatory3
         */
+        var githubRepo = repoOwner + "/" + repoName;
         var ghrepo = octoclient.repo(githubRepo);
         var commits = ghrepo.commits(function(err, data, headers) {
             //@TODO: add logic to create a commit model & save it to DB
-        
+        	callback(data);
         });
+    });
+};
         // @TODO: remove/cleanup; just using this as a reference for now...
     // 	var pushEvents = ghuser.events(['PushEvent'], function(ignore, pushEvents){
     //         if (!pushEvents){
@@ -47,4 +55,4 @@ module.exports.getCommitsForRepository = function(githubRepo, callback){
     //     	callback(strings);
     //     });
     // });
-};
+// };
