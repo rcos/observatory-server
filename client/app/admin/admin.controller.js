@@ -31,13 +31,11 @@ angular.module('observatory3App')
                       $scope.allUsers[a].activeChange = $scope.allUsers[a].active;
                     }
 
-                }).error(function(err){
+                }).error(function(){
                     $scope.attendance = [];
-                    console.log(err)
                 });
 
-            }, function(err){
-              console.log(err);
+            }, function(){
             });
 
           }

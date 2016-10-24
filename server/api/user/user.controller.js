@@ -60,7 +60,6 @@ exports.publicStats = function(req, res) {
       ],
       function(err, results){
         if (err) {
-          console.log(err);
           return res.send(400);
         }
 
@@ -245,9 +244,7 @@ exports.show = function (req, res, next) {
     if (err) {return next(err);}
     if (!user) {return res.send(404);}
     var profile = user.profile;
-    ClassYear.getCurrent(function (err, classYear) {
-        return res.json(profile);
-    });
+    return res.json(profile);
   });
 };
 
@@ -257,34 +254,61 @@ exports.show = function (req, res, next) {
 exports.privateProfile = function (req, res, next) {
   var userId = req.params.id;
   User.findById(userId)
-  .populate('smallgroup')
   .populate('projects')
   .exec(function (err, user) {
     if (err) {return next(err);}
     if (!user) {return res.send(404);}
     var profile = user.privateProfile;
-    ClassYear.getCurrent(function(err, classYear){
+    return ClassYear.getCurrent(function(err, classYear){
         var classYearId = classYear._id;
+        return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
+          var responseObjectSmallgroup = smallgroup.toObject();
+          // Get how many total attendance days there have been
+          var data = user.getTotalDays(classYear, smallgroup);
+          profile.smallgroup = responseObjectSmallgroup;
+          profile.totalDates = data.totalDates;
+          profile.totalBonusDates = data.totalBonusDates;
+          profile.totalSmallDates = data.totalSmallDates;
+          profile.totalBonusSmallDates = data.totalBonusSmallDates;
 
-        // Get how many total attendance days there have been
-        var data = user.getTotalDays(classYear);
-        profile.totalDates = data.totalDates;
-        profile.totalBonusDates = data.totalBonusDates;
-        profile.totalSmallDates = data.totalSmallDates;
-        profile.totalBonusSmallDates = data.totalBonusSmallDates;
+          Attendance.find({classYear:classYearId, user: userId})
+          .exec(function (err, attendance) {
+              if(err) { return handleError(res, err); }
+              profile.attendance = attendance;
 
-        Attendance.find({classYear:classYearId, user: userId})
-        .exec(function (err, attendance) {
-            if(err) { return handleError(res, err); }
-            profile.attendance = attendance;
-
-            return res.json(profile);
+              return res.json(profile);
+          });
         });
     });
   });
 };
 
-
+/**
+ * Get a single user's smallgroup
+ */
+exports.smallgroup = function (req, res, next) {
+  var userId = req.params.id;
+  return ClassYear.getCurrent(function(err, classYear){
+      var classYearId = classYear._id;
+      return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
+        if (err) return handleError(res, err);
+        if (!smallgroup) return res.json({});
+        var responseObject = smallgroup.toObject();
+        // If user is not a mentor or not authenticated, don't give dayCode
+        if (!req.user || !req.user.isMentor){
+            responseObject.dayCodes = null;
+        }
+        else{
+            // Mentors should get a day code
+            // Generate a day code if one does not already exist
+            if (smallgroup.dayCode){
+                responseObject.dayCode = smallgroup.dayCode;
+            }
+        }
+        res.status(200).json(responseObject);
+      });
+  });
+};
 
 /**
  * Get a single user's avatar

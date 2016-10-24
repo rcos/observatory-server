@@ -33,19 +33,38 @@ exports.index = function(req, res) {
 // router.post('/', auth.hasRole('mentor'), controller.create);
 exports.create = function(req, res){
     var user = req.user;
-    ClassYear.getCurrent(function(err, currentClassYear){
-        if (err) return handleError(res, err);
-        var smallgroup = new SmallGroup({
-            "name": "New Small Group",
-            "classYear": currentClassYear._id,
-            "enabled": true,
-            "students":[user._id],
-            "dayCodes": []
+    return ClassYear.getCurrent(function(err, classYear){
+        var classYearId = classYear._id;
+        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
+            $pull: { students : memberId }
+        }, function(err, oldSmallgroup){
+          if (err) return handleError(res, err);
+          var smallgroup = new SmallGroup({
+              "name": user.name+"'s Small Group",
+              "classYear": classYear._id,
+              "enabled": true,
+              "students":[user._id],
+              "dayCodes": []
+          });
+          return smallgroup.save().then(()=>res.sendStatus(200));
         });
-        smallgroup.save();
-        user.smallgroup = smallgroup._id;
-        user.save();
-        res.sendStatus(200);
+    });
+
+    var memberId = req.body.memberId;
+    var smallGroupId = req.params.id;
+    return ClassYear.getCurrent(function(err, classYear){
+        var classYearId = classYear._id;
+        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
+            $pull: { students : memberId }
+        }, function(err, smallgroup){
+            if (err) return handleError(res, err);
+            return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+                $addToSet: { students : memberId }
+            }, function(err, smallgroup){
+                if (err) return handleError(res, err);
+                return res.sendStatus(200);
+            });
+        });
     });
 };
 
@@ -204,15 +223,18 @@ exports.getSmallGroupMembers = function(req, res){
 exports.addMember = function(req, res){
     var memberId = req.body.memberId;
     var smallGroupId = req.params.id;
-    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
-        $addToSet: { students : memberId }
-    }, function(err, smallgroup){
-        if (err) return handleError(res, err);
-        User.findById(memberId, function(err, user){
-            if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
-            user.smallgroup = smallGroupId
-            user.save();
-            res.sendStatus(200);
+    return ClassYear.getCurrent(function(err, classYear){
+        var classYearId = classYear._id;
+        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
+            $pull: { students : memberId }
+        }, function(err, smallgroup){
+            if (err) return handleError(res, err);
+            return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+                $addToSet: { students : memberId }
+            }, function(err, smallgroup){
+                if (err) return handleError(res, err);
+                return res.sendStatus(200);
+            });
         });
     });
 };
@@ -223,16 +245,11 @@ exports.addMember = function(req, res){
 exports.deleteMember = function(req, res){
     var memberId = req.params.memberId;
     var smallGroupId = req.params.id;
-    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+    return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
         $pull: { students : memberId }
     }, function(err, smallgroup){
         if (err) return handleError(res, err);
-        User.findById(memberId, function(err, user){
-            if (err) return handleError(res,err);
-            user.smallgroup = undefined
-            user.save();
-            return res.sendStatus(200);
-        });
+        return res.sendStatus(200);
     });
 };
 

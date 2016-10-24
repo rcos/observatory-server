@@ -34,7 +34,6 @@ describe('Attendance API:', () => {
           student = results[2];
           smallgroup.students.push(mentor._id);
           smallgroup.students.push(student._id);
-          student.smallgroup = smallgroup._id;
           return Promise.all([smallgroup.save(), student.save()]);
         });
     });
