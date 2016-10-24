@@ -21,6 +21,7 @@ router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/deactivate', auth.canEdit(), controller.deactivate);
 router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.get('/:id', controller.show);
+router.get('/:id/smallgroup', auth.isAuthenticated(), controller.smallgroup);
 router.get('/:id/private', auth.canEdit(), controller.privateProfile);
 router.post('/', controller.create);
 router.put('/:id', auth.canEdit(), controller.update);

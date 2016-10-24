@@ -48,6 +48,13 @@ function UserResource($resource) {
         controller:'stats'
       },
     },
+    smallgroup: {
+      method: 'GET',
+      params: {
+        controller:'smallgroup'
+      },
+    },
+
     allstats: {
       method: 'GET',
       params: {
