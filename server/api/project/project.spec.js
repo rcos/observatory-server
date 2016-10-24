@@ -48,12 +48,12 @@ describe('POST /api/projects/', function() {
 
   it('Should create a session', function(done) {
     agent.post('/api/users')
-    .send({ username: 'a@yahoo.com', password: '123' })
-    .expect('Content-Type',/json/)
-    .end(function(err, res) {
-      expect(res.status).to.equal(200);
-      done();
-    });
+      .send({ username: 'a@yahoo.com', password: '123' })
+      .expect('Content-Type',/json/)
+      .end(function(err, res) {
+        expect(res.status).to.equal(200);
+        done();
+      });
   });
 
   it('Should return the current session', function(done) {
@@ -71,10 +71,10 @@ describe('POST /api/projects/', function() {
         description: "Testing",
         websiteUrl: "www.google.com"
       })
-      .end((err,res) => {
-        expect(res.status).to.equal(201);
-        done(err);
-     });
+    .end((err,res) => {
+      expect(res.status).to.equal(201);
+      done(err);
+    });
   });
 
   it('Should delete a project', done=> {
@@ -84,7 +84,7 @@ describe('POST /api/projects/', function() {
       .end((err,res) => {
         expect(res.status).to.equal(204);
         done(err);
-     });
+      });
   });
 
 });
