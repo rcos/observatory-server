@@ -129,7 +129,7 @@
     </div>
   </div>
 
-  <div class="row" ng-show="isMentor()">
+  <div class="row" ng-show="isMentor()" ng-hide="showAttendanceCode">
     <div class="col-sm-12">
       <h3>Attendance Days:</h3>
     </div>
@@ -139,6 +139,7 @@
           <tr>
             <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
             <td sort-arrow sortby='bonusDay' text='Type' sortorder='sortorder'></td>
+            <td text ='Attendees'>Attendees</td>
             <td text='Delete'>Delete</td>
           </tr>
         </thead>
@@ -146,6 +147,7 @@
           <tr ng-repeat="day in smallgroup.dayCodes | orderBy:sortorder">
             <td>{{ day.date | date:"MMM dd" }}</a></td>
             <td>{{ day.bonusDay?"Bonus":"Regular" }}</td>
+            <td>{{ numOfattendends.get(day.code) }}</td>
             <td><a ng-click="deleteDay(day)"><i class="fa fa-times"></i> Delete</a></td>
           </tr>
         </tbody>

@@ -41,4 +41,7 @@ router.get('/unverified/:date',  auth.hasRole('mentor'), controller.getUnverifie
 router.get('/unverified/:date/full', auth.hasRole('mentor'), controller.getUnverifiedFullAttendanceUsers);
 router.get('/unverified/:date/small', auth.hasRole('mentor'), controller.getUnverifiedSmallAttendanceUsers);
 
+//Gets the number of attendees on a date
+router.get('/code/attendees/:dateCode',auth.hasRole('mentor'), controller.getAttendees);
+
 module.exports = router;

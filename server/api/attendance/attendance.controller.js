@@ -91,6 +91,7 @@ exports.index = function(req, res) {
       });
     });
 };
+
 // *******************************************************
 
 // *******************************************************
@@ -225,6 +226,15 @@ exports.verifySmallAttendance = function(req,res){
 };
 // *******************************************************
 
+//router.get('/code/attendees/:dateCode',auth.hasRole('mentor'), controller.getAttendees);
+
+exports.getAttendees = function(req,res){
+  Attendance.find({smallgroup:true,code:req.params.dateCode})
+  .count()
+  .exec(function (err,numOfAttend){
+    return res.json(numOfAttend);
+  });
+};
 
 // *******************************************************
 // Get all attendance for a specific user (or current user) in the current classyear

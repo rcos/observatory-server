@@ -8,11 +8,26 @@ angular.module('observatory3App')
   $scope.dayCode = false;
   $scope.loaded = false;
 
+var getAttendees = function(dayCode){
+    $http.get('/api/attendance/code/attendees/'+dayCode)
+    .success(function (data){
+      $scope.numOfattendends.set(dayCode, data);
+    }).error(function(err){
+      console.log(err);
+    });
+  }
+
   var updateSmallGroup = function (callback) {
     callback = callback || function () {};
     return User.smallgroup({id:$scope.user._id})
     .$promise.then(function(smallgroup){
       $scope.smallgroup = smallgroup;
+      $scope.numOfattendends = new Map();
+      for(var i =0; i<smallgroup.dayCodes.length;i++){
+        if(smallgroup.dayCodes[i]){
+          getAttendees(smallgroup.dayCodes[i].code);
+        }
+      }
       $scope.loaded = true;
       if (!$scope.smallgroup._id) {
         $scope.smallgroup = false;

@@ -17,6 +17,10 @@
         </form>
       </div>
       <div class="col-xs-3 col-sm-6 text-right">
+        <button type="button" class="btn btn-default" ng-click="toggleSortOrder()">
+          <i class="fa fa-sort-alpha-desc" aria-hidden="true" ng-show="sortOrder === '-name'"></i>
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true" ng-show="sortOrder === 'name'"></i>
+        </button>
         <a ng-href="/users/">
           <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
             Current
@@ -47,7 +51,7 @@
       </div>
     </div>
     <div class="row image-row">
-        <div ng-repeat="user in users | filter:searchString | startFrom:currentPage*pageSize | limitTo:pageSize">
+        <div ng-repeat="user in users | filter:searchString | orderBy: sortOrder | startFrom:currentPage*pageSize | limitTo:pageSize">
             <div class="col-md-2 col-sm-3 col-xs-4 text-center user-box">
                 <a href="/users/{{ user._id}}/profile" class="user-avatar">
                     <img class="profile-img img-responsive placeholder-img" ng-src='{{user.avatar}}&s=248px'>
