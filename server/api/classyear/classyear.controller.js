@@ -126,7 +126,9 @@ exports.daycode = function(req, res){
         return res.send(200, classYear.dayCodes[i].code);
       }
     }
-    var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
+    //Not ambigious code generator, function at the bottom.
+    var code = generateCode(6);
+
     classYear.dayCodes.push({
       date: today,
       code: code,
@@ -175,3 +177,16 @@ function handleError(res, err) {
 function validationError(res, err) {
   return res.status(422).json(err);
 };
+
+//Generating non ambigious length sized code.
+function generateCode(codeLength){
+  var characterOptions = "2346789ABCDEFGHJKMNPQRTUVWXYZ";
+  //Non ambigious characters and numbers Remove Some if you think they are ambigious given your font.
+
+  var code = ""; //Simple derivation based on previous code generation code.
+  for(i=0;i<codeLength;i++){
+      var character = (Math.floor(Math.random() * characterOptions.length));
+      code = code.concat(characterOptions[character.toString()]);
+  }
+  return code;
+}
