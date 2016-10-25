@@ -4,9 +4,10 @@ angular.module('observatory3App')
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('user', {
-        url: '/users/:state',
+        url: '/users/:state?page&sort',
         templateUrl: 'app/user/user.html',
-        controller: 'UserCtrl'
+        controller: 'UserCtrl',
+        reloadOnSearch: false
       });
 
     // If the user navigates to /me, redirect them to their profile page

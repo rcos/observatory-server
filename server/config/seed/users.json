@@ -12,7 +12,8 @@
     "role": "admin",
     "name": "Admin",
     "email": "admin@admin.com",
-    "password": "admin"
+    "password": "admin",
+    "_id": "000000000000000000000100"
 },
 {
     "provider": "local",
@@ -22,38 +23,51 @@
     "password": "mentor",
     "github": {
         "login": "mentorguy"
-    }
-},{
-    "provider": "local",
-    "name": "Jane Eagle",
-    "email": "jane@school.edu",
-    "password": "Jane",
-    "github": {
-        "login": "jane"
     },
-    "_id": "5738ce217328682a75cc0a79"
+    "_id": "000000000000000000000200"
 },{
     "provider": "local",
-    "name": "Samuel Door",
-    "email": "door@school.edu",
-    "password": "Samuel",
+    "name": "Student",
+    "email": "student@student.com",
+    "password": "student",
     "github": {
-        "login": "doors"
-    }
+        "login": "student"
+    },
+    "_id": "000000000000000000000300"
 },{
     "provider": "local",
     "name": "Forest Meer",
-    "email": "meerf@school.edu",
-    "password": "Forest",
+    "email": "forest@forest.com",
+    "password": "forest",
     "github": {
         "login": "meerf"
-    }
+    },
+    "_id":"000000000000000000000400"
 },{
     "provider": "local",
     "name": "Darwin Oswald",
-    "email": "oswald@school.edu",
-    "password": "Darwin",
+    "email": "darwin@darwin.com",
+    "password": "darwin",
     "github": {
         "login": "darwin"
-    }
+    },
+    "_id":"000000000000000000000500"
+},{
+    "provider": "local",
+    "name": "Jane Eagle",
+    "email": "jane@jane.com",
+    "password": "jane",
+    "github": {
+        "login": "jane"
+    },
+    "_id": "000000000000000000000600"
+},{
+    "provider": "local",
+    "name": "Samuel Door",
+    "email": "samuel@samuel.com",
+    "password": "samuel",
+    "github": {
+        "login": "doors"
+    },
+    "_id":"000000000000000000000700"
 }]

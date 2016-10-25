@@ -16,6 +16,7 @@ router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
 
 // Generate a daycode or return the current day code for the smallgroups
 router.post('/:id/daycode', auth.hasRole('mentor'), controller.daycode);
+router.delete('/:id/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
 
 // Access / Manipulate the members of a smallgroup
 router.get('/:id/members', auth.isAuthenticated(), controller.getSmallGroupMembers);

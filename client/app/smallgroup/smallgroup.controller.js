@@ -1,38 +1,42 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('SmallGroupCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify) {
+.controller('SmallGroupCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify, $filter) {
   $scope.allUsers = User.query();
   $scope.showAttendanceCode = false;
   $scope.isMentor = Auth.isMentor;
   $scope.dayCode = false;
   $scope.loaded = false;
 
-  Auth.getCurrentUser(function (user) {
-    $scope.user = user;
-    updateSmallGroup();
-  });
+var getAttendees = function(dayCode){
+    $http.get('/api/attendance/code/attendees/'+dayCode)
+    .success(function (data){
+      $scope.numOfattendends.set(dayCode, data);
+    }).error(function(err){
+      console.log(err);
+    });
+  }
 
   var updateSmallGroup = function (callback) {
     callback = callback || function () {};
-
-    if (!$scope.user.smallgroup){
-      $scope.loaded = true;
-      $scope.smallgroup = null;
-      return;
-    }
-
-    $http.get('/api/smallgroup/' + $scope.user.smallgroup).success(function (smallgroup) {
+    return User.smallgroup({id:$scope.user._id})
+    .$promise.then(function(smallgroup){
       $scope.smallgroup = smallgroup;
+      $scope.numOfattendends = new Map();
+      for(var i =0; i<smallgroup.dayCodes.length;i++){
+        if(smallgroup.dayCodes[i]){
+          getAttendees(smallgroup.dayCodes[i].code);
+        }
+      }
       $scope.loaded = true;
-      if (!smallgroup) {
+      if (!$scope.smallgroup._id) {
         $scope.smallgroup = false;
         return false;
       }
       if ('dayCode' in smallgroup && smallgroup.dayCode) {
         $scope.dayCode = smallgroup.dayCode;
       }
-      $http.get('/api/smallgroup/' + $scope.user.smallgroup + '/members').success(function (members) {
+      return $http.get('/api/smallgroup/' + $scope.smallgroup._id + '/members').success(function (members) {
         $scope.leaders = [];
         $scope.members = [];
         members.sort(function (a, b) {
@@ -67,7 +71,6 @@ angular.module('observatory3App')
   };
 
   $scope.addUser = function (user) {
-
       if (!user) {
         return notify({message: 'User not found!', classes: ['alert-danger']});
       }
@@ -95,7 +98,7 @@ angular.module('observatory3App')
 
   $scope.saveSmallGroupName = function () {
     $scope.edittingSmallGroupName = false;
-    $http.put("/api/smallgroup/" + $scope.user.smallgroup + "/name", {
+    $http.put("/api/smallgroup/" + $scope.smallgroup._id + "/name", {
       'smallGroupName': $scope.smallgroup.name
     }).success(function () {
       notify('Small Group Name updated!');
@@ -103,7 +106,6 @@ angular.module('observatory3App')
       notify('Could not update small group name!', {classes: ["alert-danger"]});
     });
   };
-
 
   $scope.generateAttendanceCode = function () {
     if ($scope.dayCode) {
@@ -114,18 +116,18 @@ angular.module('observatory3App')
         $scope.dayCode = code;
         submitDayCode(code);
         $scope.showAttendanceCode = true;
+        updateSmallGroup();
       });
     }
   };
 
   var submitDayCode = function(code){
-      var user = Auth.getCurrentUser();
       $http.post('/api/attendance/attend', {
         dayCode: code
-      }).success(function(info){
+      }).success(function(){
         updateSmallGroup();
         }).error(function(err){
-        notify({ message: "Error: " + err, classes: ["alert-danger"] });
+        notify({ message: 'Error: ' + err, classes: ['alert-danger'] });
       });
     };
 
@@ -133,12 +135,24 @@ angular.module('observatory3App')
     return false;
   };
 
+  $scope.deleteDay = function(day) {
+    var dateString = $filter('date')(day.date, 'MMM dd');
+    $http.delete('/api/smallgroup/' + $scope.smallgroup._id + '/day/' + day.code)
+      .success(function(smallgroup){
+        notify('Successfully removed day: ' + dateString);
+        $scope.smallgroup = smallgroup;
+        updateSmallGroup();
+      })
+    .error(function() {
+      notify('ERROR: Could not remove day: ' + dateString);
+    });
+  };
+
   $scope.removeUser = function (student) {
     $http.delete('/api/smallgroup/' + $scope.smallgroup._id + '/member/' + student._id).success(function () {
       notify('Successfully removed ' + student.name);
       if (student._id === $scope.user._id) {
         notify('You have been removed from ' + $scope.smallgroup.name);
-        $scope.user.smallgroup = false;
         $scope.smallgroup = false;
       }
       updateSmallGroup();
@@ -147,10 +161,15 @@ angular.module('observatory3App')
     });
 
   };
+
+  Auth.getCurrentUser(function (user) {
+    $scope.user = user;
+    updateSmallGroup();
+  });
+
 })
 .directive('hname', function () {
   return {
     restrict: 'E',
-    //template: '<input type=\'text\' maxlength="50" ng-show=\'edittingSmallGroupName\' ng-model=\'smallgroup.name\'><br>'
   };
 });

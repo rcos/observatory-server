@@ -8,13 +8,12 @@ angular.module('observatory3App')
     $scope.getDefaultProjects = function() {
         $http.get('/api/projects/defaults').success(function(projects) {
             $scope.defaultProjects = projects;
-            console.log($scope.defaultProjects[0].photos);
             updateProjects();
         });
     };
 
     $scope.getDefaultProjects();
-    
+
     var updateProjects = function(){
         Auth.isLoggedInAsync(function(loggedIn){
             if (loggedIn){
@@ -22,8 +21,8 @@ angular.module('observatory3App')
                 $scope.user = user;
             }
         });
-    };  
-    
+    };
+
     $scope.checkUserProject = function(project) {
         return $scope.user.projects.indexOf(project._id) !== -1;
     };
@@ -50,10 +49,10 @@ angular.module('observatory3App')
         }).error(function(){
             notify({message: 'Error removing user from project!', classes: ["alert-danger"]});
         });
-    };  
+    };
 
     $scope.getImagePrefix = function(project) {
-        return '/uploads/' + project.githubUsername + '/' + project.githubProjectName + '/';
+        return '/uploads/';
     };
 
   });

@@ -19,7 +19,8 @@
     "codemirror": "~5.1.0",
     "ng-file-upload": "~8.0.1",
     "angular-markdown-directive": "~0.3.1",
-    "angular-notify": "~2.5.0"
+    "angular-notify": "~2.5.0",
+    "github.commits.widget": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"

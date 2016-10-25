@@ -23,15 +23,18 @@ var Project = require('../api/project/project.model');
 var Post = require('../api/post/post.model');
 var Smallgroup = require('../api/smallgroup/smallgroup.model');
 var ClassYear = require('../api/classyear/classyear.model')
+var Attendance = require('../api/attendance/attendance.model')
 
 
 // Seed the database with the original sample data
-var seed = function(cb) {
+var seed = function() {
     // load list of users
     var users = require('./seed/users.json');
     var projects = require('./seed/projects.json');
     var posts = require('./seed/posts.json');
     var smallgroups = require('./seed/smallgroups.json');
+    var attendances = require('./seed/attendance.json');
+    var classyears = require('./seed/classyears.json');
 
     var user = User.remove({}).exec()
         .then(function() {
@@ -65,34 +68,28 @@ var seed = function(cb) {
             console.log('finished populating smallgroups')
         });
 
-    var classYear = ClassYear.remove({}).exec()
+    var attendance = Attendance.remove({}).exec()
         .then(function(){
-            return ClassYear.create({
-                semester: '2016Spring',
-                current: true,
-                displayURP: false,
-                dayCodes: [
-                  {
-                    date: "2016-05-15T04:00:00.000Z",
-                    code: "1W2O8J",
-                    bonusDay: false
-                  }
-                ],
-
-            })
+            return Attendance.create(attendances)
         })
         .then(function() {
-                console.log('finished populating class years')
-            })
+            console.log('finished populating attendances')
+        });
 
-    Promise.all([user, project, post, smallgroup, classYear]).then(function(res){
-        cb();
-    });
+    var classYear = ClassYear.remove({}).exec()
+        .then(function(){
+            return ClassYear.create(classyears)
+        })
+        .then(function() {
+            console.log('finished populating class years')
+        })
+
+    return Promise.all([user, project, post, smallgroup, attendance, classYear]);
 }
 
 if (!module.parent) {
     if (args.length == 0) {
-        seed(function(){
+        seed().then(function(){
             db.disconnect()
         });
     }

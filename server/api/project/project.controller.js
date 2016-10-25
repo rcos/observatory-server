@@ -38,7 +38,6 @@ exports.stats = function(req, res) {
       ],
       function(err, results){
         if (err) {
-          console.log(err);
           return res.send(400);
         }
 
@@ -197,7 +196,7 @@ exports.deletePhoto = function(req, res) {
     var username = req.params.username;
     var project = req.params.project;
     var userId = req.user._id;
-    var path = config.imageUploadPath  + req.params.username + '/' + req.params.project;
+    var path = config.imageUploadPath;
 
     Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
       if(err) { return handleError(res, err); }
@@ -301,11 +300,12 @@ exports.upload = function(req, res) {
   var form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
     var file = files.file[0];
-    var name = file.path.substring(file.path.lastIndexOf('/')).substring(1);
-    var path = config.imageUploadPath  + req.params.username + '/' + req.params.project;
-    var destPath = path + '/' + name;
-    if(!fs.existsSync(path)){
-      mkdirp.sync(path);
+    var subDir = req.params.username + '/' + req.params.project + '/';
+    var name = subDir + file.path.substring(file.path.lastIndexOf('/')).substring(1);
+    var path = config.imageUploadPath;
+    var destPath = path + name;
+    if(!fs.existsSync(path+subDir)){
+      mkdirp.sync(path+subDir);
     }
     // Copy file from temp to uploads folder with streams.
     // Allows upload across partitions unlike fs.renameSync

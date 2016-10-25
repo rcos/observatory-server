@@ -1,0 +1,76 @@
+<!--Above banner login and home navigation bar-->
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<!--Top of Page Banner-->
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Rensselaer Center for Open Source</h1>
+    <p class="lead">A community of Open Source developers at <a href="http://rpi.edu">RPI</a></p>
+  </div>
+</header>
+
+<div class="container">
+  <div class="row text-area">
+    <div class="col-md-4 col-md-push-8 side-bar">
+      <p>
+      <ul class="nav nav-pills nav-stacked">
+        <li role="presentation" ><a href="/">Home</a></li>
+        <li role="presentation" class="active"><a href="#">Achievements</a></li>
+      </ul>
+      <p>
+      <div class="panel panel-default">
+        <div class="panel-heading">About Achievements</div>
+        <div class="panel-body">
+          RCOS Members are extremely active both in RCOS and at RPI as well
+          around the world. Here are a few highlights from our members.
+        </div>
+      </div>
+      <!-- Add new achievement-->
+      <div class="panel panel-default" ng-show="isAdmin()">
+        <div class="panel-heading">Add New Achievement</div>
+        <div class="panel-body">
+          <form>
+            <div class="form-group">
+              <label for="titleInput">Event Title</label>
+              <input type="text" class="form-control" id="titleInput" placeholder="Event Title" ng-model="achievement.title">
+            </div>
+            <div class="form-group">
+              <label for="descriptionInput">Event Description</label>
+              <textarea class="form-control" placeholder="Event Description" rows="3" ng-model="achievement.description"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="text" class="form-control" placeholder="01/24/2001" uib-datepicker-popup="MM/dd/yyyy" ng-model="achievement.date" />
+            </div>
+            <button type="submit" class="btn btn-default" ng-click="submit()">Submit</button>
+          </form>
+        </div>
+      </div>
+      <!-- Add new achievement-->
+    </div>
+    <div class="col-md-8 col-md-pull-4">
+      <h2>Achievements</h2>
+      <hr>
+      <div class="row" ng-repeat="ach in achievements| orderBy: '-date'">
+        <div class="col-sm-12 col-lg-4 text-right">
+          <h4>
+            {{ ach.date | date: 'mediumDate' }}
+          </h4>
+        </div>
+        <div class="col-sm-12 col-lg-8">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              {{ ach.title }}
+              <a href="#" class="pull-right" ng-click="delete(ach)" ng-show="isAdmin"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+            </div>
+            <div class="panel-body">
+              <div id="content" class="event-description" btf-markdown="ach.description"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-include="'components/footer/footer.html'"></div>

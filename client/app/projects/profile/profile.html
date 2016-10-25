@@ -29,6 +29,16 @@
           </ul>
         </div>
       </div>
+      <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
+    </div>
+    <div class="col-sm-9 text-right header-buttons">
+      <button type="button" ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</button>
+      <button type="button" ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</button>
+      <button type="button" ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</button>
+      <button type="button" ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</button>
+      <button type="button" ng-show="(isMentor() || userOnProject ) && project.active" class="btn btn-warning" ng-click="markPast()">Mark Past Project</button>
+      <button type="button" ng-show="(isMentor() || userOnProject) && !project.active" class="btn btn-warning ng-hide" ng-click="markActive()">Mark Active Project</button>
+      <button type="button" class="btn btn-primary" ng-click="editProject()" ng-show="userOnProject">Edit Project</button>
     </div>
   </div>
   <div class="row">
@@ -57,7 +67,7 @@
           </uib-carousel>
 
           <button class="btn btn-sm btn-default" ng-click="selectImage()" ng-show="userOnProject">Upload Images</button>
-          <input id="uploadImage" type="file" ngf-select="upload($file)" />
+          <input id="uploadImage" type="file" ngf-max-size="4MB" ngf-select="upload($file)" />
           <g class="glyphicon glyphicon-remove remove-photo btn btn-default" ng-show="userOnProject && project && !slides[0].placeholder" ng-click="deletePhoto()"></g>
         </div>
       </div>
@@ -70,7 +80,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-xs-12 col-sm-7">
       <div class="contributors">
         <div class="container-fluid">
           <div class="row">
@@ -90,6 +100,12 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-5">
+      <div class="description inside-full-height">
+        <h3>Recent Commits</h3>
+        <div id="github-commits"></div>
       </div>
     </div>
   </div>

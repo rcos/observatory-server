@@ -33,19 +33,38 @@ exports.index = function(req, res) {
 // router.post('/', auth.hasRole('mentor'), controller.create);
 exports.create = function(req, res){
     var user = req.user;
-    ClassYear.getCurrent(function(err, currentClassYear){
-        if (err) return handleError(res, err);
-        var smallgroup = new SmallGroup({
-            "name": "New Small Group",
-            "classYear": currentClassYear._id,
-            "enabled": true,
-            "students":[user._id],
-            "dayCodes": []
+    return ClassYear.getCurrent(function(err, classYear){
+        var classYearId = classYear._id;
+        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
+            $pull: { students : memberId }
+        }, function(err, oldSmallgroup){
+          if (err) return handleError(res, err);
+          var smallgroup = new SmallGroup({
+              "name": user.name+"'s Small Group",
+              "classYear": classYear._id,
+              "enabled": true,
+              "students":[user._id],
+              "dayCodes": []
+          });
+          return smallgroup.save().then(()=>res.sendStatus(200));
         });
-        smallgroup.save();
-        user.smallgroup = smallgroup._id;
-        user.save();
-        res.sendStatus(200);
+    });
+
+    var memberId = req.body.memberId;
+    var smallGroupId = req.params.id;
+    return ClassYear.getCurrent(function(err, classYear){
+        var classYearId = classYear._id;
+        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
+            $pull: { students : memberId }
+        }, function(err, smallgroup){
+            if (err) return handleError(res, err);
+            return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+                $addToSet: { students : memberId }
+            }, function(err, smallgroup){
+                if (err) return handleError(res, err);
+                return res.sendStatus(200);
+            });
+        });
     });
 };
 
@@ -107,10 +126,30 @@ exports.daycode = function(req, res){
         var responseObject = smallgroup.toObject();
         // Generate a day code if one does not already exist
         if (!smallgroup.dayCode){
-            var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
+            //Not ambigious code generator, function at the bottom.
+            var code = generateCode(6);
+
             smallgroup.dayCode = code;
         }
         res.status(200).json(smallgroup.dayCode);
+    });
+};
+
+// Delete a day code from a smallgroup and the corresponding daycode submission from attendance
+// Restricted to mentors
+// router.delete('/:id/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
+exports.deleteDay = function(req, res){
+    var dayCode = req.params.dayCode;
+    var smallGroupId = req.params.id;
+    return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+        $pull: { dayCodes: {code : dayCode }}
+    }, function(err, smallgroup){
+        if (err) return handleError(res, err);
+
+        return Attendance.remove({code : dayCode}, function (err){
+            if(err) {console.log(err);}
+           return res.status(200).json(smallgroup);
+        });
     });
 };
 
@@ -186,15 +225,18 @@ exports.getSmallGroupMembers = function(req, res){
 exports.addMember = function(req, res){
     var memberId = req.body.memberId;
     var smallGroupId = req.params.id;
-    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
-        $addToSet: { students : memberId }
-    }, function(err, smallgroup){
-        if (err) return handleError(res, err);
-        User.findById(memberId, function(err, user){
-            if (err) return handleError(res,err); //TODO this error leaves us in a bad state...
-            user.smallgroup = smallGroupId
-            user.save();
-            res.sendStatus(200);
+    return ClassYear.getCurrent(function(err, classYear){
+        var classYearId = classYear._id;
+        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
+            $pull: { students : memberId }
+        }, function(err, smallgroup){
+            if (err) return handleError(res, err);
+            return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+                $addToSet: { students : memberId }
+            }, function(err, smallgroup){
+                if (err) return handleError(res, err);
+                return res.sendStatus(200);
+            });
         });
     });
 };
@@ -205,16 +247,11 @@ exports.addMember = function(req, res){
 exports.deleteMember = function(req, res){
     var memberId = req.params.memberId;
     var smallGroupId = req.params.id;
-    SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+    return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
         $pull: { students : memberId }
     }, function(err, smallgroup){
         if (err) return handleError(res, err);
-        User.findById(memberId, function(err, user){
-            if (err) return handleError(res,err);
-            user.smallgroup = undefined
-            user.save();
-            return res.sendStatus(200);
-        });
+        return res.sendStatus(200);
     });
 };
 
@@ -242,4 +279,17 @@ function handleError(res, err) {
 // Return a validation error
 function validationError(res, err) {
     return res.status(422).json(err);
+}
+
+//Generating non ambigious length sized code.
+function generateCode(codeLength){
+  var characterOptions = "2346789ABCDEFGHJKMNPQRTUVWXYZ";
+  //Non ambigious characters and numbers Remove Some if you think they are ambigious given your font.
+
+  var code = ""; //Simple derivation based on previous code generation code.
+  for(var i=0;i<codeLength;i++){
+      var character = (Math.floor(Math.random() * characterOptions.length));
+      code = code.concat(characterOptions[character.toString()]);
+  }
+  return code;
 }
