@@ -184,7 +184,7 @@ function generateCode(codeLength){
   //Non ambigious characters and numbers Remove Some if you think they are ambigious given your font.
 
   var code = ""; //Simple derivation based on previous code generation code.
-  for(i=0;i<codeLength;i++){
+  for(var i=0;i<codeLength;i++){
       var character = (Math.floor(Math.random() * characterOptions.length));
       code = code.concat(characterOptions[character.toString()]);
   }
