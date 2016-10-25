@@ -22,9 +22,7 @@ exports.show = function(req, res) {
 
 // Creates a new commit in the DB.
 exports.create = function(req, res) {
-  console.error('111CREATING??');
   Commit.create(req.body, function(err, commit) {
-    console.error('CREATING??');
     if(err) { return handleError(res, err); }
     return res.json(201, commit);
   });
