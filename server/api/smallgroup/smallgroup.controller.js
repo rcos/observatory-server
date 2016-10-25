@@ -126,7 +126,9 @@ exports.daycode = function(req, res){
         var responseObject = smallgroup.toObject();
         // Generate a day code if one does not already exist
         if (!smallgroup.dayCode){
-            var code = (Math.floor(Math.random() * Math.pow(36, 6))).toString(36).toUpperCase();
+            //Not ambigious code generator, function at the bottom.
+            var code = generateCode(6);
+
             smallgroup.dayCode = code;
         }
         res.status(200).json(smallgroup.dayCode);
@@ -277,4 +279,17 @@ function handleError(res, err) {
 // Return a validation error
 function validationError(res, err) {
     return res.status(422).json(err);
+}
+
+//Generating non ambigious length sized code.
+function generateCode(codeLength){
+  var characterOptions = "2346789ABCDEFGHJKMNPQRTUVWXYZ";
+  //Non ambigious characters and numbers Remove Some if you think they are ambigious given your font.
+
+  var code = ""; //Simple derivation based on previous code generation code.
+  for(i=0;i<codeLength;i++){
+      var character = (Math.floor(Math.random() * characterOptions.length));
+      code = code.concat(characterOptions[character.toString()]);
+  }
+  return code;
 }
