@@ -49,7 +49,7 @@
         <div class='col-md-6'>
             <div class="row">
               <div class="col-sm-12">
-                <div ng-show="!user.tech.length && canEdit()">Add a new tech tag: </div>
+                <div ng-show="canEdit()">Add a new tech tag: </div>
                 <div class="tech-tags">
                   <div class='tech-boxes' ng-show="user.tech.length || canEdit()">
                       <span ng-repeat="tech in user.tech track by $index">

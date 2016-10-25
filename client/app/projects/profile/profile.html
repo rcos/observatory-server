@@ -33,7 +33,7 @@
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <div ng-show="!project.tech.length && canEdit()">Add a new tech tag: </div>
+      <div ng-show="canEdit()">Add a new tech tag: </div>
       <div class="tech-tags">
         <div class='tech-boxes' ng-show="project.tech.length || canEdit()">
             <span ng-repeat="tech in project.tech track by $index">
