@@ -2,7 +2,8 @@ var octo = require('octonode');
 /*
   @TODO: IMPORT TOKEN FROM AN UNTRACKED/PRIVATE CONFIG FILE
 */
-var token = "INSERT GITHUB API TOKEN HERE";
+
+var token = process.env.GITHUB_WORKER_TOKEN;
 var octoclient = octo.client(token);
 
 // Concurrency Variables

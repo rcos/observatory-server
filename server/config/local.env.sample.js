@@ -17,6 +17,8 @@ module.exports = {
 
   SERVER_ADDRESS: 'http://localhost:9000',
   SENDGRID_API_KEY: 'YOUR_KEY',
+  GITHUB_WORKER_TOKEN: 'YOUR_KEY',
+
 
   // Control debug level for modules using visionmedia/debug
   DEBUG: ''
