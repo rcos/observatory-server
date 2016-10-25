@@ -44,4 +44,13 @@ var ProjectSchema = new Schema({
   tech: [String]
 },{ timestamps: true});
 
+/*
+  @returns:
+ */
+ProjectSchema
+  .virtual('fullRepoPath')
+  .get(function(){
+    return (this.githubUsername + "/" + this.githubProjectName) ;
+  });
+
 module.exports = mongoose.model('Project', ProjectSchema);
