@@ -21,7 +21,6 @@ function runThread(func){
 
 
 module.exports.getCommitsForRepository = function(repoOwner, repoName, callback){
-    runThread(function(){
         /*
         	ex: github.com/<repoOwner>/<repoName>
         	repoOwner: github username for owner of github repo
@@ -35,9 +34,14 @@ module.exports.getCommitsForRepository = function(repoOwner, repoName, callback)
         var ghrepo = octoclient.repo(githubRepo);
         var commits = ghrepo.commits(function(err, data, headers) {
             //@TODO: add logic to create a commit model & save it to DB
-        	callback(data);
+        	return data;
         });
-    });
+      /*
+       not sure if callback is even needed... doesn't make sense with current function naming;
+       maybe would be better to refactor function name to specify that it applies callback to list of commits from repo?
+       or maybe this is just a javascript convention, and having callbacks everywhere is normal?
+       */
+      return callback(commits);
 };
         // @TODO: remove/cleanup; just using this as a reference for now...
     // 	var pushEvents = ghuser.events(['PushEvent'], function(ignore, pushEvents){
