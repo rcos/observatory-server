@@ -8,7 +8,6 @@ angular.module('observatory3App')
     $scope.getDefaultProjects = function() {
         $http.get('/api/projects/defaults').success(function(projects) {
             $scope.defaultProjects = projects;
-            console.log($scope.defaultProjects[0].photos);
             updateProjects();
         });
     };

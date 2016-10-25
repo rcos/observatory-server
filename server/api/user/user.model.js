@@ -30,12 +30,6 @@ var UserSchema = new Schema({
     index: true
   },
 
-  smallgroup: {
-    type : Schema.Types.ObjectId,
-    ref: 'SmallGroup',
-    index: true
-  },
-
   tech: [String],
 
   projects: [{
@@ -218,7 +212,6 @@ UserSchema
       'projects': this.projects,
       'tech': this.tech,
       'bio': this.bio,
-      'smallgroup': this.smallgroup,
       'githubProfile': this.github.login
     };
   });
@@ -232,7 +225,6 @@ UserSchema
        'email': this.email,
        'active': this.active,
        'role': this.role,
-       'smallgroup': this.smallgroup,
        'tech': this.tech,
        'avatar': this.avatar,
        'projects': this.projects,
@@ -551,14 +543,14 @@ UserSchema.methods = {
      * @param classYear object
      * @api public
      */
-    getTotalDays: function(classYear){
+    getTotalDays: function(classYear, smallgroup){
         var user = this;
         var res = {};
         res.totalDates = classYear.dates;
         res.totalBonusDates = classYear.bonusDates;
-        if ('smallgroup' in user && user.smallgroup && user.smallgroup.dates){
-            res.totalSmallDates = user.smallgroup.dates;
-            res.totalBonusSmallDates = user.smallgroup.bonusDates;
+        if (smallgroup && smallgroup.dates){
+            res.totalSmallDates = smallgroup.dates;
+            res.totalBonusSmallDates = smallgroup.bonusDates;
         }
         else{
             res.totalSmallDates = [];
