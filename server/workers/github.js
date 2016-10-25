@@ -1,8 +1,8 @@
 var octo = require('octonode');
-/* 
-  @TODO: IMPORT TOKEN FROM AN UNTRACKED/PRIVATE CONFIG FILE 
+/*
+  @TODO: IMPORT TOKEN FROM AN UNTRACKED/PRIVATE CONFIG FILE
 */
-var token = "26a687eb6476756cedf8951316c9542f3011378c";
+var token = "INSERT GITHUB API TOKEN HERE";
 var octoclient = octo.client(token);
 
 // Concurrency Variables
@@ -22,12 +22,12 @@ function runThread(func){
 
 module.exports.getCommitsForRepository = function(repoOwner, repoName, callback){
     runThread(function(){
-        /* 
+        /*
         	ex: github.com/<repoOwner>/<repoName>
-        	repoOwner: github username for owner of github repo 
+        	repoOwner: github username for owner of github repo
         	repoName: github repo name
 
-            example: 
+            example:
             	repoOwner: rcos
             	repoName: Observatory3
         */
