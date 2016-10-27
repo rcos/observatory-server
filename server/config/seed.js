@@ -24,6 +24,7 @@ var Post = require('../api/post/post.model');
 var Smallgroup = require('../api/smallgroup/smallgroup.model');
 var ClassYear = require('../api/classyear/classyear.model')
 var Attendance = require('../api/attendance/attendance.model')
+var Achievement = require('../api/achievement/achievement.model');
 
 
 // Seed the database with the original sample data
@@ -35,6 +36,7 @@ var seed = function() {
     var smallgroups = require('./seed/smallgroups.json');
     var attendances = require('./seed/attendance.json');
     var classyears = require('./seed/classyears.json');
+    var achievements = require('./seed/achievements.json');
 
     var user = User.remove({}).exec()
         .then(function() {
@@ -75,6 +77,13 @@ var seed = function() {
         .then(function() {
             console.log('finished populating attendances')
         });
+    var achievement = Achievement.remove({}).exec()
+        .then(function(){
+            return Achievement.create(achievements)
+        })
+        .then(function() {
+            console.log('finished populating achievements')
+        })
 
     var classYear = ClassYear.remove({}).exec()
         .then(function(){
@@ -84,7 +93,7 @@ var seed = function() {
             console.log('finished populating class years')
         })
 
-    return Promise.all([user, project, post, smallgroup, attendance, classYear]);
+    return Promise.all([user, project, post, smallgroup, attendance, achievement, classYear ]);
 }
 
 if (!module.parent) {
