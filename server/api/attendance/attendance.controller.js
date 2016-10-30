@@ -102,7 +102,7 @@ exports.index = function(req, res) {
 exports.show = function(req, res) {
   Attendance.findById(req.params.id, function (err, attendance) {
     if(err) { return handleError(res, err); }
-    if(!attendance) { return res.send(404); }
+    if(!attendance) { return res.sendStatus(404); }
     return res.json(attendance);
   });
 };
@@ -115,10 +115,10 @@ exports.show = function(req, res) {
 exports.destroy = function(req, res) {
   Attendance.findById(req.params.id, function (err, attendance) {
     if(err) { return handleError(res, err); }
-    if(!attendance) { return res.send(404); }
+    if(!attendance) { return res.sendStatus(404); }
     attendance.remove(function(err) {
       if(err) { return handleError(res, err); }
-      return res.send(204);
+      return res.sendStatus(204);
     });
   });
 };
@@ -146,7 +146,7 @@ exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Attendance.findById(req.params.id, function (err, attendance) {
     if (err) { return handleError(res, err); }
-    if(!attendance) { return res.send(404); }
+    if(!attendance) { return res.sendStatus(404); }
     var updated = _.merge(attendance, req.body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
@@ -164,7 +164,7 @@ exports.verifyAttendanceById = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Attendance.findById(req.params.id, function (err, attendance) {
     if (err) { return handleError(res, err); }
-    if(!attendance) { return res.send(404); }
+    if(!attendance) { return res.sendStatus(404); }
     attendance.verified = true;
     attendance.save(function (err) {
       if (err) { return handleError(res, err); }
@@ -186,7 +186,7 @@ exports.verifyFullAttendance = function(req,res){
     return getPresent(userId, isoDateToTime(new Date()), classYear._id, function(err,userAttendance){
       if (err) {return handleError(err)}
       if (!userAttendance.length){
-        return res.send(400, 'No attendance found');
+        return res.status(400).json('No attendance found');
       }
       for (var a = 0; a < userAttendance.length; a++){
         if (!userAttendance.smallgroup){
@@ -194,7 +194,7 @@ exports.verifyFullAttendance = function(req,res){
           userAttendance[a].save();
         }
       }
-      return res.send(200);
+      return res.sendStatus(200);
 
     });
   });
@@ -213,7 +213,7 @@ exports.verifySmallAttendance = function(req,res){
     return getPresent(userId, isoDateToTime(new Date()), classYear._id, function(err,userAttendance){
       if (err) {return handleError(err)}
       if (!userAttendance.length){
-        return res.send(400, 'No attendance found');
+        return res.status(400).json('No attendance found');
       }
       for (var a = 0; a < userAttendance.length; a++){
         if (userAttendance.smallgroup){
@@ -221,7 +221,7 @@ exports.verifySmallAttendance = function(req,res){
           userAttendance[a].save();
         }
       }
-      return res.send(200);
+      return res.sendStatus(200);
     });
   });
 };
@@ -313,7 +313,7 @@ exports.presentMe = function(req, res) {
 exports.attend = function(req,res){
   var user = req.user;
   var code = req.body.dayCode;
-  if (!code) {return res.send(400, 'No Code Submitted');}
+  if (!code) {return res.status(400).json('No Code Submitted');}
   // Uppercase code from client so it is case-insensitive. This must happen
   // after the above check, otherwise toUpperCase() might not exist.
   code = code.toUpperCase();
@@ -330,7 +330,7 @@ exports.attend = function(req,res){
         if (submitted.full){
           // if it is already submitted, return
 
-          return res.send(409, 'Full group attendance already recorded: ' + submitted.full.verified);
+          return res.status(409).json('Full group attendance already recorded: ' + submitted.full.verified);
         }
         // if not, create the attendance object
         return saveAttendance(
@@ -343,7 +343,7 @@ exports.attend = function(req,res){
           false, // smallgroup
           function(err,submission){
           if (err) {return handleError(err)}
-          return res.send(200, {'type':'Full group attendance', 'unverified': needsVerification});
+          return res.status(200).json({'type':'Full group attendance', 'unverified': needsVerification});
         });
       }
       // Full group & bonus day
@@ -351,7 +351,7 @@ exports.attend = function(req,res){
         // Check if the user already submitted a full group, bonus attendance
         if (submitted.fullBonus){
           // if it is already submitted, return
-          return res.send(409, 'Full group bonus attendance already recorded: ' + submitted.fullBonus.verified);
+          return res.status(409).json('Full group bonus attendance already recorded: ' + submitted.fullBonus.verified);
         }
         // if not, create the attendance object
         return saveAttendance(
@@ -364,7 +364,7 @@ exports.attend = function(req,res){
           false, // smallgroup
           function(err,submission){
           if (err) {return handleError(err)}
-          return res.send(200, {'type':'Full group bonus attendance', 'unverified': needsVerification});
+          return res.status(200).json({'type':'Full group bonus attendance', 'unverified': needsVerification});
         });
       }
       // Classyear attendance code and bonus code was incorrect, try small group
@@ -373,7 +373,7 @@ exports.attend = function(req,res){
           if (err) {return handleError(err)}
           // if the user has no smallgroup, they cannont submit smallgroup  attendance
           if (!smallgroup){
-              return res.send(400, 'No small group found or incorrect daycode!');
+              return res.status(400).json('No small group found or incorrect daycode!');
             }
 
           // Small group, and not a bonus day
@@ -381,7 +381,7 @@ exports.attend = function(req,res){
             // Check if the user already submitted a small group, non-bonus attendance
             if (submitted.small){
               // if it is already submitted, return
-              return res.send(409, 'Small group attendance already recorded: ' + submitted.small.verified);
+              return res.status(409).json('Small group attendance already recorded: ' + submitted.small.verified);
             }
             // if not, create the attendance object
             return saveAttendance(
@@ -394,7 +394,7 @@ exports.attend = function(req,res){
               true, // smallgroup
               function(err,submission){
               if (err) {return handleError(err)}
-              return res.send(200, {'type':'Small group attendance', 'unverified': needsVerification});
+              return res.status(200).json({'type':'Small group attendance', 'unverified': needsVerification});
             });
           }
           // Small group & bonus day
@@ -402,7 +402,7 @@ exports.attend = function(req,res){
             // Check if the user already submitted a small group & bonus attendance
             if (submitted.smallBonus){
               // if it is already submitted, return
-              return res.send(409, 'Small group bonus attendance already recorded: ' + submitted.smallBonus.verified);
+              return res.status(409).json('Small group bonus attendance already recorded: ' + submitted.smallBonus.verified);
             }
             // if not, create the attendance object
             return saveAttendance(
@@ -415,11 +415,11 @@ exports.attend = function(req,res){
               true, // smallgroup
               function(err,submission){
               if (err) {return handleError(err)}
-              return res.send(200, {'type':'Small group bonus attendance', 'unverified': needsVerification});
+              return res.status(200).json({'type':'Small group bonus attendance', 'unverified': needsVerification});
             });
           }
           else {
-            return res.send(400, 'Incorrect Day Code!');
+            return res.status(400).json('Incorrect Day Code!');
           }
         });
       }
@@ -468,13 +468,13 @@ exports.setAttendanceSmall = function(req, res) {
         // if it is already valid, return
         var submission = submitted.small;
         if (submission.verified){
-          return res.send(400, 'Small group attendance already recorded: ' + submission.verified);
+          return res.status(400).json('Small group attendance already recorded: ' + submission.verified);
         }
         // Otherwise, verify it and return
         else{
           submission.verified = true;
           submission.save();
-          return res.send(200, {'type':'Small group attendance', 'unverified': false});
+          return res.status(200).json({'type':'Small group attendance', 'unverified': false});
         }
       }
       // if not, create the attendance object
@@ -490,7 +490,7 @@ exports.setAttendanceSmall = function(req, res) {
           function(err,submission){
           if (err) return handleError(err);
           // saved
-          return res.send(200, {'type':'Small group attendance', 'unverified': false});
+          return res.status(200).json({'type':'Small group attendance', 'unverified': false});
         });
       }
     })
@@ -506,13 +506,13 @@ exports.setAttendanceFull = function(req, res) {
         // if it is already valid, return
         var submission = submitted.full;
         if (submission.verified){
-          return res.send(400, 'Full group attendance already recorded: ' + submission.verified);
+          return res.status(400).json('Full group attendance already recorded: ' + submission.verified);
         }
         // Otherwise, verify it and return
         else{
           submission.verified = true;
           submission.save();
-          return res.send(200, {'type':'Full group attendance', 'unverified': false});
+          return res.status(200).json({'type':'Full group attendance', 'unverified': false});
         }
       }
       // if not, create the attendance object
@@ -528,7 +528,7 @@ exports.setAttendanceFull = function(req, res) {
           function(err,submission){
           if (err) return handleError(err);
           // saved
-          return res.send(200, {'type':'Full group attendance', 'unverified': false});
+          return res.status(200).json({'type':'Full group attendance', 'unverified': false});
         });
       }
     });
@@ -545,13 +545,13 @@ exports.setAttendanceSmallBonus = function(req, res) {
         // if it is already valid, return
         var submission = submitted.smallBonus;
         if (submission.verified){
-          return res.send(400, 'Small group bonus attendance already recorded: ' + submission.verified);
+          return res.status(400).json('Small group bonus attendance already recorded: ' + submission.verified);
         }
         // Otherwise, verify it and return
         else{
           submission.verified = true;
           submission.save();
-          return res.send(200, {'type':'Small group bonus attendance', 'unverified': false});
+          return res.status(200).json({'type':'Small group bonus attendance', 'unverified': false});
         }
       }
       else{
@@ -567,7 +567,7 @@ exports.setAttendanceSmallBonus = function(req, res) {
           function(err,submission){
           if (err) return handleError(err);
           // saved
-          return res.send(200, {'type':'Small group bonus attendance', 'unverified': false});
+          return res.status(200).json({'type':'Small group bonus attendance', 'unverified': false});
         });
       }
     });
@@ -583,13 +583,13 @@ exports.setAttendanceFullBonus = function(req, res) {
         // if it is already valid, return
         var submission = submitted.fullBonus;
         if (submission.verified){
-          return res.send(400, 'Full group bonus attendance already recorded: ' + submission.verified);
+          return res.status(400).json('Full group bonus attendance already recorded: ' + submission.verified);
         }
         // Otherwise, verify it and return
         else{
           submission.verified = true;
           submission.save();
-          return res.send(200, {'type':'Full group bonus attendance', 'unverified': false});
+          return res.status(200).json({'type':'Full group bonus attendance', 'unverified': false});
         }
       }
       // if not, create the attendance object
@@ -605,7 +605,7 @@ exports.setAttendanceFullBonus = function(req, res) {
           function(err,submission){
           if (err) return handleError(err);
           // saved
-          return res.send(200, {'type':'Full group bonus attendance', 'unverified': false});
+          return res.status(200).json({'type':'Full group bonus attendance', 'unverified': false});
         });
       }
     });
@@ -699,5 +699,5 @@ exports.getUnverifiedSmallAttendanceUsers = function(req,res){
 
 
 function handleError(res, err) {
-  return res.send(500, err);
+  return res.status(500).json(err);
 }

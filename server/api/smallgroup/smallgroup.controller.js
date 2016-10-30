@@ -127,7 +127,8 @@ exports.daycode = function(req, res){
         today.setHours(0,0,0,0);
         for (var i = 0;i < smallgroup.dayCodes.length;i++){
           if (today.getTime() === smallgroup.dayCodes[i].date.getTime()){
-            return res.send(200, smallgroup.dayCodes[i].code);
+
+            return res.status(200).json(smallgroup.dayCodes[i].code)
           }
         }
         //Not ambigious code generator, function at the bottom.
@@ -140,38 +141,9 @@ exports.daycode = function(req, res){
         });
         smallgroup.save(function(err, classYear){
           if (err) return handleError(res, err);
-          res.send(200, code);
+          return res.status(200).json(code)
         });
-
     });
-};
-// Generate a daycode or return the current day code for the
-// current class year
-exports.daycode = function(req, res){
-  ClassYear.findOne({
-    "current": true
-  }, function(err, classYear){
-    if (err) return handleError(res, err);
-    var today = new Date();
-    today.setHours(0,0,0,0);
-    for (var i = 0;i < classYear.dayCodes.length;i++){
-      if (today.getTime() === classYear.dayCodes[i].date.getTime()){
-        return res.send(200, classYear.dayCodes[i].code);
-      }
-    }
-    //Not ambigious code generator, function at the bottom.
-    var code = generateCode(6);
-
-    classYear.dayCodes.push({
-      date: today,
-      code: code,
-      bonusDay: req.body.bonusDay ? true : false
-    });
-    classYear.save(function(err, classYear){
-      if (err) return handleError(res, err);
-      res.send(200, code);
-    });
-  });
 };
 
 // Delete a day code from a smallgroup and the corresponding daycode submission from attendance
@@ -186,7 +158,7 @@ exports.deleteDay = function(req, res){
         if (err) return handleError(res, err);
 
         return Attendance.remove({code : dayCode}, function (err){
-            if(err) {console.log(err);}
+          if (err) return handleError(res, err);
            return res.status(200).json(smallgroup);
         });
     });
