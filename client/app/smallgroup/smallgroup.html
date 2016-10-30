@@ -147,7 +147,9 @@
           <tr ng-repeat="day in smallgroup.dayCodes | orderBy:sortorder">
             <td>{{ day.date | date:"MMM dd" }}</a></td>
             <td>{{ day.bonusDay?"Bonus":"Regular" }}</td>
-            <td>{{ numOfattendends.get(day.code) }}</td>
+            <td> <div class = "btn btn-link" uib-popover="{{namesOfattends.get(day.code).join(', ')}}" popover-title="Attendees:">
+            {{ numOfattends.get(day.code) }}</div></td>
+
             <td><a ng-click="deleteDay(day)"><i class="fa fa-times"></i> Delete</a></td>
           </tr>
         </tbody>
