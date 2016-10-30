@@ -36,6 +36,10 @@ angular.module('observatory3App')
   };
   updateProject();
 
+  $scope.canEdit = function(){
+    return $scope.isLoggedIn() || $scope.userOnProject;
+  };
+
   $scope.editProject = function() {
     $scope.editedProject = angular.copy($scope.project);
 

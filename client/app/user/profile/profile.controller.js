@@ -103,7 +103,7 @@ angular.module('observatory3App')
          });
       };
 
-      $scope.addTech = function(){
+      $scope.addTechBubble = function(){
         if($scope.insertTechContent){
           $http.put('/api/users/' + $stateParams.id + '/addTech', {
               'tech': $scope.insertTechContent

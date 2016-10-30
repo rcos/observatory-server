@@ -44,18 +44,33 @@
         margin-top:10px;
     }
 
-    .tech-boxes{
-        margin-bottom:20px;
-    }
+    .tech-tags {
+        padding: 10px;
 
-    .tech-boxes div{
-        display:inline-block;
-        padding:4px;
-        padding-left:6px;
-        padding-right:6px;
-        margin:2px;
-        background-color:#ccc;
-        border-radius:5px;
+        span {
+          padding: 5px 10px;
+          display: inline-block;
+          background-color: #eee;
+          margin-right: 5px;
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 10px;
+        }
+        .tech-boxes {
+          white-space: nowrap;
+          overflow-x: auto;
+        }
+    }
+    .project-tech-boxes{
+        div{
+            display:inline-block;
+            padding:4px;
+            padding-left:6px;
+            padding-right:6px;
+            margin:2px;
+            background-color:#ccc;
+            border-radius:5px;
+        }
     }
 
     .content-box{
