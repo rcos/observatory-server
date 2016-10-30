@@ -33,6 +33,8 @@ exports.index = function(req, res) {
 // router.post('/', auth.hasRole('mentor'), controller.create);
 exports.create = function(req, res){
     var user = req.user;
+    var memberId = req.body.memberId;
+    var smallGroupId = req.params.id;
     return ClassYear.getCurrent(function(err, classYear){
         var classYearId = classYear._id;
         return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
@@ -47,23 +49,6 @@ exports.create = function(req, res){
               "dayCodes": []
           });
           return smallgroup.save().then(()=>res.sendStatus(200));
-        });
-    });
-
-    var memberId = req.body.memberId;
-    var smallGroupId = req.params.id;
-    return ClassYear.getCurrent(function(err, classYear){
-        var classYearId = classYear._id;
-        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
-            $pull: { students : memberId }
-        }, function(err, smallgroup){
-            if (err) return handleError(res, err);
-            return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
-                $addToSet: { students : memberId }
-            }, function(err, smallgroup){
-                if (err) return handleError(res, err);
-                return res.sendStatus(200);
-            });
         });
     });
 };
