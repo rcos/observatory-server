@@ -11,13 +11,13 @@ angular.module('observatory3App')
 var getAttendees = function(dayCode){
     $http.get('/api/attendance/code/attendees/'+dayCode)
     .success(function (data){
-      $scope.numOfattends.set(dayCode, data.length);
+      //store a list of attendees
+      $scope.numOfattendees.set(dayCode, data.length);
       var names = [];
       for(var j = 0; j < data.length; j++){
         names[j] =data[j].name;
       }
-      $scope.namesOfattends.set(dayCode, names);
-      //store a list of attendees
+      $scope.namesOfattendees.set(dayCode, names);
     }).error(function(err){
       console.log(err);
     });
@@ -37,8 +37,8 @@ var getAttendees = function(dayCode){
         $scope.dayCode = smallgroup.dayCode;
       }
       if ('dayCodes' in smallgroup && smallgroup.dayCodes){
-        $scope.numOfattends = new Map();
-        $scope.namesOfattends = new Map();
+        $scope.numOfattendees = new Map();
+        $scope.namesOfattendees = new Map();
         for(var i =0; i<smallgroup.dayCodes.length;i++){
           if(smallgroup.dayCodes[i]){
             getAttendees(smallgroup.dayCodes[i].code);
