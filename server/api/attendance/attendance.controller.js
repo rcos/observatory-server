@@ -61,7 +61,7 @@ var checkAttendanceForDate = function(user, classYear, date, cb){
   });
 };
 
-var setAttendance = function(classYearId, userId, date, code, needsVerification, bonusDay, smallgroup,cb){
+var saveAttendance = function(classYearId, userId, date, code, needsVerification, bonusDay, smallgroup,cb){
   return Attendance.create({
     classYear: classYearId,
     user: userId,
@@ -76,6 +76,7 @@ var setAttendance = function(classYearId, userId, date, code, needsVerification,
     code: code,
   },cb);
 };
+
 // *******************************************************
 // Get list of attendance submissions
 // Restricted to mentors
@@ -332,7 +333,15 @@ exports.attend = function(req,res){
           return res.send(409, 'Full group attendance already recorded: ' + submitted.full.verified);
         }
         // if not, create the attendance object
-        return setAttendance(classYear._id, user._id, new Date(), code, needsVerification, false, false, function(err,submission){
+        return saveAttendance(
+          classYear._id,  // classYearId
+          user._id, // userId
+          new Date(), // date
+          code, // code
+          needsVerification, // needsVerification
+          false, // bonusDay
+          false, // smallgroup
+          function(err,submission){
           if (err) {return handleError(err)}
           return res.send(200, {'type':'Full group attendance', 'unverified': needsVerification});
         });
@@ -345,7 +354,15 @@ exports.attend = function(req,res){
           return res.send(409, 'Full group bonus attendance already recorded: ' + submitted.fullBonus.verified);
         }
         // if not, create the attendance object
-        return setAttendance(classYear._id, user._id, new Date(), code, needsVerification, true, false, function(err,submission){
+        return saveAttendance(
+          classYear._id,  // classYearId
+          user._id, // userId
+          new Date(), // date
+          code, // code
+          needsVerification, // needsVerification
+          true, // bonusDay
+          false, // smallgroup
+          function(err,submission){
           if (err) {return handleError(err)}
           return res.send(200, {'type':'Full group bonus attendance', 'unverified': needsVerification});
         });
@@ -367,7 +384,15 @@ exports.attend = function(req,res){
               return res.send(409, 'Small group attendance already recorded: ' + submitted.small.verified);
             }
             // if not, create the attendance object
-            return setAttendance(classYear._id, user._id, new Date(), code, needsVerification, false, true, function(err,submission){
+            return saveAttendance(
+              classYear._id,  // classYearId
+              user._id, // userId
+              new Date(), // date
+              code, // code
+              needsVerification, // needsVerification
+              false, // bonusDay
+              true, // smallgroup
+              function(err,submission){
               if (err) {return handleError(err)}
               return res.send(200, {'type':'Small group attendance', 'unverified': needsVerification});
             });
@@ -380,7 +405,15 @@ exports.attend = function(req,res){
               return res.send(409, 'Small group bonus attendance already recorded: ' + submitted.smallBonus.verified);
             }
             // if not, create the attendance object
-            return setAttendance(classYear._id, user._id, new Date(), code, needsVerification, true, true, function(err,submission){
+            return saveAttendance(
+              classYear._id,  // classYearId
+              user._id, // userId
+              new Date(), // date
+              code, // code
+              needsVerification, // needsVerification
+              true, // bonusDay
+              true, // smallgroup
+              function(err,submission){
               if (err) {return handleError(err)}
               return res.send(200, {'type':'Small group bonus attendance', 'unverified': needsVerification});
             });
@@ -403,7 +436,7 @@ exports.attend = function(req,res){
 // router.post('/attend/:user/smallBonus', auth.hasRole('mentor'), controller.setAttendanceSmallBonus);
 // router.post('/attend/:user/fullBonus', auth.hasRole('mentor'), controller.setAttendanceFullBonus);
 
-// Get data for submitting attendance, then pass it to setAttendance
+// Get data for submitting attendance, then pass it to saveAttendance
 var getUserAndDateParams = function(req, cb){
   var userId = req.params.user;
   return User.findById(userId, function(err, user){
@@ -446,7 +479,15 @@ exports.setAttendanceSmall = function(req, res) {
       }
       // if not, create the attendance object
       else{
-        setAttendance(classYear._id, user._id, date, 'manual', false, false, true, function (err, submission) {
+        return saveAttendance(
+          classYear._id,  // classYearId
+          user._id, // userId
+          date, // date
+          'manual', // code
+          false, // needsVerification
+          false, // bonusDay
+          true, // smallgroup
+          function(err,submission){
           if (err) return handleError(err);
           // saved
           return res.send(200, {'type':'Small group attendance', 'unverified': false});
@@ -476,7 +517,15 @@ exports.setAttendanceFull = function(req, res) {
       }
       // if not, create the attendance object
       else{
-        setAttendance(classYear._id, user._id, date, 'manual', false, false, false, function (err, submission) {
+        return saveAttendance(
+          classYear._id,  // classYearId
+          user._id, // userId
+          date, // date
+          'manual', // code
+          false, // needsVerification
+          false, // bonusDay
+          false, // smallgroup
+          function(err,submission){
           if (err) return handleError(err);
           // saved
           return res.send(200, {'type':'Full group attendance', 'unverified': false});
@@ -507,7 +556,15 @@ exports.setAttendanceSmallBonus = function(req, res) {
       }
       else{
         // if not, create the attendance object
-        setAttendance(classYear._id, user._id, date, 'manual', false, true, true, function (err, submission) {
+        return saveAttendance(
+          classYear._id,  // classYearId
+          user._id, // userId
+          date, // date
+          'manual', // code
+          false, // needsVerification
+          true, // bonusDay
+          true, // smallgroup
+          function(err,submission){
           if (err) return handleError(err);
           // saved
           return res.send(200, {'type':'Small group bonus attendance', 'unverified': false});
@@ -537,7 +594,15 @@ exports.setAttendanceFullBonus = function(req, res) {
       }
       // if not, create the attendance object
       else{
-        setAttendance(classYear._id, user._id, date, 'manual', false, true, false, function (err,submissionl) {
+        return saveAttendance(
+          classYear._id,  // classYearId
+          user._id, // userId
+          date, // date
+          'manual', // code
+          false, // needsVerification
+          true, // bonusDay
+          false, // smallgroup
+          function(err,submission){
           if (err) return handleError(err);
           // saved
           return res.send(200, {'type':'Full group bonus attendance', 'unverified': false});
