@@ -312,6 +312,7 @@ exports.attend = function(req,res){
   var user = req.user;
   var code = req.body.dayCode;
   if (!code) {return res.status(400).json('No Code Submitted');}
+  console.log("Code",code)
   // Uppercase code from client so it is case-insensitive. This must happen
   // after the above check, otherwise toUpperCase() might not exist.
   code = code.toUpperCase();
@@ -323,6 +324,8 @@ exports.attend = function(req,res){
       // Check if the user needs to verify, with config.attendanceVerificationRatio chance
       var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
       // Full group, not a bonus day
+      console.log("classYear.dayCode",classYear.dayCode)
+      console.log("classYear.bonusDayCode",classYear.bonusDayCode)
       if (classYear.dayCode === code){
         // Check if the user already submitted a full group, non bonus attendance
         if (submitted.full){
@@ -375,6 +378,8 @@ exports.attend = function(req,res){
             }
 
           // Small group, and not a bonus day
+          console.log("smallgroup.dayCode",smallgroup.dayCode)
+
           if (smallgroup.dayCode === code){
             // Check if the user already submitted a small group, non-bonus attendance
             if (submitted.small){
@@ -396,6 +401,7 @@ exports.attend = function(req,res){
             });
           }
           // Small group & bonus day
+          console.log("smallgroup.bonusDayCode",smallgroup.bonusDayCode)
           else if (smallgroup.bonusDayCode === code){
             // Check if the user already submitted a small group & bonus attendance
             if (submitted.smallBonus){
