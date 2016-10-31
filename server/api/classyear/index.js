@@ -19,5 +19,6 @@ router.put('/semester/:semester', auth.hasRole('admin'), controller.update);
 router.delete('/semester/:semester', auth.hasRole('admin') ,controller.destroy);
 
 router.post('/daycode', auth.hasRole('admin'), controller.daycode);
+router.delete('/day/:dayCode', auth.hasRole('admin'), controller.deleteDay);
 
 module.exports = router;

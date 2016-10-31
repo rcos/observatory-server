@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('AdminAttendanceCtrl', function ($scope, $http, Auth, User, $location, $window, notify) {
+.controller('AdminAttendanceCtrl', function ($scope, $http, Auth, User, $location, $window, notify, $filter) {
     $scope.showDayCode = false;
     $scope.showBonusDayCode = false;
     $scope.dayCode = false;
@@ -33,7 +33,7 @@ angular.module('observatory3App')
     var updateClassYear = function(){
         $http.get('/api/classyear')
         .success(function(currentClass){
-=            // Check if there is already an attendance code
+            // Check if there is already an attendance code
             var today = new Date();
             today.setHours(0,0,0,0);
             if ('dayCode' in currentClass && currentClass.dayCode) {
@@ -69,6 +69,19 @@ angular.module('observatory3App')
       });
     };
 
+    $scope.deleteDay = function(day) {
+      console.log("deleteDay")
+      var dateString = $filter('date')(day.date, 'MMM dd');
+      $http.delete('/api/classyear/day/' + day.code)
+        .success(function(currentClass){
+          notify('Successfully removed day: ' + dateString);
+          $scope.currentClass = currentClass;
+          updateClassYear();
+        })
+      .error(function() {
+        notify('ERROR: Could not remove day: ' + dateString);
+      });
+    };
 
     $scope.generateDayCode = function(bonusDay){
         $http.post('/api/classyear/daycode', {
