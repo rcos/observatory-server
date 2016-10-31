@@ -96,6 +96,10 @@ exports.getSmallGroup = function(req, res){
             if (smallgroup.dayCode){
                 responseObject.dayCode = smallgroup.dayCode;
             }
+            if (smallgroup.bonusDayCode){
+                responseObject.bonusDayCode = smallgroup.bonusDayCode;
+            }
+
         }
         res.status(200).json(responseObject);
     });

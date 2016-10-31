@@ -12,18 +12,41 @@ exports.index = function(req, res) {
   	"current": true
   }, function (err, classYear) {
   	if(err) { return handleError(res, err); }
-   	return res.status(200).json(classYear);
+    var responseObject = classYear.toObject();
+    // Admins should get a day code
+    // Generate a day code if one does not already exist
+    if (!req.user || !req.user.isAdmin){
+        responseObject.dayCodes = [];
+    }
+    else{
+        // Admins should get a day code
+        // Generate a day code if one does not already exist
+        if (classYear.dayCode){
+            responseObject.dayCode = classYear.dayCode;
+        }
+        if (classYear.bonusDayCode){
+            responseObject.bonusDayCode = classYear.bonusDayCode;
+        }
+
+    }
+   	return res.status(200).json(responseObject);
   });
 };
 
-// Get a specific class year
+// Get a specific class year, Limited to Admins
 exports.getClassYear = function(req, res) {
   ClassYear.findOne({
     "semester": req.params.semester
   }, function (err, classYear){
     if(err) { return handleError(res, err); }
     if (!classYear) return res.send(404);
-    res.json(classYear);
+    var responseObject = classYear.toObject();
+    // Admins should get a day code
+    // Generate a day code if one does not already exist
+    if (classYear.dayCode){
+        responseObject.dayCode = classYear.dayCode;
+    }
+    res.json(responseObject);
   })
 };
 

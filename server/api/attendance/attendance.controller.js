@@ -234,9 +234,7 @@ exports.getAttendees = function(req,res){
   return Attendance.find({code:req.params.dateCode})
     .exec(function (err,results){
         var userIds = results.map(function(e){ return e.user } );
-        console.log(userIds);
         User.find({_id : {$in : userIds } },{"name" : 1}, function(err, users){
-        console.log("users",users);
         res.json(users);
         })
     })

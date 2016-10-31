@@ -22,7 +22,7 @@
     <div class="col-sm-12" ng-hide="edittingSmallGroupName">
       <h2 class="group-name">
         Small Group: {{smallgroup.name}}
-        <i class="glyphicon glyphicon-edit edit-name" aria-hidden="true" ng-click="editSmallGroupName()" ng-show="isMentor() && !showAttendanceCode"></i>
+        <i class="glyphicon glyphicon-edit edit-name" aria-hidden="true" ng-click="editSmallGroupName()" ng-show="isMentor() && !showDayCode && !showBonusDayCode"></i>
       </h2>
     </div>
     <div class="col-sm-4" ng-show="edittingSmallGroupName">
@@ -40,15 +40,19 @@
       </form>
     </div>
   </div>
-  <div class="info" ng-hide='showAttendanceCode'>
+  <div class="info" ng-hide='showDayCode || showBonusDayCode'>
     <div class="row attendance" ng-show="isMentor()">
       <div class="col-sm-12">
         <p ng-show='dayCode' >The Attendance Code is {{dayCode}}</p>
-        <button ng-hide='dayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='generateAttendanceCode()'> Generate Attendance Code </button>
-        <button ng-show='dayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='showAttendanceCode = true;'> Show Code Full Screen </button>
-        <div ng-show='isPresent()'>
-          Your attendance has been taken!
-        </div>
+        <p ng-show='bonusDayCode' >The Bonus attendance Code is {{bonusDayCode}}</p>
+      </div>
+      <div class="col-sm-12 button-row" ng-hide="bonusDayCode || dayCode">
+        <button ng-hide='dayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='generateDayCode(false)'> Generate Attendance Code </button>
+        <button ng-hide='bonusDayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='generateDayCode(true)'> Generate Bonus Attendance Code </button>
+      </div>
+      <div class="col-sm-12 button-row">
+        <button ng-show='dayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='showDayCode = true;'> Show Code Full Screen </button>
+        <button ng-show='bonusDayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='showBonusDayCode = true;'> Show Bonus Code Full Screen </button>
       </div>
     </div>
     <div class="row">
@@ -129,7 +133,7 @@
     </div>
   </div>
 
-  <div class="row" ng-show="isMentor()" ng-hide="showAttendanceCode">
+  <div class="row" ng-show="isMentor()" ng-hide="showDayCode || showBonusDayCode">
     <div class="col-sm-12">
       <h3>Attendance Days:</h3>
     </div>
@@ -157,8 +161,8 @@
   </div>
 </div>
 
-<div class="container-fluid smallgroup" ng-show='showAttendanceCode'>
-  <div class='big-attendance text-center' ng-click='showAttendanceCode=false;'>
+<div class="container-fluid smallgroup" ng-show='showDayCode'>
+  <div class='big-attendance text-center' ng-click='showDayCode=false;'>
     <div class="row">
       <div class="col-sm-12">
         <div class='small-text'>
@@ -166,6 +170,21 @@
         </div>
         <div class='big-text'>
           {{ dayCode }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid smallgroup" ng-show='showBonusDayCode'>
+  <div class='big-attendance text-center' ng-click='showBonusDayCode=false;'>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class='small-text'>
+          The Bonus Attendance Code is...
+        </div>
+        <div class='big-text'>
+          {{ bonusDayCode }}
         </div>
       </div>
     </div>

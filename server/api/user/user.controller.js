@@ -304,6 +304,9 @@ exports.smallgroup = function (req, res, next) {
             if (smallgroup.dayCode){
                 responseObject.dayCode = smallgroup.dayCode;
             }
+            if (smallgroup.bonusDayCode){
+                responseObject.bonusDayCode = smallgroup.bonusDayCode;
+            }
         }
         res.status(200).json(responseObject);
       });

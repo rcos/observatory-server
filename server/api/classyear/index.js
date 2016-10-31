@@ -8,7 +8,7 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 // TODO permissions
-router.get('/', controller.index);
+router.get('/', auth.isAuthenticated(), controller.index);
 router.post('/',  auth.hasRole('admin'), controller.create);
 
 router.get('/displayURP', controller.getDisplayURP);
