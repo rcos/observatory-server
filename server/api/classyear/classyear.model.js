@@ -36,7 +36,22 @@ ClassSchema
 		var today = new Date();
 		today.setHours(0,0,0,0);
 		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() == today.getTime()){
+			if (this.dayCodes[i].date.getTime() == today.getTime()
+      && this.dayCodes[i].bonusDay === false){
+				return this.dayCodes[i].code;
+			}
+		}
+		return null;
+	});
+
+ClassSchema
+	.virtual("bonusDayCode")
+	.get(function(){
+		var today = new Date();
+		today.setHours(0,0,0,0);
+		for (var i = 0;i < this.dayCodes.length;i++){
+			if (this.dayCodes[i].date.getTime() == today.getTime()
+      && this.dayCodes[i].bonusDay === true){
 				return this.dayCodes[i].code;
 			}
 		}
