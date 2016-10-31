@@ -379,6 +379,7 @@ exports.attend = function(req,res){
 
           // Small group, and not a bonus day
           console.log("smallgroup.dayCode",smallgroup.dayCode)
+          console.log("smallgroup.bonusDayCode",smallgroup.bonusDayCode)
 
           if (smallgroup.dayCode === code){
             // Check if the user already submitted a small group, non-bonus attendance
@@ -401,7 +402,6 @@ exports.attend = function(req,res){
             });
           }
           // Small group & bonus day
-          console.log("smallgroup.bonusDayCode",smallgroup.bonusDayCode)
           else if (smallgroup.bonusDayCode === code){
             // Check if the user already submitted a small group & bonus attendance
             if (submitted.smallBonus){
