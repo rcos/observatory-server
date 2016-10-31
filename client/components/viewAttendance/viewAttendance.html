@@ -37,7 +37,9 @@
             <tr ng-repeat="day in group.dayCodes | orderBy:sortorder">
               <td>{{ day.date | date:"MMM dd" }}</a></td>
               <td>{{ day.bonusDay?"Bonus":"Regular" }}</td>
-              <td>{{ numOfattendees.get(day.code) }}</td>
+              <td>
+                <div ng-show="names" class="btn btn-link" uib-popover="{{namesOfattendees.get(day.code).join(', ')}}" popover-title="Attendees:">{{ numOfattendees.get(day.code) }}</div>
+                <div ng-hide="names">{{ numOfattendees.get(day.code) }}</div></td>
               <td><a ng-click="deleteDay(day)"><i class="fa fa-times"></i> Delete</a></td>
             </tr>
           </tbody>
