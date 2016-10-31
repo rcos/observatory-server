@@ -49,7 +49,7 @@ describe('Attendance API:', () => {
 
     it('should allow mentors to generate an attendance code', done => {
       mentorSession
-      .post('/api/smallgroup/'+smallgroup._id+'/daycode').end((err, res) => {
+      .post('/api/smallgroup/daycode').end((err, res) => {
         expect(res.body).to.have.length(6);
         dayCode = res.body;
         done(err);
