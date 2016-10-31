@@ -71,6 +71,7 @@
 },{
     "provider": "local",
     "name": "TestMentor",
+    "role": "mentor",
     "email": "testmentor@testmentor.com",
     "password": "testmentor",
     "github": {
