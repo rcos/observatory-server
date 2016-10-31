@@ -287,7 +287,7 @@ exports.privateProfile = function (req, res, next) {
  * Get a single user's smallgroup
  */
 exports.smallgroup = function (req, res, next) {
-  var userId = req.params.id;
+  var userId = req.user.id;
   return ClassYear.getCurrent(function(err, classYear){
       var classYearId = classYear._id;
       return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){

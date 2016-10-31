@@ -18,7 +18,7 @@
 </div>
 
 <div class="container smallgroup" ng-show="smallgroup">
-  <div class="row">
+  <div class="row" >
     <div class="col-sm-12" ng-hide="edittingSmallGroupName">
       <h2 class="group-name">
         Small Group: {{smallgroup.name}}
@@ -40,21 +40,7 @@
       </form>
     </div>
   </div>
-  <div class="info" ng-hide='showDayCode || showBonusDayCode'>
-    <div class="row attendance" ng-show="isMentor()">
-      <div class="col-sm-12">
-        <p ng-show='dayCode' >The Attendance Code is {{dayCode}}</p>
-        <p ng-show='bonusDayCode' >The Bonus attendance Code is {{bonusDayCode}}</p>
-      </div>
-      <div class="col-sm-12 button-row" ng-hide="bonusDayCode || dayCode">
-        <button ng-hide='dayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='generateDayCode(false)'> Generate Attendance Code </button>
-        <button ng-hide='bonusDayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='generateDayCode(true)'> Generate Bonus Attendance Code </button>
-      </div>
-      <div class="col-sm-12 button-row">
-        <button ng-show='dayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='showDayCode = true;'> Show Code Full Screen </button>
-        <button ng-show='bonusDayCode' class='btn btn-primary' ng-show='isMentor()' ng-click='showBonusDayCode = true;'> Show Bonus Code Full Screen </button>
-      </div>
-    </div>
+  <div class="info" ng-hide='hide'>
     <div class="row">
       <div class="col-sm-12 col-md-6 col-lg-5" ng-show="isMentor()">
         <h3>User Registration</h3>
@@ -133,62 +119,12 @@
     </div>
   </div>
 
-  <div class="row" ng-show="isMentor()" ng-hide="showDayCode || showBonusDayCode">
+  <div class="row">
     <div class="col-sm-12">
-      <h3>Attendance Days:</h3>
-    </div>
-    <div class="col-sm-12">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
-            <td sort-arrow sortby='bonusDay' text='Type' sortorder='sortorder'></td>
-            <td text ='Attendees'>Attendees</td>
-            <td text='Delete'>Delete</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="day in smallgroup.dayCodes | orderBy:sortorder">
-            <td>{{ day.date | date:"MMM dd" }}</a></td>
-            <td>{{ day.bonusDay?"Bonus":"Regular" }}</td>
-            <td> <div class = "btn btn-link" uib-popover="{{namesOfattendees.get(day.code).join(', ')}}" popover-title="Attendees:">
-            {{ numOfattendees.get(day.code) }}</div></td>
-            <td><a ng-click="deleteDay(day)"><i class="fa fa-times"></i> Delete</a></td>
-          </tr>
-        </tbody>
-      </table>
+      <h3 ng-hide="hide">Attendance</h3>
+      <view-attendance endpoint="smallgroup" names="true" hide="hide"></view-attendance>
     </div>
   </div>
-</div>
 
-<div class="container-fluid smallgroup" ng-show='showDayCode'>
-  <div class='big-attendance text-center' ng-click='showDayCode=false;'>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class='small-text'>
-          The Attendance Code is...
-        </div>
-        <div class='big-text'>
-          {{ dayCode }}
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
-
-<div class="container-fluid smallgroup" ng-show='showBonusDayCode'>
-  <div class='big-attendance text-center' ng-click='showBonusDayCode=false;'>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class='small-text'>
-          The Bonus Attendance Code is...
-        </div>
-        <div class='big-text'>
-          {{ bonusDayCode }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div ng-include="'components/footer/footer.html'"></div>

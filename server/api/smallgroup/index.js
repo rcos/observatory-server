@@ -10,13 +10,14 @@ var router = express.Router();
 // Basic Access / Manipulation
 router.get('/', auth.hasRole('mentor'), controller.index);
 router.post('/', auth.hasRole('mentor'), controller.create);
+
+// Generate a daycode or return the current day code for your smallgroup
+router.post('/daycode', auth.hasRole('mentor'), controller.daycode);
+router.delete('/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
+
 router.put('/:id', auth.hasRole('mentor'), controller.modify);
 router.delete('/:id', auth.hasRole('mentor'), controller.delete);
 router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
-
-// Generate a daycode or return the current day code for the smallgroups
-router.post('/:id/daycode', auth.hasRole('mentor'), controller.daycode);
-router.delete('/:id/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
 
 // Access / Manipulate the members of a smallgroup
 router.get('/:id/members', auth.isAuthenticated(), controller.getSmallGroupMembers);

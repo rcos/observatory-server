@@ -10,6 +10,7 @@ router.get('/stats',  controller.publicStats);
 router.get('/past', controller.past);
 router.get('/search', controller.search);
 router.get('/adminstats', auth.hasRole('admin'), controller.allStats);
+router.get('/smallgroup', auth.isAuthenticated(), controller.smallgroup);
 router.get('/:id/commits', controller.commits);
 router.get('/:id/avatar', controller.avatar);
 
