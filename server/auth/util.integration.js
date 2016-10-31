@@ -70,7 +70,7 @@ describe("Login Tests", () => {
   });
 
   before(()=>{
-    return exports.getSessionFor('mentor')
+    return exports.getSessionFor('testmentor')
       .then((session) => mentorSession = session);
   });
 

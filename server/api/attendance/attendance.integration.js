@@ -17,7 +17,7 @@ describe('Attendance API:', () => {
 
     var mentorSession, studentSession;
 
-    before(() => getSessionFor('mentor').then(session => mentorSession = session));
+    before(() => getSessionFor('testmentor').then(session => mentorSession = session));
     before(() => getSessionFor('student').then(session => studentSession = session));
 
     let smallgroup, mentor, student;
@@ -25,7 +25,7 @@ describe('Attendance API:', () => {
     before(() => {
       // Add the mentor to a small group
       return Promise.all([
-        User.findOne({"email": "mentor@mentor.com"}),
+        User.findOne({"email": "testmentor@testmentor.com"}),
         SmallGroup.findOne({"name": "New Small Group"}),
         User.findOne({"email": "student@student.com"})
       ]).then(results => {
