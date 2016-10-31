@@ -63,6 +63,7 @@ describe('Attendance API:', () => {
         "dayCode": dayCode
       })
       .end((err, res) => {
+        console.log("res",res.body,res.status)
         expect(res.status).to.equal(200);
         done(err);
       });
