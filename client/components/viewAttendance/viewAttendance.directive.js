@@ -11,7 +11,6 @@ angular.module('observatory3App')
     },
     restrict: 'E',
     controller: function ($scope, $http, User, $window, notify, $filter) {
-      console.log("endpoint",$scope.endpoint)
       $scope.showDayCode = false;
       $scope.showBonusDayCode = false;
       $scope.hide = false;
