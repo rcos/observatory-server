@@ -11,23 +11,23 @@ angular.module('observatory3App')
 var getAttendees = function(dayCode){
     $http.get('/api/attendance/code/attendees/'+dayCode)
     .success(function (data){
-      $scope.numOfattendends.set(dayCode, data);
+      //store a list of attendees
+      $scope.numOfattendees.set(dayCode, data.length);
+      var names = [];
+      for(var j = 0; j < data.length; j++){
+        names[j] =data[j].name;
+      }
+      $scope.namesOfattendees.set(dayCode, names);
     }).error(function(err){
       console.log(err);
     });
-  }
+  };
 
   var updateSmallGroup = function (callback) {
     callback = callback || function () {};
     return User.smallgroup({id:$scope.user._id})
     .$promise.then(function(smallgroup){
       $scope.smallgroup = smallgroup;
-      $scope.numOfattendends = new Map();
-      for(var i =0; i<smallgroup.dayCodes.length;i++){
-        if(smallgroup.dayCodes[i]){
-          getAttendees(smallgroup.dayCodes[i].code);
-        }
-      }
       $scope.loaded = true;
       if (!$scope.smallgroup._id) {
         $scope.smallgroup = false;
@@ -36,6 +36,17 @@ var getAttendees = function(dayCode){
       if ('dayCode' in smallgroup && smallgroup.dayCode) {
         $scope.dayCode = smallgroup.dayCode;
       }
+      if ('dayCodes' in smallgroup && smallgroup.dayCodes){
+        $scope.numOfattendees = new Map();
+        $scope.namesOfattendees = new Map();
+        for(var i =0; i<smallgroup.dayCodes.length;i++){
+          if(smallgroup.dayCodes[i]){
+            getAttendees(smallgroup.dayCodes[i].code);
+
+          }
+        }
+      }
+
       return $http.get('/api/smallgroup/' + $scope.smallgroup._id + '/members').success(function (members) {
         $scope.leaders = [];
         $scope.members = [];

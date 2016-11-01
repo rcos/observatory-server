@@ -33,6 +33,8 @@ exports.index = function(req, res) {
 // router.post('/', auth.hasRole('mentor'), controller.create);
 exports.create = function(req, res){
     var user = req.user;
+    var memberId = req.body.memberId;
+    var smallGroupId = req.params.id;
     return ClassYear.getCurrent(function(err, classYear){
         var classYearId = classYear._id;
         return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
@@ -47,23 +49,6 @@ exports.create = function(req, res){
               "dayCodes": []
           });
           return smallgroup.save().then(()=>res.sendStatus(200));
-        });
-    });
-
-    var memberId = req.body.memberId;
-    var smallGroupId = req.params.id;
-    return ClassYear.getCurrent(function(err, classYear){
-        var classYearId = classYear._id;
-        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
-            $pull: { students : memberId }
-        }, function(err, smallgroup){
-            if (err) return handleError(res, err);
-            return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
-                $addToSet: { students : memberId }
-            }, function(err, smallgroup){
-                if (err) return handleError(res, err);
-                return res.sendStatus(200);
-            });
         });
     });
 };
@@ -123,15 +108,26 @@ exports.daycode = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
         if (err) {return handleError(res, err);}
-        var responseObject = smallgroup.toObject();
-        // Generate a day code if one does not already exist
-        if (!smallgroup.dayCode){
-            //Not ambigious code generator, function at the bottom.
-            var code = generateCode(6);
+        var today = new Date();
+        today.setHours(0,0,0,0);
+        for (var i = 0;i < smallgroup.dayCodes.length;i++){
+          if (today.getTime() === smallgroup.dayCodes[i].date.getTime()){
 
-            smallgroup.dayCode = code;
+            return res.status(200).json(smallgroup.dayCodes[i].code)
+          }
         }
-        res.status(200).json(smallgroup.dayCode);
+        //Not ambigious code generator, function at the bottom.
+        var code = generateCode(6);
+
+        smallgroup.dayCodes.push({
+          date: today,
+          code: code,
+          bonusDay: req.body.bonusDay ? true : false
+        });
+        smallgroup.save(function(err, classYear){
+          if (err) return handleError(res, err);
+          return res.status(200).json(code)
+        });
     });
 };
 
@@ -147,7 +143,7 @@ exports.deleteDay = function(req, res){
         if (err) return handleError(res, err);
 
         return Attendance.remove({code : dayCode}, function (err){
-            if(err) {console.log(err);}
+          if (err) return handleError(res, err);
            return res.status(200).json(smallgroup);
         });
     });
