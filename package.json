@@ -1,6 +1,6 @@
 {
   "name": "observatory3",
-  "version": "0.2.6",
+  "version": "0.2.8",
   "main": "server/app.js",
   "license": "MIT",
   "dependencies": {

@@ -3,6 +3,9 @@
 var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
+var agent = request.agent(app);
+var project = request.agent();
+var studentSession;
 
 describe('GET /api/projects', function() {
 
@@ -31,5 +34,24 @@ describe('GET /api/projects/past', function() {
         res.body.should.be.instanceof(Array);
         done();
       });
+  });
+});
+
+describe('POST /api/projects/', function() {
+  it('Should create a session', function(done) {
+    agent.post('/api/users')
+    .send({ username: 'a@yahoo.com', password: '123' })
+    .expect('Content-Type',/json/)
+    .end(function(err, res) {
+      expect(res.status).to.equal(200);
+      done();
+    });
+  });
+
+  it('Should return the current session', function(done) {
+    agent.get('/api/projects').end(function(err, res) {
+      expect(res.status).to.equal(200);
+      done();
+    });
   });
 });
