@@ -19,9 +19,7 @@ var octo = require('octonode');
   @TODO: IMPORT TOKEN FROM AN UNTRACKED/PRIVATE CONFIG FILE
 */
 
-var token = process.env.GITHUB_WORKER_TOKEN;
-console.log(process.env);
-throw new AssertionError('wtasd');
+var token = config.GITHUB_WORKER_TOKEN;
 var octoclient = octo.client(token);
 
 // var updateProjectCommits = function() {
@@ -56,7 +54,6 @@ Project.find().exec().then(function (projects) {
               console.log("projectId:", commitData.projectId);
               console.log(commitData);
               console.log(Object.getOwnPropertyNames(commitData));
-              // process.exit();
               throw new Error('abort abort abort ABORT');
               return Commit.create(commitData);
           });
