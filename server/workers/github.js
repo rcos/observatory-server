@@ -20,22 +20,64 @@ var octo = require('octonode');
 */
 
 var token = process.env.GITHUB_WORKER_TOKEN;
+console.log(process.env);
+throw new AssertionError('wtasd');
 var octoclient = octo.client(token);
 
-// var projects
-Project.find().exec().then(function(projects){
-  projects.forEach(function(project) {
+// var updateProjectCommits = function() {
+//   // var projects
+//   Project.find().exec().then(function (projects) {
+//     projects.forEach(function (project) {
+//       console.error("PROJECT: ", project.fullRepoPath);
+//       var ghrepo = octoclient.repo(project.fullRepoPath);
+//       ghrepo.commits(
+//         function (err, commitDataArray, headers) {
+//           commitDataArray.forEach(function (commitData) {
+//             //console.log("creating ....");
+//             return Commit.create(commitData);
+//           });
+//         });
+//     });
+//   });
+// }
+
+Project.find().exec().then(function (projects) {
+  var responses = [];
+  projects.forEach(function (project) {
     console.error("PROJECT: ", project.fullRepoPath);
     var ghrepo = octoclient.repo(project.fullRepoPath);
-    ghrepo.commits(
-      function(err, commitDataArray, headers) {
-        commitDataArray.forEach(function(commitData) {
-          //console.log("creating ....");
-          return Commit.create(commitData);
-        });
-      });
+    var r = ghrepo.commits(
+        function (err, commitDataArray, headers) {
+          console.log(err,commitDataArray);
+          commitDataArray.forEach(
+            function (commitData) {
+            //console.log("creating ....");
+              commitData["projectId"] = project.id;
+              console.log("projectId:", commitData.projectId);
+              console.log(commitData);
+              console.log(Object.getOwnPropertyNames(commitData));
+              // process.exit();
+              throw new Error('abort abort abort ABORT');
+              return Commit.create(commitData);
+          });
+          // console.error(err, headers);
+        }
+      );
+    responses.push(r);
   });
+  // console.error("responses", responses);
+}).then(function() {
+  db.disconnect();
+  console.log('finished populating commits');
 });
+// if (!module.parent) {
+//   if (args.length == 0) {
+//     seed().then(function(){
+//
+//       db.disconnect()
+//     });
+//   }
+// }
 //
 // projects.forEach(function(project) {
 //     console.error("PROJECT: ", project.fullRepoPath);

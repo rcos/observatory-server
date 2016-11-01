@@ -18,6 +18,7 @@ var CommitSchema = new Schema({
   branch: String,
   message: String,
   date: Date,
+  projectId: { type: String, index: true},
 },{ timestamps: true});
 
 module.exports = mongoose.model('Commit', CommitSchema);
