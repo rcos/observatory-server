@@ -49,7 +49,10 @@ Project.find().exec().then(
   }
 ).then(
   function () {
-    db.disconnect();
+    // @TODO FIX ASYNC ISSUES SO DISCONNECT HAPPENS AFTER ALL SAVES HAVE COMPLETED.
+    // Spent like 4 hours trying to debug this, but javascript is just too magical and asynchronous for me =(
+    // It works perfectly with db.disconnect commented out, since it will always disconnect before the saves occur...
+    // db.disconnect();
     console.log('finished populating commits');
   }
 );
