@@ -228,18 +228,52 @@ exports.verifySmallAttendance = function(req,res){
 // *******************************************************
 
 // *******************************************************
-//get the list of attending students on a date
+//Get the list of attending students on a date
 //router.get('/code/attendees/:dateCode',auth.hasRole('mentor'), controller.getAttendees);
 exports.getAttendees = function(req,res){
   return Attendance.find({code:req.params.dateCode})
     .exec(function (err,results){
         var userIds = results.map(function(e){ return e.user } );
-        console.log(userIds);
         User.find({_id : {$in : userIds } },{"name" : 1}, function(err, users){
-        console.log("users",users);
         res.json(users);
         })
     })
+}
+// *******************************************************
+
+// *******************************************************
+// Get a list of date and the number of attendees of large group attendance
+// router.get('/code/attendees/', controller.bigGroupAttendance);
+exports.bigGroupAttendance = function(req,res){
+    Attendance.aggregate([
+      {$match : {"smallgroup":false} },
+      {$group : {_id:"$date", count: {$sum: 1} } }],
+      function (err, result){
+      if(err){
+        console.log(err);
+      }else{
+        res.json(result);
+      }
+    }
+  )}
+// *******************************************************
+
+// *******************************************************
+// delete a given daycode and its code submissions
+// requires: the daycode has to be in the current class year
+//router.delete('/day/:date/:classId', controller.deleteBigGroupDay);
+exports.deleteBigGroupDay = function(req, res){
+  var day = req.params.date;
+  var id = req.params.classId;
+  return ClassYear.findOneAndUpdate({_id: id}, {
+        $pull: { dayCodes: {date : day }}
+    }, function(err, classyear){
+      if (err) return handleError(res, err);
+      return Attendance.remove({date : day}, function (err){
+      if (err) return handleError(res, err);
+      return res.status(200).json(classyear);
+  });
+})
 }
 // *******************************************************
 
