@@ -9,17 +9,16 @@ var Attendance = require('../attendance/attendance.model');
 
 // Get current class year
 exports.index = function(req, res) {
-  ClassYear.findOne({
-  	"current": true
-  }, function (err, classYear) {
+  var query = ClassYear.findOne({"current": true});
+  if (req.user && req.user.isAdmin){
+      query.select('+dayCodes.code')
+  }
+  return query.exec(function(err, classYear){
   	if(err) { return handleError(res, err); }
     var responseObject = classYear.toObject();
     // Admins should get a day code
     // Generate a day code if one does not already exist
-    if (!req.user || !req.user.isAdmin){
-        responseObject.dayCodes = [];
-    }
-    else{
+    if (req.user.isAdmin){
         // Admins should get a day code
         // Generate a day code if one does not already exist
         if (classYear.dayCode){
@@ -28,7 +27,6 @@ exports.index = function(req, res) {
         if (classYear.bonusDayCode){
             responseObject.bonusDayCode = classYear.bonusDayCode;
         }
-
     }
    	return res.status(200).json(responseObject);
   });
@@ -38,24 +36,19 @@ exports.index = function(req, res) {
 exports.getClassYear = function(req, res) {
   ClassYear.findOne({
     "semester": req.params.semester
-  }, function (err, classYear){
+  })
+  .select('+dayCodes.code')
+  .exec(function (err, classYear){
     if(err) { return handleError(res, err); }
     if (!classYear) return res.send(404);
     var responseObject = classYear.toObject();
-    // Admins should get a day code
-    // Generate a day code if one does not already exist
-    if (classYear.dayCode){
-        responseObject.dayCode = classYear.dayCode;
-    }
     res.json(responseObject);
   })
 };
 
 // Get a specific class year's attendance bonus days
 exports.countBonusDays = function(req, res) {
-  ClassYear.findOne({
-    "current": true
-  }, function (err, classYear){
+  ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
     if (!classYear) return res.send(404);
     var bonusDays  = classYear.dayCodes.reduce(function(previousValue, currentValue) {
@@ -139,9 +132,7 @@ exports.destroy = function(req, res) {
 // Generate a daycode or return the current day code for the
 // current class year
 exports.daycode = function(req, res){
-  return ClassYear.findOne({
-    "current": true
-  }, function(err, classYear){
+  ClassYear.getCurrentCodes(function(err, classYear){
     if (err) return handleError(res, err);
     var today = new Date();
     today.setHours(0,0,0,0);
@@ -170,10 +161,12 @@ exports.daycode = function(req, res){
 // router.delete('/day/:dayCode', auth.hasRole('admin'), controller.deleteDay);
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
-    var smallGroupId = req.params.id;
+
     return ClassYear.findOneAndUpdate({"current": true}, {
         $pull: { dayCodes: {code : dayCode }}
-    }, function(err, classYear){
+    })
+    .select('+dayCodes.code')
+    .exec(function(err, classYear){
         if (err) return handleError(res, err);
 
         return Attendance.remove({code : dayCode}, function (err){
@@ -186,9 +179,7 @@ exports.deleteDay = function(req, res){
 
 // Toggles URP display
 exports.displayURP = function(req, res) {
-  return ClassYear.findOne({
-    "current": true
-  }, function(err, classYear){
+  return ClassYear.getCurrent(function(err, classYear){
     if(err) { return handleError(res, err); }
     return classYear.update(req.body, function(err){
       if(err) { return handleError(res, err); }
@@ -199,9 +190,7 @@ exports.displayURP = function(req, res) {
 
 // Toggles URP display
 exports.getDisplayURP = function(req, res) {
-  return ClassYear.findOne({
-    "current": true
-  }, function (err, classYear){
+  return ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
     // if no class year is defined then don't show urp
     if(!classYear) {

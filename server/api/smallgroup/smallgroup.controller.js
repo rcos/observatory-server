@@ -76,21 +76,21 @@ exports.delete = function(req, res){
     });
 };
 
-// Get the smallgroup for the user
+// Get the smallgroup by id
 // Restricted to authenticated users
 // Only return daycode is the user is a mentor
 // router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
 exports.getSmallGroup = function(req, res){
     var id = req.params.id;
-    SmallGroup.findById(id, function(err, smallgroup){
+    var query = SmallGroup.findById(id)
+    if (req.user.isMentor){
+        query.select('+dayCodes.code')
+    }
+    return query.exec(function(err, smallgroup){
         if (err) return handleError(res, err);
         if (!smallgroup) return handleError(res, err);
         var responseObject = smallgroup.toObject();
-        // If user is not a mentor or not authenticated, don't give dayCode
-        if (!req.user || !req.user.isMentor){
-            responseObject.dayCodes = null;
-        }
-        else{
+        if (req.user && req.user.isMentor){
             // Mentors should get a day code
             // Generate a day code if one does not already exist
             if (smallgroup.dayCode){
@@ -99,7 +99,6 @@ exports.getSmallGroup = function(req, res){
             if (smallgroup.bonusDayCode){
                 responseObject.bonusDayCode = smallgroup.bonusDayCode;
             }
-
         }
         res.status(200).json(responseObject);
     });
@@ -110,9 +109,12 @@ exports.getSmallGroup = function(req, res){
 // router.post('/daycode', auth.hasRole('mentor'), controller.daycode);
 exports.daycode = function(req, res){
   var userId = req.user.id;
+
   return ClassYear.getCurrent(function(err, classYear){
     var classYearId = classYear._id;
-    return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
+    return SmallGroup.findOne({"students":userId, "classYear":classYearId})
+    .select('+dayCodes.code')
+    .exec(function(err, smallgroup){
         if (err) {return handleError(res, err);}
         var today = new Date();
         today.setHours(0,0,0,0);
@@ -149,7 +151,9 @@ exports.deleteDay = function(req, res){
 
       return SmallGroup.findOneAndUpdate({"students":userId, "classYear":classYearId}, {
         $pull: { dayCodes: {code : dayCode }}
-      }, function(err, smallgroup){
+      })
+      .select('+dayCodes.code')
+      .exec(function(err, smallgroup){
         if (err) return handleError(res, err);
 
         return Attendance.remove({code : dayCode}, function (err){

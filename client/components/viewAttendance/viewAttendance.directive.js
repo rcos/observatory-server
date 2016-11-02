@@ -117,7 +117,6 @@ angular.module('observatory3App')
         });
       };
 
-
       updateGroup();
     }
   };
