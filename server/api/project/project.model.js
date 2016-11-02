@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+var Commit = require('../commit/commit.model');
 
 var ProjectSchema = new Schema({
   name: {
@@ -41,7 +42,12 @@ var ProjectSchema = new Schema({
     default: false,
     index: true
   },
-  tech: [String]
+  tech: [String],
+  commits: [{
+    type : Schema.Types.ObjectId,
+    ref: 'Commit',
+    index: true
+  }],
 },{ timestamps: true});
 
 /*
