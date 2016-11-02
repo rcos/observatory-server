@@ -43,5 +43,6 @@ router.get('/unverified/:date/small', auth.hasRole('mentor'), controller.getUnve
 
 //Gets the number of attendees on a date
 router.get('/code/attendees/:dateCode',auth.hasRole('mentor'), controller.getAttendees);
-
+router.get('/code/attendees/', controller.bigGroupAttendance);
+router.delete('/day/:date/:classId', controller.deleteBigGroupDay);
 module.exports = router;

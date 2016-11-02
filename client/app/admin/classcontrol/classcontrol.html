@@ -61,4 +61,30 @@
   </div>
 </div>
 
+<div class='container' ng-hide = "showAttendanceCode">
+<div class="row">
+    <div class="col-sm-12">
+      <h3>This semester's attendance:</h3>
+    </div>
+    <div class="col-sm-12">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
+            <td text ='Attendees'>Attendees</td>
+            <td text='Delete'>Delete</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="day in days | orderBy:sortorder">
+            <td>{{ day._id | date:"MMM dd" }}</td>
+            <td>{{ day.count }}</td>
+            <td><a ng-click="deleteDay(day)"><i class="fa fa-times"></i> Delete</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <div ng-include="'components/footer/footer.html'"></div>
