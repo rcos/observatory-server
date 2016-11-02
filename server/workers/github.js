@@ -32,7 +32,6 @@ Project.find().exec().then(
           function (err, commitDataArray, headers) {
             commitDataArray.forEach(
               function (commitData) {
-                console.log(JSON.stringify(commitData, null, 4));
                 var newCommit = new Commit(commitData);
 
                 // super hacky, definitely need to abstract this before github's api changes and this goes boom!!
