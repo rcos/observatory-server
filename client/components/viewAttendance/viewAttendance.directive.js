@@ -42,7 +42,8 @@ angular.module('observatory3App')
           $scope.group = false;
           return false;
         }
-
+        $scope.dayCode = false;
+        $scope.bonusDayCode = false;
         // Check if there is already an attendance code
         if ('dayCode' in group && group.dayCode) {
           $scope.dayCode = group.dayCode;
