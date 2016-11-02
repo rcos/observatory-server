@@ -35,7 +35,7 @@ angular.module('observatory3App')
         $scope.submitted = true;
 
         if(form.$valid) {
-            $scope.project.repositories[0] = "https://github.com/" + $scope.project.githubUsername + "/" + $scope.project.githubProjectName;
+          //  $scope.project.repositories[0] = "https://github.com/" + $scope.project.githubUsername + "/" + $scope.project.githubProjectName;
 
             // use setTimeout because hiding the modal takes longer than the post request
             // and results in the modal disappearing but the overlay staying if not used
@@ -76,7 +76,15 @@ angular.module('observatory3App')
 
         }
     };
-    $scope.close = function(){
+
+    $scope.addRepository = function() {
+      $scope.project.repositories.push("");    };
+
+    $scope.removeRepository = function(index) {
+      $scope.project.repositories.splice(index, 1);
+    };
+
+    $scope.close = function() {
       // $uibModalInstance.close($scope.event);
       $uibModalInstance.dismiss('cancel');
     };
