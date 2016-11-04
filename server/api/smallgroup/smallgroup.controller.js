@@ -76,25 +76,28 @@ exports.delete = function(req, res){
     });
 };
 
-// Get the smallgroup for the user
+// Get the smallgroup by id
 // Restricted to authenticated users
 // Only return daycode is the user is a mentor
 // router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
 exports.getSmallGroup = function(req, res){
     var id = req.params.id;
-    SmallGroup.findById(id, function(err, smallgroup){
+    var query = SmallGroup.findById(id)
+    if (req.user.isMentor){
+        query.select('+dayCodes.code')
+    }
+    return query.exec(function(err, smallgroup){
         if (err) return handleError(res, err);
         if (!smallgroup) return handleError(res, err);
         var responseObject = smallgroup.toObject();
-        // If user is not a mentor or not authenticated, don't give dayCode
-        if (!req.user || !req.user.isMentor){
-            responseObject.dayCodes = null;
-        }
-        else{
+        if (req.user && req.user.isMentor){
             // Mentors should get a day code
             // Generate a day code if one does not already exist
             if (smallgroup.dayCode){
                 responseObject.dayCode = smallgroup.dayCode;
+            }
+            if (smallgroup.bonusDayCode){
+                responseObject.bonusDayCode = smallgroup.bonusDayCode;
             }
         }
         res.status(200).json(responseObject);
@@ -103,10 +106,15 @@ exports.getSmallGroup = function(req, res){
 
 // Generate a daycode or return the current day code for the smallgroups
 // Restricted to mentors
-// router.post('/:id/daycode', auth.hasRole('mentor'), controller.daycode);
+// router.post('/daycode', auth.hasRole('mentor'), controller.daycode);
 exports.daycode = function(req, res){
-    var id = req.params.id;
-    SmallGroup.findById(id, function(err, smallgroup){
+  var userId = req.user.id;
+
+  return ClassYear.getCurrent(function(err, classYear){
+    var classYearId = classYear._id;
+    return SmallGroup.findOne({"students":userId, "classYear":classYearId})
+    .select('+dayCodes.code')
+    .exec(function(err, smallgroup){
         if (err) {return handleError(res, err);}
         var today = new Date();
         today.setHours(0,0,0,0);
@@ -124,22 +132,28 @@ exports.daycode = function(req, res){
           code: code,
           bonusDay: req.body.bonusDay ? true : false
         });
-        smallgroup.save(function(err, classYear){
+        return smallgroup.save(function(err, classYear){
           if (err) return handleError(res, err);
           return res.status(200).json(code)
         });
     });
+  });
 };
 
 // Delete a day code from a smallgroup and the corresponding daycode submission from attendance
 // Restricted to mentors
-// router.delete('/:id/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
+// router.delete('/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
-    var smallGroupId = req.params.id;
-    return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+    var id = req.user.id;
+    return ClassYear.getCurrent(function(err, classYear){
+      var classYearId = classYear._id;
+
+      return SmallGroup.findOneAndUpdate({"students":userId, "classYear":classYearId}, {
         $pull: { dayCodes: {code : dayCode }}
-    }, function(err, smallgroup){
+      })
+      .select('+dayCodes.code')
+      .exec(function(err, smallgroup){
         if (err) return handleError(res, err);
 
         return Attendance.remove({code : dayCode}, function (err){
@@ -147,7 +161,9 @@ exports.deleteDay = function(req, res){
            return res.status(200).json(smallgroup);
         });
     });
+  });
 };
+
 
 // Returns the user profile for a userId
 // Only returns private information if the user is a mentor

@@ -262,10 +262,13 @@ exports.privateProfile = function (req, res, next) {
     return ClassYear.getCurrent(function(err, classYear){
         var classYearId = classYear._id;
         return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
-          var responseObjectSmallgroup = smallgroup.toObject();
+          if (err) {return next(err);}
+          if (smallgroup) {
+            var responseObjectSmallgroup = smallgroup.toObject();
+            profile.smallgroup = responseObjectSmallgroup;
+          }
           // Get how many total attendance days there have been
           var data = user.getTotalDays(classYear, smallgroup);
-          profile.smallgroup = responseObjectSmallgroup;
           profile.totalDates = data.totalDates;
           profile.totalBonusDates = data.totalBonusDates;
           profile.totalSmallDates = data.totalSmallDates;
@@ -282,28 +285,63 @@ exports.privateProfile = function (req, res, next) {
     });
   });
 };
-
 /**
- * Get a single user's smallgroup
+ * Get a my smallgroup
  */
 exports.smallgroup = function (req, res, next) {
-  var userId = req.params.id;
+  var userId = req.user.id;
   return ClassYear.getCurrent(function(err, classYear){
       var classYearId = classYear._id;
-      return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
+      var query = SmallGroup.findOne({"students":userId, "classYear":classYearId});
+      if (req.user.isMentor){
+          query.select('+dayCodes.code')
+      }
+      return query.exec(function(err, smallgroup){
+        console.log("smallgroup",smallgroup)
         if (err) return handleError(res, err);
         if (!smallgroup) return res.json({});
         var responseObject = smallgroup.toObject();
         // If user is not a mentor or not authenticated, don't give dayCode
-        if (!req.user || !req.user.isMentor){
-            responseObject.dayCodes = null;
+        if (req.user.isMentor){
+          // Mentors should get a day code
+          // Generate a day code if one does not already exist
+          if (smallgroup.dayCode){
+              responseObject.dayCode = smallgroup.dayCode;
+          }
+          if (smallgroup.bonusDayCode){
+              responseObject.bonusDayCode = smallgroup.bonusDayCode;
+          }
         }
-        else{
-            // Mentors should get a day code
-            // Generate a day code if one does not already exist
-            if (smallgroup.dayCode){
-                responseObject.dayCode = smallgroup.dayCode;
-            }
+        res.status(200).json(responseObject);
+      });
+  });
+};
+
+
+/**
+ * Get a single user's smallgroup
+ */
+exports.userSmallgroup = function (req, res, next) {
+  var userId = req.params.id;
+  return ClassYear.getCurrent(function(err, classYear){
+      var classYearId = classYear._id;
+      var query = SmallGroup.findOne({"students":userId, "classYear":classYearId})
+      if (req.user.isMentor){
+          query.select('+dayCodes.code')
+      }
+      return query.exec(function(err, smallgroup){
+        console.log("userSmallgroup",smallgroup)
+        if (err) return handleError(res, err);
+        if (!smallgroup) return res.json({});
+        var responseObject = smallgroup.toObject();
+        // If user is not a mentor or not authenticated, don't give dayCode
+        // Mentors should get a day code
+        // Generate a day code if one does not already exist
+        if (smallgroup.dayCode){
+            responseObject.dayCode = smallgroup.dayCode;
+        }
+        if (smallgroup.bonusDayCode){
+            responseObject.bonusDayCode = smallgroup.bonusDayCode;
         }
         res.status(200).json(responseObject);
       });
