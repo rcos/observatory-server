@@ -16,9 +16,6 @@ router.delete('/:id', auth.hasRole('mentor'), controller.destroy);
 router.post('/', auth.hasRole('admin'), controller.create);
 router.put('/:id', auth.hasRole('admin'), controller.update);
 
-// Gets the attendance code for a particular date
-router.get('/code/:date', auth.hasRole('admin'), controller.getCode);
-
 // Verifies existing attendance submissions in the DB.
 router.put('/:id/verify', auth.hasRole('mentor'), controller.verifyAttendanceById);
 router.post('/present/:user/full', auth.hasRole('mentor'), controller.verifyFullAttendance);

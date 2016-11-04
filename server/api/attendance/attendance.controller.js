@@ -157,22 +157,6 @@ exports.update = function(req, res) {
 // *******************************************************
 
 // *******************************************************
-// Get the attendance code for a particular day
-//
-// This searches through all the recorded attendances and gets the latest one
-// for the given day, there may be multiple codes but this returns only one
-// Restricted to admins
-// router.get('/code/:date', auth.hasRole('admin'), controller.getCode);
-exports.getCode = function(req, res) {
-  var date = req.params.date;
-  Attendance.find({date: new Date(date)}, {code:1,_id:0 }).limit(1)
-    .exec(function(err, attendance){
-      return res.status(200).json(attendance);
-    });
-}
-// *******************************************************
-
-// *******************************************************
 // Verifies an existing attendance submission in the DB.
 // Restricted to mentors
 // router.put('/:id/verify', auth.hasRole('mentor'), controller.verifyAttendanceById);

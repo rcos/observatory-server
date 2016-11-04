@@ -83,25 +83,6 @@ angular.module('observatory3App')
           user: user
         }
       });
-
-      modalInstance.result.then(function (projectAdded) {
-        // $window.location.reload();
-        var redirectUsername = projectAdded.githubUsername;
-        var redirectProjectName = projectAdded.githubProjectName;
-        $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
-      }, function(){
-
-      });
-      /*$('#attendanceModal').on('shown.bs.modal', function () {
-        //$('#myInput').focus()
-      });
-      $http.post('/api/users/' + user._id + '/attend', {
-            role: user.role
-        }).success(function() {
-          notify('Updated user attendance.');
-        }).error(function() {
-          notify('Unable to set user attendance');
-        });*/
     };
 
     $scope.submitAll = function(){
