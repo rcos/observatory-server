@@ -14,10 +14,17 @@ var SmallGroupSchema = new Schema({
     type: Boolean,
     default: true
   },
-  students: [{type : Schema.Types.ObjectId, ref: 'User'}],
+  students: [{
+    type : Schema.Types.ObjectId, ref: 'User',
+    index: true
+  }],
   dayCodes: [{
     date:Date,
-    code:String,
+    code:{
+      type: String,
+      select: false,
+      index: true
+    },
     bonusDay:{
       type:Boolean,
       default:false,

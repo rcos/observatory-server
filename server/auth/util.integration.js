@@ -70,11 +70,11 @@ describe("Login Tests", () => {
   });
 
   before(()=>{
-    return exports.getSessionFor('mentor')
+    return exports.getSessionFor('testmentor')
       .then((session) => mentorSession = session);
   });
 
-  it('should allow mentor to see their information', done =>{
+  it('should allow testmentor to see their information', done =>{
     mentorSession.get('/api/users/me').end((err, res) => {
       expect(res.body).to.not.be.empty;
       expect(res.body).to.have.property('email');

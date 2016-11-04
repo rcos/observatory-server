@@ -3,12 +3,8 @@
 angular.module('observatory3App')
 .controller('SmallGroupCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify, $filter) {
   $scope.allUsers = User.query();
-  $scope.showAttendanceCode = false;
   $scope.isMentor = Auth.isMentor;
-  $scope.dayCode = false;
-  $scope.loaded = false;
-
-var getAttendees = function(dayCode){
+  var getAttendees = function(dayCode){
     $http.get('/api/attendance/code/attendees/'+dayCode)
     .success(function (data){
       //store a list of attendees
@@ -25,28 +21,13 @@ var getAttendees = function(dayCode){
 
   var updateSmallGroup = function (callback) {
     callback = callback || function () {};
-    return User.smallgroup({id:$scope.user._id})
+    return User.smallgroup()
     .$promise.then(function(smallgroup){
       $scope.smallgroup = smallgroup;
-      $scope.loaded = true;
       if (!$scope.smallgroup._id) {
         $scope.smallgroup = false;
         return false;
       }
-      if ('dayCode' in smallgroup && smallgroup.dayCode) {
-        $scope.dayCode = smallgroup.dayCode;
-      }
-      if ('dayCodes' in smallgroup && smallgroup.dayCodes){
-        $scope.numOfattendees = new Map();
-        $scope.namesOfattendees = new Map();
-        for(var i =0; i<smallgroup.dayCodes.length;i++){
-          if(smallgroup.dayCodes[i]){
-            getAttendees(smallgroup.dayCodes[i].code);
-
-          }
-        }
-      }
-
       return $http.get('/api/smallgroup/' + $scope.smallgroup._id + '/members').success(function (members) {
         $scope.leaders = [];
         $scope.members = [];
@@ -118,44 +99,20 @@ var getAttendees = function(dayCode){
     });
   };
 
-  $scope.generateAttendanceCode = function () {
-    if ($scope.dayCode) {
-      $scope.showAttendanceCode = true;
-    } else {
-      $http.post('/api/smallgroup/' + $scope.smallgroup._id + '/daycode')
-      .success(function (code) {
+  $scope.generateDayCode = function (bonusDay) {
+    $http.post('/api/smallgroup/' + $scope.smallgroup._id + '/daycode', {
+        bonusDay: bonusDay ? true : false
+    }).success(function (code) {
+      submitDayCode(code);
+      if (bonusDay){
+        $scope.bonusDayCode = code;
+        $scope.showBonusDayCode = true;
+      }
+      else{
         $scope.dayCode = code;
-        submitDayCode(code);
-        $scope.showAttendanceCode = true;
-        updateSmallGroup();
-      });
-    }
-  };
-
-  var submitDayCode = function(code){
-      $http.post('/api/attendance/attend', {
-        dayCode: code
-      }).success(function(){
-        updateSmallGroup();
-        }).error(function(err){
-        notify({ message: 'Error: ' + err, classes: ['alert-danger'] });
-      });
-    };
-
-  $scope.isPresent = function () {
-    return false;
-  };
-
-  $scope.deleteDay = function(day) {
-    var dateString = $filter('date')(day.date, 'MMM dd');
-    $http.delete('/api/smallgroup/' + $scope.smallgroup._id + '/day/' + day.code)
-      .success(function(smallgroup){
-        notify('Successfully removed day: ' + dateString);
-        $scope.smallgroup = smallgroup;
-        updateSmallGroup();
-      })
-    .error(function() {
-      notify('ERROR: Could not remove day: ' + dateString);
+        $scope.showDayCode = true;
+      }
+      updateSmallGroup();
     });
   };
 

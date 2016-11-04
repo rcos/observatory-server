@@ -19,7 +19,11 @@ var ClassSchema = new Schema({
   },
   dayCodes: [{
     date:Date,
-    code:String,
+    code:{
+      type: String,
+      select: false,
+      index: true
+    },
     bonusDay:{
       type:Boolean,
       default:false,
@@ -63,6 +67,16 @@ ClassSchema.statics.getCurrent = function(cb){
 	ClassYear.findOne({
 		"current": true
 	}, function(err, classYear){
+		cb(err, classYear);
+	});
+};
+
+ClassSchema.statics.getCurrentCodes = function(cb){
+	ClassYear.findOne({
+		"current": true
+	})
+  .select('+dayCodes.code')
+  .exec(function(err, classYear){
 		cb(err, classYear);
 	});
 };

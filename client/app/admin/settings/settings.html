@@ -1,29 +1,10 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container classcontrol" ng-hide='showAttendanceCode'>
+<div class="container admin settings">
     <div class="row">
         <div class="col-sm-12">
-            <div class='currentSemester'>
-                <div class='info'>
-                    <p>Current semester: {{ currentClass.semester }}</p>
-                    <p ng-show='attendanceCode' >The attendance code is: {{ attendanceCode }}</p>
-                    <button ng-hide='attendanceCode' ng-click='generateAttendanceCode()' class='btn btn-primary'>Generate Attendance Code</button>
-                    <button ng-hide='attendanceCode' ng-click='generateAttendanceCode(true)' class='btn btn-warning'>Generate Bonus Day Code</button>
-                    <button ng-show='attendanceCode' ng-click='showAttendanceCode=true' class='btn btn-primary'>Show Code Full Screen</button>
-                </div>
-            </div>
-        </div>
-    </div>
+            <h2>Current semester: {{ currentClass.semester }}</h2>
 
-    <div class="row">
-        <div class="col-sm-12 buttonLine">
-            <button ng-show= "!displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP'>Show URP Form</button>
-            <button ng-show= "displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP' >Hide URP Form</button>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12">
             <div class='buttonLine'>
                 <button ng-hide='showNewSemester' ng-click='showNewSemester=true' class='btn btn-primary'>Create a New Semester</button>
                 <div ng-show="showNewSemester">
@@ -44,21 +25,13 @@
             </div>
         </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-sm-12 buttonLine">
+            <button ng-show= "!displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP'>Show URP Form</button>
+            <button ng-show= "displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP' >Hide URP Form</button>
+        </div>
+    </div>
 
-<div class="container-fluid classcontrol" ng-show='showAttendanceCode'>
-  <div class='big-attendance text-center' ng-click='showAttendanceCode=false;'>
-      <div class="row">
-          <div class="col-sm-12">
-              <div class='small-text'>
-                  The Attendance Code is...
-              </div>
-              <div class='big-text'>
-                  {{ attendanceCode }}
-              </div>
-          </div>
-      </div>
-  </div>
 </div>
 
 <div ng-include="'components/footer/footer.html'"></div>
