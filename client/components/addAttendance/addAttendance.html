@@ -11,15 +11,12 @@
       </div>
       <div class="form-group">
         <label for="attendanceType">Attendance Type</label>
-        <select class="form-control" id="attendanceType" ng-model="attend.type" ng-disabled="!dateSelected" required>
+        <select class="form-control" id="attendanceType" ng-model="attend.type" required>
           <option>Regular</option>
           <option>Small Group</option>
           <option>Bonus Day</option>
+          <option>Small Group Bonus Day</option>
         </select>
-      </div>
-      <div class="form-group">
-        <label for="attendanceCode">Attendance Code</label>
-        <input class="form-control" id="attendanceCode" ng-model="attend.code" ng-disabled="!dateSelected" required/>
       </div>
       <span class="text-muted">Please verify any autofilled data.</span>
       <div class="modal-footer">

@@ -637,7 +637,6 @@ exports.setAttendanceFullBonus = function(req, res) {
 exports.addAttendance = function(req, res) {
   var userId = req.params.id;
   var date = req.body.date;
-  var code = req.body.code;
   var smallgroup = req.body.smallgroup
   var bonusDay = req.body.bonusday;
 
@@ -649,7 +648,7 @@ exports.addAttendance = function(req, res) {
         classYear._id,  // classYearId
         user._id, // userId
         date, // date
-        code, // code
+        'manual', // code
         false, // needsVerification
         bonusDay, // bonusDay
         smallgroup, // smallgroup

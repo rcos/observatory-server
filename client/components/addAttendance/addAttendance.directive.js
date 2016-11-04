@@ -3,8 +3,7 @@
 angular.module('observatory3App')
 .controller('addAttendanceController', function($scope, $location, $http, $uibModalInstance, Auth, user, notify){
   $scope.user = user;
-  $scope.attend = {date:"",type:"",code:""};
-  $scope.dateSelected = false; //whether a date has been selected yet
+  $scope.attend = {date:"",type:""};
 
   $scope.autofill = function() {
     //autofill the probable attendance type
@@ -15,20 +14,6 @@ angular.module('observatory3App')
     } else {//Some other day
         $scope.attend.type = "Bonus Day";
     }
-    //get the attendance code for the selected day and autofill it
-    $http.get('/api/attendance/code/'+$scope.attend.date.toISOString())
-    .success(function(attendance){
-      if(attendance && attendance.length > 0) {
-        $scope.attend.code = attendance[0].code;
-      } else {
-        $scope.attend.code = "";
-      }
-    }).error(function(){
-      $scope.attend.code = "";
-    });
-    //this enables allow manual date entry
-    //in case we don't find the correct code or its wrong nd if the type is wrong
-    $scope.dateSelected = true;
   }
 
   $scope.submit = function(form) {
@@ -38,10 +23,9 @@ angular.module('observatory3App')
     }
     var params = {};
     params.date = $scope.attend.date;
-    params.code = $scope.attend.code;
-    params.smallgroup = $scope.attend.type == "Small Group";
-    params.bonusday = $scope.attend.type == "Bonus Day";
-    
+    params.smallgroup = $scope.attend.type == "Small Group" || $scope.attend.type == "Small Group Bonus Day";
+    params.bonusday = $scope.attend.type == "Bonus Day" || $scope.attend.type == "Small Group Bonus Day";
+
     $http.post('/api/attendance/attend/'+user._id+"/manual", params)
     .then(function(response){
       $uibModalInstance.close();
