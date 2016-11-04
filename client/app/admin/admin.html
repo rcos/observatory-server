@@ -45,6 +45,7 @@
             <td colspan="2">Small Group</td>
             <td colspan="2">Contributions</td>
             <td>Toggle</td>
+            <td>Attendance</td>
         </tr>
         <tr>
             <td sort-arrow sortby='name' text='Name' sortorder='sortorder'></td>
@@ -80,7 +81,11 @@
                 <a class="btn btn-link md-text no-padding" role="button" ng-href="#" ><i class="fa"  ng-class="{'fa-minus-square-o':!user.active, 'fa-check-square-o':user.active}" ></i></a>
                 <!-- <input class="center-link" type="checkbox" ng-model="user.activeChange"></input> -->
               </td>
-
+              <td class="no-padding">
+                <a class="btn btn-link large-text no-padding" role="button" ng-click="addAttendence(user)" title="Add Attendance">
+                  <i class="fa fa-calendar-plus-o" ></i>
+                </a>
+              </td>
           </tr>
       </tbody>
     </table>

@@ -16,6 +16,9 @@ router.delete('/:id', auth.hasRole('mentor'), controller.destroy);
 router.post('/', auth.hasRole('admin'), controller.create);
 router.put('/:id', auth.hasRole('admin'), controller.update);
 
+// Gets the attendance code for a particular date
+router.get('/code/:date', auth.hasRole('admin'), controller.getCode);
+
 // Verifies existing attendance submissions in the DB.
 router.put('/:id/verify', auth.hasRole('mentor'), controller.verifyAttendanceById);
 router.post('/present/:user/full', auth.hasRole('mentor'), controller.verifyFullAttendance);
@@ -35,6 +38,9 @@ router.post('/attend/:user/small', auth.hasRole('mentor'), controller.setAttenda
 router.post('/attend/:user/full', auth.hasRole('mentor'), controller.setAttendanceFull);
 router.post('/attend/:user/smallBonus', auth.hasRole('mentor'), controller.setAttendanceSmallBonus);
 router.post('/attend/:user/fullBonus', auth.hasRole('mentor'), controller.setAttendanceFullBonus);
+
+//Manually adds an attendance entry
+router.post('/attend/:user/manual', auth.hasRole('admin'), controller.attend);
 
 // Gets all users with unverifed attendance for today
 router.get('/unverified/:date',  auth.hasRole('mentor'), controller.getUnverifiedAttendanceUsers);

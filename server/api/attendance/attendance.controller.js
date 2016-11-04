@@ -157,6 +157,22 @@ exports.update = function(req, res) {
 // *******************************************************
 
 // *******************************************************
+// Get the attendance code for a particular day
+//
+// This searches through all the recorded attendances and gets the latest one
+// for the given day, there may be multiple codes but this returns only one
+// Restricted to admins
+// router.get('/code/:date', auth.hasRole('admin'), controller.getCode);
+exports.getCode = function(req, res) {
+  var date = req.params.date;
+  Attendance.find({date: new Date(date)}, {code:1,_id:0 }).limit(1)
+    .exec(function(err, attendance){
+      return res.status(200).json(attendance);
+    });
+}
+// *******************************************************
+
+// *******************************************************
 // Verifies an existing attendance submission in the DB.
 // Restricted to mentors
 // router.put('/:id/verify', auth.hasRole('mentor'), controller.verifyAttendanceById);
@@ -613,6 +629,39 @@ exports.setAttendanceFullBonus = function(req, res) {
 };
 // *******************************************************
 
+// *******************************************************
+// Adds an attendance entry with the given parameters
+//
+// Restricted to admins
+// router.post('/attend/:user/manual', auth.hasRole('admin'), controller.attend);
+exports.addAttendance = function(req, res) {
+  var userId = req.params.id;
+  var date = req.body.date;
+  var code = req.body.code;
+  var smallgroup = req.body.smallgroup
+  var bonusDay = req.body.bonusday;
+
+  User.findById(userId, function(err,user){
+    if (err) return handleError(err);
+    ClassYear.getCurrent(function(err, classYear){
+      if (err) return handleError(err);
+      saveAttendance(
+        classYear._id,  // classYearId
+        user._id, // userId
+        date, // date
+        code, // code
+        false, // needsVerification
+        bonusDay, // bonusDay
+        smallgroup, // smallgroup
+        function(err,submission){
+        if (err) return handleError(err);
+        // saved
+        return res.status(200);
+      });
+    };
+  });
+}
+// *******************************************************
 
 // *******************************************************
 // Gets all users with unverifed attendance for today
