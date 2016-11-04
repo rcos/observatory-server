@@ -634,17 +634,22 @@ exports.setAttendanceFullBonus = function(req, res) {
 //
 // Restricted to admins
 // router.post('/attend/:user/manual', auth.hasRole('admin'), controller.attend);
-exports.addAttendance = function(req, res) {
-  var userId = req.params.id;
+exports.addManualAttendance = function(req, res) {
+  var userId = req.params.user;
   var date = req.body.date;
   var smallgroup = req.body.smallgroup
-  var bonusDay = req.body.bonusday;
+  var bonusDay = req.body.bonusday;console.log("1")
 
-  User.findById(userId, function(err,user){
-    if (err) return handleError(err);
-    ClassYear.getCurrent(function(err, classYear){
-      if (err) return handleError(err);
-      saveAttendance(
+  return User.findById(userId, function(err,user){
+    if (err) {
+      return handleError(err);
+    }console.log("2")
+    return ClassYear.getCurrent(function(err, classYear){
+      if (err) {
+        return handleError(err);
+      }console.log("3")
+
+      return saveAttendance(
         classYear._id,  // classYearId
         user._id, // userId
         date, // date
@@ -653,11 +658,13 @@ exports.addAttendance = function(req, res) {
         bonusDay, // bonusDay
         smallgroup, // smallgroup
         function(err,submission){
-        if (err) return handleError(err);
-        // saved
-        return res.status(200);
+          if (err) {
+            return handleError(err);
+          }console.log("4")
+          // saved
+          return res.status(200).json({saved: true});
       });
-    };
+    });
   });
 }
 // *******************************************************

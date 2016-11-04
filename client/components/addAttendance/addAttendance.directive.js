@@ -4,6 +4,7 @@ angular.module('observatory3App')
 .controller('addAttendanceController', function($scope, $location, $http, $uibModalInstance, Auth, user, notify){
   $scope.user = user;
   $scope.attend = {date:"",type:""};
+  $scope.submitted = false;
 
   $scope.autofill = function() {
     //autofill the probable attendance type
@@ -17,10 +18,15 @@ angular.module('observatory3App')
   }
 
   $scope.submit = function(form) {
-    if(!form.$valid) {
-      notify("Please fill out all fields before submitting, if any fields are disabled select a date first");
+    if($scope.submitted) {
       return;
     }
+    if(!form.$valid) {
+      notify("Please fill out all fields before submitting");
+      return;
+    }
+    $scope.submitted = true;
+
     var params = {};
     params.date = $scope.attend.date;
     params.smallgroup = $scope.attend.type == "Small Group" || $scope.attend.type == "Small Group Bonus Day";
@@ -32,6 +38,7 @@ angular.module('observatory3App')
       notify("Added attendance entry");
     },function(err){
       notify("There was an error with adding the attendance entry");
+      $scope.submitted = false;
     });
   };
   $scope.close = function(){
