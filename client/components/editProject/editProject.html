@@ -66,28 +66,7 @@
       </div>
 
       <div class="form-group">
-        <label>Additional repositories</label>
-        <button class="btn btn-xs btn-success" type="button" ng-click="addRepository()">+</button>
-
-        <div ng-repeat="repo in project.repositories track by $id($index)" ng-if="$index >= 1" ng-class="{ 'has-success': editProjectForm['repository_' + $index].$valid && submitted,
-          'has-error': editProjectForm['repository_' + $index].$invalid && submitted }">
-
-          <div class="form-group">
-             <div class="input-group col-md-12">
-               <input type="url" name="repository_{{$index}}" class="repo form-control" ng-model="project.repositories[$index]" required/>
-               <span class="input-group-btn">
-                 <button class="btn btn-danger repoButton" class="form-control" type="button" ng-click="removeRepository($index)">-</button>
-               </span>
-             </div>
-           </div>
-
-          <div class="help-block" ng-show="editProjectForm['repository_' + $index].$error.url && submitted">
-            Doesn't look like a valid url.
-          </div>
-          <div class="help-block" ng-show="editProjectForm['repository_' + $index].$error.required && submitted">
-            A url is required.
-          </div>
-        </div>
+        <additional-repos  model="project.repositories" submitted="submitted"></additional-repos>
       </div>
 
       <div class="form-group" ng-class="{ 'has-success': editProjectForm.description.$valid && submitted,

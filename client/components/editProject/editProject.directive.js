@@ -77,13 +77,6 @@ angular.module('observatory3App')
         }
     };
 
-    $scope.addRepository = function() {
-      $scope.project.repositories.push("");    };
-
-    $scope.removeRepository = function(index) {
-      $scope.project.repositories.splice(index, 1);
-    };
-
     $scope.close = function() {
       // $uibModalInstance.close($scope.event);
       $uibModalInstance.dismiss('cancel');
