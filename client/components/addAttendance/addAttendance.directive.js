@@ -5,6 +5,8 @@ angular.module('observatory3App')
   $scope.user = user;
   $scope.attend = {date:"",type:""};
   $scope.submitted = false;
+  $scope.formDateEmptyError = false;
+  $scope.formTypeEmptyError = false;
 
   $scope.autofill = function() {
     //autofill the probable attendance type
@@ -15,6 +17,12 @@ angular.module('observatory3App')
     } else {//Some other day
         $scope.attend.type = "Bonus Day";
     }
+    $scope.formDateEmptyError = false;
+    $scope.formTypeEmptyError = false;
+  }
+
+  $scope.typeChanged = function() {
+    $scope.formTypeEmptyError = !$scope.attend.type;
   }
 
   $scope.submit = function(form) {
@@ -22,9 +30,13 @@ angular.module('observatory3App')
       return;
     }
     if(!form.$valid) {
-      notify("Please fill out all fields before submitting");
+      console.log(!!$scope.attend.date);
+      $scope.formDateEmptyError = !$scope.attend.date;
+      $scope.formTypeEmptyError = !$scope.attend.type;
       return;
     }
+    $scope.formDateEmptyError = false;
+    $scope.formTypeEmptyError = false;
     $scope.submitted = true;
 
     var params = {};

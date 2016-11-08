@@ -622,16 +622,16 @@ exports.addManualAttendance = function(req, res) {
   var userId = req.params.user;
   var date = req.body.date;
   var smallgroup = req.body.smallgroup
-  var bonusDay = req.body.bonusday;console.log("1")
+  var bonusDay = req.body.bonusday;
 
   return User.findById(userId, function(err,user){
     if (err) {
       return handleError(err);
-    }console.log("2")
+    }
     return ClassYear.getCurrent(function(err, classYear){
       if (err) {
         return handleError(err);
-      }console.log("3")
+      }
 
       return saveAttendance(
         classYear._id,  // classYearId
@@ -644,7 +644,7 @@ exports.addManualAttendance = function(req, res) {
         function(err,submission){
           if (err) {
             return handleError(err);
-          }console.log("4")
+          }
           // saved
           return res.status(200).json({saved: true});
       });
