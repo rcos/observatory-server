@@ -33,7 +33,7 @@ exports.create = function(req, res) {
     'emailAddress': data.email,
     'RIN': data.rin,
     'degreeProgram': data.degree,
-    'rpiYear': 
+    'rpiYear': data.year
   }
 
 
