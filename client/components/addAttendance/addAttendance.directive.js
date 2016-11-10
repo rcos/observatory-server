@@ -30,7 +30,6 @@ angular.module('observatory3App')
       return;
     }
     if(!form.$valid) {
-      console.log(!!$scope.attend.date);
       $scope.formDateEmptyError = !$scope.attend.date;
       $scope.formTypeEmptyError = !$scope.attend.type;
       return;
