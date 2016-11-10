@@ -71,10 +71,17 @@ describe('POST /api/projects/', function() {
         description: "Testing",
         websiteUrl: "www.google.com"
       })
+<<<<<<< HEAD
     .end((err,res) => {
       expect(res.status).to.equal(201);
       done(err);
     });
+=======
+      .end((err,res) => {
+        expect(res.status).to.equal(201);
+        done(err);
+     });
+>>>>>>> 54979d6... Added tests that check if project creation and deletion work
   });
 
   it('Should delete a project', done=> {
@@ -84,7 +91,11 @@ describe('POST /api/projects/', function() {
       .end((err,res) => {
         expect(res.status).to.equal(204);
         done(err);
+<<<<<<< HEAD
       });
+=======
+     });
+>>>>>>> 54979d6... Added tests that check if project creation and deletion work
   });
 
 });
