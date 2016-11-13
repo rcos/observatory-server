@@ -117,6 +117,7 @@ angular.module('observatory3App')
   };
 
   $scope.removeUser = function (student) {
+    console.log($scope.smallgroup._id); 
     $http.delete('/api/smallgroup/' + $scope.smallgroup._id + '/member/' + student._id).success(function () {
       notify('Successfully removed ' + student.name);
       if (student._id === $scope.user._id) {
@@ -130,8 +131,15 @@ angular.module('observatory3App')
 
   };
 
+  $scope.removeSelf = function(){
+    $scope.removeUser($scope.user);
+
+  }
+
   Auth.getCurrentUser(function (user) {
     $scope.user = user;
+    console.log(user._id);
+
     updateSmallGroup();
   });
 

@@ -145,11 +145,11 @@ exports.daycode = function(req, res){
 // router.delete('/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
-    var id = req.user.id;
+    console.log(dayCode);
     return ClassYear.getCurrent(function(err, classYear){
       var classYearId = classYear._id;
 
-      return SmallGroup.findOneAndUpdate({"students":userId, "classYear":classYearId}, {
+      return SmallGroup.findOneAndUpdate({"classYear":classYearId}, {
         $pull: { dayCodes: {code : dayCode }}
       })
       .select('+dayCodes.code')
@@ -255,16 +255,19 @@ exports.addMember = function(req, res){
 
 // Delete a member from a smallgroup
 // Restricted to mentors
-// router.delete('/:id/member/:memberId', auth.hasRole('mentor'), controller.deleteMember);
+// router.delete('/:id/member/:memberId', auth.isAuthenticated(), controller.deleteMember);
 exports.deleteMember = function(req, res){
+    console.log(req.user.role, "hello");
     var memberId = req.params.memberId;
     var smallGroupId = req.params.id;
+    if(req.user.id === memberId || req.user.role != 'user' ){
     return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
         $pull: { students : memberId }
     }, function(err, smallgroup){
         if (err) return handleError(res, err);
         return res.sendStatus(200);
-    });
+    }); }
+    return res.sendStatus(403);
 };
 
 // Change ths name of a smallgroup
