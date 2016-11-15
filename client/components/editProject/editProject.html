@@ -66,13 +66,7 @@
       </div>
 
       <div class="form-group">
-        <label>Additional repositories</label>
-        <button class="btn btn-xs btn-success" type="button" ng-click="addRepository()">+</button>
-
-        <div ng-repeat="repo in project.repositories track by $id($index)" ng-if="$index >= 1">
-          <input type="text" name="repository" class="form-control repo" ng-model="project.repositories[$index]" />
-          <button class="btn btn-danger repoButton" type="button" ng-click="removeRepository($index)">-</button>
-        </div>
+        <additional-repos  model="project.repositories" submitted="submitted"></additional-repos>
       </div>
 
       <div class="form-group" ng-class="{ 'has-success': editProjectForm.description.$valid && submitted,
