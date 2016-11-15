@@ -26,7 +26,6 @@ Project.find().exec().then(
   function (projects) {
     projects.forEach(
       function (project) {
-        console.error("PROJECT: ", project.fullRepoPath);
         var ghrepo = octoclient.repo(project.fullRepoPath);
         ghrepo.commits(
           function (err, commitDataArray, headers) {
