@@ -35,11 +35,14 @@
             <a uib-dropdown-toggle href="#">
                 Admin <span class="caret"></span></a>
             <ul uib-dropdown-menu>
-                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}">
-                    <a href="/admin">Users</a>
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/users')}">
+                    <a href="/admin/users">Users</a>
                 </li>
-                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/classcontrol')}">
-                    <a href="/admin/classcontrol">Class Control</a>
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/settings')}">
+                    <a href="/admin/settings">Settings</a>
+                </li>
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/attendance')}">
+                    <a href="/admin/attendance">Attendance</a>
                 </li>
             </ul>
         </li>

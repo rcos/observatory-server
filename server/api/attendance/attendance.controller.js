@@ -234,9 +234,7 @@ exports.getAttendees = function(req,res){
   return Attendance.find({code:req.params.dateCode})
     .exec(function (err,results){
         var userIds = results.map(function(e){ return e.user } );
-        console.log(userIds);
         User.find({_id : {$in : userIds } },{"name" : 1}, function(err, users){
-        console.log("users",users);
         res.json(users);
         })
     })
@@ -318,7 +316,7 @@ exports.attend = function(req,res){
   // after the above check, otherwise toUpperCase() might not exist.
   code = code.toUpperCase();
   // Check code against current class year
-  return ClassYear.getCurrent(function(err, classYear){
+  return ClassYear.getCurrentCodes(function(err, classYear){
     if (err) {return handleError(err)}
     return checkAttendanceForDate(user,classYear,new Date(),function(err, submitted){
       if (err) {return handleError(err)}
@@ -369,7 +367,9 @@ exports.attend = function(req,res){
       }
       // Classyear attendance code and bonus code was incorrect, try small group
       else{
-        return SmallGroup.findOne({"students":user._id, "classYear":classYear._id}, function(err, smallgroup){
+        return SmallGroup.findOne({"students":user._id, "classYear":classYear._id})
+    	  .select('+dayCodes.code')
+        .exec(function(err, smallgroup){
           if (err) {return handleError(err)}
           // if the user has no smallgroup, they cannont submit smallgroup  attendance
           if (!smallgroup){
@@ -377,6 +377,7 @@ exports.attend = function(req,res){
             }
 
           // Small group, and not a bonus day
+
           if (smallgroup.dayCode === code){
             // Check if the user already submitted a small group, non-bonus attendance
             if (submitted.small){

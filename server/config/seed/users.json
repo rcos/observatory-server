@@ -6,16 +6,14 @@
     "github": {
         "login": "test"
     }
-},
-{
+},{
     "provider": "local",
     "role": "admin",
     "name": "Admin",
     "email": "admin@admin.com",
     "password": "admin",
     "_id": "000000000000000000000100"
-},
-{
+},{
     "provider": "local",
     "role": "mentor",
     "name": "Mentor",
@@ -25,15 +23,6 @@
         "login": "mentorguy"
     },
     "_id": "000000000000000000000200"
-},{
-    "provider": "local",
-    "name": "Student",
-    "email": "student@student.com",
-    "password": "student",
-    "github": {
-        "login": "student"
-    },
-    "_id": "000000000000000000000300"
 },{
     "provider": "local",
     "name": "Forest Meer",
@@ -70,4 +59,23 @@
         "login": "doors"
     },
     "_id":"000000000000000000000700"
+},{
+    "provider": "local",
+    "name": "Student",
+    "email": "student@student.com",
+    "password": "student",
+    "github": {
+        "login": "student"
+    },
+    "_id": "000000000000000000000300"
+},{
+    "provider": "local",
+    "name": "TestMentor",
+    "role": "mentor",
+    "email": "testmentor@testmentor.com",
+    "password": "testmentor",
+    "github": {
+        "login": "testmentor"
+    },
+    "_id": "000000000000000000000800"
 }]
