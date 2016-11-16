@@ -6,53 +6,53 @@ angular.module('observatory3App')
   $scope.isMentor = Auth.isMentor;
   var getAttendees = function(dayCode){
     $http.get('/api/attendance/code/attendees/'+dayCode)
-    .success(function (data){
-      //store a list of attendees
-      $scope.numOfattendees.set(dayCode, data.length);
-      var names = [];
-      for(var j = 0; j < data.length; j++){
-        names[j] =data[j].name;
-      }
-      $scope.namesOfattendees.set(dayCode, names);
-    }).error(function(err){
-      console.log(err);
-    });
+      .success(function (data){
+        //store a list of attendees
+        $scope.numOfattendees.set(dayCode, data.length);
+        var names = [];
+        for(var j = 0; j < data.length; j++){
+          names[j] =data[j].name;
+        }
+        $scope.namesOfattendees.set(dayCode, names);
+      }).error(function(err){
+        console.log(err);
+      });
   };
 
   var updateSmallGroup = function (callback) {
     callback = callback || function () {};
     return User.smallgroup()
-    .$promise.then(function(smallgroup){
-      $scope.smallgroup = smallgroup;
-      if (!$scope.smallgroup._id) {
-        $scope.smallgroup = false;
-        return false;
-      }
-      return $http.get('/api/smallgroup/' + $scope.smallgroup._id + '/members').success(function (members) {
-        $scope.leaders = [];
-        $scope.members = [];
-        members.sort(function (a, b) {
-          if (a.name < b.name) {
-            return -1;
-          } else if (a.name > b.name) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-        for (var person = 0; person < members.length; person++)
-        {
-          if (members[person].role === 'admin' || members[person].role === 'mentor')
-          {
-            $scope.leaders.push(members[person]);
-          } else
-          {
-            $scope.members.push(members[person]);
-          }
+      .$promise.then(function(smallgroup){
+        $scope.smallgroup = smallgroup;
+        if (!$scope.smallgroup._id) {
+          $scope.smallgroup = false;
+          return false;
         }
-        callback(smallgroup);
+        return $http.get('/api/smallgroup/' + $scope.smallgroup._id + '/members').success(function (members) {
+          $scope.leaders = [];
+          $scope.members = [];
+          members.sort(function (a, b) {
+            if (a.name < b.name) {
+              return -1;
+            } else if (a.name > b.name) {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+          for (var person = 0; person < members.length; person++)
+          {
+            if (members[person].role === 'admin' || members[person].role === 'mentor')
+            {
+              $scope.leaders.push(members[person]);
+            } else
+            {
+              $scope.members.push(members[person]);
+            }
+          }
+          callback(smallgroup);
+        });
       });
-    });
   };
 
   $scope.createSmallGroup = function () {
@@ -127,14 +127,16 @@ angular.module('observatory3App')
     }).error(function () {
       notify('ERROR: Could not remove ' + student.name);
     });
-
   };
+
+  $scope.removeSelf = function(){
+    $scope.removeUser($scope.user);
+  }
 
   Auth.getCurrentUser(function (user) {
     $scope.user = user;
     updateSmallGroup();
   });
-
 })
 .directive('hname', function () {
   return {
