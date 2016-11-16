@@ -1,0 +1,76 @@
+- hosts: rcos
+  remote_user: root
+  gather_facts: true
+  vars:
+    nodejs_version: "4.x"
+    domain_name: dev.rcos.io
+  roles:
+    - geerlingguy.nodejs
+  pre_tasks:
+    - name: 'install python2'
+      raw: sudo apt-get -y install python
+  handlers:
+    - name: nginx_restart
+      service:
+        name: nginx
+        state: restarted
+  tasks:
+    - name: Update apt cache once
+      apt:
+        update_cache: yes
+
+    - name: Create rcos user
+      user:
+        name: rcos
+        group: admin
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: latest
+
+    - name: Install mongodb
+      apt:
+        name: mongodb
+        state: latest
+
+    - name: Install make
+      apt:
+        name: make
+        state: latest
+
+    - name: Create Diffe Helman Key File
+      command: openssl dhparam -out /home/rcos/dhparams.pem 2048
+      args:
+        creates: /home/rcos/dhparams.pem
+
+    - name: ensure default nginx config is removed
+      file:
+        path=/etc/nginx/sites-enabled/default
+        state=absent
+
+    - name: copy nginx config to site-enabled
+      template:
+        src=nginx.conf.j2
+        dest=/etc/nginx/sites-enabled/nginx.conf
+      changed_when: true
+      notify:
+        - nginx_restart
+
+    - name: copy the lets encrypt script over
+      template:
+        src: letsencrypt.sh.j2
+        dest: /home/rcos/letsencrypt.sh
+        mode: 0774
+
+    - name: Install forever
+      npm: name=forever global=yes state=latest
+
+    - name: Install grunt
+      npm: name=grunt global=yes state=latest
+
+    - name: Install grunt-cli
+      npm: name=grunt-cli global=yes state=latest
+
+    - name: Install bower
+      npm: name=bower global=yes state=latest
