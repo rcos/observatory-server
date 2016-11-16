@@ -145,7 +145,6 @@ exports.daycode = function(req, res){
 // router.delete('/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
-    console.log(dayCode);
     return ClassYear.getCurrent(function(err, classYear){
       var classYearId = classYear._id;
 
@@ -257,7 +256,6 @@ exports.addMember = function(req, res){
 // Restricted to mentors
 // router.delete('/:id/member/:memberId', auth.isAuthenticated(), controller.deleteMember);
 exports.deleteMember = function(req, res){
-    console.log(req.user.role, "hello");
     var memberId = req.params.memberId;
     var smallGroupId = req.params.id;
     if(req.user.id === memberId || req.user.role != 'user' ){

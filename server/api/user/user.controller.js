@@ -297,7 +297,6 @@ exports.smallgroup = function (req, res, next) {
           query.select('+dayCodes.code')
       }
       return query.exec(function(err, smallgroup){
-        console.log("smallgroup",smallgroup)
         if (err) return handleError(res, err);
         if (!smallgroup) return res.json({});
         var responseObject = smallgroup.toObject();
@@ -330,7 +329,6 @@ exports.userSmallgroup = function (req, res, next) {
           query.select('+dayCodes.code')
       }
       return query.exec(function(err, smallgroup){
-        console.log("userSmallgroup",smallgroup)
         if (err) return handleError(res, err);
         if (!smallgroup) return res.json({});
         var responseObject = smallgroup.toObject();
