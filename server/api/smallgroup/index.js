@@ -22,7 +22,7 @@ router.get('/:id', auth.isAuthenticated(), controller.getSmallGroup);
 // Access / Manipulate the members of a smallgroup
 router.get('/:id/members', auth.isAuthenticated(), controller.getSmallGroupMembers);
 router.put('/:id/member', auth.hasRole('mentor'), controller.addMember);
-router.delete('/:id/member/:memberId', auth.hasRole('mentor'), controller.deleteMember);
+router.delete('/:id/member/:memberId', auth.isAuthenticated(), controller.deleteMember);
 
 // Change the smallgroup name
 router.put('/:id/name', auth.hasRole('mentor'), controller.changeName);

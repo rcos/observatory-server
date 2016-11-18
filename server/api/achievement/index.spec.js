@@ -26,6 +26,8 @@ describe('POST /api/achievements', function() {
     before(seed);
     var adminSession;
     var id;
+    var first_test_id = "000000000000000000000010";
+    var second_test_id =  "000000000000000000000011";
     before(() => getSessionFor('admin').then(session => adminSession = session));
 
     it('should create an achievement', done => {
@@ -42,11 +44,21 @@ describe('POST /api/achievements', function() {
     });
 
     it('should delete an acheivement', done => {
-      var test_id = "000000000000000000000010"
       adminSession
-        .delete('/api/achievements/'+test_id)
+        .delete('/api/achievements/'+first_test_id)
         .end((err, res) => {
           expect(res.status).to.equal(204);
+          done(err);
+        });
+    });
+    it('should update an achievement', done =>{
+      adminSession
+        .put('/api/achievements/'+second_test_id)
+        .send({
+            title: "Changes!"
+          })
+          .end((err,res) => {
+          expect(res.status).to.equal(200);
           done(err);
         });
     });

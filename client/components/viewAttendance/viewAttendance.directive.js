@@ -20,20 +20,22 @@ angular.module('observatory3App')
       $scope.namesOfattendees = new Map();
 
       var getAttendees = function(dayCode){
-        $http.get('/api/attendance/code/attendees/'+dayCode)
-        .success(function (data){
-          //store a list of attendees
-          $scope.numOfattendees.set(dayCode, data.length);
-          if ($scope.names){
-            var names = [];
-            for(var j = 0; j < data.length; j++){
-              names[j] =data[j].name;
-            }
-            $scope.namesOfattendees.set(dayCode, names);
-          }
-        }).error(function(err){
-          console.log(err);
-        });
+        if(dayCode){
+          $http.get('/api/attendance/code/attendees/'+dayCode)
+            .success(function (data){
+              //store a list of attendees
+              $scope.numOfattendees.set(dayCode, data.length);
+              if ($scope.names){
+                var names = [];
+                for(var j = 0; j < data.length; j++){
+                  names[j] =data[j].name;
+                }
+                $scope.namesOfattendees.set(dayCode, names);
+              }
+            }).error(function(err){
+              console.log(err);
+            });
+        }
       };
 
       var saveGroupData = function(group){
