@@ -15,113 +15,135 @@ var Commit = require('../api/commit/commit.model');
 var Project = require('../api/project/project.model');
 
 var Octokat = require('octokat');
-/*
- @TODO: IMPORT TOKEN FROM AN UNTRACKED/PRIVATE CONFIG FILE
- */
-mongoose.Promise = require('bluebird');
 
+var Promise = require("bluebird");
+
+mongoose.Promise = require('bluebird');
+/*
+  The github token currently needs to be defined in development.js env.
+  Since, this is a worker that is currently run individually, it does not have app.js loaded beforehand.
+  Meaning, magic env stuff isn't automagically setup.
+  @TODO: bring back the magic
+ */
 var gtoken = config.GITHUB_WORKER_TOKEN;
+if(gtoken == "YOUR_KEY") {
+  console.error('ERROR: PLEASE SET YOUR GITHUB AUTH IN DEVELOPMENT.JS TOKEN BEFORE PROCEEDING');
+  throw new Error('ERROR: PLEASE SET YOUR GITHUB AUTH IN DEVELOPMENT.JS TOKEN BEFORE PROCEEDING');
+}
+// setup & initilize our github API library
 var octo = new Octokat({
   token: gtoken
 });
-var cb = function (err, val) {
-  if(err) {
-    console.log(err);
-    throw new Error();
-  }
-  console.log(val);
-  console.log(val.length);
-  return val.length;
-};
 
-
-
-function fetchCommitsFromProject (owner, project) {
-  console.log(owner, project,'000');
-  return fetchAll(octo.repos(owner,project).commits.fetch, [])
+/*
+  @TODO: add support for filtering commits by date/author/etc..
+   ex: only get commits newer than date x, or only get commits older than date y
+ */
+function fetchCommitsFromProject (owner, repository) {
+  return fetchAll(octo.repos(owner,repository).commits.fetch, [])
 }
 
 function fetchAll (fetch, results) {
-  console.log(fetch, results, '456');
-
   return fetchUntil(fetch, results, () => false)
 }
 
 function fetchUntil (fetch, results, done) {
-  // console.log(fetch, results, done, '123');
   return new Promise((resolve, reject) => {
     fetch()
     .then(result => {
     results = results.concat(result);
 
   if (result.nextPage && ! done(result)) {
-    return resolve(fetchUntil(result.nextPage, results, done))
+    return resolve(fetchUntil(result.nextPage, results, done));
   }
 
-  resolve(results)
+  resolve(results);
 })
 .catch(reject)
 })
 }
-var saveCommit = function (commitData) {
-  console.log('saviing....');
+var saveCommit = function (commitData, project) {
   var newCommit = new Commit(commitData);
-
-  // super hacky, definitely need to abstract this before github's api changes and this goes boom!!
+  /*
+   establish the ownership relationship; i.e. what project does this commit belong to?
+   @TODO: setup the inverse relationship(?); i.e. what commits does the project own?
+  */
   newCommit.project = project;
+  /*
+    manually extract/configure the data to match our Commit schema.
+   */
   newCommit.message = commitData.commit.message;
   newCommit.date = commitData.commit.author.date;
   newCommit.commentCount = commitData.commit.comment_count;
+  // Save the new commit model to the db. This is an async operation, so it will be turned into a promise.
   return newCommit.save();
 };
-var saveCommits = function(commits) {
-  console.log("comm len", commits.length, commits[0].length);
+/*
+  @promiseObject: JS object containing 2 fields.
+    commits: promise array of fetched commits from github
+    project: instance of project model that we are fetching the commits for.
+ */
+var saveCommits = function (promiseObject) {
+  // extract the data from the promiseObject
+  var commits = promiseObject.commits;
+  var project = promiseObject.project;
+  // array of Commit.save() operations; to be turned into an array of Promises.
   var commitPromises = [];
-  commits[0].forEach(function(commit) {
-    console.log('pre-save...');
-    commitPromises.push(saveCommit(commit));
+  commits.forEach(function(commit) {
+    commitPromises.push(saveCommit(commit, project));
   });
-  console.log("cpro len", commitPromises.length);
+  // return an array of promises, where each promise is a promise to save the commit model to the DB.
   return Promise.all(commitPromises);
 };
-var fetchCommits = function (owner, project) {
-  return Promise.all([fetchCommitsFromProject(owner, project)]);
+
+var fetchCommits = function (project) {
+  // extract the github username & github repository name to fetch the commits from.
+  var owner = project.githubUsername;
+  var repository = project.githubProjectName;
+  /*
+    Needed to pass through project model; to saveCommits; but javascript.
+    So instead I just tacked it onto an object.
+    Promise.props is essentially the same as using Promise.all([]),
+    Except it returns an object with arbitrary fields that can be a promise or arbitrary data.
+    with an added variable, @project.
+    Probably a better way to do this, but I currently can't think of any because javascript.
+   */
+
+  return Promise.props({
+    commits: fetchCommitsFromProject(owner, repository),
+    project: project,
+  });
 };
+
+/*
+ For now just a hard coded example/P.O.C using the github repo rcos/observatory3
+ Planning to refactor this "soon(tm)"
+ */
 if (!module.parent) {
   if (args.length == 0) {
-
-    fetchCommits('rcos', 'Observatory3').then(saveCommits).then(function (val) {
-      console.log(val);
-      console.log(val.length);
-      console.log(Object.keys(val));
-      console.log(Object.getOwnPropertyNames(val));
-      console.log("gg?");
+    //
+    Project.findOne({githubUsername: 'rcos', githubProjectName: 'observatory3'}, function(err, project) {
+      //@TODO: more robust error handling & feedback
+      if(err) {
+        console.error('Error finding project!');
+        throw new Error('Error finding project!', err);
+      }
+      /*
+       .then may not be needed? May just be able to do it all in this function?
+       Probably un-needed, but I don't even anymore. Javascript is just too mystical...
+        */
+    }).then(function(project) {
+      /*
+        flow:
+        1. fetch commits from github for @project
+        2. save fetched commits to db
+        3. disconnect from DB
+       */
+      fetchCommits(project).then(saveCommits).then(function () {
+        db.disconnect();
+        console.log("Done fetching & saving commits!\n Check the commits collection in your database!");
+      });
     });
+
   }
 }
-// Project.find().exec().then(
-//   function (projects) {
-//     var promises = [];
-//     projects.forEach(
-//       function (project) {
-//         console.log('test start...');
-//         var owner = project.githubUsername;
-//         var proj = project.githubProjectName;
-//         console.log('...');
-//         promises.push(fetchCommit(owner,proj));//octo.repos(owner,proj).commits.fetch()
-//           // .then(); //commits.fetchAll(cb);
-//         // console.log(test);
-//         // throw new Error();
-//       }
-//     );
-//     return Promise.all(promises);
-//   }
-// ).then(
-//   function () {
-//     // @TODO FIX ASYNC ISSUES SO DISCONNECT HAPPENS AFTER ALL SAVES HAVE COMPLETED.
-//     // Spent like 4 hours trying to debug this, but javascript is just too magical and asynchronous for me =(
-//     // It works perfectly with db.disconnect commented out, since it will always disconnect before the saves occur...
-//     // db.disconnect();
-//     console.log('finished populating commits');
-//   }
-// );
