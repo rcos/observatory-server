@@ -309,14 +309,17 @@ exports.presentMe = function(req, res) {
 // Mark attendance as present, subject to verification
 // router.post('/attend', auth.isAuthenticated(), controller.attend);
 exports.attend = function(req,res){
+  var currentDate = new Date( new Date().setHours(0,0,0,0) );
   var user = req.user;
   var code = req.body.dayCode;
+  var yearId = '';
   if (!code) {return res.status(400).json('No Code Submitted');}
   // Uppercase code from client so it is case-insensitive. This must happen
   // after the above check, otherwise toUpperCase() might not exist.
   code = code.toUpperCase();
   // Check code against current class year
   return ClassYear.getCurrentCodes(function(err, classYear){
+    yearId = classYear._id;
     if (err) {return handleError(err)}
     return checkAttendanceForDate(user,classYear,new Date(),function(err, submitted){
       if (err) {return handleError(err)}
@@ -365,20 +368,57 @@ exports.attend = function(req,res){
           return res.status(200).json({'type':'Full group bonus attendance', 'unverified': needsVerification});
         });
       }
-      // Classyear attendance code and bonus code was incorrect, try small group
       else{
+      // Classyear attendance code and bonus code was incorrect, try small group        
         return SmallGroup.findOne({"students":user._id, "classYear":classYear._id})
     	  .select('+dayCodes.code')
         .exec(function(err, smallgroup){
-          if (err) {return handleError(err)}
-          // if the user has no smallgroup, they cannont submit smallgroup  attendance
+          if (err) {return handleError(err)}          
+          
+          //if the user has no smallgroup,try comparing the code submission with the lastest dayCodes
           if (!smallgroup){
-              return res.status(400).json('No small group found or incorrect daycode!');
+              SmallGroup.findOne({"dayCodes.code":code,"classYear":classYear._id})
+              .select('+dayCodes.code')
+              .exec(function(err,smallgroup){
+                if (err) {return handleError(err);}
+                if (!smallgroup){return res.status(400).json('Incorrect Day Code!');}
+                var lastestCode = smallgroup.dayCode;
+                var lastestBonusCode = smallgroup.bonusDayCode;
+                //check if the lastest dayCode of each group was create today 
+                if((lastestCode && lastestCode === code) || 
+                  (lastestBonusCode && lastestBonusCode === code)){
+                  //check if today's small group codes match with the submission 
+                  SmallGroup.findOneAndUpdate({_id: smallgroup._id}, {
+                      $addToSet: { students : user._id }
+                  }, function(err, groupJoined){
+                      if (err) return handleError(res, err);
+                      if (submitted.small){
+                        // if it is already submitted, return
+                        return res.status(409).json('Small group attendance already recorded: ' + submitted.small.verified);
+                      }
+
+                      return saveAttendance(
+                        classYear._id,  // classYearId
+                        user._id, // userId
+                        new Date(), // date
+                        code, // code
+                        needsVerification, // needsVerification
+                        lastestBonusCode === code, // bonusDay
+                        true, // smallgroup
+                        function(err,submission){
+                        if (err) {return handleError(err)}
+                        return res.status(200).json({'type':'Small group attendance', 'unverified': needsVerification});
+                      });
+                  });     
+                }
+                else{
+                 return res.status(400).json('Incorrect Day Code!');
+                }
+              })
             }
 
-          // Small group, and not a bonus day
-
-          if (smallgroup.dayCode === code){
+        // Small group, and not a bonus day
+           if (smallgroup.dayCode === code){
             // Check if the user already submitted a small group, non-bonus attendance
             if (submitted.small){
               // if it is already submitted, return
