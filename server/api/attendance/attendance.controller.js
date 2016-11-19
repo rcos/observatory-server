@@ -309,17 +309,14 @@ exports.presentMe = function(req, res) {
 // Mark attendance as present, subject to verification
 // router.post('/attend', auth.isAuthenticated(), controller.attend);
 exports.attend = function(req,res){
-  var currentDate = new Date( new Date().setHours(0,0,0,0) );
   var user = req.user;
   var code = req.body.dayCode;
-  var yearId = '';
   if (!code) {return res.status(400).json('No Code Submitted');}
   // Uppercase code from client so it is case-insensitive. This must happen
   // after the above check, otherwise toUpperCase() might not exist.
   code = code.toUpperCase();
   // Check code against current class year
   return ClassYear.getCurrentCodes(function(err, classYear){
-    yearId = classYear._id;
     if (err) {return handleError(err)}
     return checkAttendanceForDate(user,classYear,new Date(),function(err, submitted){
       if (err) {return handleError(err)}
