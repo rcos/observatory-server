@@ -384,7 +384,6 @@ exports.attend = function(req,res){
                 if (!smallgroup){return res.status(400).json('Incorrect Day Code!');}
                 var lastestCode = smallgroup.dayCode;
                 var lastestBonusCode = smallgroup.bonusDayCode;
-                //check if the lastest dayCode of each group was create today 
                 if((lastestCode && lastestCode === code) || 
                   (lastestBonusCode && lastestBonusCode === code)){
                   //check if today's small group codes match with the submission 
@@ -417,8 +416,8 @@ exports.attend = function(req,res){
               })
             }
 
-        // Small group, and not a bonus day
-           if (smallgroup.dayCode === code){
+          // Small group, and not a bonus day
+          else if (smallgroup.dayCode === code){
             // Check if the user already submitted a small group, non-bonus attendance
             if (submitted.small){
               // if it is already submitted, return
