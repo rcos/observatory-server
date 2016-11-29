@@ -126,7 +126,7 @@ exports.daycode = function(req, res){
         }
         //Not ambigious code generator, function at the bottom.
         var code = generateCode(6);
-
+        
         smallgroup.dayCodes.push({
           date: today,
           code: code,
@@ -304,5 +304,20 @@ function generateCode(codeLength){
       var character = (Math.floor(Math.random() * characterOptions.length));
       code = code.concat(characterOptions[character.toString()]);
   }
+  ClassYear.findOne({"dayCodes.code":code})
+    .exec(function(err, classYear){
+      if (err) return handleError(res, err);
+      if(classYear) {
+        generateCode(codeLength);
+      }
+      else{
+        SmallGroup.findOne({"dayCodes.code":code})
+          .exec(function(err, smallgroup){
+            if (err) return handleError(res, err);
+            if(smallgroup){
+              generateCode(codeLength);
+            }
+        });}
+    });
   return code;
 }

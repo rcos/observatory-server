@@ -6,6 +6,7 @@
 
 var ClassYear = require('./classyear.model');
 var Attendance = require('../attendance/attendance.model');
+var SmallGroup = require('../smallgroup/smallgroup.model');
 
 // Get current class year
 exports.index = function(req, res) {
@@ -151,7 +152,8 @@ exports.daycode = function(req, res){
     });
     return classYear.save(function(err, classYear){
       if (err) return handleError(res, err);
-      res.send(200, code);
+      return res.status(200).json(code);
+
     });
   });
 };
@@ -220,5 +222,20 @@ function generateCode(codeLength){
       var character = (Math.floor(Math.random() * characterOptions.length));
       code = code.concat(characterOptions[character.toString()]);
   }
+  ClassYear.findOne({"dayCodes.code":code})
+    .exec(function(err, classYear){
+      if (err) return handleError(res, err);
+      if(classYear) {
+        generateCode(codeLength);
+      }
+      else{
+        SmallGroup.findOne({"dayCodes.code":code})
+          .exec(function(err, smallgroup){
+            if (err) return handleError(res, err);
+            if(smallgroup){
+              generateCode(codeLength);
+            }
+        });}
+    });  
   return code;
 }
