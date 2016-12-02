@@ -20,10 +20,10 @@ var Promise = require("bluebird");
 
 mongoose.Promise = require('bluebird');
 /*
-  The github token currently needs to be defined in development.js env.
-  Since, this is a worker that is currently run individually, it does not have app.js loaded beforehand.
-  Meaning, magic env stuff isn't automagically setup.
-  @TODO: bring back the magic
+ The github token currently needs to be defined in development.js env.
+ Since, this is a worker that is currently run individually, it does not have app.js loaded beforehand.
+ Meaning, magic env stuff isn't automagically setup.
+ @TODO: bring back the magic
  */
 var gtoken = config.GITHUB_WORKER_TOKEN;
 if(gtoken == "YOUR_KEY") {
@@ -36,8 +36,8 @@ var octo = new Octokat({
 });
 
 /*
-  @TODO: add support for filtering commits by date/author/etc..
-   ex: only get commits newer than date x, or only get commits older than date y
+ @TODO: add support for filtering commits by date/author/etc..
+ ex: only get commits newer than date x, or only get commits older than date y
  */
 function fetchCommitsFromProject (owner, repository) {
   return fetchAll(octo.repos(owner,repository).commits.fetch, [])
@@ -50,27 +50,27 @@ function fetchAll (fetch, results) {
 function fetchUntil (fetch, results, done) {
   return new Promise((resolve, reject) => {
     fetch()
-    .then(result => {
-    results = results.concat(result);
+      .then(result => {
+        results = results.concat(result);
 
-  if (result.nextPage && ! done(result)) {
-    return resolve(fetchUntil(result.nextPage, results, done));
-  }
+        if (result.nextPage && ! done(result)) {
+          return resolve(fetchUntil(result.nextPage, results, done));
+        }
 
-  resolve(results);
-})
-.catch(reject)
-})
+        resolve(results);
+      })
+      .catch(reject)
+  })
 }
 var saveCommit = function (commitData, project) {
   var newCommit = new Commit(commitData);
   /*
    establish the ownership relationship; i.e. what project does this commit belong to?
    @TODO: setup the inverse relationship(?); i.e. what commits does the project own?
-  */
+   */
   newCommit.project = project;
   /*
-    manually extract/configure the data to match our Commit schema.
+   manually extract/configure the data to match our Commit schema.
    */
   newCommit.message = commitData.commit.message;
   newCommit.date = commitData.commit.author.date;
@@ -79,9 +79,9 @@ var saveCommit = function (commitData, project) {
   return newCommit.save();
 };
 /*
-  @promiseObject: JS object containing 2 fields.
-    commits: promise array of fetched commits from github
-    project: instance of project model that we are fetching the commits for.
+ @promiseObject: JS object containing 2 fields.
+ commits: promise array of fetched commits from github
+ project: instance of project model that we are fetching the commits for.
  */
 var saveCommits = function (promiseObject) {
   // extract the data from the promiseObject
@@ -101,12 +101,12 @@ var fetchCommits = function (project) {
   var owner = project.githubUsername;
   var repository = project.githubProjectName;
   /*
-    Needed to pass through project model; to saveCommits; but javascript.
-    So instead I just tacked it onto an object.
-    Promise.props is essentially the same as using Promise.all([]),
-    Except it returns an object with arbitrary fields that can be a promise or arbitrary data.
-    with an added variable, @project.
-    Probably a better way to do this, but I currently can't think of any because javascript.
+   Needed to pass through project model; to saveCommits; but javascript.
+   So instead I just tacked it onto an object.
+   Promise.props is essentially the same as using Promise.all([]),
+   Except it returns an object with arbitrary fields that can be a promise or arbitrary data.
+   with an added variable, @project.
+   Probably a better way to do this, but I currently can't think of any because javascript.
    */
 
   return Promise.props({
@@ -131,13 +131,13 @@ if (!module.parent) {
       /*
        .then may not be needed? May just be able to do it all in this function?
        Probably un-needed, but I don't even anymore. Javascript is just too mystical...
-        */
+       */
     }).then(function(project) {
       /*
-        flow:
-        1. fetch commits from github for @project
-        2. save fetched commits to db
-        3. disconnect from DB
+       flow:
+       1. fetch commits from github for @project
+       2. save fetched commits to db
+       3. disconnect from DB
        */
       fetchCommits(project).then(saveCommits).then(function () {
         db.disconnect();
