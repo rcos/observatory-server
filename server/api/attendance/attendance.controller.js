@@ -614,6 +614,45 @@ exports.setAttendanceFullBonus = function(req, res) {
 };
 // *******************************************************
 
+// *******************************************************
+// Adds an attendance entry with the given parameters
+//
+// Restricted to admins
+// router.post('/attend/:user/manual', auth.hasRole('admin'), controller.attend);
+exports.addManualAttendance = function(req, res) {
+  var userId = req.params.user;
+  var date = req.body.date;
+  var smallgroup = req.body.smallgroup
+  var bonusDay = req.body.bonusday;
+
+  return User.findById(userId, function(err,user){
+    if (err) {
+      return handleError(err);
+    }
+    return ClassYear.getCurrent(function(err, classYear){
+      if (err) {
+        return handleError(err);
+      }
+
+      return saveAttendance(
+        classYear._id,  // classYearId
+        user._id, // userId
+        date, // date
+        'manual', // code
+        false, // needsVerification
+        bonusDay, // bonusDay
+        smallgroup, // smallgroup
+        function(err,submission){
+          if (err) {
+            return handleError(err);
+          }
+          // saved
+          return res.status(200).json({saved: true});
+      });
+    });
+  });
+}
+// *******************************************************
 
 // *******************************************************
 // Gets all users with unverifed attendance for today

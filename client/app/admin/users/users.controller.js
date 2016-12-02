@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('AdminCtrl', function ($scope, $http, Auth, User, Util, notify, $location) {
+  .controller('AdminCtrl', function ($scope, $http, $uibModal, Auth, User, Util, notify, $location) {
     $scope.past = {active: true };
     $scope.sortorder = 'name';
 
@@ -72,6 +72,17 @@ angular.module('observatory3App')
 
     $scope.toggle = function(user){
         $scope.submit(user, !user.active);
+    };
+
+    $scope.addAttendence = function(user){
+      var modalInstance = $uibModal.open({
+        templateUrl: 'components/addAttendance/addAttendance.html',
+        controller: 'addAttendanceController',
+        backdrop : 'static',
+        resolve : {
+          user: user
+        }
+      });
     };
 
     $scope.submitAll = function(){
