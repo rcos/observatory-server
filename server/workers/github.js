@@ -39,29 +39,49 @@ var octo = new Octokat({
  @TODO: add support for filtering commits by date/author/etc..
  ex: only get commits newer than date x, or only get commits older than date y
  */
-function fetchCommitsFromProject (owner, repository) {
-  return fetchAll(octo.repos(owner,repository).commits.fetch, [])
+function fetchCommitsFromProject (owner, repository, config) {
+  return fetchAll(octo.repos(owner, repository).commits.fetch, config);
 }
-
-function fetchAll (fetch, results) {
-  return fetchUntil(fetch, results, () => false)
+function fetchAll(fn, args) {
+  let acc = [];
+  if (!args) {
+    args = {per_page: 100};
+  }
+  let p = new Promise((resolve, reject) => {
+    fn(args).then((val) => {
+      acc = acc.concat(val);
+      if (val.nextPage) {
+        fetchAll(val.nextPage).then((val2) => {
+          acc = acc.concat(val2);
+          resolve(acc);
+        }, reject);
+      } else {
+        resolve(acc);
+      }
+    }, reject);
+  });
+  return p;
 }
+  // var fn = octo.repos(owner,repository).commits.fetch;
+  //
+  // let acc = []; // Accumulated results
+  // let p = new Promise((resolve, reject) => {
+  //   fn(config).then((val) => {
+  //     acc = acc.concat(val);
+  //     if (val.nextPage) {
+  //       return fetchAll(val.nextPage).then((val2) => {
+  //         acc = acc.concat(val2);
+  //         resolve(acc);
+  //       }, reject);
+  //     } else {
+  //       resolve(acc);
+  //     }
+  //   }, reject);
+  // });
+  // console.log("Fetched commits for project:::", repository);
+  // return p;
+// }
 
-function fetchUntil (fetch, results, done) {
-  return new Promise((resolve, reject) => {
-    fetch()
-      .then(result => {
-        results = results.concat(result);
-
-        if (result.nextPage && ! done(result)) {
-          return resolve(fetchUntil(result.nextPage, results, done));
-        }
-
-        resolve(results);
-      })
-      .catch(reject)
-  })
-}
 var saveCommit = function (commitData, project) {
   var newCommit = new Commit(commitData);
   /*
@@ -96,10 +116,22 @@ var saveCommits = function (promiseObject) {
   return Promise.all(commitPromises);
 };
 
-var fetchCommits = function (project) {
+/**
+ *
+ * @param project: instance of Project model
+ * @param config:
+ */
+var fetchCommits = function (project, config) {
   // extract the github username & github repository name to fetch the commits from.
   var owner = project.githubUsername;
   var repository = project.githubProjectName;
+
+  // Config is an optional arguement, so if it isn't pased init it ourselves
+  config = config || {};
+
+  // always set the results per page limit to the maximum, 100, to reduce github API calls
+  config["per_page"] = 100;
+
   /*
    Needed to pass through project model; to saveCommits; but javascript.
    So instead I just tacked it onto an object.
@@ -110,7 +142,7 @@ var fetchCommits = function (project) {
    */
 
   return Promise.props({
-    commits: fetchCommitsFromProject(owner, repository),
+    commits: fetchCommitsFromProject(owner, repository, config),
     project: project,
   });
 };
@@ -121,6 +153,18 @@ var fetchCommits = function (project) {
  */
 if (!module.parent) {
   if (args.length == 0) {
+
+    // Project.find({}).exec(function(err, projects) {
+    //   console.log(projects);
+    //   projects.forEach(function(project) {
+    //     fetchCommits(project).then(saveCommits).then(function() {
+    //       console.log("Processed commits for project::: ", project.fullRepoPath());
+    //     });
+    //   })
+    // }).then(function () {
+    //   db.disconnect();
+    //   console.log("Done fetching & saving commits!\n Check the commits collection in your database!");
+    // });
     //
     Project.findOne({githubUsername: 'rcos', githubProjectName: 'observatory3'}, function(err, project) {
       //@TODO: more robust error handling & feedback
@@ -139,11 +183,13 @@ if (!module.parent) {
        2. save fetched commits to db
        3. disconnect from DB
        */
-      fetchCommits(project).then(saveCommits).then(function () {
+      fetchCommits(project).then(saveCommits).then(function() {
+        console.log("Processed commits for project::: ", project.githubProjectName);
+      }).then(function () {
         db.disconnect();
         console.log("Done fetching & saving commits!\n Check the commits collection in your database!");
       });
-    });
 
+    });
   }
 }
