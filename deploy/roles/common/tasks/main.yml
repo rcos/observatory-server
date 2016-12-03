@@ -1,0 +1,10 @@
+---
+
+- name: Update apt cache once
+  apt:
+    update_cache: yes
+
+- name: Create rcos user
+  user:
+    name: rcos
+    group: admin
