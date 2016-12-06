@@ -12,6 +12,7 @@ angular.module('observatory3App')
 
         if($scope.project.githubUsername && $scope.project.githubProjectName) {
             $scope.project.name = $scope.project.githubProjectName;
+
             $http({ url: 'https://api.github.com/repos/' + $scope.project.githubUsername + '/' + $scope.project.githubProjectName}).then(
               function(response) {
                 if (response.data.homepage){
@@ -20,7 +21,9 @@ angular.module('observatory3App')
                 else{
                   $scope.project.websiteUrl = response.data.html_url;
                 }
+
                 $scope.project.description = response.data.description;
+
               }, function(){
                 $scope.githubError = true;
               });
