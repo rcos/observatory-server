@@ -8,6 +8,7 @@ var fs = require('fs');
 var mkdirp = require('mkdirp');
 var async = require('async');
 var config = require('../../config/environment');
+var validUrl = require('valid-url');
 
 
 // Get list of current projects
@@ -132,6 +133,23 @@ exports.update = function(req, res) {
       if (err) { return handleError(res, err); }
 
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
+
+        var urls = req.body.repositories;
+
+        // validate urls, change only if all urls are valid
+        var valid = false;
+        for (var i = 0; i < urls.length; i++) {
+          if (validUrl.isUri(urls[i])) {
+            valid = true;
+          } else {
+            valid = false;
+          }
+        }
+
+        if (valid == true) {
+          project.repositories = req.body.repositories;
+        }
+
         var updated = _.merge(project, req.body);
         updated.save(function (err) {
           if (err) { return handleError(res, err); }

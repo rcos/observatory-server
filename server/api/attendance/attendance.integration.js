@@ -17,7 +17,7 @@ describe('Attendance API:', () => {
 
     var mentorSession, studentSession;
 
-    before(() => getSessionFor('mentor').then(session => mentorSession = session));
+    before(() => getSessionFor('testmentor').then(session => mentorSession = session));
     before(() => getSessionFor('student').then(session => studentSession = session));
 
     let smallgroup, mentor, student;
@@ -25,7 +25,7 @@ describe('Attendance API:', () => {
     before(() => {
       // Add the mentor to a small group
       return Promise.all([
-        User.findOne({"email": "mentor@mentor.com"}),
+        User.findOne({"email": "testmentor@testmentor.com"}),
         SmallGroup.findOne({"name": "New Small Group"}),
         User.findOne({"email": "student@student.com"})
       ]).then(results => {
@@ -49,7 +49,7 @@ describe('Attendance API:', () => {
 
     it('should allow mentors to generate an attendance code', done => {
       mentorSession
-      .post('/api/smallgroup/'+smallgroup._id+'/daycode').end((err, res) => {
+      .post('/api/smallgroup/daycode').end((err, res) => {
         expect(res.body).to.have.length(6);
         dayCode = res.body;
         done(err);

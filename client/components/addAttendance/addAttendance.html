@@ -1,0 +1,34 @@
+<div class="addModal">
+  <div class="modal-header">
+    <h3 class="modal-title">Add Attendance for {{user.name}}</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form" name="addAttendanceForm" ng-submit="submit(addAttendanceForm)" novalidate>
+
+      <div>
+        <label>Attendance Date</label>
+        <div uib-datepicker class="well well-sm" ng-model="attend.date" ng-change="autofill()" required></div>
+        <p class="help-block has-error" ng-show="formDateEmptyError">
+          Please select a date
+        </p>
+      </div>
+      <div class="form-group">
+        <label for="attendanceType">Attendance Type</label>
+        <select class="form-control" id="attendanceType" ng-model="attend.type" ng-change="typeChanged()" required>
+          <option>Regular</option>
+          <option>Small Group</option>
+          <option>Bonus Day</option>
+          <option>Small Group Bonus Day</option>
+        </select>
+        <p class="help-block has-error" ng-show="formTypeEmptyError">
+          Please select a type
+        </p>
+      </div>
+      <span class="text-muted">Please verify any autofilled data.</span>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

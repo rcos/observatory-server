@@ -61,7 +61,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               {{ ach.title }}
-              <a href="#" class="pull-right" ng-click="delete(ach)" ng-show="isAdmin"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+              <a href="#" class="pull-right" ng-click="delete(ach)" ng-show="isAdmin()"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
             </div>
             <div class="panel-body">
               <div id="content" class="event-description" btf-markdown="ach.description"></div>

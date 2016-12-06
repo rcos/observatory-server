@@ -79,14 +79,6 @@ angular.module('observatory3App')
         });
     };
 
-    $scope.addRepository = function() {
-        $scope.projectToAdd.repositories[$scope.projectToAdd.repositories.length] = "";
-    }
-
-    $scope.removeRepository = function(index) {
-        $scope.projectToAdd.repositories.splice(index, 1);
-    }
-
     if ($stateParams.state === 'past') {
       $scope.past = true;
       $scope.getPastProjects();

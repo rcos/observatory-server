@@ -19,7 +19,11 @@ var ClassSchema = new Schema({
   },
   dayCodes: [{
     date:Date,
-    code:String,
+    code:{
+      type: String,
+      select: false,
+      index: true
+    },
     bonusDay:{
       type:Boolean,
       default:false,
@@ -36,7 +40,22 @@ ClassSchema
 		var today = new Date();
 		today.setHours(0,0,0,0);
 		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() == today.getTime()){
+			if (this.dayCodes[i].date.getTime() == today.getTime()
+      && this.dayCodes[i].bonusDay === false){
+				return this.dayCodes[i].code;
+			}
+		}
+		return null;
+	});
+
+ClassSchema
+	.virtual("bonusDayCode")
+	.get(function(){
+		var today = new Date();
+		today.setHours(0,0,0,0);
+		for (var i = 0;i < this.dayCodes.length;i++){
+			if (this.dayCodes[i].date.getTime() == today.getTime()
+      && this.dayCodes[i].bonusDay === true){
 				return this.dayCodes[i].code;
 			}
 		}
@@ -48,6 +67,16 @@ ClassSchema.statics.getCurrent = function(cb){
 	ClassYear.findOne({
 		"current": true
 	}, function(err, classYear){
+		cb(err, classYear);
+	});
+};
+
+ClassSchema.statics.getCurrentCodes = function(cb){
+	ClassYear.findOne({
+		"current": true
+	})
+  .select('+dayCodes.code')
+  .exec(function(err, classYear){
 		cb(err, classYear);
 	});
 };

@@ -60,37 +60,41 @@ angular.module('observatory3App')
 
       var parseAttendanceInfo = function(u){
         Util.parseAttendance(u);
+        if ('totalDates' in u && u.totalDates){
+          u.full.all = u.totalDates.length;
 
-        u.full.all = u.totalDates.length;
-        u.small.all = u.totalSmallDates.length;
+          u.full.greyWidth = 0;
 
-        u.full.greyWidth = 0;
-        u.small.greyWidth = 0;
-
-        if (u.full.all === 0){
-            u.full.goodWidth = 0;
-            u.full.greyWidth = 100;
+          if (u.full.all === 0){
+              u.full.goodWidth = 0;
+              u.full.greyWidth = 100;
+          }
+          else{
+              if (u.full.normal + u.full.bonus >= u.full.all){
+                  u.full.goodWidth = 100;
+              }
+              else{
+                  u.full.goodWidth = 100 * (u.full.normal + u.full.bonus) / u.full.all ;
+              }
+          }
         }
-        else{
-            if (u.full.normal + u.full.bonus >= u.full.all){
-                u.full.goodWidth = 100;
-            }
-            else{
-                u.full.goodWidth = 100 * (u.full.normal + u.full.bonus) / u.full.all ;
-            }
-        }
+        if ('totalSmallDates' in u && u.totalSmallDates){
+          u.small.all = u.totalSmallDates.length;
 
-        if (u.small.all === 0){
-            u.small.goodWidth = 0;
-            u.small.greyWidth = 100;
-        }
-        else{
-            if (u.small.normal + u.small.bonus >= u.small.all){
-                u.small.goodWidth = 100;
-            }
-            else{
-                u.small.goodWidth = 100 * (u.small.normal + u.small.bonus) / u.small.all ;
-            }
+          u.small.greyWidth = 0;
+
+          if (u.small.all === 0){
+              u.small.goodWidth = 0;
+              u.small.greyWidth = 100;
+          }
+          else{
+              if (u.small.normal + u.small.bonus >= u.small.all){
+                  u.small.goodWidth = 100;
+              }
+              else{
+                  u.small.goodWidth = 100 * (u.small.normal + u.small.bonus) / u.small.all ;
+              }
+          }
         }
       };
       var getCommits = function(){
@@ -103,7 +107,7 @@ angular.module('observatory3App')
          });
       };
 
-      $scope.addTech = function(){
+      $scope.addTechBubble = function(){
         if($scope.insertTechContent){
           $http.put('/api/users/' + $stateParams.id + '/addTech', {
               'tech': $scope.insertTechContent
