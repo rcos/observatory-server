@@ -22,7 +22,7 @@ var SmallGroupSchema = new Schema({
     date:Date,
     code:{
       type: String,
-      select: false,
+      select: true,
       index: true
     },
     bonusDay:{
