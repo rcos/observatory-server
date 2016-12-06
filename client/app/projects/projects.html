@@ -45,6 +45,7 @@
             <li><a href="{{project.websiteUrl}}" target="_blank">Website</a></li>
             <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
             <li><a href="https://github.com/{{project.githubUsername}}/{{project.githubProjectName}}" target="_blank">Repository</a></li>
+            <li><a href="{{project.proposalUrl}}" ng-show="project.proposalUrl" target="_blank">Proposal</a></li>
             <li><a a href="" ng-show='isAdmin() && !past' ng-click="markPast(project._id)"> Mark Past Project</a> </li>
             <li><a a href="" ng-show='isAdmin() && past' ng-click="markActive(project._id)"> Mark Active Project</a> </li>
           </ul>
