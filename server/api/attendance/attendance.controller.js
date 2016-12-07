@@ -253,35 +253,39 @@ var getAttendance = function(userId, classYearId, cb){
     if (err) {return handleError(err)}
     SmallGroup.find({classYear:classYearId, students:userId}, function (err, smallgroup) {
       if (err) {return handleError(err)}
-      for (var i = 0; i < smallgroup[0]["dayCodes"].length; i++) {
-        var smallattend = smallgroup[0]["dayCodes"][i];
-        var found = false;
-        for (var j = 0; j < attendance.length; j++) {
-          var attendcode = attendance[j]["code"];
-          if (attendcode === smallattend.code) {
-            found = true;
-            break;
+      if (typeof(smallgroup[0]) != 'undefined') {
+        for (var i = 0; i < smallgroup[0]["dayCodes"].length; i++) {
+          var smallattend = smallgroup[0]["dayCodes"][i];
+          var found = false;
+          for (var j = 0; j < attendance.length; j++) {
+            var attendcode = attendance[j]["code"];
+            if (attendcode === smallattend.code) {
+              found = true;
+              break;
+            }
           }
-        }
-        if (!found) {
-          attendance.push({date:smallattend.date, bonusDay:smallattend.bonusDay, smallgroup:true, verified:false, present:false});
+          if (!found) {
+            attendance.push({date:smallattend.date, bonusDay:smallattend.bonusDay, smallgroup:true, verified:false, present:false});
+          }
         }
       }
     });
     ClassYear.find({current:true}, function (err, classyear) {
       if (err) {return handleError(err)}
-      for (var i = 0; i < classyear[0]["dayCodes"].length; i++) {
-        var yearcode = classyear[0]["dayCodes"][i];
-        var found = false;
-        for (var j = 0; j < attendance.length; j++) {
-          var attendcode = attendance[i]["code"];
-          if (attendcode === yearcode) {
-            found = true;
-            break;
+      if (typeof(classyear) != 'undefined') {
+        for (var i = 0; i < classyear[0]["dayCodes"].length; i++) {
+          var yearcode = classyear[0]["dayCodes"][i];
+          var found = false;
+          for (var j = 0; j < attendance.length; j++) {
+            var attendcode = attendance[i]["code"];
+            if (attendcode === yearcode) {
+              found = true;
+              break;
+            }
           }
-        }
-        if (!found) {
-          attendance.push({date:yearcode.date, bonusDay:yearcode.bonusDay, smallgroup:false, verified:false, present:false});
+          if (!found) {
+            attendance.push({date:yearcode.date, bonusDay:yearcode.bonusDay, smallgroup:false, verified:false, present:false});
+          }
         }
       }
       return callback(attendance);
