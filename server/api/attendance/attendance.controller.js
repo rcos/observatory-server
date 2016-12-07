@@ -388,11 +388,6 @@ exports.attend = function(req,res){
                       $addToSet: { students : user._id }
                   }, function(err, groupJoined){
                       if (err) return handleError(res, err);
-                      if (submitted.small){
-                        // if it is already submitted, return
-                        return res.status(409).json('Small group attendance already recorded: ' + submitted.small.verified);
-                      }
-
                       return saveAttendance(
                         classYear._id,  // classYearId
                         user._id, // userId
