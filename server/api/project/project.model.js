@@ -17,6 +17,7 @@ var ProjectSchema = new Schema({
   },
   repositories: [String],
   websiteUrl: String,
+  proposalUrl: String,
   githubUsername: {
     type: String,
     lowercase:true,

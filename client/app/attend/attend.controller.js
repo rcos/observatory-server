@@ -27,6 +27,7 @@ angular.module('observatory3App')
           load();
       }).error(function(err){
         notify({ message: "Error: " + err, classes: ["alert-danger"] });
+        $scope.attend.$setPristine();
         load();
       });
     };

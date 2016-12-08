@@ -9,11 +9,11 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
       <p>
-      <form ng-submit="submitDayCode()">
+      <form name ="attend" ng-submit="attend.$dirty && submitDayCode()">
         <div class="input-group dayCodeForm">
           <input id="dayCodeInput" type="text" ng-model='userDayCode' class="form-control" placeholder="Day Code" tabindex="1">
           <span class="input-group-btn">
-            <button class="btn btn-primary" ng-click='submitDayCode()' type="button">Submit Day Code</button>
+            <button class="btn btn-primary" ng-click='submitDayCode()' ng-disabled="attend.$pristine" type="button">Submit Day Code</button>
           </span>
         </div>
       </form>
