@@ -582,7 +582,7 @@ exports.resetPassword = function(req, res){
 
               var sub = {
                 ":name": [user.name],
-                "[%address%]": [config.addr + "/login?token=" + user.passwordResetToken],
+                "[%address%]": ["https://rcos.io/login?token=" + user.passwordResetToken],
               }
 
               var filter = {
@@ -597,7 +597,6 @@ exports.resetPassword = function(req, res){
               // email token to user
               email.sendEmail(user.email, "RCOS.IO Forgot Password", sub, '<br>', filter, function(err, success){
                 if (err) return res.status(500).json(err);
-
                 return res.status(200).json(success);
               });
             });
