@@ -154,18 +154,6 @@ var fetchCommits = function (project, config) {
 if (!module.parent) {
   if (args.length == 0) {
 
-    // Project.find({}).exec(function(err, projects) {
-    //   console.log(projects);
-    //   projects.forEach(function(project) {
-    //     fetchCommits(project).then(saveCommits).then(function() {
-    //       console.log("Processed commits for project::: ", project.fullRepoPath());
-    //     });
-    //   })
-    // }).then(function () {
-    //   db.disconnect();
-    //   console.log("Done fetching & saving commits!\n Check the commits collection in your database!");
-    // });
-    //
     Project.findOne({githubUsername: 'rcos', githubProjectName: 'observatory3'}, function(err, project) {
       //@TODO: more robust error handling & feedback
       if(err) {
