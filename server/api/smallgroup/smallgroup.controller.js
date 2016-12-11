@@ -317,7 +317,8 @@ function generateCode(codeLength){
             if(smallgroup){
               generateCode(codeLength);
             }
-        });}
-    });
+        });
+      }
+  });
   return code;
 }
