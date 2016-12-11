@@ -43,12 +43,9 @@ describe('getting another user as student', function() {
     studentSession
       .get('/api/users/' + userId)
       .end((err, res) => {
-        if(res.body.attendance){
-          console.log("should not have access other/'s attudence")
-          done();
-        }
+        should.not.exist(res.body.attendance);
         expect(res.status).to.equal(200);
         done();
       });
-  }); 
+  });
 });
