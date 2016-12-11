@@ -41,7 +41,6 @@ angular.module('observatory3App')
     $scope.onSearch = function(){
         $scope.users = $scope.currentUsers;
         $scope.users = $filter('filter')($scope.users, $scope.searchString.name);
-        console.log($scope.users.length);
       };
 
     $scope.numberOfPages=function(){
@@ -104,4 +103,4 @@ angular.module('observatory3App')
         start = +start; //parse to int
         return input.slice(start);
     };
-});
+  });
