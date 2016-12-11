@@ -126,7 +126,7 @@ exports.daycode = function(req, res){
         }
         //Not ambigious code generator, function at the bottom.
         var code = generateCode(6);
-        
+
         smallgroup.dayCodes.push({
           date: today,
           code: code,
