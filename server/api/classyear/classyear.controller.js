@@ -154,7 +154,7 @@ exports.daycode = function(req, res){
       });
       return classYear.save(function(err, classYear){
         if (err) return handleError(res, err);
-        return res.status(200).json(code);
+        return res.send(200,code);
       });      
     });
   });
