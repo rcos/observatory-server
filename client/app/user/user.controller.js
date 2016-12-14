@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-  .controller('UserCtrl', function ($scope, $stateParams, $location, $rootScope, User) {
+  .controller('UserCtrl', function ($scope, $stateParams, $location, $rootScope, $filter, User) {
     $scope.currentUsers = User.query();
     $scope.pastUsers = User.past();
     $scope.users = $scope.currentUsers;
@@ -37,6 +37,11 @@ angular.module('observatory3App')
         $location.search("sort", $scope.sortOrder);
       }
     };
+
+    $scope.onSearch = function(){
+        $scope.users = $scope.currentUsers;
+        $scope.users = $filter('filter')($scope.users, $scope.searchString.name);
+      };
 
     $scope.numberOfPages=function(){
         return Math.ceil($scope.users.length/$scope.pageSize);
@@ -98,4 +103,4 @@ angular.module('observatory3App')
         start = +start; //parse to int
         return input.slice(start);
     };
-});
+  });

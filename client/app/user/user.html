@@ -12,7 +12,7 @@
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
-            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer" ng-model="searchString.name" tabindex="1">
+            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer" ng-model="searchString.name" ng-change="onSearch()" tabindex="1">
           </div>
         </form>
       </div>
@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="row image-row">
-        <div ng-repeat="user in users | filter:searchString | orderBy: sortOrder | startFrom:currentPage*pageSize | limitTo:pageSize">
+        <div ng-repeat="user in users | orderBy: sortOrder | startFrom:currentPage*pageSize | limitTo:pageSize">
             <div class="col-md-2 col-sm-3 col-xs-4 text-center user-box">
                 <a href="/users/{{ user._id}}/profile" class="user-avatar">
                     <img class="profile-img img-responsive placeholder-img" ng-src='{{user.avatar}}&s=248px'>
@@ -69,9 +69,7 @@
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
                   page {{ currentPage + 1 }} of {{ numberOfPages() }}
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
-
                 <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all</button>
-
               </span>
               <span ng-hide='numberOfPages() > 1'>
                 <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
