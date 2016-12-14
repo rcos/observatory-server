@@ -19,6 +19,7 @@ var Octokat = require('octokat');
 var Promise = require("bluebird");
 
 mongoose.Promise = require('bluebird');
+
 /*
  The github token currently needs to be defined in development.js env.
  Since, this is a worker that is currently run individually, it does not have app.js loaded beforehand.
@@ -27,8 +28,8 @@ mongoose.Promise = require('bluebird');
  */
 var gtoken = config.GITHUB_WORKER_TOKEN;
 if(gtoken == "YOUR_KEY") {
-  console.error('ERROR: PLEASE SET YOUR GITHUB AUTH IN DEVELOPMENT.JS TOKEN BEFORE PROCEEDING');
-  throw new Error('ERROR: PLEASE SET YOUR GITHUB AUTH IN DEVELOPMENT.JS TOKEN BEFORE PROCEEDING');
+  console.error('ERROR: PLEASE SET YOUR GITHUB_WORKER_TOKEN IN DEVELOPMENT.JS TOKEN BEFORE PROCEEDING');
+  throw new Error('ERROR: PLEASE SET YOUR GITHUB_WORKER_TOKEN IN DEVELOPMENT.JS TOKEN BEFORE PROCEEDING');
 }
 // setup & initilize our github API library
 var octo = new Octokat({
@@ -62,26 +63,6 @@ function fetchAll(fn, args) {
   });
   return p;
 }
-  // var fn = octo.repos(owner,repository).commits.fetch;
-  //
-  // let acc = []; // Accumulated results
-  // let p = new Promise((resolve, reject) => {
-  //   fn(config).then((val) => {
-  //     acc = acc.concat(val);
-  //     if (val.nextPage) {
-  //       return fetchAll(val.nextPage).then((val2) => {
-  //         acc = acc.concat(val2);
-  //         resolve(acc);
-  //       }, reject);
-  //     } else {
-  //       resolve(acc);
-  //     }
-  //   }, reject);
-  // });
-  // console.log("Fetched commits for project:::", repository);
-  // return p;
-// }
-
 var saveCommit = function (commitData, project) {
   var newCommit = new Commit(commitData);
   /*
@@ -103,7 +84,10 @@ var saveCommit = function (commitData, project) {
  commits: promise array of fetched commits from github
  project: instance of project model that we are fetching the commits for.
  */
-var saveCommits = function (promiseObject) {
+var saveCommits = saveCommitsFn;
+  function saveCommitsFn (promiseObject) {
+    console.dir(promiseObject);
+    console.log("entering...");
   // extract the data from the promiseObject
   var commits = promiseObject.commits;
   var project = promiseObject.project;
@@ -116,6 +100,25 @@ var saveCommits = function (promiseObject) {
   return Promise.all(commitPromises);
 };
 
+exports.getCommitsForProjectSinceDate = function (project, date) {
+  date = new Date(Date.parse(date)) || new Date();
+  var config = {
+    since: date.toISOString()
+  };
+  return processProject(project, config);
+};
+
+exports.getCommitsForProjectUntilDate = function (project, date) {
+  date = new Date(Date.parse(date)) || new Date();
+  var config = {
+    ungil: date.toISOString()
+  };
+  return processProject(project, config);
+};
+
+exports.getCommitsForProject = function(project) {
+  return processProject(project);
+};
 /**
  *
  * @param project: instance of Project model
@@ -151,33 +154,40 @@ var fetchCommits = function (project, config) {
  For now just a hard coded example/P.O.C using the github repo rcos/observatory3
  Planning to refactor this "soon(tm)"
  */
+
+function processProject(project, config) {
+  /*
+   flow:
+   1. fetch commits from github for @project
+   2. save fetched commits to db
+   3. disconnect from DB
+   */
+  return fetchCommits(project, config).then(saveCommits);
+}
+function reflect(promise){
+  console.log('reflecttest');
+  return promise.then(function(v){ return {v:v, status: "resolved" }},
+    function(e){ return {e:e, status: "rejected" }});
+}
+function processAllProjects() {
+  var start = Promise.resolve();
+  return Promise.map(Project.find({}).exec(), function (proj) {
+    start = start.then(function () {
+      return fetchCommits(proj);
+    });
+    return start;
+  }).map(saveCommitsFn)
+    .then(function(results) {
+    console.dir(results);
+    console.dir(results.length);
+    db.disconnect();
+  });
+}
+
 if (!module.parent) {
   if (args.length == 0) {
-
-    Project.findOne({githubUsername: 'rcos', githubProjectName: 'observatory3'}, function(err, project) {
-      //@TODO: more robust error handling & feedback
-      if(err) {
-        console.error('Error finding project!');
-        throw new Error('Error finding project!', err);
-      }
-      /*
-       .then may not be needed? May just be able to do it all in this function?
-       Probably un-needed, but I don't even anymore. Javascript is just too mystical...
-       */
-    }).then(function(project) {
-      /*
-       flow:
-       1. fetch commits from github for @project
-       2. save fetched commits to db
-       3. disconnect from DB
-       */
-      fetchCommits(project).then(saveCommits).then(function() {
-        console.log("Processed commits for project::: ", project.githubProjectName);
-      }).then(function () {
-        db.disconnect();
-        console.log("Done fetching & saving commits!\n Check the commits collection in your database!");
-      });
-
-    });
+    console.log("??????????");
+    processAllProjects();
+    console.log("??????????");
   }
 }
