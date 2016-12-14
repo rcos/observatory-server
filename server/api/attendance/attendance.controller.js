@@ -256,12 +256,22 @@ var getAttendance = function(userId, classYearId, cb){
       if (typeof(smallgroup[0]) != 'undefined') {
         for (var i = 0; i < smallgroup[0]["dayCodes"].length; i++) {
           var smallattend = smallgroup[0]["dayCodes"][i];
+          var smalldate = new Date(smallattend.date);
+          smalldate.setUTCHours(4); //sets time to midnight of EDT zone
+          smalldate.setUTCMinutes(0);
+          smalldate.setUTCSeconds(0);
+          smalldate.setUTCMilliseconds(0);
+
           var found = false;
           for (var j = 0; j < attendance.length; j++) {
-            var attendcode = attendance[j]["code"];
-            if (attendcode === smallattend.code) {
-              found = true;
-              break;
+            var attend = attendance[j];
+            if (attend.date.getTime() == smalldate.getTime()) {
+              if (attend.bonusDay === smallattend.bonusDay) {
+                if (attend.smallgroup === true) {
+                  found = true;
+                  break;
+                }
+              }
             }
           }
           if (!found) {
