@@ -27,10 +27,11 @@ mongoose.Promise = require('bluebird');
  @TODO: bring back the magic
  */
 var gtoken = config.GITHUB_WORKER_TOKEN;
-if(gtoken == "YOUR_KEY") {
+if (gtoken == "YOUR_KEY") {
   console.error('ERROR: PLEASE SET YOUR GITHUB_WORKER_TOKEN IN DEVELOPMENT.JS TOKEN BEFORE PROCEEDING');
   throw new Error('ERROR: PLEASE SET YOUR GITHUB_WORKER_TOKEN IN DEVELOPMENT.JS TOKEN BEFORE PROCEEDING');
 }
+
 // setup & initilize our github API library
 var octo = new Octokat({
   token: gtoken
@@ -40,9 +41,10 @@ var octo = new Octokat({
  @TODO: add support for filtering commits by date/author/etc..
  ex: only get commits newer than date x, or only get commits older than date y
  */
-function fetchCommitsFromProject (owner, repository, config) {
+function fetchCommitsFromProject(owner, repository, config) {
   return fetchAll(octo.repos(owner, repository).commits.fetch, config);
 }
+
 function fetchAll(fn, args) {
   let acc = [];
   if (!args) {
@@ -63,6 +65,7 @@ function fetchAll(fn, args) {
   });
   return p;
 }
+
 var saveCommit = function (commitData, project) {
   var newCommit = new Commit(commitData);
   /*
@@ -79,26 +82,27 @@ var saveCommit = function (commitData, project) {
   // Save the new commit model to the db. This is an async operation, so it will be turned into a promise.
   return newCommit.save();
 };
+
 /*
  @promiseObject: JS object containing 2 fields.
  commits: promise array of fetched commits from github
  project: instance of project model that we are fetching the commits for.
  */
 var saveCommits = saveCommitsFn;
-  function saveCommitsFn (promiseObject) {
-    console.dir(promiseObject);
-    console.log("entering...");
+function saveCommitsFn(promiseObject) {
+  console.dir(promiseObject);
+  console.log("entering...");
   // extract the data from the promiseObject
   var commits = promiseObject.commits;
   var project = promiseObject.project;
   // array of Commit.save() operations; to be turned into an array of Promises.
   var commitPromises = [];
-  commits.forEach(function(commit) {
+  commits.forEach(function (commit) {
     commitPromises.push(saveCommit(commit, project));
   });
   // return an array of promises, where each promise is a promise to save the commit model to the DB.
   return Promise.all(commitPromises);
-};
+}
 
 exports.getCommitsForProjectSinceDate = function (project, date) {
   date = new Date(Date.parse(date)) || new Date();
@@ -116,9 +120,10 @@ exports.getCommitsForProjectUntilDate = function (project, date) {
   return processProject(project, config);
 };
 
-exports.getCommitsForProject = function(project) {
+exports.getCommitsForProject = function (project) {
   return processProject(project);
 };
+
 /**
  *
  * @param project: instance of Project model
@@ -164,11 +169,7 @@ function processProject(project, config) {
    */
   return fetchCommits(project, config).then(saveCommits);
 }
-function reflect(promise){
-  console.log('reflecttest');
-  return promise.then(function(v){ return {v:v, status: "resolved" }},
-    function(e){ return {e:e, status: "rejected" }});
-}
+
 function processAllProjects() {
   var start = Promise.resolve();
   return Promise.map(Project.find({}).exec(), function (proj) {
@@ -176,8 +177,7 @@ function processAllProjects() {
       return fetchCommits(proj);
     });
     return start;
-  }).map(saveCommitsFn)
-    .then(function(results) {
+  }).map(saveCommitsFn).then(function (results) {
     console.dir(results);
     console.dir(results.length);
     db.disconnect();
@@ -186,8 +186,6 @@ function processAllProjects() {
 
 if (!module.parent) {
   if (args.length == 0) {
-    console.log("??????????");
     processAllProjects();
-    console.log("??????????");
   }
 }
