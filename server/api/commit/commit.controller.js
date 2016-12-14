@@ -58,7 +58,7 @@ exports.destroy = function(req, res) {
 // Show a list of a projects Commits
 // Get a single commit
 exports.showProjectCommits = function(req, res) {
-  Commit.findById(req.params.projectId, function (err, commits) {
+  Commit.find.where('project').equals(req.params.projectId)).exec(function (err, commits) {
     if(err) { return handleError(res, err); }
     if(!commits) { return res.send(404); }
     return res.json(commits);
