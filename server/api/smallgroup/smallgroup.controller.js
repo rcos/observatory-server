@@ -222,7 +222,7 @@ exports.getSmallGroupMembers = function(req, res){
                 }
 
                 // Check if we're done loading members
-                if (loadedMembers == smallgroup.students.length){
+                if (loadedMembers === smallgroup.students.length){
                     return res.status(200).json(members);
                 }
             })
@@ -258,7 +258,7 @@ exports.addMember = function(req, res){
 exports.deleteMember = function(req, res){
     var memberId = req.params.memberId;
     var smallGroupId = req.params.id;
-    if(req.user.id === memberId || req.user.role != 'user' ){
+    if(req.user.id === memberId || req.user.role !== 'user' ){
     return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
         $pull: { students : memberId }
     }, function(err, smallgroup){

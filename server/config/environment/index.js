@@ -25,7 +25,7 @@ var all = {
   ip: process.env.IP || '0.0.0.0',
 
   // Attendance verification ratio
-  attendanceVerificationRatio: .2,
+  attendanceVerificationRatio: 0.2,
 
   // Github API Info
   // Client ID

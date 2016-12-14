@@ -674,7 +674,7 @@ exports.getUnverifiedAttendanceUsers = function(req,res){
     .populate('user')
     .exec(function (err, attendance) {
       if(err) { return handleError(res, err); }
-      return res.json(attendance);;
+      return res.json(attendance);
     });
   });
 };
@@ -703,7 +703,7 @@ exports.getUnverifiedFullAttendanceUsers = function(req,res){
     .exec(function (err, attendance) {
       if(err) { return handleError(res, err); }
 
-      return res.json(attendance);;
+      return res.json(attendance);
     });
   });
 };
@@ -731,7 +731,7 @@ exports.getUnverifiedSmallAttendanceUsers = function(req,res){
     .populate('user')
     .exec(function (err, attendance) {
       if(err) { return handleError(res, err); }
-      return res.json(attendance);;
+      return res.json(attendance);
     });
   });
 };
