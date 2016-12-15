@@ -1,25 +1,11 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('SmallGroupCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify, $filter) {
+.controller('SmallGroupCtrl', function ($scope, $stateParams, $http, Auth, User, Smallgroup, $location, notify) {
   $scope.allUsers = User.query();
   $scope.isMentor = Auth.isMentor;
-  var getAttendees = function(dayCode){
-    $http.get('/api/attendance/code/attendees/'+dayCode)
-      .success(function (data){
-        //store a list of attendees
-        $scope.numOfattendees.set(dayCode, data.length);
-        var names = [];
-        for(var j = 0; j < data.length; j++){
-          names[j] =data[j].name;
-        }
-        $scope.namesOfattendees.set(dayCode, names);
-      }).error(function(err){
-        console.log(err);
-      });
-  };
 
-  var updateSmallGroup = function (callback) {
+  var loadSmallGroup = function (callback) {
     callback = callback || function () {};
     return User.smallgroup()
       .$promise.then(function(smallgroup){
@@ -67,17 +53,20 @@ angular.module('observatory3App')
         return notify({message: 'User not found!', classes: ['alert-danger']});
       }
       // Reload small group (in case other mentors have modified it since page load)
-      updateSmallGroup(function (smallgroup) {
+      loadSmallGroup(function (smallgroup) {
         // Check if user is already in small group
         if (smallgroup.students.indexOf(user._id) !== -1) {
           // User is already in group
           return notify('User already in group');
         } else {
-          $http.put('/api/smallgroup/' + $scope.smallgroup._id + '/member', {
-            'memberId': user._id
-          }).success(function () {
+          Smallgroup.addMember({
+              _id: $scope.smallgroup._id,
+              memberId: user._id
+          }, function() {
             notify('Successfully added ' + user.name);
-            updateSmallGroup();
+            loadSmallGroup();
+          }, function() {
+            notify('Could not add user to small group!', {classes: ['alert-danger']});
           });
         }
     });
@@ -90,52 +79,39 @@ angular.module('observatory3App')
 
   $scope.saveSmallGroupName = function () {
     $scope.edittingSmallGroupName = false;
-    $http.put("/api/smallgroup/" + $scope.smallgroup._id + "/name", {
+    Smallgroup.setName({
+      '_id': $scope.smallgroup._id,
       'smallGroupName': $scope.smallgroup.name
-    }).success(function () {
+    }, function () {
       notify('Small Group Name updated!');
-    }).error(function () {
-      notify('Could not update small group name!', {classes: ["alert-danger"]});
-    });
-  };
-
-  $scope.generateDayCode = function (bonusDay) {
-    $http.post('/api/smallgroup/' + $scope.smallgroup._id + '/daycode', {
-        bonusDay: bonusDay ? true : false
-    }).success(function (code) {
-      submitDayCode(code);
-      if (bonusDay){
-        $scope.bonusDayCode = code;
-        $scope.showBonusDayCode = true;
-      }
-      else{
-        $scope.dayCode = code;
-        $scope.showDayCode = true;
-      }
-      updateSmallGroup();
+    }, function () {
+      notify('Could not update small group name!', {classes: ['alert-danger']});
     });
   };
 
   $scope.removeUser = function (student) {
-    $http.delete('/api/smallgroup/' + $scope.smallgroup._id + '/member/' + student._id).success(function () {
+    Smallgroup.removeMember({
+      smallgroupId: $scope.smallgroup._id,
+      id: student._id
+    }, function() {
       notify('Successfully removed ' + student.name);
       if (student._id === $scope.user._id) {
         notify('You have been removed from ' + $scope.smallgroup.name);
         $scope.smallgroup = false;
       }
-      updateSmallGroup();
-    }).error(function () {
+      loadSmallGroup();
+    }, function () {
       notify('ERROR: Could not remove ' + student.name);
     });
   };
 
   $scope.removeSelf = function(){
     $scope.removeUser($scope.user);
-  }
+  };
 
   Auth.getCurrentUser(function (user) {
     $scope.user = user;
-    updateSmallGroup();
+    loadSmallGroup();
   });
 })
 .directive('hname', function () {

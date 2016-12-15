@@ -10,7 +10,7 @@ angular.module('observatory3App')
       hide: '='
     },
     restrict: 'E',
-    controller: function ($scope, $http, User, $window, notify, $filter) {
+    controller: function ($scope, $http, User, Smallgroup, $window, notify, $filter) {
       $scope.showDayCode = false;
       $scope.showBonusDayCode = false;
       $scope.hide = false;
@@ -90,34 +90,67 @@ angular.module('observatory3App')
       };
 
       $scope.generateDayCode = function(bonusDay){
-        $http.post('/api/'+$scope.endpoint+'/daycode', {
-          bonusDay: bonusDay ? true : false
-        }).success(function(code){
-          submitDayCode(code);
-          if (bonusDay){
-            $scope.bonusDayCode = code;
-            $scope.showBonusDayCode = true;
-          }
-          else{
-            $scope.dayCode = code;
-            $scope.showDayCode = true;
-          }
-          $scope.hide = true;
-          updateGroup();
-        });
+        if ($scope.endpoint === 'smallgroup') {
+          Smallgroup.createDaycode({
+            '_id': $scope.group._id,
+            'bonusDay': bonusDay ? true : false
+          }, function (data) {
+            submitDayCode(data.code);
+            if (bonusDay){
+              $scope.bonusDayCode = data.code;
+              $scope.showBonusDayCode = true;
+            }
+            else{
+              $scope.dayCode = data.code;
+              $scope.showDayCode = true;
+            }
+            $scope.hide = true;
+            updateGroup();
+          });
+        } else {
+          $http.post('/api/'+$scope.endpoint+'/daycode', {
+            bonusDay: bonusDay ? true : false
+          }).success(function(code){
+            submitDayCode(code);
+            if (bonusDay){
+              $scope.bonusDayCode = code;
+              $scope.showBonusDayCode = true;
+            }
+            else{
+              $scope.dayCode = code;
+              $scope.showDayCode = true;
+            }
+            $scope.hide = true;
+            updateGroup();
+          });
+        }
       };
 
       $scope.deleteDay = function(day) {
         var dateString = $filter('date')(day.date, 'MMM dd');
-        $http.delete('/api/'+$scope.endpoint+'/day/' + day.code)
-        .success(function(group){
+
+        var deleteDaySuccess = function(group) {
           notify('Successfully removed day: ' + dateString);
           $scope.group = group;
           updateGroup();
-        })
-        .error(function() {
+        };
+
+        var deleteDayError = function() {
           notify('ERROR: Could not remove day: ' + dateString);
-        });
+        };
+
+        if ($scope.endpoint === 'smallgroup') {
+          Smallgroup.deleteDaycode({
+            smallgroupId: $scope.group._id,
+            id: day.code
+          },
+          deleteDaySuccess,
+          deleteDayError);
+        } else {
+          $http.delete('/api/'+$scope.endpoint+'/day/' + day.code)
+            .success(deleteDaySuccess)
+            .error(deleteDayError);
+        }
       };
 
       updateGroup();
