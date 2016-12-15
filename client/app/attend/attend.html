@@ -43,18 +43,20 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
+            <td sort-arrow sortby='date' text='Date' sortorder='sortorder'></td>
             <td sort-arrow sortby='bonusDay' text='Type' sortorder='sortorder'></td>
             <td sort-arrow sortby='smallgroup' text='Group' sortorder='sortorder'></td>
             <td sort-arrow sortby='verified' text='Verified' sortorder='sortorder'></td>
+            <td sort-arrow sortby='present' text='Attendance' sortorder='sortorder'></td>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="submission in previousSubmissions | orderBy:sortorder">
+          <tr ng-repeat="submission in previousSubmissions | orderBy:sortorder" ng-class="submission.present?'present':'absent'">
             <td>{{ submission.date | date:"MMM dd" }}</a></td>
             <td>{{ submission.bonusDay?"Bonus":"Regular" }}</td>
             <td>{{ submission.smallgroup?"Smallgroup":"Full" }}</td>
             <td><i class="fa" ng-class="{'fa-check':submission.verified, 'fa-times':!submission.verified}"></i> &nbsp;{{ submission.verified?"Yes":"No" }}</td>
+            <td>{{ submission.present?"Present":"Absent" }}</td>
           </tr>
         </tbody>
       </table>

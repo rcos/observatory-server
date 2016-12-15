@@ -251,7 +251,51 @@ var getAttendance = function(userId, classYearId, cb){
   var callback = cb || function(){};
   Attendance.find({user:userId, classYear:classYearId}, function (err, attendance) {
     if (err) {return handleError(err)}
-    return callback(attendance);
+    SmallGroup.findOne({classYear:classYearId, students:userId}, function (err, smallgroup) {
+      if (err) {return handleError(err)}
+      if (smallgroup != null) {
+        for (var i = 0; i < smallgroup["dayCodes"].length; i++) {
+          var smallattend = smallgroup["dayCodes"][i];
+          var smalldate = new Date(smallattend.date);
+          smalldate.setUTCHours(4); //sets time to midnight of EDT zone
+          smalldate.setUTCMinutes(0);
+          smalldate.setUTCSeconds(0);
+          smalldate.setUTCMilliseconds(0);
+
+          var found = false;
+          for (var j = 0; j < attendance.length; j++) {
+            var attend = attendance[j];
+            if (attend.date.getTime() === smalldate.getTime() && attend.bonusDay === smallattend.bonusDay && attend.smallgroup === true) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            attendance.push({date:smallattend.date, bonusDay:smallattend.bonusDay, smallgroup:true, verified:false, present:false});
+          }
+        }
+      }
+    });
+    ClassYear.findOne({current:true}, function (err, classyear) {
+      if (err) {return handleError(err)}
+      if (classyear != null) {
+        for (var i = 0; i < classyear["dayCodes"].length; i++) {
+          var yearcode = classyear["dayCodes"][i];
+          var found = false;
+          for (var j = 0; j < attendance.length; j++) {
+            var attendcode = attendance[i]["code"];
+            if (attendcode === yearcode) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            attendance.push({date:yearcode.date, bonusDay:yearcode.bonusDay, smallgroup:false, verified:false, present:false});
+          }
+        }
+      }
+      return callback(attendance);
+    });
   });
 };
 exports.getAttendance = function(req, res) {
