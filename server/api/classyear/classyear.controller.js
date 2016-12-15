@@ -143,7 +143,7 @@ exports.daycode = function(req, res){
       }
     }
     //unique code generator, function at the bottom.
-    uniqueDayCode(generateCode(6),6,function(err,dayCode){
+    uniqueDayCode(6,function(err,dayCode){
       if (err) return handleError(res, err);
       var code = dayCode;
 
@@ -228,19 +228,20 @@ function generateCode(codeLength){
 }
 
 //Generating unique code.
-function uniqueDayCode(code,codeLength,callback){  
+function uniqueDayCode(codeLength,callback){
+  var code = generateCode(codeLength);
   ClassYear.findOne({"dayCodes.code":code})
     .exec(function(err, classYear){
       if (err) return callback("error when getting dayCode",null);
       if(classYear) {
-        return uniqueDayCode(generateCode(codeLength+1),codeLength+1,callback);
+        return uniqueDayCode(codeLength+1,callback);
       }
       else{
         SmallGroup.findOne({"dayCodes.code":code})
           .exec(function(err, smallgroup){
             if (err) return callback("error when getting dayCode",null);
             if(smallgroup){
-              return uniqueDayCode(generateCode(codeLength+1),codeLength+1,callback);
+              return uniqueDayCode(codeLength+1,callback);
             }
             return callback(null,code);
         });
