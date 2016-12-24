@@ -33,7 +33,7 @@ angular.module('observatory3App')
     };
 
     $scope.hasSmallGroup = function(){
-      return $scope.getCurrentUser().smallgroup != null;
+      return $scope.getCurrentUser().smallgroup ==true;
     };
 
     // Toggles the display of URP form
