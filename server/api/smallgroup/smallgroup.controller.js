@@ -124,18 +124,21 @@ exports.daycode = function(req, res){
             return res.status(200).json(smallgroup.dayCodes[i].code)
           }
         }
-        //Not ambigious code generator, function at the bottom.
-        var code = generateCode(6);
-
-        smallgroup.dayCodes.push({
-          date: today,
-          code: code,
-          bonusDay: req.body.bonusDay ? true : false
-        });
-        return smallgroup.save(function(err, classYear){
+        //unique code generator, function at the bottom.
+        uniqueDayCode(6,function(err,dayCode){
           if (err) return handleError(res, err);
-          return res.status(200).json(code)
+          var code = dayCode;
+
+          smallgroup.dayCodes.push({
+            date: today,
+            code: code,
+            bonusDay: req.body.bonusDay ? true : false
+          });
+          return smallgroup.save(function(err, classYear){
+            if (err) return handleError(res, err);
+            return res.status(200).json(code);
         });
+      });
     });
   });
 };
@@ -305,4 +308,26 @@ function generateCode(codeLength){
       code = code.concat(characterOptions[character.toString()]);
   }
   return code;
+}
+
+//Generating unique code.
+function uniqueDayCode(codeLength,callback){
+  var code = generateCode(codeLength);
+  ClassYear.findOne({"dayCodes.code":code})
+    .exec(function(err, classYear){
+      if (err) return callback("error when getting dayCode",null);
+      if(classYear) {
+        return uniqueDayCode(codeLength+1,callback);
+      }
+      else{
+        SmallGroup.findOne({"dayCodes.code":code})
+          .exec(function(err, smallgroup){
+            if (err) return callback("error when getting dayCode",null);
+            if(smallgroup){
+              return uniqueDayCode(codeLength+1,callback);
+            }
+            return callback(null,code);
+        });
+      }
+  });  
 }

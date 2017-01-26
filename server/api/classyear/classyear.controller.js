@@ -6,6 +6,7 @@
 
 var ClassYear = require('./classyear.model');
 var Attendance = require('../attendance/attendance.model');
+var SmallGroup = require('../smallgroup/smallgroup.model');
 
 // Get current class year
 exports.index = function(req, res) {
@@ -141,17 +142,20 @@ exports.daycode = function(req, res){
         return res.send(200, classYear.dayCodes[i].code);
       }
     }
-    //Not ambigious code generator, function at the bottom.
-    var code = generateCode(6);
-
-    classYear.dayCodes.push({
-      date: today,
-      code: code,
-      bonusDay: req.body.bonusDay ? true : false
-    });
-    return classYear.save(function(err, classYear){
+    //unique code generator, function at the bottom.
+    uniqueDayCode(6,function(err,dayCode){
       if (err) return handleError(res, err);
-      res.send(200, code);
+      var code = dayCode;
+
+      classYear.dayCodes.push({
+        date: today,
+        code: code,
+        bonusDay: req.body.bonusDay ? true : false
+      });
+      return classYear.save(function(err, classYear){
+        if (err) return handleError(res, err);
+        return res.send(200,code);
+      });      
     });
   });
 };
@@ -219,6 +223,28 @@ function generateCode(codeLength){
   for(var i=0;i<codeLength;i++){
       var character = (Math.floor(Math.random() * characterOptions.length));
       code = code.concat(characterOptions[character.toString()]);
-  }
+  }  
   return code;
+}
+
+//Generating unique code.
+function uniqueDayCode(codeLength,callback){
+  var code = generateCode(codeLength);
+  ClassYear.findOne({"dayCodes.code":code})
+    .exec(function(err, classYear){
+      if (err) return callback("error when getting dayCode",null);
+      if(classYear) {
+        return uniqueDayCode(codeLength+1,callback);
+      }
+      else{
+        SmallGroup.findOne({"dayCodes.code":code})
+          .exec(function(err, smallgroup){
+            if (err) return callback("error when getting dayCode",null);
+            if(smallgroup){
+              return uniqueDayCode(codeLength+1,callback);
+            }
+            return callback(null,code);
+        });
+      }
+  });  
 }
