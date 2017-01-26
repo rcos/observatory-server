@@ -125,38 +125,6 @@ exports.destroy = function(req, res) {
 // *******************************************************
 
 // *******************************************************
-// Creates a new attendance submission in the DB.
-// NOT FOR NORMAL USE : does not generate required data for submission
-// Restricted to admins
-// router.post('/', auth.hasRole('admin'), controller.create);
-exports.create = function(req, res) {
-  Attendance.create(req.body, function(err, attendance) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, attendance);
-  });
-};
-// *******************************************************
-
-// *******************************************************
-// Updates an existing attendance submission in the DB.
-// NOT FOR NORMAL USE : does not generate required data for submission
-// Restricted to admins
-// router.put('/:id', auth.hasRole('admin'), controller.update);
-exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  Attendance.findById(req.params.id, function (err, attendance) {
-    if (err) { return handleError(res, err); }
-    if(!attendance) { return res.sendStatus(404); }
-    var updated = _.merge(attendance, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.json(200, attendance);
-    });
-  });
-};
-// *******************************************************
-
-// *******************************************************
 // Verifies an existing attendance submission in the DB.
 // Restricted to mentors
 // router.put('/:id/verify', auth.hasRole('mentor'), controller.verifyAttendanceById);
@@ -169,59 +137,6 @@ exports.verifyAttendanceById = function(req, res) {
     attendance.save(function (err) {
       if (err) { return handleError(res, err); }
       return res.json(200, attendance);
-    });
-  });
-};
-// *******************************************************
-
-
-// *******************************************************
-// Verify users large group attendance for today, available only to mentors
-// router.post('/present/:user/full', hasRole('mentor'),controller.verifyFullAttendance);
-exports.verifyFullAttendance = function(req,res){
-  var userId = req.params.id;
-  return ClassYear.getCurrent(function(err, classYear){
-    if (err) {return handleError(err)}
-    var classYearId = classYear._id;
-    return getPresent(userId, isoDateToTime(new Date()), classYear._id, function(err,userAttendance){
-      if (err) {return handleError(err)}
-      if (!userAttendance.length){
-        return res.status(400).json('No attendance found');
-      }
-      for (var a = 0; a < userAttendance.length; a++){
-        if (!userAttendance.smallgroup){
-          userAttendance[a].verified = true;
-          userAttendance[a].save();
-        }
-      }
-      return res.sendStatus(200);
-
-    });
-  });
-};
-// *******************************************************
-
-// *******************************************************
-// Verify users small group attendance, available only to mentors
-// TODO: verify that mentor is part of the smallgroup
-// router.post('/present/:user/small', auth.hasRole('mentor'), controller.verifySmallAttendance);
-exports.verifySmallAttendance = function(req,res){
-  var userId = req.params.id;
-  return ClassYear.getCurrent(function(err, classYear){
-    if (err) {return handleError(err)}
-    var classYearId = classYear._id;
-    return getPresent(userId, isoDateToTime(new Date()), classYear._id, function(err,userAttendance){
-      if (err) {return handleError(err)}
-      if (!userAttendance.length){
-        return res.status(400).json('No attendance found');
-      }
-      for (var a = 0; a < userAttendance.length; a++){
-        if (userAttendance.smallgroup){
-          userAttendance[a].verified = true;
-          userAttendance[a].save();
-        }
-      }
-      return res.sendStatus(200);
     });
   });
 };
@@ -243,8 +158,8 @@ exports.getAttendees = function(req,res){
 
 // *******************************************************
 // Get all attendance for a specific user (or current user) in the current classyear
-// router.get('/present/me', auth.isAuthenticated(), controller.getAttendanceMe);
-// router.get('/present/:user', auth.hasRole('mentor'), controller.getAttendance);
+// router.get('/present', auth.isAuthenticated(), controller.getAttendanceMe);
+// router.get('/:user/present', auth.hasRole('mentor'), controller.getAttendance);
 
 // Get all attendance for a specific user (or current user) in the current class year
 var getAttendance = function(userId, classYearId, cb){
@@ -268,40 +183,6 @@ exports.getAttendance = function(req, res) {
 exports.getAttendanceMe = function(req, res) {
   req.params.user = req.user._id
   exports.getAttendance(req,res);
-};
-// *******************************************************
-
-
-// *******************************************************
-// Get attendance for a specific user (or current user) on a date
-// router.get('/present/:user/today', auth.hasRole('mentor'), controller.present);
-// router.get('/present/:user/:date', auth.hasRole('mentor'), controller.present);
-//
-// router.get('/present/me/today', auth.isAuthenticated(), controller.presentMe);
-// router.get('/present/me/:date', auth.isAuthenticated(), controller.presentMe);
-
-
-exports.present = function(req, res) {
-  var date = req.params.date;
-  if (req.params.date === 'today'){
-    date = isoDateToTime(new Date());
-  }
-  else{
-    date = isoDateToTime(req.params.date);
-  }
-  var userId = req.params.user;
-  return ClassYear.getCurrent(function(err, classYear){
-    if (err) {return handleError(err)}
-    var classYearId = classYear._id;
-    getPresent(userId, date, classYearId, function(err,userAttendance){
-      if (err) {return handleError(err)}
-      return res.json(userAttendance);
-    });
-  });
-};
-exports.presentMe = function(req, res) {
-  req.params.user = req.user._id
-  exports.present(req,res);
 };
 // *******************************************************
 
@@ -432,11 +313,11 @@ exports.attend = function(req,res){
 
 // *******************************************************
 // Set attendance as present (no verification)
-// router.post('/attend/:user/small', auth.hasRole('mentor'), controller.setAttendanceSmall);
-// router.post('/attend/:user/full', auth.hasRole('mentor'), controller.setAttendanceFull);
-// router.post('/attend/:user/smallBonus', auth.hasRole('mentor'), controller.setAttendanceSmallBonus);
-// router.post('/attend/:user/fullBonus', auth.hasRole('mentor'), controller.setAttendanceFullBonus);
-
+// router.post('/:user/attend/small', auth.hasRole('mentor'), controller.setAttendanceSmall);
+// router.post('/:user/attend/full', auth.hasRole('mentor'), controller.setAttendanceFull);
+// router.post('/:user/attend/smallBonus', auth.hasRole('mentor'), controller.setAttendanceSmallBonus);
+// router.post('/:user/attend/fullBonus', auth.hasRole('mentor'), controller.setAttendanceFullBonus);
+//
 // Get data for submitting attendance, then pass it to saveAttendance
 var getUserAndDateParams = function(req, cb){
   var userId = req.params.user;
@@ -664,7 +545,7 @@ exports.getUnverifiedFullAttendanceUsers = function(req,res){
     .exec(function (err, attendance) {
       if(err) { return handleError(res, err); }
 
-      return res.json(attendance);;
+      return res.json(attendance);
     });
   });
 };
@@ -692,7 +573,7 @@ exports.getUnverifiedSmallAttendanceUsers = function(req,res){
     .populate('user')
     .exec(function (err, attendance) {
       if(err) { return handleError(res, err); }
-      return res.json(attendance);;
+      return res.json(attendance);
     });
   });
 };

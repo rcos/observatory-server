@@ -10,7 +10,7 @@ angular.module('observatory3App')
       hide: '='
     },
     restrict: 'E',
-    controller: function ($scope, $http, User, $window, notify, $filter) {
+    controller: function ($scope, $http, User, Attendance, $window, notify, $filter) {
       $scope.showDayCode = false;
       $scope.showBonusDayCode = false;
       $scope.hide = false;
@@ -20,8 +20,8 @@ angular.module('observatory3App')
       $scope.namesOfattendees = new Map();
 
       var getAttendees = function(dayCode){
-        $http.get('/api/attendance/code/attendees/'+dayCode)
-        .success(function (data){
+        Attendance.attendees({code:dayCode}).$promise.then(
+        function (data){
           //store a list of attendees
           $scope.numOfattendees.set(dayCode, data.length);
           if ($scope.names){
@@ -31,7 +31,8 @@ angular.module('observatory3App')
             }
             $scope.namesOfattendees.set(dayCode, names);
           }
-        }).error(function(err){
+        },
+        function(err){
           console.log(err);
         });
       };
@@ -57,9 +58,10 @@ angular.module('observatory3App')
           if ($scope.names){
             $scope.namesOfattendees = new Map();
           }
+          var getAttendeesPromise = [];
           for(var i =0; i<group.dayCodes.length;i++){
             if(group.dayCodes[i]){
-              getAttendees(group.dayCodes[i].code);
+              getAttendeesPromise.push(getAttendees(group.dayCodes[i].code));
             }
           }
         }
@@ -79,11 +81,11 @@ angular.module('observatory3App')
       };
 
       var submitDayCode = function(code){
-        $http.post('/api/attendance/attend', {
-          dayCode: code
-        }).success(function(){
-        }).error(function(err){
-          notify({ message: 'Error: ' + err, classes: ['alert-danger'] });
+        Attendance.attend({dayCode: code }).$promise.then(
+          function(){
+          },
+          function(err){
+            notify({ message: 'Error: ' + err, classes: ['alert-danger']});
         });
       };
 

@@ -27,9 +27,9 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
+              <td sort-arrow sortby='date' text='Date' sortorder='sortorder'></td>
               <td sort-arrow sortby='bonusDay' text='Type' sortorder='sortorder'></td>
-              <td text='Attendees'>Attendees</td>
+              <td sort-arrow sortby='numOfattendees.get(day.code)' text='Attendees' sortorder='sortorder'></td>
               <td text='Delete'>Delete</td>
             </tr>
           </thead>

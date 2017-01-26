@@ -3,7 +3,7 @@
 angular.module('observatory3App')
   .controller('MentorCtrl', function ($scope, $stateParams, $http, Auth, User, $location, notify) {
     var updateUnverified = function(){
-        $http.get('/api/attendance/unverified/today')
+        $http.get('/api/attendance/today/unverified')
         	.success(function(unverifiedSubmissions){
         		$scope.unverifiedSubmissions = unverifiedSubmissions;
         	})

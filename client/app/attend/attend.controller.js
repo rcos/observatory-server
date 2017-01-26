@@ -5,7 +5,7 @@ angular.module('observatory3App')
     $scope.sortorder = '-datetime';
 
     var load = function(){
-      $http.get('/api/attendance/present/me')
+      $http.get('/api/attendance/present')
       .success(function(submissions){
           $scope.previousSubmissions = submissions;
       }).error(function(err){
