@@ -368,14 +368,16 @@ function loadUserProjects(user, callback){
     // Otherwise load all the user projects
     var fullProjects = [];
     var loadedProjects = 0;
+    var loadProject = function(err, project) {
+      loadedProjects ++;
+      if (!err) fullProjects.push(project);
+      if (loadedProjects === user.projects.length){
+        return callback(fullProjects);
+      }
+    }
+
     for (var i = 0;i < user.projects.length;i++){
-        Project.findById(user.projects[i], function(err, project){
-            loadedProjects ++;
-            if (!err) fullProjects.push(project);
-            if (loadedProjects === user.projects.length){
-                return callback(fullProjects);
-            }
-        });
+        Project.findById(user.projects[i], loadProject);
     }
 }
 

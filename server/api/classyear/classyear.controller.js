@@ -212,7 +212,7 @@ function handleError(res, err) {
 
 function validationError(res, err) {
   return res.status(422).json(err);
-};
+}
 
 //Generating non ambigious length sized code.
 function generateCode(codeLength){
