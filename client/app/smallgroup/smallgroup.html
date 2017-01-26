@@ -1,6 +1,6 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class='container smallgroup' ng-show='loaded && !smallgroup && isMentor()'>
+<div class='container smallgroup' ng-show='!smallgroup && isMentor()'>
   <div class="row">
     <div class="col-sm-12">
       <h3> You do not have a small group </h3>
@@ -8,7 +8,7 @@
     </div>
   </div>
 </div>
-<div class='container smallgroup' ng-show='loaded && !smallgroup && !isMentor()'>
+<div class='container smallgroup' ng-show='!smallgroup && !isMentor()'>
   <div class="row">
     <div class="col-sm-12 text-center">
       <h2> You do not have a small group yet.</h2>
