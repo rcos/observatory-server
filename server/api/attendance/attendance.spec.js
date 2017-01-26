@@ -25,6 +25,22 @@ describe('GET /api/commits', function() {
   });
 });
 
+describe('GET /api/attendance', function() {
+  before(seed);
+  var session,mentorSession;
+  before(() => getSessionFor('mentor').then(session => mentorSession = session));
+
+    it('should respond with list of attendance submissions', done => {
+        mentorSession
+        .get('/api/attendance')
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          res.body.should.be.instanceof(Array);
+          done(err);
+        });
+    });
+});
+
 describe('samllgroup attendance test', function() {
   before(seed);
   var mentorSession;
@@ -85,20 +101,3 @@ describe('samllgroup attendance test', function() {
   });
 })
 
-=======
-describe('GET /api/attendance', function() {
-  before(seed);
-  var session,mentorSession;
-  before(() => getSessionFor('mentor').then(session => mentorSession = session));
-
-    it('should respond with list of attendance submissions', done => {
-        mentorSession
-        .get('/api/attendance')
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          res.body.should.be.instanceof(Array);
-          done(err);
-        });
-    });
-
-});
