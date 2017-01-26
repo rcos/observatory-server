@@ -250,7 +250,51 @@ var getAttendance = function(userId, classYearId, cb){
   var callback = cb || function(){};
   Attendance.find({user:userId, classYear:classYearId}, function (err, attendance) {
     if (err) {return handleError(err)}
-    return callback(attendance);
+    SmallGroup.findOne({classYear:classYearId, students:userId}, function (err, smallgroup) {
+      if (err) {return handleError(err)}
+      if (smallgroup != null) {
+        for (var i = 0; i < smallgroup["dayCodes"].length; i++) {
+          var smallattend = smallgroup["dayCodes"][i];
+          var smalldate = new Date(smallattend.date);
+          smalldate.setUTCHours(4); //sets time to midnight of EDT zone
+          smalldate.setUTCMinutes(0);
+          smalldate.setUTCSeconds(0);
+          smalldate.setUTCMilliseconds(0);
+
+          var found = false;
+          for (var j = 0; j < attendance.length; j++) {
+            var attend = attendance[j];
+            if (attend.date.getTime() === smalldate.getTime() && attend.bonusDay === smallattend.bonusDay && attend.smallgroup === true) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            attendance.push({date:smallattend.date, bonusDay:smallattend.bonusDay, smallgroup:true, verified:false, present:false});
+          }
+        }
+      }
+    });
+    ClassYear.findOne({current:true}, function (err, classyear) {
+      if (err) {return handleError(err)}
+      if (classyear != null) {
+        for (var i = 0; i < classyear["dayCodes"].length; i++) {
+          var yearcode = classyear["dayCodes"][i];
+          var found = false;
+          for (var j = 0; j < attendance.length; j++) {
+            var attendcode = attendance[i]["code"];
+            if (attendcode === yearcode) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            attendance.push({date:yearcode.date, bonusDay:yearcode.bonusDay, smallgroup:false, verified:false, present:false});
+          }
+        }
+      }
+      return callback(attendance);
+    });
   });
 };
 exports.getAttendance = function(req, res) {
@@ -646,6 +690,45 @@ exports.setAttendanceFullBonus = function(req, res) {
 };
 // *******************************************************
 
+// *******************************************************
+// Adds an attendance entry with the given parameters
+//
+// Restricted to admins
+// router.post('/attend/:user/manual', auth.hasRole('admin'), controller.attend);
+exports.addManualAttendance = function(req, res) {
+  var userId = req.params.user;
+  var date = req.body.date;
+  var smallgroup = req.body.smallgroup
+  var bonusDay = req.body.bonusday;
+
+  return User.findById(userId, function(err,user){
+    if (err) {
+      return handleError(err);
+    }
+    return ClassYear.getCurrent(function(err, classYear){
+      if (err) {
+        return handleError(err);
+      }
+
+      return saveAttendance(
+        classYear._id,  // classYearId
+        user._id, // userId
+        date, // date
+        'manual', // code
+        false, // needsVerification
+        bonusDay, // bonusDay
+        smallgroup, // smallgroup
+        function(err,submission){
+          if (err) {
+            return handleError(err);
+          }
+          // saved
+          return res.status(200).json({saved: true});
+      });
+    });
+  });
+}
+// *******************************************************
 
 // *******************************************************
 // Gets all users with unverifed attendance for today
@@ -667,7 +750,7 @@ exports.getUnverifiedAttendanceUsers = function(req,res){
     .populate('user')
     .exec(function (err, attendance) {
       if(err) { return handleError(res, err); }
-      return res.json(attendance);;
+      return res.json(attendance);
     });
   });
 };
@@ -696,7 +779,7 @@ exports.getUnverifiedFullAttendanceUsers = function(req,res){
     .exec(function (err, attendance) {
       if(err) { return handleError(res, err); }
 
-      return res.json(attendance);;
+      return res.json(attendance);
     });
   });
 };
@@ -724,7 +807,7 @@ exports.getUnverifiedSmallAttendanceUsers = function(req,res){
     .populate('user')
     .exec(function (err, attendance) {
       if(err) { return handleError(res, err); }
-      return res.json(attendance);;
+      return res.json(attendance);
     });
   });
 };

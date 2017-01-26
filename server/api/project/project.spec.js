@@ -8,6 +8,7 @@ var app = require('../../app');
 var request = require('supertest');
 var agent = request.agent(app);
 var project = request.agent();
+var test_id = "000000000000000000000010";
 
 describe('GET /api/projects', function() {
 
@@ -16,6 +17,18 @@ describe('GET /api/projects', function() {
       .get('/api/projects')
       .expect(200)
       .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.be.instanceof(Array);
+        done();
+      });
+  });
+
+  it('should show all the default projects', function(done){
+    request(app)
+      .get('/api/projects/defaults')
+      .expect(200)
+      .expect('Content-Type',/json/)
       .end(function(err, res) {
         if (err) return done(err);
         res.body.should.be.instanceof(Array);
@@ -48,12 +61,12 @@ describe('POST /api/projects/', function() {
 
   it('Should create a session', function(done) {
     agent.post('/api/users')
-    .send({ username: 'a@yahoo.com', password: '123' })
-    .expect('Content-Type',/json/)
-    .end(function(err, res) {
-      expect(res.status).to.equal(200);
-      done();
-    });
+      .send({ username: 'a@yahoo.com', password: '123' })
+      .expect('Content-Type',/json/)
+      .end(function(err, res) {
+        expect(res.status).to.equal(200);
+        done();
+      });
   });
 
   it('Should return the current session', function(done) {
@@ -71,20 +84,55 @@ describe('POST /api/projects/', function() {
         description: "Testing",
         websiteUrl: "www.google.com"
       })
-      .end((err,res) => {
-        expect(res.status).to.equal(201);
+    .end((err,res) => {
+      expect(res.status).to.equal(201);
+      done(err);
+    });
+  });
+
+  it('Should mark a default project', done=> {
+    adminSession
+      .put('/api/projects/'+test_id+'/markdefault')
+      .end((err,res)=>{
+        expect(res.status).to.equal(200);
         done(err);
-     });
+      });
+  });
+
+  it('Should unmark a default project', done=> {
+    adminSession
+      .put('/api/projects/'+test_id+'/unmarkdefault')
+      .end((err,res)=>{
+        expect(res.status).to.equal(200);
+        done(err);
+      });
+  });
+
+  it('Should mark a current project', done=> {
+    adminSession
+      .put('/api/projects/'+test_id+'/markActive')
+      .end((err,res)=>{
+        expect(res.status).to.equal(200);
+        done(err);
+      });
+  });
+
+  it('Should mark a past project', done=> {
+    adminSession
+      .put('/api/projects/'+test_id+'/markPast')
+      .end((err,res)=>{
+        expect(res.status).to.equal(200);
+        done(err);
+      });
   });
 
   it('Should delete a project', done=> {
-    var test_id = "000000000000000000000010";
     adminSession
       .delete('/api/projects/'+test_id)
       .end((err,res) => {
         expect(res.status).to.equal(204);
         done(err);
-     });
+      });
   });
 
 });

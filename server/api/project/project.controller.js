@@ -42,7 +42,7 @@ exports.stats = function(req, res) {
           return res.send(400);
         }
 
-        if (results == null) {
+        if (results === null) {
           return res.send(400);
         }
 
@@ -146,7 +146,7 @@ exports.update = function(req, res) {
           }
         }
 
-        if (valid == true) {
+        if (valid === true) {
           project.repositories = req.body.repositories;
         }
 
@@ -350,3 +350,9 @@ exports.upload = function(req, res) {
     });
   });
 };
+
+// Return a validation error
+function validationError(res, err) {
+    return res.status(422).json(err);
+}
+

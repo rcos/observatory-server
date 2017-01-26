@@ -9,11 +9,11 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
       <p>
-      <form ng-submit="submitDayCode()">
+      <form name ="attend" ng-submit="attend.$dirty && submitDayCode()">
         <div class="input-group dayCodeForm">
           <input id="dayCodeInput" type="text" ng-model='userDayCode' class="form-control" placeholder="Day Code" tabindex="1">
           <span class="input-group-btn">
-            <button class="btn btn-primary" ng-click='submitDayCode()' type="button">Submit Day Code</button>
+            <button class="btn btn-primary" ng-click='submitDayCode()' ng-disabled="attend.$pristine" type="button">Submit Day Code</button>
           </span>
         </div>
       </form>
@@ -43,18 +43,20 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
+            <td sort-arrow sortby='date' text='Date' sortorder='sortorder'></td>
             <td sort-arrow sortby='bonusDay' text='Type' sortorder='sortorder'></td>
             <td sort-arrow sortby='smallgroup' text='Group' sortorder='sortorder'></td>
             <td sort-arrow sortby='verified' text='Verified' sortorder='sortorder'></td>
+            <td sort-arrow sortby='present' text='Attendance' sortorder='sortorder'></td>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="submission in previousSubmissions | orderBy:sortorder">
+          <tr ng-repeat="submission in previousSubmissions | orderBy:sortorder" ng-class="submission.present?'present':'absent'">
             <td>{{ submission.date | date:"MMM dd" }}</a></td>
             <td>{{ submission.bonusDay?"Bonus":"Regular" }}</td>
             <td>{{ submission.smallgroup?"Smallgroup":"Full" }}</td>
             <td><i class="fa" ng-class="{'fa-check':submission.verified, 'fa-times':!submission.verified}"></i> &nbsp;{{ submission.verified?"Yes":"No" }}</td>
+            <td>{{ submission.present?"Present":"Absent" }}</td>
           </tr>
         </tbody>
       </table>

@@ -3,6 +3,9 @@
 angular.module('observatory3App')
   .controller('NavbarCtrl', function ($scope, $location, $http, Auth) {
     $scope.menu = [{
+      'title': 'Achievements',
+      'link': '/achievements'
+    }, {
       'title': 'Projects',
       'link': '/projects'
     },{

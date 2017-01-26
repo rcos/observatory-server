@@ -63,7 +63,7 @@ exports.publicStats = function(req, res) {
           return res.send(400);
         }
 
-        if (results == null) {
+        if (results === null) {
           return res.send(400);
         }
 

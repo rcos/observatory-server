@@ -65,6 +65,19 @@
         </p>
       </div>
 
+      <div class="form-group" ng-class="{ 'has-success': editProjectForm.proposalUrl.$valid && submitted,
+      'has-error': editProjectForm.proposalUrl.$invalid && submitted }">
+        <label>Link to your project's proposal</label>
+
+        <input type="url" name="proposalUrl" class="form-control" ng-model="project.proposalUrl" required />
+        <p class="help-block" ng-show="editProjectForm.proposalUrl.$error.url && submitted">
+          Doesn't look like a valid url.
+        </p>
+        <p class="help-block" ng-show="editProjectForm.proposalUrl.$error.required && submitted">
+          Project homepage is required
+        </p>
+      </div>
+
       <div class="form-group">
         <additional-repos  model="project.repositories" submitted="submitted"></additional-repos>
       </div>

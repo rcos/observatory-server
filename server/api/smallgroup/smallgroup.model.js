@@ -42,8 +42,8 @@ SmallGroupSchema
 		var today = new Date();
 		today.setHours(0,0,0,0);
 		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() === today.getTime()
-      && this.dayCodes[i].bonusDay === false){
+			if (this.dayCodes[i].date.getTime() === today.getTime() &&
+          this.dayCodes[i].bonusDay === false){
 				return this.dayCodes[i].code;
 			}
 		}
@@ -56,8 +56,8 @@ SmallGroupSchema
 		var today = new Date();
 		today.setHours(0,0,0,0);
 		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() === today.getTime()
-      && this.dayCodes[i].bonusDay === true){
+			if (this.dayCodes[i].date.getTime() === today.getTime() &&
+          this.dayCodes[i].bonusDay === true){
 				return this.dayCodes[i].code;
 			}
 		}

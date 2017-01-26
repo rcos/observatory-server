@@ -45,6 +45,15 @@ describe('Attendance API:', () => {
       });
     });
 
+    it('should not allow student have access to small group day codes', done => {
+     studentSession
+       .post('/api/smallgroup/daycode')
+       .end((err, res) => {
+         expect(res.status).to.equal(403);
+         done(err);
+       });
+   });
+
     let dayCode;
 
     it('should allow mentors to generate an attendance code', done => {

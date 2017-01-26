@@ -1,0 +1,36 @@
+---
+
+- name: Install nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: Install make
+  apt:
+    name: make
+    state: latest
+
+- name: Create Diffe Helman Key File
+  command: openssl dhparam -out /home/rcos/dhparams.pem 2048
+  args:
+    creates: /home/rcos/dhparams.pem
+
+- name: ensure default nginx config is removed
+  file:
+    path=/etc/nginx/sites-enabled/default
+    state=absent
+
+- name: copy nginx config to site-enabled
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-enabled/nginx.conf
+    mode: 0644
+  changed_when: true
+  notify:
+    - nginx_restart
+
+- name: copy the lets encrypt script over
+  template:
+    src: letsencrypt.sh.j2
+    dest: /home/rcos/letsencrypt.sh
+    mode: 0774

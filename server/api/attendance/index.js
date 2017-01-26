@@ -36,6 +36,9 @@ router.post('/attend/:user/full', auth.hasRole('mentor'), controller.setAttendan
 router.post('/attend/:user/smallBonus', auth.hasRole('mentor'), controller.setAttendanceSmallBonus);
 router.post('/attend/:user/fullBonus', auth.hasRole('mentor'), controller.setAttendanceFullBonus);
 
+//Manually adds an attendance entry
+router.post('/attend/:user/manual', auth.hasRole('admin'), controller.addManualAttendance);
+
 // Gets all users with unverifed attendance for today
 router.get('/unverified/:date',  auth.hasRole('mentor'), controller.getUnverifiedAttendanceUsers);
 router.get('/unverified/:date/full', auth.hasRole('mentor'), controller.getUnverifiedFullAttendanceUsers);
