@@ -1,0 +1,10 @@
+#/bin/bash
+
+cd /usr/local/sbin
+sudo wget https://dl.eff.org/certbot-auto
+sudo chmod a+x /usr/local/sbin/certbot-auto
+
+./certbot-auto certonly --standalone -d {{ domain_name }}
+
+# Restart nginx
+sudo service nginx restart
