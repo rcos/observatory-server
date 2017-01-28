@@ -370,7 +370,6 @@ exports.attend = function(req,res){
   if (!code) {return res.status(400).json('No Code Submitted');}
   // Uppercase code from client so it is case-insensitive. This must happen
   // after the above check, otherwise toUpperCase() might not exist.
-  console.log(code);
   code = code.toUpperCase();
   // Check code against current class year
   return ClassYear.getCurrentCodes(function(err, classYear){

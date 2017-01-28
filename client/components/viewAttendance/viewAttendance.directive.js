@@ -89,39 +89,33 @@ angular.module('observatory3App')
         });
       };
 
+      var createDayCodeSuccess = function(code, bonusDay) {
+        submitDayCode(code);
+        if (bonusDay){
+          $scope.bonusDayCode = code;
+          $scope.showBonusDayCode = true;
+        }
+        else{
+          $scope.dayCode = code;
+          $scope.showDayCode = true;
+        }
+        $scope.hide = true;
+        updateGroup();
+      };
+
       $scope.generateDayCode = function(bonusDay){
         if ($scope.endpoint === 'smallgroup') {
           Smallgroup.createDaycode({
             '_id': $scope.group._id,
             'bonusDay': bonusDay ? true : false
-          }, function (data) {
-            submitDayCode(data.code);
-            if (bonusDay){
-              $scope.bonusDayCode = data.code;
-              $scope.showBonusDayCode = true;
-            }
-            else{
-              $scope.dayCode = data.code;
-              $scope.showDayCode = true;
-            }
-            $scope.hide = true;
-            updateGroup();
+          }, function(data) {
+            createDayCodeSuccess(data.code, bonusDay);
           });
         } else {
           $http.post('/api/'+$scope.endpoint+'/daycode', {
             bonusDay: bonusDay ? true : false
           }).success(function(code){
-            submitDayCode(code);
-            if (bonusDay){
-              $scope.bonusDayCode = code;
-              $scope.showBonusDayCode = true;
-            }
-            else{
-              $scope.dayCode = code;
-              $scope.showDayCode = true;
-            }
-            $scope.hide = true;
-            updateGroup();
+            createDayCodeSuccess(code, bonusDay);
           });
         }
       };
