@@ -7,7 +7,6 @@ var ClassYear = require('../classyear/classyear.model');
 var User = require('../user/user.model');
 var SmallGroup = require('../smallgroup/smallgroup.model');
 var config = require('../../config/environment');
-
 function isoDateToTime(isoDate){
   var date = new Date(isoDate);
   date.setHours(0,0,0,0);
@@ -409,20 +408,21 @@ exports.attend = function(req,res){
           return res.status(200).json({'type':'Full group bonus attendance', 'unverified': needsVerification});
         });
       }
-      // Classyear attendance code and bonus code was incorrect, try small group
       else{
+      // Classyear attendance code and bonus code was incorrect, try small group        
         return SmallGroup.findOne({"students":user._id, "classYear":classYear._id})
     	  .select('+dayCodes.code')
         .exec(function(err, smallgroup){
           if (err) {return handleError(err)}
-          // if the user has no smallgroup, they cannont submit smallgroup  attendance
+          //if the user has no smallgroup,try comparing the code submission with the lastest dayCodes
           if (!smallgroup){
-              return res.status(400).json('No small group found or incorrect daycode!');
-            }
-
+            joinGroupAndSubmit(user,code,classYear,needsVerification,function(err,ret){
+              if (err) {return res.status(400).json('Incorrect Day Code!')}
+              return res.status(200).json(ret);
+            })
+          }
           // Small group, and not a bonus day
-
-          if (smallgroup.dayCode === code){
+          else if (smallgroup.dayCode === code){
             // Check if the user already submitted a small group, non-bonus attendance
             if (submitted.small){
               // if it is already submitted, return
@@ -473,6 +473,38 @@ exports.attend = function(req,res){
 };
 // *******************************************************
 
+function joinGroupAndSubmit(user,code,classYear,needsVerification,callback){
+  SmallGroup.findOne({"dayCodes.code":code,"classYear":classYear._id})
+  .select('+dayCodes.code')
+  .exec(function(err,smallgroup){
+    if (err) {return callback(err,null)}
+    if (!smallgroup){return callback(err,null)}
+    var lastestCode = smallgroup.dayCode;
+    var lastestBonusCode = smallgroup.bonusDayCode;
+    if((lastestCode && lastestCode === code) || 
+      (lastestBonusCode && lastestBonusCode === code)){
+      //check if today's small group codes match with the submission 
+      SmallGroup.findOneAndUpdate({_id: smallgroup._id}, {
+          $addToSet: { students : user._id }
+      }, function(err, groupJoined){
+          if (err) {return callback(err,null)}
+          return saveAttendance(
+            classYear._id,  // classYearId
+            user._id, // userId
+            new Date(), // date
+            code, // code
+            needsVerification, // needsVerification
+            lastestBonusCode === code, // bonusDay
+            true, // smallgroup
+            function(err,submission){
+            if (err) {return callback(err)}
+            return callback(null,{'type':'Small group attendance', 'unverified': needsVerification});
+          });
+      });
+    }
+    else{return callback(err)}
+  })
+}
 
 // *******************************************************
 // Set attendance as present (no verification)

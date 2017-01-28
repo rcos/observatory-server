@@ -41,7 +41,7 @@ describe('Adding and removing users from small group as a mentor', function() {
   });
 });
 
-describe('Adding and removing users from small group as a mentor', function() {
+describe('Adding and removing users from small group as a student', function() {
   before(seed);
   var studentSession;
   var id;
