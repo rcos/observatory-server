@@ -6,6 +6,8 @@
     - server_dir: "/opt/observatory/"
     - port: 8443
   tasks:
+    - local_action: shell npm install
+
     - local_action: shell grunt build --force
 
     - synchronize:
