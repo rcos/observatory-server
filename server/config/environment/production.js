@@ -18,7 +18,7 @@ module.exports = {
             "",
 
   // Location of image uploads
-  imageUploadPath: '/opt/uploads/images/',
+  imageUploadPath: '/home/deploy/uploads/images/',
 
   // MongoDB connection options
   mongo: {
