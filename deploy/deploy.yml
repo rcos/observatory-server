@@ -1,5 +1,5 @@
 - hosts: rcos
-  remote_user: root
+  remote_user: deploy
   gather_facts: false
   vars:
     - log_file: "/opt/observatory.log"
