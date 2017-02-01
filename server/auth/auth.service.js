@@ -66,7 +66,7 @@ export function canEdit() {
   return compose()
     .use(isAuthenticated())
     .use(function meetsRequirements(req, res, next) {
-      if (req.user._id.toString('binary') === req.params.id || req.user.role === 'admin'){
+      if (req.user._id.toString() === req.params.id || req.user.role === 'admin'){
         next();
       }
       else {
