@@ -14,8 +14,8 @@ module.exports = {
             8080,
 
   // Server Address
-  addr:     process.env.SERVER_ADDR ||
-            "",
+  addr:     process.env.SERVER_ADDRESS ||
+            "https://rcos.io",
 
   // Location of image uploads
   imageUploadPath: '/opt/uploads/images/',
