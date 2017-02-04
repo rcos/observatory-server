@@ -1,6 +1,6 @@
 - hosts: rcos
   remote_user: root
-  gather_facts: true
+  gather_facts: false
   vars:
     nodejs_version: "4.x"
     domain_name: dev.rcos.io
@@ -10,7 +10,9 @@
     - mongodb
   pre_tasks:
     - name: 'install python2'
-      raw: sudo apt-get -y install python
+      raw: apt-get -y -qq install python
+    - name: 'gather facts'
+      setup:
   tasks:
     - name: Install forever
       npm: name=forever global=yes state=latest

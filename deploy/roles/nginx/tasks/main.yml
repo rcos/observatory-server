@@ -11,9 +11,9 @@
     state: latest
 
 - name: Create Diffe Helman Key File
-  command: openssl dhparam -out /home/rcos/dhparams.pem 2048
+  command: openssl dhparam -out /home/deploy/dhparams.pem 2048
   args:
-    creates: /home/rcos/dhparams.pem
+    creates: /home/deploy/dhparams.pem
 
 - name: ensure default nginx config is removed
   file:
@@ -32,5 +32,5 @@
 - name: copy the lets encrypt script over
   template:
     src: letsencrypt.sh.j2
-    dest: /home/rcos/letsencrypt.sh
+    dest: /home/deploy/letsencrypt.sh
     mode: 0774

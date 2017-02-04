@@ -1,16 +1,18 @@
 - hosts: rcos
-  remote_user: root
+  remote_user: deploy
   gather_facts: false
   vars:
-    - log_file: "/opt/observatory.log"
-    - server_dir: "/opt/observatory/"
+    - log_file: "/home/deploy/observatory.log"
+    - server_dir: "/home/deploy/observatory/"
     - port: 8443
   tasks:
+    - local_action: shell npm install
+
     - local_action: shell grunt build --force
 
     - synchronize:
         src: ../dist/
-        dest: /opt/observatory
+        dest: "{{ server_dir }}"
 
     - shell: "forever stopall"
       args:
