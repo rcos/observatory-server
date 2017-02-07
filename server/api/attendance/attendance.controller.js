@@ -252,44 +252,57 @@ var getAttendance = function(userId, classYearId, cb){
     if (err) {return handleError(err)}
     SmallGroup.findOne({classYear:classYearId, students:userId}, function (err, smallgroup) {
       if (err) {return handleError(err)}
-      if (smallgroup != null) {
-        for (var i = 0; i < smallgroup["dayCodes"].length; i++) {
-          var smallattend = smallgroup["dayCodes"][i];
-          var smalldate = new Date(smallattend.date);
-          smalldate.setUTCHours(4); //sets time to midnight of EDT zone
-          smalldate.setUTCMinutes(0);
-          smalldate.setUTCSeconds(0);
-          smalldate.setUTCMilliseconds(0);
+      if (smallgroup !== null) {
+        for (var i = 0; i < smallgroup.dayCodes.length; i++) {
+          var smallAttend = smallgroup.dayCodes[i];
+          var smallDate = isoDateToTime(smallAttend.date);
 
           var found = false;
           for (var j = 0; j < attendance.length; j++) {
             var attend = attendance[j];
-            if (attend.date.getTime() === smalldate.getTime() && attend.bonusDay === smallattend.bonusDay && attend.smallgroup === true) {
+            var attendDate = isoDateToTime(attend.date)
+            if (smallDate === attendDate && attend.bonusDay === smallAttend.bonusDay && attend.smallgroup === true) {
               found = true;
               break;
             }
           }
           if (!found) {
-            attendance.push({date:smallattend.date, bonusDay:smallattend.bonusDay, smallgroup:true, verified:false, present:false});
+            attendance.push(
+              {
+                date:smallAttend.date,
+                bonusDay:smallAttend.bonusDay,
+                smallgroup:true,
+                verified:false,
+                present:false
+              }
+            );
           }
         }
       }
     });
     ClassYear.findOne({current:true}, function (err, classyear) {
       if (err) {return handleError(err)}
-      if (classyear != null) {
-        for (var i = 0; i < classyear["dayCodes"].length; i++) {
-          var yearcode = classyear["dayCodes"][i];
+      if (classyear !== null) {
+        for (var i = 0; i < classyear.dayCodes.length; i++) {
+          var classAttend = classyear.dayCodes[i];
+          var classDate = isoDateToTime(classAttend.date);
           var found = false;
           for (var j = 0; j < attendance.length; j++) {
-            var attendcode = attendance[i]["code"];
-            if (attendcode === yearcode) {
+            var attend = attendance[j];
+            var attendDate = isoDateToTime(attend.date)
+            if (classDate === attendDate && attend.bonusDay === classAttend.bonusDay && attend.smallgroup === false) {
               found = true;
               break;
             }
           }
           if (!found) {
-            attendance.push({date:yearcode.date, bonusDay:yearcode.bonusDay, smallgroup:false, verified:false, present:false});
+            attendance.push({
+              date:classAttend.date,
+              bonusDay:classAttend.bonusDay,
+              smallgroup:false,
+              verified:false,
+              present:false
+            });
           }
         }
       }
@@ -409,7 +422,7 @@ exports.attend = function(req,res){
         });
       }
       else{
-      // Classyear attendance code and bonus code was incorrect, try small group        
+      // Classyear attendance code and bonus code was incorrect, try small group
         return SmallGroup.findOne({"students":user._id, "classYear":classYear._id})
     	  .select('+dayCodes.code')
         .exec(function(err, smallgroup){
@@ -481,9 +494,9 @@ function joinGroupAndSubmit(user,code,classYear,needsVerification,callback){
     if (!smallgroup){return callback(err,null)}
     var lastestCode = smallgroup.dayCode;
     var lastestBonusCode = smallgroup.bonusDayCode;
-    if((lastestCode && lastestCode === code) || 
+    if((lastestCode && lastestCode === code) ||
       (lastestBonusCode && lastestBonusCode === code)){
-      //check if today's small group codes match with the submission 
+      //check if today's small group codes match with the submission
       SmallGroup.findOneAndUpdate({_id: smallgroup._id}, {
           $addToSet: { students : user._id }
       }, function(err, groupJoined){
