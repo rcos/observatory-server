@@ -4,9 +4,13 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
     var currentUser = {};
     var safeCb = Util.safeCb;
     var currentUser = {};
+    var smallgroup = {};
     var userRoles = appConfig.userRoles || [];
     if ($cookieStore.get('token') && $location.path() !== '/logout') {
       currentUser = User.get();
+       User.smallgroup().$promise.then(function (data){
+         smallgroup = data;
+       })
     }
 
     function isLoggedInAsync(cb) {
@@ -152,6 +156,7 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
      */
     getCurrentUser(callback) {
       if (arguments.length === 0) {
+        smallgroup._id ? currentUser.smallgroup = true : currentUser.smallgroup = false;
         return currentUser;
       }
       var value = (currentUser.hasOwnProperty('$promise')) ?
