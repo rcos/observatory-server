@@ -156,7 +156,7 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
      */
     getCurrentUser(callback) {
       if (arguments.length === 0) {
-        smallgroup._id ? currentUser.smallgroup = true : currentUser.smallgroup = false;
+        currentUser.smallgroup = smallgroup._id !== undefined;
         return currentUser;
       }
       var value = (currentUser.hasOwnProperty('$promise')) ?
