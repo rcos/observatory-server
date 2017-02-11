@@ -12,6 +12,8 @@ router.get('/defaults', controller.defaults)
 router.get('/past', controller.indexOld);
 router.get('/:id/authors', controller.authors);
 router.get('/:username/:project', controller.show);
+router.get('/mine', auth.isAuthenticated(), controller.my_projects);
+router.get('/mentees', auth.hasRole('mentor'), controller.mentees);
 router.get('/:id', controller.show);
 router.post('/:username/:project/upload', auth.isAuthenticated(), controller.upload);
 router.delete('/:username/:project/:photoName', auth.isAuthenticated(), controller.deletePhoto);

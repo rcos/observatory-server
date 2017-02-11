@@ -3,12 +3,15 @@
 var _ = require('lodash');
 var Project = require('./project.model');
 var User = require('../user/user.model');
+var ClassYear = require('../classyear/classyear.model');
+var SmallGroup = require('../smallgroup/smallgroup.model');
 var multiparty = require('multiparty');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var async = require('async');
 var config = require('../../config/environment');
 var validUrl = require('valid-url');
+var mongoose = require('mongoose');
 
 
 // Get list of current projects
@@ -87,6 +90,42 @@ exports.show = function(req, res) {
     });
   }
 };
+
+exports.my_projects = function(req, res) {
+  var userId = req.user._id;
+  User.findById(userId).populate('projects').exec(function(err, user){
+    if (err) { return handleError(res, err); }
+    return res.status(200).json(user.projects);
+  });
+}
+
+exports.mentees = function(req, res) {
+  var userId = req.user._id;
+
+  return ClassYear.getCurrent(function(err, classYear) {
+      if(err) { return handleError(res, err); }
+      var classYearId = classYear._id;
+      var query = SmallGroup.findOne({"students":userId, "classYear":classYearId});
+
+      return query.select('students').exec(function(err, smallgroup){
+        if (err) return handleError(res, err);
+        if (!smallgroup.students) return res.json([]);
+        var mentees_ids = smallgroup.students.map(function(s) {
+          return mongoose.Types.ObjectId(s);
+        });
+        User.find({ "_id": { $in: mentees_ids }} )
+          .distinct('projects')
+          .exec(function(err, projectIds){
+            if (err) return handleError(res, err);
+            Project.find({"_id": {$in: projectIds}}).exec(function(err, projects){
+              if (err) return handleError(res, err);
+              return res.json(projects);
+            });
+        });
+      })
+  });
+
+}
 
 // Get authors on a project
 exports.authors = function(req, res) {

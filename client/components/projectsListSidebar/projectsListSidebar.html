@@ -1,0 +1,32 @@
+<div ng-show="loggedIn()">
+  <div class="panel panel-default">
+    <div class="panel-heading">My Projects</div>
+    <div class="panel-body">
+      <ul class="list-unstyled">
+        <li ng-repeat="project in myProjects">
+          <a ng-href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a>
+        </li>
+        <li ng-show="!myProjects.length">No Projects</li>
+      </ul>
+    </div>
+  </div>
+  <div ng-show="isMentor()" class="panel panel-default">
+    <div class="panel-heading">Mentees Projects</div>
+    <div class="panel-body">
+      <ul class="list-unstyled">
+        <li ng-repeat="project in menteeProjects">
+          <a ng-href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a>
+        </li>
+        <li ng-show="!myProjects.length">No Projects</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div ng-show="!loggedIn()">
+  <div class="panel panel-default">
+    <div class="panel-heading">My Projects</div>
+    <div class="panel-body">
+      <a ng-href="/signup">Sign Up</a> to make a project!
+    </div>
+  </div>
+</div>

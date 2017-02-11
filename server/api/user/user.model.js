@@ -559,7 +559,7 @@ UserSchema.methods = {
             res.currentSmallAttendance = [];
         }
         return res;
-    }
+    },
 };
 
 module.exports = mongoose.model('User', UserSchema);

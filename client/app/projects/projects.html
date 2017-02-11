@@ -37,7 +37,7 @@
   </div>
   <br/>
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-9">
       <div ng-repeat="project in projects | filter:searchString | orderBy: sortOrder">
         <div class="extra-content" >
           <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a> </h2>
@@ -53,6 +53,9 @@
           <div id="description" btf-markdown="project.description"></div>
         </div>
       </div>
+    </div>
+    <div class="col-md-3">
+      <projects-list-sidebar></projects-list-sidebar>
     </div>
   </div>
 </div>
