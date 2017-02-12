@@ -711,6 +711,9 @@ exports.setAttendanceFullBonus = function(req, res) {
 exports.addManualAttendance = function(req, res) {
   var userId = req.params.user;
   var date = req.body.date;
+  console.log("date", date)
+  console.log("isoDateToTime(date)", isoDateToTime(date))
+
   var smallgroup = req.body.smallgroup
   var bonusDay = req.body.bonusday;
 
