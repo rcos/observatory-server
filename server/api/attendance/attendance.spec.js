@@ -41,25 +41,25 @@ describe('GET /api/attendance', function() {
     });
 });
 
-describe('samllgroup attendance test', function() {
+describe('smallgroup attendance test', function() {
   before(seed);
   var mentorSession;
   var bonusDay = false;
   var code ='';
   var smallGroupId = "000000000000000000001000";
-  
+
   before(() => getSessionFor('admin').then(session => mentorSession = session));
 
   it('should allow mentor create dayCode', done => {
-      var bonusDay = false; 
+      var bonusDay = false;
 
     mentorSession
-      .post('/api/smallgroup/daycode')
+      .post('/api/smallgroup/' + smallGroupId + '/daycode')
       .send({
         'bonusDay': bonusDay
       })
       .end((err, res) => {
-        code = res.body;
+        code = res.body.code;
         expect(res.status).to.equal(200);
         done(err);
       });

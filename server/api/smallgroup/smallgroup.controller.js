@@ -136,7 +136,7 @@ exports.daycode = function(req, res){
           });
           return smallgroup.save(function(err, classYear){
             if (err) return handleError(res, err);
-            return res.status(200).json(code);
+            return res.status(200).json({'code': code})
         });
       });
     });
@@ -145,24 +145,21 @@ exports.daycode = function(req, res){
 
 // Delete a day code from a smallgroup and the corresponding daycode submission from attendance
 // Restricted to mentors
-// router.delete('/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
+// router.delete('/:id/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
-    return ClassYear.getCurrent(function(err, classYear){
-      var classYearId = classYear._id;
-
-      return SmallGroup.findOneAndUpdate({"classYear":classYearId}, {
-        $pull: { dayCodes: {code : dayCode }}
-      })
+    var smallgroupId = req.params.id;
+    SmallGroup.findOneAndUpdate({"_id":smallgroupId}, {
+      $pull: { dayCodes: {code : dayCode }}
+    })
       .select('+dayCodes.code')
       .exec(function(err, smallgroup){
         if (err) return handleError(res, err);
 
         return Attendance.remove({code : dayCode}, function (err){
           if (err) return handleError(res, err);
-           return res.status(200).json(smallgroup);
+          return res.status(200).json(smallgroup);
         });
-    });
   });
 };
 
@@ -329,5 +326,5 @@ function uniqueDayCode(codeLength,callback){
             return callback(null,code);
         });
       }
-  });  
+  });
 }
