@@ -204,11 +204,9 @@ angular.module('observatory3App')
   };
 
   $scope.deletePhoto = function(){
-    var username = $scope.project.githubUsername;
-    var projectName = $scope.project.githubProjectName;
     var activePhoto = $scope.slides[$scope.active];
     if (activePhoto){
-      $http.delete('/api/projects/' +  username + '/' + projectName + '/' + activePhoto.src)
+      $http.delete('/api/projects/'+ activePhoto.src)
         .success(function(){
           location.reload();
         });

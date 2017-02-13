@@ -345,14 +345,49 @@ exports.upload = function(req, res) {
       project.photos.push(name);
       project.save(function (err) {
           // TODO handle project saving error
+          return res.json(201, name);
       });
-      return res.json(201, name);
     });
   });
+};
+
+exports.deletePhoto = function(req, res) {
+    var photoName = req.params.photoName;
+    var username = req.params.username;
+    var project = req.params.project;
+    var userId = req.user._id;
+    var path = config.imageUploadPath;
+    var name = username + '/' + project + '/' + photoName;
+
+    Project.findOne({'photos': name}, function (err, project) {
+      if(err) { return handleError(res, err); }
+      if(!project) { return res.sendStatus(404); }
+      for (var i = 0; i < project.photos.length; i++){
+          if (project.photos[i] === name){
+            project.photos.splice(i, 1);
+            var toRemove = path + '/' + name;
+            fs.unlinkSync(toRemove);
+          }
+      }
+      project.save(function (err) {
+        User.findById(userId, function(err, user) {
+          if (err) { return handleError(res, err); }
+
+          if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
+            var updated = _.merge(project, req.body);
+            updated.save(function (err) {
+            if (err) { return handleError(res, err); }
+              return res.json(200, project);
+            });
+          } else {
+            return handleError(res, err);
+          }
+        });
+      });
+    });
 };
 
 // Return a validation error
 function validationError(res, err) {
     return res.status(422).json(err);
 }
-
