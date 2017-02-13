@@ -7,10 +7,46 @@ angular.module('observatory3App')
   $scope.userOnProject = false;
   $scope.project = {};
 
-  $scope.selectImage = function() {
-    angular.element('#uploadImage').trigger('click');
+  $scope.isLoggedIn = Auth.isLoggedIn;
+  $scope.isAdmin = Auth.isAdmin;
+  $scope.isMentor = Auth.isMentor;
+
+  var getAuthors = function() {
+    var project = $scope.project;
+    $http.get('/api/projects/' + project._id + '/authors')
+      .success(function(authors){
+        $scope.authors = authors;
+      });
   };
 
+  var initializeSlides = function(photos) {
+    var slides = [];
+    if(photos.length > 0) {
+      for (var i = 0; i < photos.length; i++){
+        slides.push({
+          id: i,
+          active: false,
+          image: $scope.imgPrefix + photos[i],
+          src: photos[i]
+        });
+        if (i === 0) {
+          slides[0].active = true;
+        }
+      }
+    }
+    else {
+      slides.push({
+        id: 0,
+        active: true,
+        placeholder: true,
+        image: '../../assets/images/projectplaceholder.png',
+        src: '../../assets/images/projectplaceholder.png'
+      });
+    }
+    $scope.slides = slides;
+  };
+
+  //end tech bubble code
   var updateProject = function(){
     Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
       $scope.project = result.data;
@@ -26,7 +62,7 @@ angular.module('observatory3App')
       $('#github-commits').githubInfoWidget({ user: $scope.project.githubUsername, repo: $scope.project.githubProjectName, branch: 'master', last: 15 },
           function() {
             $('.github-user').each(function(index, user) {
-              $(user).find(".github-avatar").attr('src', $(user).find('a').attr('href')+".png");
+              $(user).find('.github-avatar').attr('src', $(user).find('a').attr('href')+'.png');
             });
           });
 
@@ -34,7 +70,10 @@ angular.module('observatory3App')
       $location.path('/projects');
     });
   };
-  updateProject();
+
+  $scope.selectImage = function() {
+    angular.element('#uploadImage').trigger('click');
+  };
 
   $scope.canEdit = function(){
     return $scope.isLoggedIn() || $scope.userOnProject;
@@ -68,14 +107,6 @@ angular.module('observatory3App')
     }, function(){});
   };
 
-  var getAuthors = function() {
-    var project = $scope.project;
-    $http.get('/api/projects/' + project._id + '/authors')
-      .success(function(authors){
-        $scope.authors = authors;
-      });
-  };
-
   $scope.getPic = function(user) {
     if (! ('avatar' in user)){
       user.avatar = '//www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid';
@@ -86,37 +117,6 @@ angular.module('observatory3App')
     }
     return user.avatar;
   };
-
-  var initializeSlides = function(photos) {
-    var slides = [];
-    if(photos.length > 0) {
-      for (var i = 0; i < photos.length; i++){
-        slides.push({
-          id: i,
-          active: false,
-          image: $scope.imgPrefix + photos[i],
-          src: photos[i]
-        });
-        if (i === 0) {
-          slides[0].active = true;
-        }
-      }
-    }
-    else {
-      slides.push({
-        id: 0,
-        active: true,
-        placeholder: true,
-        image: '../../assets/images/projectplaceholder.png',
-        src: '../../assets/images/projectplaceholder.png'
-      });
-    }
-    $scope.slides = slides;
-  };
-
-  $scope.isLoggedIn = Auth.isLoggedIn;
-  $scope.isAdmin = Auth.isAdmin;
-  $scope.isMentor = Auth.isMentor;
 
   $scope.joinProject = function(){
     $http.put('/api/users/' + $scope.user._id + '/project',{
@@ -232,24 +232,6 @@ angular.module('observatory3App')
     });
   };
 
-  //end tech bubble code
-
-  var updateProject = function(){
-    Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
-      $scope.project = result.data;
-      initializeSlides($scope.project.photos);
-      getAuthors();
-      Auth.isLoggedInAsync(function(loggedIn){
-        if (loggedIn){
-          var user = Auth.getCurrentUser();
-          $scope.user = user;
-          $scope.checkUserProject();
-        }
-      });
-    },function(){
-      $location.path('/projects');
-    });
-  };
   updateProject();
 
 });

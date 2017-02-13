@@ -39,11 +39,11 @@ exports.stats = function(req, res) {
       ],
       function(err, results){
         if (err) {
-          return res.send(400);
+          return res.sendStatus(400);
         }
 
         if (results === null) {
-          return res.send(400);
+          return res.sendStatus(400);
         }
 
         //results contains [activeProjectCount, pastProjectCount]
@@ -76,13 +76,13 @@ exports.show = function(req, res) {
   if (req.params.username && req.params.project){
     Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
       if(err) { return handleError(res, err); }
-      if(!project) { return res.send(404); }
+      if(!project) { return res.sendStatus(404); }
       return res.json(project);
     });
   }else if (req.params.id){
     Project.findById(req.params.id, function(err, project){
       if(err) { return handleError(res, err); }
-      if(!project) { return res.send(404); }
+      if(!project) { return res.sendStatus(404); }
       return res.json(project);
     });
   }
@@ -125,7 +125,7 @@ exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Project.findById(req.params.id, function (err, project) {
     if (err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return res.sendStatus(404); }
 
     // Only mentors and project owners can update a project
     var userId = req.user._id;
@@ -201,50 +201,12 @@ exports.removeTech = function(req, res){
 exports.destroy = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return res.sendStatus(404); }
     project.remove(function(err) {
       if(err) { return handleError(res, err); }
       return res.send(204);
     });
   });
-};
-
-exports.deletePhoto = function(req, res) {
-    var photoName = req.params.photoName;
-    var username = req.params.username;
-    var project = req.params.project;
-    var userId = req.user._id;
-    var path = config.imageUploadPath;
-
-    Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
-      if(err) { return handleError(res, err); }
-      if(!project) { return res.send(404); }
-      if(project.photos.length===10){
-        var temp = project.photos.shift();
-        var toRemove = path + '/' + temp;
-        fs.unlinkSync(toRemove);
-      }
-      for (var i = 0; i < project.photos.length; i++){
-          if (project.photos[i] === photoName){
-            project.photos.splice(i, 1);
-          }
-      }
-      project.save(function (err) {
-        User.findById(userId, function(err, user) {
-          if (err) { return handleError(res, err); }
-
-          if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
-            var updated = _.merge(project, req.body);
-            updated.save(function (err) {
-            if (err) { return handleError(res, err); }
-              return res.json(200, project);
-            });
-          } else {
-            return handleError(res, err);
-          }
-        });
-      });
-    });
 };
 
 function handleError(res, err) {
@@ -256,7 +218,7 @@ exports.markPast = function(req,res){
   var userId = req.user._id;
   Project.findById(req.params.id,function(err,project){
     if(err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return res.sendStatus(404); }
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
 
@@ -276,7 +238,7 @@ exports.markActive = function(req,res){
   var userId = req.user._id;
   Project.findById(req.params.id,function(err,project){
     if(err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return res.sendStatus(404); }
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
 
@@ -295,7 +257,7 @@ exports.markActive = function(req,res){
 exports.markDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return res.sendStatus(404); }
     project.update({ markedDefault: true }, function(err) {
       if(err) { return handleError(res, err); }
       return res.send(200);
@@ -306,7 +268,7 @@ exports.markDefault = function(req, res) {
 exports.unmarkDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.send(404); }
+    if(!project) { return res.sendStatus(404); }
     project.update({ markedDefault: false }, function(err) {
       if(err) { return handleError(res, err); }
       return res.send(200);
@@ -336,8 +298,8 @@ exports.upload = function(req, res) {
 
     Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
       if(err) { return handleError(res, err); }
-      if(!project) { return res.send(404); }
-      if(project.photos.length===10){
+      if(!project) { return res.sendStatus(404); }
+      if(project.photos.length>=10){
         var temp = project.photos.shift();
         var toRemove = path + '/' + temp;
         fs.unlinkSync(toRemove);
