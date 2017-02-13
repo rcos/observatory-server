@@ -9,13 +9,7 @@ var ClassYear = require('../classyear/classyear.model');
 var Attendance = require('../attendance/attendance.model');
 var User = require('../user/user.model');
 var Project = require('../project/project.model');
-
-// Convert dates to midnight
-function isoDateToTime(isoDate){
-    var date = new Date(isoDate);
-    date.setHours(0,0,0,0);
-    return date.getTime();
-}
+var util = require('../../components/utilities')
 
 // Get all smallgroups
 // Restricted to authenticated users
@@ -179,7 +173,7 @@ function getFullUserProfile(userId, mentor, callback){
 
             ClassYear.getCurrent(function(err, classYear){
                 var classYearId = classYear._id;
-                var date = isoDateToTime(new Date());
+                var date = util.convertToMidnight(new Date());
 
                 Attendance.find({classYear:classYearId, date:date, smallgroup:true, user:userId})
                 .exec(function(err, attendance){
