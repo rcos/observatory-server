@@ -3,7 +3,6 @@
 angular.module('observatory3App')
 .controller('ProjectsListSidebarCtrl',
     function ($scope, Auth, Project) {
-      $scope.loggedIn = Auth.isLoggedIn;
       $scope.isMentor = Auth.isMentor;
 
       if ($scope.loggedIn()) {
