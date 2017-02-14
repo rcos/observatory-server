@@ -38,9 +38,14 @@ angular.module('observatory3App')
       }
     };
 
-    $scope.onSearch = function(){
-        $scope.users = $scope.currentUsers;
-        $scope.users = $filter('filter')($scope.users, $scope.searchString.name);
+    $scope.onSearch = function(past){
+        if (!past){
+          $scope.users = $scope.currentUsers;
+          $scope.users = $filter('filter')($scope.users, $scope.searchString.name);
+        } else {
+          $scope.users = $scope.pastUsers;
+          $scope.users = $filter('filter')($scope.users, $scope.searchString.name);
+        }
       };
 
     $scope.numberOfPages=function(){
