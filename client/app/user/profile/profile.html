@@ -2,7 +2,7 @@
 
 <div class='container profile'>
     <div class='row'>
-        <div class='col-md-3 profile-sidebar'>
+        <div class='col-sm-4 profile-sidebar'>
             <img width='75%' ng-src='{{user.avatar}}&s=256px'/>
             <span id='semester-count' ng-show="user.semesters">{{user.semesters}}</span>
             <div class='sidebar-text name'>
@@ -21,8 +21,7 @@
                     <button class='btn btn-default btn-xs' ng-click='setRole()' ng-disabled="originalRole === user.role">Save</button>
                 </div>
             </div>
-            <div class='sidebar-text box'>
-
+            <div class='panel sidebar-text box'>
               <div class='row'>
                 <div class='col-xs-12'>
                   <p>
@@ -46,7 +45,7 @@
               </div>
             </div>
         </div>
-        <div class='col-md-6'>
+        <div class='col-sm-8'>
             <div class="row">
               <div class="col-sm-12">
                 <div ng-show="canEdit()">Add a new tech tag: </div>
@@ -63,13 +62,13 @@
               </div>
             </div>
             <div ng-hide="user.bio">User has not written a bio</div>
-            <div ng-show="canEdit() || user.bio" class='content-box'>
+            <div ng-show="canEdit() || user.bio" class='panel content-box'>
                 <div class='content-title row'>
                     <div class='col-xs-6'>Bio</div>
                 </div>
                 <div style="white-space:pre-wrap;" btf-markdown="user.bio"></div>
             </div>
-            <div class='content-box' ng-repeat='project in projects'>
+            <div class='panel content-box' ng-repeat='project in projects'>
                 <div class='project row'>
                     <div class='col-xs-3' style='text-align:center;'>
                       <a href="#" class="thumbnail" ng-hide="project.photos.length === 0">
@@ -88,7 +87,7 @@
             </div>
         </div>
         <div class='col-md-3'>
-            <div ng-hide='!canEdit()' class='content-box'>
+            <div ng-hide='!canEdit()' class='panel content-box'>
                 <div class='content-title'>
                     Attendance
                 </div>
@@ -116,9 +115,9 @@
                     </div>
                 </div>
             </div>
-            <div class='content-box'>
+            <div ng-hide="user.commits.length == 0" class='panel content-box'>
                 <div class='content-title'>Commits</div>
-                <div ng-show="user.commits.length == 0">No commits yet...</div>
+                <div>No commits yet...</div>
                 <div ng-repeat='event in user.github.events' class='commit'>
                     <a href='{{event.url}}'>{{event.message}}</a>
                 </div>
