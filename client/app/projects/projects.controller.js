@@ -3,7 +3,7 @@
 angular.module('observatory3App')
 .controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams,notify) {
     $scope.projects = [];
-    $scope.projectToAdd = {active: true, repositories: [""]};
+    $scope.projectToAdd = {active: true, repositories: ['']};
     $scope.loggedIn = false;
     $scope.sortOrder = 'name';
 
@@ -51,7 +51,6 @@ angular.module('observatory3App')
       });
 
       modalInstance.result.then(function (projectAdded) {
-        // $window.location.reload();
         var redirectUsername = projectAdded.githubUsername;
         var redirectProjectName = projectAdded.githubProjectName;
         $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');
@@ -64,7 +63,7 @@ angular.module('observatory3App')
     $scope.markPast = function(id){
         $http.put('api/projects/'+id+'/markPast').success(function(){
             $scope.getCurrentProjects();
-            notify("Project marked as past project");
+            notify('Project marked as past project');
         }).error(function(){
             notify({ message: 'Error trying to mark as a past project', classes: ['alert-danger'] });
         });
@@ -73,7 +72,7 @@ angular.module('observatory3App')
     $scope.markActive =  function(id){
         $http.put('api/projects/'+id+'/markActive').success(function(){
             $scope.getPastProjects();
-            notify("Project marked as a current project");
+            notify('Project marked as a current project');
         }).error(function(){
             notify({ message: 'Error trying to mark as current project', classes: ['alert-danger'] });
         });
