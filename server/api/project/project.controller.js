@@ -91,7 +91,7 @@ exports.show = function(req, res) {
   }
 };
 
-exports.my_projects = function(req, res) {
+exports.myProjects = function(req, res) {
   var userId = req.user._id;
   User.findById(userId).populate('projects').exec(function(err, user){
     if (err) { return handleError(res, err); }
