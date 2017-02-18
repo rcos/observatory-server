@@ -6,6 +6,12 @@ angular.module('observatory3App')
       getProjects: function() {
         return $http.get('/api/projects/');
       },
+      getMyProjects: function() {
+        return $http.get('/api/projects/mine');
+      },
+      getMenteesProjects: function() {
+        return $http.get('/api/projects/mentees');
+      },
       getPastProjects: function() {
         return $http.get('/api/projects/past');
       },

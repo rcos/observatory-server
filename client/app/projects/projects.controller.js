@@ -4,15 +4,8 @@ angular.module('observatory3App')
 .controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams,notify) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: ['']};
-    $scope.loggedIn = false;
+    $scope.loggedIn = Auth.isLoggedIn;
     $scope.sortOrder = 'name';
-
-    Auth.isLoggedInAsync(function(loggedIn){
-        if (loggedIn){
-            var user = Auth.getCurrentUser();
-            $scope.user = user;
-        }
-    });
     $scope.isAdmin = Auth.isAdmin;
 
     $scope.toggleSortOrder = function(){
@@ -51,6 +44,7 @@ angular.module('observatory3App')
       });
 
       modalInstance.result.then(function (projectAdded) {
+        // $window.location.reload();
         var redirectUsername = projectAdded.githubUsername;
         var redirectProjectName = projectAdded.githubProjectName;
         $location.path( 'projects/' + redirectUsername + '/' + redirectProjectName + '/profile');

@@ -539,27 +539,28 @@ UserSchema.methods = {
        });
      });
   },
-    /**
-     * Gets the number of days there has been attendance for the user
-     *
-     * @param classYear object
-     * @api public
-     */
-    getTotalDays: function(classYear, smallgroup){
-        var user = this;
-        var res = {};
-        res.totalDates = classYear.dates;
-        res.totalBonusDates = classYear.bonusDates;
-        if (smallgroup && smallgroup.dates){
-            res.totalSmallDates = smallgroup.dates;
-            res.totalBonusSmallDates = smallgroup.bonusDates;
-        }
-        else{
-            res.totalSmallDates = [];
-            res.currentSmallAttendance = [];
-        }
-        return res;
+
+  /**
+   * Gets the number of days there has been attendance for the user
+   *
+   * @param classYear object
+   * @api public
+   */
+  getTotalDays: function(classYear, smallgroup){
+    var user = this;
+    var res = {};
+    res.totalDates = classYear.dates;
+    res.totalBonusDates = classYear.bonusDates;
+    if (smallgroup && smallgroup.dates){
+      res.totalSmallDates = smallgroup.dates;
+      res.totalBonusSmallDates = smallgroup.bonusDates;
     }
+    else{
+      res.totalSmallDates = [];
+      res.currentSmallAttendance = [];
+    }
+    return res;
+  }
 };
 
 module.exports = mongoose.model('User', UserSchema);
