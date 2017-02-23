@@ -75,7 +75,7 @@ angular.module('observatory3App')
     };
 
     $scope.addAttendence = function(user){
-      var modalInstance = $uibModal.open({
+      $uibModal.open({
         templateUrl: 'components/addAttendance/addAttendance.html',
         controller: 'addAttendanceController',
         backdrop : 'static',

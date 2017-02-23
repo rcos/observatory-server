@@ -8,6 +8,7 @@ const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 var md5 = require('md5');
 var Project = require('../project/project.model');
+var util = require('../../components/utilities')
 
 var UserSchema = new Schema({
   name: String,
@@ -122,45 +123,37 @@ UserSchema
 });
 
 
-function isoDateToTime(isoDate){
-  var date = new Date(isoDate);
-  date.setHours(0,0,0,0);
-  return date.getTime();
-}
-
 // Represents a users attendance on a given day
 UserSchema
   .virtual('presence')
   .get(function(){
-    var today = new Date();
-    today.setHours(0,0,0,0);
+    var today = util.convertToMidnight(new Date());
     var i = 0;
     for (i = 0;i < this.attendance.length;i++){
-      if (isoDateToTime(this.attendance[i]) === today.getTime()){
+      if (util.dateToTime(this.attendance[i]) === today){
         return "present";
       }
     }
     for (i = 0;i < this.unverifiedAttendance.length;i++){
-      if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
+      if (util.dateToTime(this.unverifiedAttendance[i]) === today){
         return "unverified";
       }
     }
     return "absent";
   })
   .set(function(status){
-    var today = new Date();
-    today.setHours(0,0,0,0);
+    var today = util.convertToMidnight(new Date());
     var i = 0;
     if (status === "present"){
       // Make sure user is not unverified for today
       for (i = this.unverifiedAttendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
+        if (util.dateToTime(this.unverifiedAttendance[i]) === today){
            this.unverifiedAttendance.splice(i,1);
         }
       }
       // If user already has attendance don't change anything
       for (i = 0;i < this.attendance.length;i++){
-        if (isoDateToTime(this.attendance[i]) === today.getTime()){
+        if (util.dateToTime(this.attendance[i]) === today){
           return;
         }
       }
@@ -168,14 +161,14 @@ UserSchema
     }else if (status === "unverified"){
       // If user already has attendance remove their attendance
       for (i = this.attendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.attendance[i]) === today.getTime()){
+        if (util.dateToTime(this.attendance[i]) === today){
           this.attendance.splice(i,1);
         }
       }
 
       // See if user already is unverifed
       for (i = 0;i < this.unverifiedAttendance.length;i++){
-        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
+        if (util.dateToTime(this.unverifiedAttendance[i]) === today){
           return;
         }
       }
@@ -184,12 +177,12 @@ UserSchema
     }else if (status === "absent"){
       // Remove attendance from unverified and attendance
       for (i = this.attendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.attendance[i]) === today.getTime()){
+        if (util.dateToTime(this.attendance[i]) === today){
           this.attendance.splice(i,1);
         }
       }
       for (i = this.unverifiedAttendance.length-1;i >= 0;i--){
-        if (isoDateToTime(this.unverifiedAttendance[i]) === today.getTime()){
+        if (util.dateToTime(this.unverifiedAttendance[i]) === today){
            this.unverifiedAttendance.splice(i,1);
         }
       }

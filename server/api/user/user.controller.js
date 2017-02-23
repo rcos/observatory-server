@@ -13,12 +13,6 @@ var ClassYear = require('../classyear/classyear.model');
 var Attendance = require('../attendance/attendance.model');
 var SmallGroup = require('../smallgroup/smallgroup.model');
 
-function isoDateToTime(isoDate){
-  var date = new Date(isoDate);
-  date.setHours(0,0,0,0);
-  return date.getTime();
-}
-
 // Return a standard error
 function handleError(res, err) {
     return res.sendStatus(500, err);

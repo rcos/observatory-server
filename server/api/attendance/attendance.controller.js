@@ -7,11 +7,7 @@ var ClassYear = require('../classyear/classyear.model');
 var User = require('../user/user.model');
 var SmallGroup = require('../smallgroup/smallgroup.model');
 var config = require('../../config/environment');
-function isoDateToTime(isoDate){
-  var date = new Date(isoDate);
-  date.setHours(0,0,0,0);
-  return date.getTime();
-}
+var util = require('../../components/utilities')
 
 function isSmallAttendance(submission){
   return !submission.bonusDay && submission.smallgroup
@@ -38,7 +34,7 @@ var getPresent = function(userId, date, classYearId, cb){
   });
 };
 var checkAttendanceForDate = function(user, classYear, date, cb){
-  return getPresent(user._id, isoDateToTime(date), classYear._id, function(err,userAttendance){
+  return getPresent(user._id, date, classYear._id, function(err,userAttendance){
     if (err) {return cb(err)}
     var submitted = {full: false, small: false, fullBonus: false, smallBonus: false}
     // Check what types of attendance the user has submitted today
@@ -65,7 +61,7 @@ var saveAttendance = function(classYearId, userId, date, code, needsVerification
     classYear: classYearId,
     user: userId,
 
-    date: isoDateToTime(date),
+    date: date,
     datetime: date,
 
     bonusDay: bonusDay,
@@ -124,38 +120,6 @@ exports.destroy = function(req, res) {
 // *******************************************************
 
 // *******************************************************
-// Creates a new attendance submission in the DB.
-// NOT FOR NORMAL USE : does not generate required data for submission
-// Restricted to admins
-// router.post('/', auth.hasRole('admin'), controller.create);
-exports.create = function(req, res) {
-  Attendance.create(req.body, function(err, attendance) {
-    if(err) { return handleError(res, err); }
-    return res.json(201, attendance);
-  });
-};
-// *******************************************************
-
-// *******************************************************
-// Updates an existing attendance submission in the DB.
-// NOT FOR NORMAL USE : does not generate required data for submission
-// Restricted to admins
-// router.put('/:id', auth.hasRole('admin'), controller.update);
-exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  Attendance.findById(req.params.id, function (err, attendance) {
-    if (err) { return handleError(res, err); }
-    if(!attendance) { return res.sendStatus(404); }
-    var updated = _.merge(attendance, req.body);
-    updated.save(function (err) {
-      if (err) { return handleError(res, err); }
-      return res.json(200, attendance);
-    });
-  });
-};
-// *******************************************************
-
-// *******************************************************
 // Verifies an existing attendance submission in the DB.
 // Restricted to mentors
 // router.put('/:id/verify', auth.hasRole('mentor'), controller.verifyAttendanceById);
@@ -175,59 +139,7 @@ exports.verifyAttendanceById = function(req, res) {
 
 
 // *******************************************************
-// Verify users large group attendance for today, available only to mentors
-// router.post('/present/:user/full', hasRole('mentor'),controller.verifyFullAttendance);
-exports.verifyFullAttendance = function(req,res){
-  var userId = req.params.id;
-  return ClassYear.getCurrent(function(err, classYear){
-    if (err) {return handleError(err)}
-    var classYearId = classYear._id;
-    return getPresent(userId, isoDateToTime(new Date()), classYear._id, function(err,userAttendance){
-      if (err) {return handleError(err)}
-      if (!userAttendance.length){
-        return res.status(400).json('No attendance found');
-      }
-      for (var a = 0; a < userAttendance.length; a++){
-        if (!userAttendance.smallgroup){
-          userAttendance[a].verified = true;
-          userAttendance[a].save();
-        }
-      }
-      return res.sendStatus(200);
-
-    });
-  });
-};
-// *******************************************************
-
-// *******************************************************
-// Verify users small group attendance, available only to mentors
-// TODO: verify that mentor is part of the smallgroup
-// router.post('/present/:user/small', auth.hasRole('mentor'), controller.verifySmallAttendance);
-exports.verifySmallAttendance = function(req,res){
-  var userId = req.params.id;
-  return ClassYear.getCurrent(function(err, classYear){
-    if (err) {return handleError(err)}
-    var classYearId = classYear._id;
-    return getPresent(userId, isoDateToTime(new Date()), classYear._id, function(err,userAttendance){
-      if (err) {return handleError(err)}
-      if (!userAttendance.length){
-        return res.status(400).json('No attendance found');
-      }
-      for (var a = 0; a < userAttendance.length; a++){
-        if (userAttendance.smallgroup){
-          userAttendance[a].verified = true;
-          userAttendance[a].save();
-        }
-      }
-      return res.sendStatus(200);
-    });
-  });
-};
-// *******************************************************
-
-// *******************************************************
-//get the list of attending students on a date
+//get the list of attending students on a for a daycode
 //router.get('/code/attendees/:dateCode',auth.hasRole('mentor'), controller.getAttendees);
 exports.getAttendees = function(req,res){
   return Attendance.find({code:req.params.dateCode})
@@ -255,12 +167,12 @@ var getAttendance = function(userId, classYearId, cb){
       if (smallgroup !== null) {
         for (var i = 0; i < smallgroup.dayCodes.length; i++) {
           var smallAttend = smallgroup.dayCodes[i];
-          var smallDate = isoDateToTime(smallAttend.date);
+          var smallDate = util.setToZero(smallAttend.date);
 
           var found = false;
           for (var j = 0; j < attendance.length; j++) {
             var attend = attendance[j];
-            var attendDate = isoDateToTime(attend.date)
+            var attendDate = util.setToZero(attend.date)
             if (smallDate === attendDate && attend.bonusDay === smallAttend.bonusDay && attend.smallgroup === true) {
               found = true;
               break;
@@ -279,37 +191,38 @@ var getAttendance = function(userId, classYearId, cb){
           }
         }
       }
-    });
-    ClassYear.findOne({current:true}, function (err, classyear) {
-      if (err) {return handleError(err)}
-      if (classyear !== null) {
-        for (var i = 0; i < classyear.dayCodes.length; i++) {
-          var classAttend = classyear.dayCodes[i];
-          var classDate = isoDateToTime(classAttend.date);
-          var found = false;
-          for (var j = 0; j < attendance.length; j++) {
-            var attend = attendance[j];
-            var attendDate = isoDateToTime(attend.date)
-            if (classDate === attendDate && attend.bonusDay === classAttend.bonusDay && attend.smallgroup === false) {
-              found = true;
-              break;
+      ClassYear.findOne({current:true}, function (err, classyear) {
+        if (err) {return handleError(err)}
+        if (classyear !== null) {
+          for (var i = 0; i < classyear.dayCodes.length; i++) {
+            var classAttend = classyear.dayCodes[i];
+            var classDate = util.setToZero(classAttend.date);
+            var found = false;
+            for (var j = 0; j < attendance.length; j++) {
+              var attend = attendance[j];
+              var attendDate = util.setToZero(attend.date)
+              if (classDate === attendDate && attend.bonusDay === classAttend.bonusDay && attend.smallgroup === false) {
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
+              attendance.push({
+                date:classAttend.date,
+                bonusDay:classAttend.bonusDay,
+                smallgroup:false,
+                verified:false,
+                present:false
+              });
             }
           }
-          if (!found) {
-            attendance.push({
-              date:classAttend.date,
-              bonusDay:classAttend.bonusDay,
-              smallgroup:false,
-              verified:false,
-              present:false
-            });
-          }
         }
-      }
-      return callback(attendance);
+        return callback(attendance);
+      });
     });
   });
 };
+
 exports.getAttendance = function(req, res) {
   var userId = req.params.user;
   return ClassYear.getCurrent(function(err, classYear){
@@ -321,6 +234,7 @@ exports.getAttendance = function(req, res) {
     });
   });
 };
+
 exports.getAttendanceMe = function(req, res) {
   req.params.user = req.user._id
   exports.getAttendance(req,res);
@@ -340,10 +254,10 @@ exports.getAttendanceMe = function(req, res) {
 exports.present = function(req, res) {
   var date = req.params.date;
   if (req.params.date === 'today'){
-    date = isoDateToTime(new Date());
+    date = util.convertToMidnight(new Date());
   }
   else{
-    date = isoDateToTime(req.params.date);
+    date = util.convertToMidnight(req.params.date);
   }
   var userId = req.params.user;
   return ClassYear.getCurrent(function(err, classYear){
@@ -374,7 +288,7 @@ exports.attend = function(req,res){
   // Check code against current class year
   return ClassYear.getCurrentCodes(function(err, classYear){
     if (err) {return handleError(err)}
-    return checkAttendanceForDate(user,classYear,new Date(),function(err, submitted){
+    return checkAttendanceForDate(user,classYear,util.convertToMidnight(new Date()),function(err, submitted){
       if (err) {return handleError(err)}
       // Check if the user needs to verify, with config.attendanceVerificationRatio chance
       var needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
@@ -390,7 +304,7 @@ exports.attend = function(req,res){
         return saveAttendance(
           classYear._id,  // classYearId
           user._id, // userId
-          new Date(), // date
+          util.convertToMidnight(new Date()), // date
           code, // code
           needsVerification, // needsVerification
           false, // bonusDay
@@ -411,7 +325,7 @@ exports.attend = function(req,res){
         return saveAttendance(
           classYear._id,  // classYearId
           user._id, // userId
-          new Date(), // date
+          util.convertToMidnight(new Date()), // date
           code, // code
           needsVerification, // needsVerification
           true, // bonusDay
@@ -445,7 +359,7 @@ exports.attend = function(req,res){
             return saveAttendance(
               classYear._id,  // classYearId
               user._id, // userId
-              new Date(), // date
+              util.convertToMidnight(new Date()), // date
               code, // code
               needsVerification, // needsVerification
               false, // bonusDay
@@ -466,7 +380,7 @@ exports.attend = function(req,res){
             return saveAttendance(
               classYear._id,  // classYearId
               user._id, // userId
-              new Date(), // date
+              util.convertToMidnight(new Date()), // date
               code, // code
               needsVerification, // needsVerification
               true, // bonusDay
@@ -504,7 +418,7 @@ function joinGroupAndSubmit(user,code,classYear,needsVerification,callback){
           return saveAttendance(
             classYear._id,  // classYearId
             user._id, // userId
-            new Date(), // date
+            util.convertToMidnight(new Date()), // date
             code, // code
             needsVerification, // needsVerification
             lastestBonusCode === code, // bonusDay
@@ -533,10 +447,10 @@ var getUserAndDateParams = function(req, cb){
     if (err) {return cb(err)}
     var date = req.params.date;
     if (!req.params.date || req.params.date === 'today'){
-      date = isoDateToTime(new Date());
+      date = util.convertToMidnight(new Date());
     }
     else{
-      date = isoDateToTime(req.params.date);
+      date = util.convertToMidnight(req.params.date);
     }
     var userId = req.params.user;
     return ClassYear.getCurrent(function(err, classYear){
@@ -547,162 +461,6 @@ var getUserAndDateParams = function(req, cb){
   });
 };
 
-// Endpoints for submitting attendance, then pass it to setAttendanceInfo
-exports.setAttendanceSmall = function(req, res) {
-  return getUserAndDateParams(req, function(err, user, classYear, date){
-    if (err) {return handleError(err)}
-    return checkAttendanceForDate(user,classYear,date,function(err, submitted){
-      if (err) {return handleError(err)}
-      // Check if the user already submitted a small group, non bonus attendance
-      if (submitted.small){
-        // if it is already valid, return
-        var submission = submitted.small;
-        if (submission.verified){
-          return res.status(400).json('Small group attendance already recorded: ' + submission.verified);
-        }
-        // Otherwise, verify it and return
-        else{
-          submission.verified = true;
-          submission.save();
-          return res.status(200).json({'type':'Small group attendance', 'unverified': false});
-        }
-      }
-      // if not, create the attendance object
-      else{
-        return saveAttendance(
-          classYear._id,  // classYearId
-          user._id, // userId
-          date, // date
-          'manual', // code
-          false, // needsVerification
-          false, // bonusDay
-          true, // smallgroup
-          function(err,submission){
-          if (err) return handleError(err);
-          // saved
-          return res.status(200).json({'type':'Small group attendance', 'unverified': false});
-        });
-      }
-    })
-  });
-};
-exports.setAttendanceFull = function(req, res) {
-  return getUserAndDateParams(req, function(err, user, classYear, date){
-    if (err) {return handleError(err)}
-    return checkAttendanceForDate(user,classYear,date,function(err, submitted){
-      if (err) {return handleError(err)}
-      // Check if the user already submitted a full group, non-bonus attendance
-      if (submitted.full){
-        // if it is already valid, return
-        var submission = submitted.full;
-        if (submission.verified){
-          return res.status(400).json('Full group attendance already recorded: ' + submission.verified);
-        }
-        // Otherwise, verify it and return
-        else{
-          submission.verified = true;
-          submission.save();
-          return res.status(200).json({'type':'Full group attendance', 'unverified': false});
-        }
-      }
-      // if not, create the attendance object
-      else{
-        return saveAttendance(
-          classYear._id,  // classYearId
-          user._id, // userId
-          date, // date
-          'manual', // code
-          false, // needsVerification
-          false, // bonusDay
-          false, // smallgroup
-          function(err,submission){
-          if (err) return handleError(err);
-          // saved
-          return res.status(200).json({'type':'Full group attendance', 'unverified': false});
-        });
-      }
-    });
-  });
-};
-
-exports.setAttendanceSmallBonus = function(req, res) {
-  return getUserAndDateParams(req, function(err, user, classYear, date){
-    if (err) {return handleError(err)}
-    return checkAttendanceForDate(user,classYear,date,function(err, submitted){
-      if (err) {return handleError(err)}
-      // Check if the user already submitted a small group & bonus attendance
-      if (submitted.smallBonus){
-        // if it is already valid, return
-        var submission = submitted.smallBonus;
-        if (submission.verified){
-          return res.status(400).json('Small group bonus attendance already recorded: ' + submission.verified);
-        }
-        // Otherwise, verify it and return
-        else{
-          submission.verified = true;
-          submission.save();
-          return res.status(200).json({'type':'Small group bonus attendance', 'unverified': false});
-        }
-      }
-      else{
-        // if not, create the attendance object
-        return saveAttendance(
-          classYear._id,  // classYearId
-          user._id, // userId
-          date, // date
-          'manual', // code
-          false, // needsVerification
-          true, // bonusDay
-          true, // smallgroup
-          function(err,submission){
-          if (err) return handleError(err);
-          // saved
-          return res.status(200).json({'type':'Small group bonus attendance', 'unverified': false});
-        });
-      }
-    });
-  });
-};
-exports.setAttendanceFullBonus = function(req, res) {
-  return getUserAndDateParams(req, function(err, user, classYear, date){
-    if (err) {return handleError(err)}
-    return checkAttendanceForDate(user,classYear,date,function(err, submitted){
-      if (err) {return handleError(err)}
-      // Check if the user already submitted a full group & bonus attendance
-      if (submitted.fullBonus){
-        // if it is already valid, return
-        var submission = submitted.fullBonus;
-        if (submission.verified){
-          return res.status(400).json('Full group bonus attendance already recorded: ' + submission.verified);
-        }
-        // Otherwise, verify it and return
-        else{
-          submission.verified = true;
-          submission.save();
-          return res.status(200).json({'type':'Full group bonus attendance', 'unverified': false});
-        }
-      }
-      // if not, create the attendance object
-      else{
-        return saveAttendance(
-          classYear._id,  // classYearId
-          user._id, // userId
-          date, // date
-          'manual', // code
-          false, // needsVerification
-          true, // bonusDay
-          false, // smallgroup
-          function(err,submission){
-          if (err) return handleError(err);
-          // saved
-          return res.status(200).json({'type':'Full group bonus attendance', 'unverified': false});
-        });
-      }
-    });
-  });
-};
-// *******************************************************
-
 // *******************************************************
 // Adds an attendance entry with the given parameters
 //
@@ -711,6 +469,7 @@ exports.setAttendanceFullBonus = function(req, res) {
 exports.addManualAttendance = function(req, res) {
   var userId = req.params.user;
   var date = req.body.date;
+
   var smallgroup = req.body.smallgroup
   var bonusDay = req.body.bonusday;
 
@@ -726,7 +485,7 @@ exports.addManualAttendance = function(req, res) {
       return saveAttendance(
         classYear._id,  // classYearId
         user._id, // userId
-        date, // date
+        util.setToZero(date), // date
         'manual', // code
         false, // needsVerification
         bonusDay, // bonusDay
@@ -751,10 +510,10 @@ exports.addManualAttendance = function(req, res) {
 exports.getUnverifiedAttendanceUsers = function(req,res){
   var date = req.params.date;
   if (req.params.date === 'today'){
-    date = isoDateToTime(new Date());
+    date = util.convertToMidnight(new Date());
   }
   else{
-    date = isoDateToTime(req.params.date);
+    date = util.convertToMidnight(req.params.date);
   }
   ClassYear.getCurrent(function(err, classYear){
     if (err) {return handleError(err)}
@@ -778,10 +537,10 @@ exports.getUnverifiedAttendanceUsers = function(req,res){
 exports.getUnverifiedFullAttendanceUsers = function(req,res){
   var date = req.params.date;
   if (req.params.date === 'today'){
-    date = isoDateToTime(new Date());
+    date = util.convertToMidnight(new Date());
   }
   else{
-    date = isoDateToTime(req.params.date);
+    date = util.convertToMidnight(req.params.date);
   }
   ClassYear.getCurrent(function(err, classYear){
     if (err) {return handleError(err)}
@@ -808,10 +567,10 @@ exports.getUnverifiedSmallAttendanceUsers = function(req,res){
 
   var date = req.params.date;
   if (req.params.date === 'today'){
-    date = isoDateToTime(new Date());
+    date = util.convertToMidnight(new Date());
   }
   else{
-    date = isoDateToTime(req.params.date);
+    date = util.convertToMidnight(req.params.date);
   }
   ClassYear.getCurrent(function(err, classYear){
     if (err) {return handleError(err)}
