@@ -40,7 +40,6 @@ angular.module('observatory3App')
 
     var params = {};
     params.date = $scope.attend.date;
-    console.log("$scope.attend.date;",$scope.attend.date)
     params.smallgroup = $scope.attend.type === 'Small Group' || $scope.attend.type === 'Small Group Bonus Day';
     params.bonusday = $scope.attend.type === 'Bonus Day' || $scope.attend.type === 'Small Group Bonus Day';
 
