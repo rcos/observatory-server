@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="row">
-      <div class="col-xs-9 col-sm-6">
+      <div class="col-xs-7 col-sm-6">
         <form class="form-inline" role="form">
           <div class="left-inner-addon">
             <i class="glyphicon glyphicon-search"></i>
@@ -16,21 +16,29 @@
           </div>
         </form>
       </div>
-      <div class="col-xs-3 col-sm-6 text-right">
-        <button type="button" class="btn btn-default" ng-click="toggleSortOrder()">
-          <i class="fa fa-sort-alpha-desc" aria-hidden="true" ng-show="sortOrder === '-name'"></i>
-          <i class="fa fa-sort-alpha-asc" aria-hidden="true" ng-show="sortOrder === 'name'"></i>
-        </button>
-        <a ng-href="/users/">
-          <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
-            Current
-          </button>
-        </a>
-        <a ng-href="/users/past">
-          <button type="button" class="btn btn-default" ng-show="!past">
-            Past
-          </button>
-        </a>
+      <div class="col-xs-5 col-sm-6 text-right">
+        <div class="toolbar">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default" ng-click="toggleSortOrder()">
+              <i class="fa fa-sort-alpha-desc" aria-hidden="true" ng-show="sortOrder === '-name'"></i>
+              <i class="fa fa-sort-alpha-asc" aria-hidden="true" ng-show="sortOrder === 'name'"></i>
+            </button>
+          </div>
+          <div class="btn-group">
+            <a ng-href="/users/">
+              <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
+                Current
+              </button>
+            </a>
+          </div>
+          <div class="btn-group">
+            <a ng-href="/users/past">
+              <button type="button" class="btn btn-default" ng-show="!past">
+                Past
+              </button>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     <br/>
