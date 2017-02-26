@@ -1,4 +1,4 @@
-- hosts: rcos
+- hosts: "{{ variable_host | default('rcos') }}"
   remote_user: root
   gather_facts: false
   vars:
