@@ -608,17 +608,59 @@ exports.resetPassword = function(req, res){
 exports.addProject = function(req,res){
     var userId = req.params.id;
     var newProject = req.body.project;
+
     User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
+      if (err) { return handleError(res, err); }
+      if(!user) { return res.send(404); }
+
+        Projects.findById(newProject, function(err, project) {
+          if (err) { return handleError(res, err); }
+          if(!project) { return res.send(404); }
+
+          return ClassYear.getCurrent(function(err, classYear){
+
+            if (err) { return handleError(res, err); }
+            if(!classYear) { return res.send(404); }
+
             if (!user.projects) user.projects = [];
-            if (user.projects.indexOf(newProject) !== -1) return;
-            user.projects.push(newProject);
+
+            var projectFound = null;
+            for (var i = 0; i < user.projects.length; i++){
+              if (newProject === user.projects[i]) {
+                projectFound == user.projects[i];
+
+                if (!user.projects[i].semesters) user.projects[i].semesters = [];
+
+                var classYearFound = null;
+
+                for(var j = 0; j < user.projects[i].semesters.length; j++) {
+                  if (classYear === user.projects[i].semesters[j])  {
+                    classYearFound = user.projects[i].semesters[j];
+                  }
+                }
+
+                if (classYearFound === null) {
+                  user.projects[i].semesters.push(classYear);
+                }
+
+              }
+            }
+
+            if(projectFound == null) {
+              var projectToAdd =
+              {
+                project: newProject._id,
+                classYear: [classYear._id]
+              }
+              user.projects.push(projectToAdd);
+            }
+
             user.save(function(err) {
                 if (err) return validationError(res, err);
                 res.send(200);
             });
+
+          }
         }
     });
 };
