@@ -51,12 +51,17 @@
   <br/>
   <div class="row">
     <div class="pull-right col-xs-12 col-md-3" ng-show="loggedIn()">
-      <projects-list-sidebar></projects-list-sidebar>
+      <projects-list-sidebar my-projects="myProjects" mentee-projects="menteeProjects" favorite-projects="favoriteProjects">
+      </projects-list-sidebar>
     </div>
     <div ng-class="{'col-md-9': loggedIn(), 'col-md-12': !loggedIn()}">
       <div ng-repeat="project in projects | filter:searchString | orderBy: sortOrder">
         <div class="extra-content panel" >
-          <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a> </h2>
+          <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title">
+            <a href="" ng-show="loggedIn() && !isFavorite(project)" ng-click="markFavorite(project)"><i class="fa fa-star-o" title="Favorite this project"></i></a>
+            <a href="" ng-show="loggedIn() && isFavorite(project)" ng-click="markNotFavorite(project)"><i class="fa fa-star" title="Unfavorite this project"></i></a>
+            <a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a>
+          </h2>
           <ul class="project-info">
             <li><a href="{{project.websiteUrl}}" target="_blank">Website</a></li>
             <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>

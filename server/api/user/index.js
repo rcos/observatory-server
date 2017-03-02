@@ -27,6 +27,7 @@ router.get('/:id/commits', controller.commits);
 router.get('/:id/avatar', controller.avatar);
 router.get('/:id/smallgroup', auth.isAuthenticated(), controller.userSmallgroup);
 router.get('/:id/private', auth.canEdit(), controller.privateProfile);
+router.get('/:id/favoriteProjects', auth.canEdit(), controller.favoriteProjects);
 
 router.post('/:id/role', auth.hasRole('admin'), controller.role);
 
@@ -34,9 +35,11 @@ router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/:id/deactivate', auth.canEdit(), controller.deactivate);
 router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.put('/:id/project', auth.isAuthenticated(), controller.addProject);
+router.put('/:id/favorite/:project', auth.isAuthenticated(), controller.addFavorite);
 router.put('/:id/addTech', auth.canEdit(), controller.addTech);
 router.put('/:id/removeTech', auth.canEdit(), controller.removeTech);
 
 router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);
+router.delete('/:id/favorite/:project', auth.isAuthenticated(), controller.removeFavorite);
 
 export default router;

@@ -1,12 +1,33 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams,notify) {
+.controller('ProjectsCtrl', function ($scope, $location, $http, $uibModal, Auth, $stateParams, notify, User, Project) {
     $scope.projects = [];
     $scope.projectToAdd = {active: true, repositories: ['']};
     $scope.loggedIn = Auth.isLoggedIn;
     $scope.sortOrder = 'name';
+    $scope.favoriteProjects = [];
     $scope.isAdmin = Auth.isAdmin;
+
+    Auth.isLoggedInAsync(function(loggedIn){
+        if (loggedIn){
+            $scope.user = Auth.getCurrentUser();
+
+            User.favoriteProjects({id:$scope.user._id},function(projects){
+                $scope.favoriteProjects = projects;
+            });
+
+            Project.getMyProjects().success(function(projects){
+              $scope.myProjects = projects;
+            });
+
+            if (Auth.isMentor()){
+              Project.getMenteesProjects().success(function(projects){
+                $scope.menteeProjects = projects;
+              });
+            }
+        }
+    });
 
     $scope.toggleSortOrder = function(){
       if($scope.sortOrder === '-name'){
@@ -71,6 +92,40 @@ angular.module('observatory3App')
             notify({ message: 'Error trying to mark as current project', classes: ['alert-danger'] });
         });
     };
+
+    $scope.markFavorite = function(project) {
+        $http.put('api/users/' + $scope.user._id + '/favorite/'+project._id
+        ).success(function(){
+            $scope.favoriteProjects.push(project);
+            notify("Project added as a favorite");
+        }).error(function(){
+            notify({ message: 'Error trying to mark as a favorite project', classes: ['alert-danger'] });
+        });
+    }
+
+    $scope.markNotFavorite = function(project) {
+        $http.delete('api/users/' + $scope.user._id + '/favorite/'+project._id
+        ).success(function(){
+            for(var index = 0; index < $scope.favoriteProjects.length; index++) {
+                if($scope.favoriteProjects[index]._id == project._id) {
+                  $scope.favoriteProjects.splice(index, 1);
+                  break;
+                }
+            }
+            notify("Project removed from favorites");
+        }).error(function(){
+            notify({ message: 'Error trying to mark as a favorite project', classes: ['alert-danger'] });
+        });
+    }
+
+    $scope.isFavorite = function(project) {
+        for (var index = 0; index < $scope.favoriteProjects.length; index++) {
+            if ($scope.favoriteProjects[index]._id == project._id) {
+              return true;
+            }
+        }
+        return false;
+    }
 
     if ($stateParams.state === 'past') {
       $scope.past = true;

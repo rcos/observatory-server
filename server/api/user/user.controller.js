@@ -249,6 +249,7 @@ exports.privateProfile = function (req, res, next) {
   var userId = req.params.id;
   User.findById(userId)
   .populate('projects')
+  .populate('favoriteProjects')
   .exec(function (err, user) {
     if (err) {return next(err);}
     if (!user) {return res.send(404);}
@@ -279,6 +280,22 @@ exports.privateProfile = function (req, res, next) {
     });
   });
 };
+
+/**
+ * Get a user's favorite projects
+ */
+exports.favoriteProjects = function (req, res, next) {
+  var userId = req.params.id;
+  User.findById(userId)
+  .populate('favoriteProjects')
+  .exec(function (err, user) {
+    if (err) {return next(err);}
+    if (!user) {return res.send(404);}
+
+    return res.json(user.favoriteProjects);
+  });
+};
+
 /**
  * Get a my smallgroup
  */
@@ -624,6 +641,27 @@ exports.addProject = function(req,res){
 };
 
 /**
+ * Add an item to the favorite projects array for the user
+ */
+exports.addFavorite = function(req,res){
+    var userId = req.params.id;
+    var newFavorite = req.params.project;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (!user.favoriteProjects) user.favoriteProjects = [];
+            if (user.favoriteProjects.indexOf(newFavorite) !== -1) return;
+            user.favoriteProjects.push(newFavorite);
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
+    });
+};
+
+/**
  * Remove an item from the tech array for a user
  */
 exports.removeProject = function(req,res){
@@ -635,6 +673,25 @@ exports.removeProject = function(req,res){
         }else{
             if (!user.projects) user.projects = [];
             user.projects.splice(user.projects.indexOf(project), 1);
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
+    });
+};
+/**
+ * Remove an item from the favorite projects array for a user
+ */
+exports.removeFavorite = function(req,res){
+    var userId = req.params.id;
+    var project = req.params.project;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        }else{
+            if (!user.favoriteProjects) user.favoriteProjects = [];
+            user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
             user.save(function(err) {
                 if (err) return validationError(res, err);
                 res.send(200);
