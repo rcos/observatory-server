@@ -60,16 +60,6 @@ describe('POST /api/projects/', function () {
   before(() => getSessionFor('student').then(session => studentSession = session));
   before(() => getSessionFor('admin').then(session => adminSession = session));
 
-  it('Should create a session', function (done) {
-    agent.post('/api/users')
-      .send({username: 'a@yahoo.com', password: '123'})
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        expect(res.status).to.equal(200);
-        done();
-      });
-  });
-
   it('Should return the current session', function (done) {
     agent.get('/api/projects').end(function (err, res) {
       expect(res.status).to.equal(200);
