@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+var Commit = require('../commit/commit.model');
 
 var ProjectSchema = new Schema({
   name: {
@@ -42,7 +43,21 @@ var ProjectSchema = new Schema({
     default: false,
     index: true
   },
-  tech: [String]
+  tech: [String],
+  commits: [{
+    type : Schema.Types.ObjectId,
+    ref: 'Commit',
+    index: true
+  }],
 },{ timestamps: true});
+
+/*
+  @returns:
+ */
+ProjectSchema
+  .virtual('fullRepoPath')
+  .get(function(){
+    return (this.githubUsername + "/" + this.githubProjectName) ;
+  });
 
 module.exports = mongoose.model('Project', ProjectSchema);

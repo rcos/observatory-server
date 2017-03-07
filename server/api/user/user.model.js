@@ -39,6 +39,7 @@ var UserSchema = new Schema({
     index: true
   }], // project id
 
+
   bio: String,
 
   password: {

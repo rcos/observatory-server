@@ -99,6 +99,7 @@ var seed = function() {
 if (!module.parent) {
     if (args.length === 0) {
         seed().then(function(){
+
             db.disconnect()
         });
     }

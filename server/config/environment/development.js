@@ -17,5 +17,8 @@ module.exports = {
   // For testing verification
   // attendanceVerificationRatio: 1,
 
-  seedDB: false
+  seedDB: false,
+  // Github token for worker, local.env.js kept returning undefined but it worked once I added it here...
+  GITHUB_WORKER_TOKEN: 'YOUR_KEY',
+
 };

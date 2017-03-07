@@ -58,7 +58,7 @@ exports.destroy = function(req, res) {
 // Show a list of a projects Commits
 // Get a single commit
 exports.showProjectCommits = function(req, res) {
-  Commit.findById(req.params.projectId, function (err, commits) {
+  Commit.find({project: req.params.projectId}).populate('project').exec(function (err, commits) {
     if(err) { return handleError(res, err); }
     if(!commits) { return res.send(404); }
     return res.json(commits);
@@ -68,16 +68,9 @@ exports.showProjectCommits = function(req, res) {
 // Get a list of a user Commits
 exports.showUserCommits = function(req, res) {
   var prevDays = new Date();
-  if (req.params.timeperiod){
-    prevDays.setDate(prevDays.getDate()-Number(req.params.timeperiod));
-  }
-  else{
-    prevDays.setDate(prevDays.getDate()-14);
-  }
 
   Commit.find()
         .where('author.login').equals(String(req.params.githubProfile))
-        .where('date').gt(prevDays)
         .exec(function(err, commits){
           if(err) { return handleError(res, err); }
           if(!commits) { return res.json([]); }
