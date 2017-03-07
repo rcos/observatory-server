@@ -67,6 +67,13 @@ function UserResource($resource) {
       params: {
         controller:'private'
       }
+    },
+    favoriteProjects: {
+      method: 'GET',
+      params: {
+        controller:'favoriteProjects'
+      },
+      isArray:true
     }
   });
 }
