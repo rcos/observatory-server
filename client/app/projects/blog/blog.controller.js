@@ -84,28 +84,40 @@ angular.module('observatory3App')
       $location.hash(id);
       if($location.hash()!==id){
         $location.hash(id);
-      }
-      else{
+      }else{
         $anchorScroll();
       }
     }
 
     var sortPosts = function(){
       $scope.semesters = {};
+      $scope.listOfsem = [];
       for(var i =$scope.posts.length-1; i >-1 ; --i){
         var postDate = $scope.posts[i].date;
         var year = postDate.substring(0,4);
         var semester = '';
-        if(postDate.charAt(5) > 0 || postDate.charAt(6) > 7)
+        if(postDate.charAt(5) > 0 || postDate.charAt(6) > 7){
           semester = 'Fall';
-        else
+        }else{
           semester = 'Spring';
+        }
         semester = semester + ' '+year;
         if(!$scope.semesters.hasOwnProperty(semester)){
           $scope.semesters[semester] = [];
         }
         $scope.semesters[semester].push($scope.posts[i]);
+        $scope.listOfsem.push(semester);
       }
+      $scope.listOfsem.sort(semesterComparator);
+    }
+
+    var semesterComparator = function(s1,s2){
+      var s1parts = s1.split(" ");
+      var s2parts = s2.split(" ");
+      if(s1parts[1] === s2parts[1]){
+        return s1parts[0] === "Spring" ? 1 : -1;
+      }
+      return s1parts[1] < s2parts[1] ? 1 : -1;
     }
 
     $scope.load = function() {

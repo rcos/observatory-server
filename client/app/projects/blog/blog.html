@@ -14,17 +14,17 @@
 
   <div class="row">
     <div class="pull-right hidden-sm col-sm-2" >
-     <ul class ="nav nav-list affix" >
-      <li ng-repeat="(key,value) in semesters">  
-        <a href="" ng-click="goto(key)"  >{{key}} </a> 
+     <ul class ="nav nav-list affix">
+      <li ng-repeat="sem in listOfsem">
+        <a href="" ng-click="goto(sem)">{{sem}}</a>
       </li>
      </ul>
-  </div>
+    </div>
 
     <div class="col-md-9">
-      <div ng-repeat="(key,value) in semesters | orderBy:'-'" >
-      <h2 id = "{{key}}"> {{key}}</h2>
-        <div ng-repeat="post in value | orderBy:'-date'">
+      <div ng-repeat="sem in listOfsem">
+      <h2 id = "{{sem}}"> {{sem}}</h2>
+        <div ng-repeat="post in semesters[sem] | orderBy:'-date'">
           <div class="extra-content">
             <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
             <div ng-show='userInProject()'>
