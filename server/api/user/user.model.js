@@ -39,6 +39,12 @@ var UserSchema = new Schema({
     index: true
   }], // project id
 
+  favoriteProjects: [{
+    type : Schema.Types.ObjectId,
+    ref: 'Project',
+    index: true
+  }], // project id
+
   bio: String,
 
   password: {
@@ -221,6 +227,7 @@ UserSchema
        'tech': this.tech,
        'avatar': this.avatar,
        'projects': this.projects,
+       'favoriteProjects': this.favoriteProjects,
        'bio': this.bio,
        'semesters': this.semesterCount,
        'rcosStyle': this.rcosStyle,
