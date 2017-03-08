@@ -80,7 +80,7 @@ describe('POST /api/users/', function () {
       .post('/api/users/')
       .send(p)
       .end((err, res) => {
-        expect(res.status).to.equal(201);
+        expect(res.status).to.equal(422);
         done(err);
       });
   });
