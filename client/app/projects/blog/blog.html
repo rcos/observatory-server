@@ -1,6 +1,7 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
+  <div class="row"> 
   <div class="col-xs-3">
     <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
   </div>
@@ -9,27 +10,42 @@
     Add a post
     </button>
   </div>
-  <div class="col-sm-12">
-    <div ng-repeat="post in posts | orderBy:'-date'">
-      <div class="extra-content">
-        <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
-        <div ng-show='userInProject()'>
-          <div ng-show="userOwnsPost(post)"class="col-xs-6 text-right">
-          <div class="btn-group">
-            <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post)'>Edit</button>
-            <button type="button" class='btn btn-default btn-sm' ng-click='savePost(post)'>Save</button>
-            <button type="button" class='btn btn-default btn-sm' ng-click='deletePost(post)'>Delete</button>
-          </div>
-          </div>
-        </div>
-        <div class="clear"></div>
-        <div  id="content" btf-markdown="post.content"></div>
-        <div class="bottom-bar">
-          <div class="bottom-bar-left">
-            <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
-          </div>
-          <div class="bottom-bar-right">
-            {{ post.date | date:'MMM dd yyyy HH:mm:ss' }}
+  </div>
+
+  <div class="row">
+    <div class="pull-right hidden-sm col-sm-2" >
+     <ul class ="nav nav-list affix">
+      <li ng-repeat="sem in listOfsem">
+        <a href="" ng-click="goto(sem)">{{sem}}</a>
+      </li>
+     </ul>
+    </div>
+
+    <div class="col-md-9">
+      <div ng-repeat="sem in listOfsem">
+      <h2 id = "{{sem}}"> {{sem}}</h2>
+        <div ng-repeat="post in semesters[sem] | orderBy:'-date'">
+          <div class="extra-content">
+            <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
+            <div ng-show='userInProject()'>
+              <div ng-show="user/dOwnsPost(post)"class="col-xs-6 text-right">
+              <div class="btn-group">
+                <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post)'>Edit</button>
+                <button type="button" class='btn btn-default btn-sm' ng-click='savePost(post)'>Save</button>
+                <button type="button" class='btn btn-default btn-sm' ng-click='deletePost(post)'>Delete</button>
+              </div>
+              </div>
+            </div>
+            <div class="clear"></div>
+            <div  id="content" btf-markdown="post.content"></div>
+            <div class="bottom-bar">
+              <div class="bottom-bar-left">
+                <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
+              </div>
+              <div class="bottom-bar-right">
+                {{ post.date | date:'MMM dd yyyy HH:mm:ss' }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
