@@ -665,7 +665,6 @@ exports.addProject = function(req,res) {
             // only add semester since project exists
             if (thisSemesterExists === false) {
               user.projects[i].semesters.push(classYear);
-              break;
             }
 
           } else {
