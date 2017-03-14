@@ -12,6 +12,8 @@ var Commit = require('../commit/commit.model');
 var ClassYear = require('../classyear/classyear.model');
 var Attendance = require('../attendance/attendance.model');
 var SmallGroup = require('../smallgroup/smallgroup.model');
+var Projects = require('../project/project.model');
+
 
 // Return a standard error
 function handleError(res, err) {
@@ -605,85 +607,135 @@ exports.resetPassword = function(req, res){
 /**
  * Add an item to the projects array for the user
  */
-exports.addProject = function(req,res){
+exports.addProject = function(req,res) {
     var userId = req.params.id;
     var newProject = req.body.project;
 
-    User.findById(userId, function(err,user){
+    User.findById(userId, function(err,user) {
       if (err) { return handleError(res, err); }
       if(!user) { return res.send(404); }
 
-        Projects.findById(newProject, function(err, project) {
+      Projects.findById(newProject, function(err, project) {
+        if (err) { return handleError(res, err); }
+        if(!project) { return res.send(404); }
+
+        return ClassYear.getCurrent(function(err, classYear) {
           if (err) { return handleError(res, err); }
-          if(!project) { return res.send(404); }
+          if(!classYear) { return res.send(404); }
 
-          return ClassYear.getCurrent(function(err, classYear){
+          if (!user.projects) user.projects = [];
 
-            if (err) { return handleError(res, err); }
-            if(!classYear) { return res.send(404); }
-
-            if (!user.projects) user.projects = [];
-
-            var projectFound = null;
-            for (var i = 0; i < user.projects.length; i++){
-              if (newProject === user.projects[i]) {
-                projectFound == user.projects[i];
-
-                if (!user.projects[i].semesters) user.projects[i].semesters = [];
-
-                var classYearFound = null;
-
-                for(var j = 0; j < user.projects[i].semesters.length; j++) {
-                  if (classYear === user.projects[i].semesters[j])  {
-                    classYearFound = user.projects[i].semesters[j];
-                  }
-                }
-
-                if (classYearFound === null) {
-                  user.projects[i].semesters.push(classYear);
-                }
-
-              }
+          var projIndex = null;
+          for (var i = 0; i < user.projects.length; i++) {
+            if (newProject === user.projects[i]) {
+              projIndex = i;
+              break;
             }
-
-            if(projectFound == null) {
-              var projectToAdd =
-              {
-                project: newProject._id,
-                classYear: [classYear._id]
-              }
-              user.projects.push(projectToAdd);
-            }
-
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-
           }
-        }
+
+          if(projIndex !== null) {
+
+            if (!user.projects[projIndex].semesters) user.projects[projIndex].semesters = [];
+
+            var thisSemesterExists = false;
+            for(var j = 0; j < user.projects[i].semesters.length; j++) {
+              if (classYear === user.projects[i].semesters[j]) {
+                thisSemesterExists = true;
+                break;
+              }
+            }
+
+            // only add semester since project exists
+            if (thisSemesterExists === false) {
+              user.projects[i].semesters.push(classYear);
+              break;
+            }
+
+          } else {
+            // add the entire project + semester
+            var projectToAdd =
+            {
+              project: newProject._id,
+              classYear: [classYear._id]
+            }
+            user.projects.push(projectToAdd);
+          }
+
+          user.save(function(err) {
+              if (err) return validationError(res, err);
+              res.send(200);
+          });
+        });
+      });
     });
-};
+  };
 
 /**
  * Remove an item from the tech array for a user
  */
-exports.removeProject = function(req,res){
+exports.removeProject = function(req,res) {
     var userId = req.params.id;
-    var project = req.body.project;
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
-            if (!user.projects) user.projects = [];
-            user.projects.splice(user.projects.indexOf(project), 1);
-            user.save(function(err) {
+    var oldProject = req.body.project;
+
+    User.findById(userId, function(err,user) {
+      if (err) { return handleError(res, err); }
+      if(!user) { return res.send(404); }
+
+      Projects.findById(oldProject, function(err, project) {
+        if (err) { return handleError(res, err); }
+        if(!project) { return res.send(404); }
+
+        return ClassYear.getCurrent(function(err, classYear) {
+          if (err) { return handleError(res, err); }
+          if(!classYear) { return res.send(404); }
+
+          if (!user.projects) user.projects = [];
+
+          var projIndex = null;
+
+          for (var i = 0; i < user.projects.length; i++) {
+            if (oldProject === user.projects[i]) {
+              projIndex = i;
+              break;
+            }
+          }
+
+          var thisSemesterExists = false;
+          if (projIndex !== null) {
+            if (!user.projects[i].semesters) user.projects[i].semesters = [];
+
+            // FOR NOW, fully remove project only if user left before
+            // the current semester is over
+            // Maybe using the total attendance days?
+
+            for(var j = 0; j < user.projects[i].semesters.length; j++) {
+              if (classYear === user.projects[i].semesters[j]) {
+                thisSemesterExists = true;
+                break;
+              }
+            }
+          }
+
+          if (thisSemesterExists === true) {
+            // just remove this semester if others exist
+            if (user.projects.semesters.length > 1) {
+              user.projects.splice(user.projects.semester.indexOf(classYear), 1);
+            } else {
+              // o.w remove project entirely from user's array
+              user.projects.splice(user.projects.indexOf(oldProject), 1);
+            }
+
+            user.save( function(err) {
                 if (err) return validationError(res, err);
                 res.send(200);
             });
-        }
-    });
-};
+          }
+
+        });
+      });
+    }); // end user findById
+  };
+
 /*
 Function that is called by removeUser api call
 */
