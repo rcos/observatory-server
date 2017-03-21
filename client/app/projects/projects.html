@@ -58,8 +58,8 @@
       <div ng-repeat="project in projects | filter:searchString | orderBy: sortOrder">
         <div class="extra-content panel" >
           <h2 id="{{project.githubUsername}}-{{project.githubProjectName}}" class="project-title">
-            <a href="" ng-show="loggedIn() && !isFavorite(project)" ng-click="markFavorite(project)"><i class="fa fa-star-o" title="Favorite this project"></i></a>
-            <a href="" ng-show="loggedIn() && isFavorite(project)" ng-click="markNotFavorite(project)"><i class="fa fa-star" title="Unfavorite this project"></i></a>
+            <a href="" ng-show="loggedIn() && !isFavorite(project)" ng-click="markFavorite(project)"><i class="fa fa-star-o favorite-star" title="Favorite this project"></i></a>
+            <a href="" ng-show="loggedIn() && isFavorite(project)" ng-click="markNotFavorite(project)"><i class="fa fa-star favorite-star" title="Unfavorite this project"></i></a>
             <a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name}}</a>
           </h2>
           <ul class="project-info">
