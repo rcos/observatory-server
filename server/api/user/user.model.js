@@ -40,10 +40,13 @@ var UserSchema = new Schema({
       index: true,
      },
      classYears: [{
-       type : Schema.Types.ObjectId,
-       ref: 'ClassYear',
-       index: true
-      }]
+       id:{
+         type : Schema.Types.ObjectId,
+         ref: 'ClassYear',
+         index: true
+       },
+       joinDate: Date
+     }]
   }], // project id
 
   favoriteProjects: [{
