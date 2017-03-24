@@ -114,7 +114,7 @@ angular.module('observatory3App')
             }
             notify("Project removed from favorites");
         }).error(function(){
-            notify({ message: 'Error trying to mark as a favorite project', classes: ['alert-danger'] });
+            notify({ message: 'Error trying to unmark as a favorite project', classes: ['alert-danger'] });
         });
     }
 
