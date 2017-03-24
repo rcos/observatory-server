@@ -1,7 +1,7 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-  <div class="row"> 
+  <div class="row">
   <div class="col-xs-3">
     <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
   </div>
@@ -15,7 +15,7 @@
   <div class="row">
     <div class="pull-right hidden-sm col-sm-2" >
      <ul class ="nav nav-list affix">
-      <li ng-repeat="sem in listOfsem">
+      <li ng-repeat="sem in listOfsem track by $index">
         <a href="" ng-click="goto(sem)">{{sem}}</a>
       </li>
      </ul>
@@ -24,7 +24,7 @@
     <div class="col-md-9">
       <div ng-repeat="sem in listOfsem">
       <h2 id = "{{sem}}"> {{sem}}</h2>
-        <div ng-repeat="post in semesters[sem] | orderBy:'-date'">
+        <div ng-repeat="post in semesters[sem] | orderBy:'-date' track by $index">
           <div class="extra-content">
             <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
             <div ng-show='userInProject()'>

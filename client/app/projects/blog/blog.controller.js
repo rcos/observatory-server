@@ -69,7 +69,7 @@ angular.module('observatory3App')
     };
 
     $scope.deletePost = function(post) {
-        if (window.confirm("Are you sure you want to delete this post?")) {
+        if (window.confirm('Are you sure you want to delete this post?')) {
             $http.delete('/api/posts/' + post._id).success(function(){
                 notify('Post deleted!');
             }).error(function(){
@@ -87,7 +87,7 @@ angular.module('observatory3App')
       }else{
         $anchorScroll();
       }
-    }
+    };
 
     var sortPosts = function(){
       $scope.semesters = {};
@@ -104,12 +104,12 @@ angular.module('observatory3App')
         semester = semester + ' '+year;
         if(!$scope.semesters.hasOwnProperty(semester)){
           $scope.semesters[semester] = [];
+          $scope.listOfsem.push(semester);
         }
         $scope.semesters[semester].push($scope.posts[i]);
-        $scope.listOfsem.push(semester);
       }
       $scope.listOfsem.sort(semesterComparator);
-    }
+    };
 
     var semesterComparator = function(s1,s2){
       var s1parts = s1.split(" ");
@@ -118,7 +118,7 @@ angular.module('observatory3App')
         return s1parts[0] === "Spring" ? 1 : -1;
       }
       return s1parts[1] < s2parts[1] ? 1 : -1;
-    }
+    };
 
     $scope.load = function() {
       Project.getProject($stateParams.username, $stateParams.project).then(function(result){
