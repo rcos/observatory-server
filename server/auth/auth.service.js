@@ -7,6 +7,8 @@ import expressJwt from 'express-jwt';
 import compose from 'composable-middleware';
 import User from '../api/user/user.model';
 
+const crypto = require('crypto');
+
 var validateJwt = expressJwt({
   secret: config.secrets.session
 });
@@ -82,6 +84,14 @@ export function signToken(id, role) {
   return jwt.sign({ _id: id, role: role }, config.secrets.session, {
     expiresIn: 60 * 60 * 5
   });
+}
+
+/**
+ * Returns a refresh jwt token signed by the app secret
+ */
+export function generateRefreshToken(userid) {
+  var refreshToken = userid.toString() + '.' + crypto.randomBytes(40).toString('hex');
+  return refreshToken;
 }
 
 /**

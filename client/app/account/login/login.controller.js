@@ -12,8 +12,7 @@ angular.module('observatory3App')
 
       if(form.$valid) {
         // unchecked checkbox is null instead of false
-        if ($scope.user.rememberme == undefined) $scope.user.rememberme = false;
-        console.log($scope.user);
+        if ($scope.user.rememberme == null) $scope.user.rememberme = false;
         Auth.login({
           email: $scope.user.email,
           password: $scope.user.password,

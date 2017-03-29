@@ -1,12 +1,12 @@
 'use strict';
 (function() {
-function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) {
+function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
     var currentUser = {};
     var safeCb = Util.safeCb;
     var currentUser = {};
     var smallgroup = {};
     var userRoles = appConfig.userRoles || [];
-    if ($cookieStore.get('token') && $location.path() !== '/logout') {
+    if ($cookies.get('token') && $location.path() !== '/logout') {
       currentUser = User.get();
        User.smallgroup().$promise.then(function (data){
          smallgroup = data;
@@ -40,7 +40,7 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
           token: resetToken
         })
           .then(res => {
-            $cookieStore.put('token', res.data.token);
+            $cookies.put('token', res.data.token);
             currentUser = User.get();
             return currentUser.$promise;
           })
@@ -63,13 +63,19 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
      * @param  {Function} callback - optional, function(error, user)
      * @return {Promise}
      */
-    login({email, password}, callback) {
+    login({email, password, rememberme}, callback) {
       return $http.post('/auth/local', {
         email: email,
-        password: password
+        password: password,
+        rememberme: rememberme
       })
         .then(res => {
-          $cookieStore.put('token', res.data.token);
+          console.log(res);
+          $cookies.put('token', res.data.token);
+          var now = new Date();
+          var expireDate = new Date(now.getFullYear(), now.getMonth()+3, now.getDate());
+          $cookies.put('refreshtoken', res.data.refreshtoken, {'expires': expireDate});
+
           currentUser = User.get();
           return currentUser.$promise;
         })
@@ -87,7 +93,7 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
      * Delete access token and user info
      */
     logout() {
-      $cookieStore.remove('token');
+      $cookies.remove('token');
       currentUser = {};
     },
     /**
@@ -100,7 +106,7 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
     createUser(user, callback) {
       return User.save(user,
         function(data) {
-          $cookieStore.put('token', data.token);
+          $cookies.put('token', data.token);
           currentUser = User.get();
           return safeCb(callback)(null, user);
         },
@@ -293,7 +299,7 @@ function AuthService($location, $http, $cookieStore, $q, appConfig, Util, User) 
      * @return {String} - a token string used for authenticating
      */
     getToken() {
-      return $cookieStore.get('token');
+      return $cookies.get('token');
     },
 
     /**

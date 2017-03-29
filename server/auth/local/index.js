@@ -2,7 +2,7 @@
 
 import express from 'express';
 import passport from 'passport';
-import {signToken} from '../auth.service';
+import {signToken, generateRefreshToken} from '../auth.service';
 var User = require("../../api/user/user.model");
 
 var router = express.Router();
@@ -18,7 +18,14 @@ router.post('/', function(req, res, next) {
     }
 
     var token = signToken(user._id, user.role);
-    res.json({ token });
+    console.log(token);
+    if (req.body.rememberme){
+      // Get additional refresh token
+      var refreshtoken = generateRefreshToken(user._id);
+      res.json({ token, refreshtoken });
+    } else {
+      res.json({ token });
+    }
   })(req, res, next)
 });
 

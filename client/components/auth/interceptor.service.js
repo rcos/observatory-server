@@ -2,14 +2,14 @@
 
 (function() {
 
-function authInterceptor($rootScope, $q, $cookieStore, $injector, Util) {
+function authInterceptor($rootScope, $q, $cookies, $injector, Util) {
   var state;
   return {
     // Add authorization token to headers
     request(config) {
       config.headers = config.headers || {};
-      if ($cookieStore.get('token') && Util.isSameOrigin(config.url)) {
-        config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+      if ($cookies.get('token') && Util.isSameOrigin(config.url)) {
+        config.headers.Authorization = 'Bearer ' + $cookies.get('token');
       }
       return config;
     },
@@ -19,7 +19,7 @@ function authInterceptor($rootScope, $q, $cookieStore, $injector, Util) {
       if (response.status === 401) {
         (state || (state = $injector.get('$state'))).go('login', {referrer: state.current.url});
         // remove any stale tokens
-        $cookieStore.remove('token');
+        $cookies.remove('token');
       }
       return $q.reject(response);
     }
