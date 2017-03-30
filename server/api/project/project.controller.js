@@ -145,7 +145,7 @@ exports.create = function(req, res) {
     var userId = req.user._id;
     User.findById(userId, function(err, user){
       if (err){
-        res.send(500, err);
+        res.status(500).send(err);
       }else{
         if (!user.projects) user.projects = [];
         if (user.projects.indexOf(project) !== -1) return;
@@ -207,13 +207,13 @@ exports.addTechBubble = function(req, res){
 	var newTech = req.params.tech;
 	Project.findById(projectId, function(err, project){
 		if (err){
-			res.send(500, err);
+			res.status(500).send(err);
 		}else{
 			if (!project.tech) project.tech=[];
 			project.tech.push(newTech);
 			project.save(function(err){
 				if (err) return validationError(res, err);
-				res.send(200);
+				res.sendStatus(200);
 			});
 		}
 	});
@@ -224,13 +224,13 @@ exports.removeTech = function(req, res){
 	var oldTech = req.params.tech;
 	Project.findById(projectId, function(err, project){
 		if (err){
-			res.send(500, err);
+			res.status(500).send(err);
 		}else{
 			if (!project.tech) project.tech = [];
 			project.tech.splice(project.tech.indexOf(oldTech), 1);
 			project.save(function(err){
 				if (err) return validationError(res, err);
-				res.send(200);
+				res.sendStatus(200);
 			});
 		}
 	});
@@ -243,13 +243,13 @@ exports.destroy = function(req, res) {
     if(!project) { return res.sendStatus(404); }
     project.remove(function(err) {
       if(err) { return handleError(res, err); }
-      return res.send(204);
+      return res.sendStatus(204);
     });
   });
 };
 
 function handleError(res, err) {
-  return res.send(500, err);
+  return res.status(500).send(err);
 }
 
 exports.markPast = function(req,res){
@@ -264,7 +264,7 @@ exports.markPast = function(req,res){
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
             project.update({ active: false }, function(err) {
               if(err) { return handleError(res, err); }
-              return res.send(200);
+              return res.sendStatus(200);
             });
       } else {
         return handleError(res, err);
@@ -284,7 +284,7 @@ exports.markActive = function(req,res){
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
             project.update({ active: true }, function(err) {
               if(err) { return handleError(res, err); }
-              return res.send(200);
+              return res.sendStatus(200);
             });
       } else {
         return handleError(res, err);
@@ -299,7 +299,7 @@ exports.markDefault = function(req, res) {
     if(!project) { return res.sendStatus(404); }
     project.update({ markedDefault: true }, function(err) {
       if(err) { return handleError(res, err); }
-      return res.send(200);
+      return res.sendStatus(200);
     });
   });
 };
@@ -310,7 +310,7 @@ exports.unmarkDefault = function(req, res) {
     if(!project) { return res.sendStatus(404); }
     project.update({ markedDefault: false }, function(err) {
       if(err) { return handleError(res, err); }
-      return res.send(200);
+      return res.sendStatus(200);
     });
   });
 };
