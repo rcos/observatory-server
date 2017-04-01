@@ -28,7 +28,7 @@
           <div class="extra-content">
             <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
             <div ng-show='userInProject()'>
-              <div ng-show="user/dOwnsPost(post)"class="col-xs-6 text-right">
+              <div ng-show="userOwnsPost(post)"class="col-xs-6 text-right">
               <div class="btn-group">
                 <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post)'>Edit</button>
                 <button type="button" class='btn btn-default btn-sm' ng-click='savePost(post)'>Save</button>
