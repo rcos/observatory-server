@@ -57,6 +57,10 @@ var UserSchema = new Schema({
     select: false
   },
 
+  refreshTokens: [String],
+  
+  refreshTokenDates: [Date],
+
   provider: {
     type: String,
     select: false
