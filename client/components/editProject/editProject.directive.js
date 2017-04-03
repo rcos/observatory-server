@@ -38,9 +38,6 @@ angular.module('observatory3App')
         $scope.submitted = true;
 
         if(form.$valid) {
-
-            // use setTimeout because hiding the modal takes longer than the post request
-            // and results in the modal disappearing but the overlay staying if not used
             if ($scope.editing){
                 $http.put('/api/projects/' + $scope.project._id, $scope.project).then(function(response){
                   $uibModalInstance.close(response.data);
@@ -58,6 +55,7 @@ angular.module('observatory3App')
                 });
               }
             else{
+                $scope.project.repositories[0] = 'https://github.com/' + $scope.project.githubUsername + '/' + $scope.project.githubProjectName;
                 $http.post('/api/projects', $scope.project)
                 .then(function(response){
                   $uibModalInstance.close(response.data);
