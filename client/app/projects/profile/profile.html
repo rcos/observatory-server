@@ -22,10 +22,6 @@
 
         <a class="btn btn-info" href="https://github.com/{{project.githubUsername}}/{{project.githubProjectName}}" title="" ng-show="project.repositories.length === 1" target="_blank">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
 
-        <a class="btn btn-info" href="{{project.proposalUrl}}" ng-show="project.proposalUrl" title="" target="_blank">Proposal</a>
-
-        <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
-
         <div class="btn-group" uib-dropdown is-open="repositoryMenu" ng-show="project.repositories.length > 1">
           <a class="btn btn-info dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
             Repositories <span class="caret"></span>
@@ -34,6 +30,10 @@
             <li><a href="{{repo}}" ng-repeat="repo in project.repositories">{{repo}}<span class="glyphicon glyphicon-menu-right"></span></a></li>
           </ul>
         </div>
+
+        <a class="btn btn-info" href="{{project.proposalUrl}}" ng-show="project.proposalUrl" title="" target="_blank">Proposal</a>
+
+        <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
 
       </div>
     </div>
