@@ -51,7 +51,7 @@
   <br/>
   <div class="row">
     <div class="pull-right col-xs-12 col-md-3" ng-show="loggedIn()">
-      <projects-list-sidebar my-projects="myProjects" mentee-projects="menteeProjects" favorite-projects="favoriteProjects">
+      <projects-list-sidebar mark-not-favorite="markNotFavorite" my-projects="myProjects" mentee-projects="menteeProjects" favorite-projects="favoriteProjects">
       </projects-list-sidebar>
     </div>
     <div ng-class="{'col-md-9': loggedIn(), 'col-md-12': !loggedIn()}">

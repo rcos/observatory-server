@@ -25,6 +25,7 @@
   <div class="panel-body">
     <ul class="list-unstyled">
       <li ng-repeat="project in favoriteProjects">
+        <a href="" ng-click="markNotFavorite(project)"><i class="fa fa-trash" title="Unfavorite this project"></i></a>
         <a ng-href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile">{{ project.name }}</a>
       </li>
       <li ng-show="!favoriteProjects.length">No Projects</li>
