@@ -41,16 +41,7 @@
   <div class="row">
     <div class="col-sm-12">
       <div ng-show="canEdit()">Add a new tech tag: </div>
-      <div class="tech-tags">
-        <div class='tech-boxes' ng-show="project.tech.length || canEdit()">
-            <span ng-repeat="tech in project.tech track by $index">
-              {{tech}}
-              <g class="glyphicon glyphicon-remove" ng-show='canEdit()' class='btn btn=default btn-xs' ng-click='removeTech(tech)' aria-hidden="true"></g>
-            </span>
-            <input ng-enter="addTechBubble()" ng-show='canEdit()' placeholder='html' ng-model="insertTechContent" size='4' type='text' />
-            <button ng-click="addTechBubble()" ng-show='canEdit()' class="btn btn-default btn-xs">+</button>
-        </div>
-      </div>
+      <tag endpoint="projects" id="project._id" can-Edit="canEdit()" tags="project.tech"> </tag>
     </div>
   </div>
   <div class="row">

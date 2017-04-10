@@ -36,10 +36,10 @@ router.put('/:id/deactivate', auth.canEdit(), controller.deactivate);
 router.put('/:id/activate', auth.isAuthenticated(), controller.activate);
 router.put('/:id/project', auth.isAuthenticated(), controller.addProject);
 router.put('/:id/favorite/:project', auth.isAuthenticated(), controller.addFavorite);
-router.put('/:id/addTech', auth.canEdit(), controller.addTech);
-router.put('/:id/removeTech', auth.canEdit(), controller.removeTech);
+router.put('/addTechBubble/:id/:tech', auth.canEdit(), controller.addTech);
+router.put('/:id/:tech/removeTech', auth.canEdit(), controller.removeTech);
 
-router.delete('/:id/project', auth.isAuthenticated(), controller.removeProject);
+router.delete('/addTechBubble/:id/:tech', auth.isAuthenticated(), controller.removeProject);
 router.delete('/:id/favorite/:project', auth.isAuthenticated(), controller.removeFavorite);
 
 export default router;
