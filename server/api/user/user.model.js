@@ -57,9 +57,13 @@ var UserSchema = new Schema({
     select: false
   },
 
-  refreshTokens: [String],
-  
-  refreshTokenDates: [Date],
+  refreshTokens: {
+    activetokens: [{
+      token: String,
+      expire: Date,
+    }]
+    // used tokens?
+  }
 
   provider: {
     type: String,

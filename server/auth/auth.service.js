@@ -91,6 +91,7 @@ export function signToken(id, role) {
  */
 export function generateRefreshToken(userid) {
   var refreshToken = userid.toString() + '.' + crypto.randomBytes(40).toString('hex');
+  
   return refreshToken;
 }
 
