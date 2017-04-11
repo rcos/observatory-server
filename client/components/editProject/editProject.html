@@ -27,18 +27,19 @@
         <p class="help-block" ng-show="editProjectForm.githubUsername.$error.required && submitted">
           The project owner's github username is required
         </p>
-        <p class="help-block" ng-show="editProjectForm.githubUsername.$error.mongoose && submitted">
-          This field cannot have a '/' character
-        </p>
       </div>
       <div class="form-group" ng-class="{ 'has-success': editProjectForm.githubProjectName.$valid && submitted,
       'has-error': editProjectForm.githubProjectName.$invalid && submitted }">
         <p class="help-block" ng-show="editProjectForm.githubProjectName.$error.required && submitted">
           The project's github name is required
         </p>
-        <p class="help-block" ng-show="editProjectForm.githubProjectName.$error.mongoose && submitted">
-          This field cannot have a '/' character
-        </p>
+      </div>
+      <div class="form-group" ng-class="{
+          'has-success': editProjectForm.githubUsername.$valid && editProjectForm.githubProjectName.$valid && submitted,
+          'has-error': (editProjectForm.githubUsername.$invalid || editProjectForm.githubProjectName.$invalid) && submitted }">
+          <p class="help-block" ng-show="(editProjectForm.githubUsername.$error.mongoose || editProjectForm.githubProjectName.$error.mongoose) && submitted">
+              This field cannot have a '/' character
+          </p>
       </div>
 
       <div id="getInfo" align="right">
