@@ -103,6 +103,13 @@ angular.module('observatory3App')
       $scope.viewActive(activate);
     };
 
+    $scope.confirmDeativate=function(){
+      var r = confirm("confirm deactivate all user");
+      if (r===true) {
+        $scope.activateAll(false);
+      }
+    };
+
     $scope.submit = function(user,activate){
       var endpoint =  '/deactivate';
       if(activate === true){
