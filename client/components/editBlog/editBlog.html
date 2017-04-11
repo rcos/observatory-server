@@ -13,6 +13,8 @@
           What is the title of your blog post?
         </p>
       </div>
+      <tag endpoint="posts" id="blog._id" can-Edit="canEdit()" tags="blog.tags"> </tag>
+      
       <div class="form-group" ng-class="{ 'has-success': addPostForm.content.$valid && submitted,
       'has-error': addPostForm.content.$invalid && submitted }">
         <label>Content</label>

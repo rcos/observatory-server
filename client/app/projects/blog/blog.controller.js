@@ -13,8 +13,10 @@ angular.module('observatory3App')
     };
 
     $scope.userOwnsPost = function(post) {
-        var userId = $scope.user._id;
-        return ($scope.isAdmin() || $scope.getCurrentUser().role.toLowerCase() === 'mentor' || userId === post.author._id);
+        if($scope.user._id){
+          var userId = $scope.user._id;
+          return ($scope.isAdmin() || $scope.getCurrentUser().role.toLowerCase() === 'mentor' || userId === post.author._id);
+        }
     };
 
     $scope.editPost = function(post) {
@@ -143,7 +145,9 @@ angular.module('observatory3App')
 
       });
     };
-
+    $scope.readOnly = function(){
+      return false;
+    }
     $scope.load();
 
   });

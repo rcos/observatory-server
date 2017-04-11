@@ -62,4 +62,8 @@ angular.module('observatory3App')
     $uibModalInstance.dismiss('cancel');
   };
 
+  $scope.canEdit = function(){
+    return true;
+  };
+
 });

@@ -5,7 +5,6 @@
         {{tag}}
         <g class="glyphicon glyphicon-remove" ng-show='canEdit()' class='btn btn=default btn-xs' ng-click='removeTech(tag)' aria-hidden="true"></g>
       </span>
-      <input ng-enter="addTechBubble()" ng-show='canEdit()' placeholder='html' ng-model="insertTechContent" size='4' type='text' />
-      <button ng-click="addTechBubble()" ng-show='canEdit()' class="btn btn-default btn-xs">+</button>
+      <input ng-enter="addTechBubble()" ng-show="canEdit()&& id" placeholder='new tag' ng-model="insertTechContent" size='6' type='text' />
   </div>
 </div>
