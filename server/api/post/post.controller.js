@@ -80,6 +80,7 @@ exports.update = function(req, res) {
       if (err) { return handleError(res, err); }
 
       if (userId.equals(post.author) || user.role === 'mentor' || user.role === 'admin'){
+        post.tags = req.body.tags;
         var updated = _.merge(post, req.body);
         updated.save(function (err) {
           if (err) { return handleError(res, err); }
@@ -89,40 +90,6 @@ exports.update = function(req, res) {
         return handleError(res, err);
       }
     });
-  });
-};
-
-exports.addTechBubble = function(req, res){
-  var postId = req.params.id;
-  var newTag = req.params.tag;
-  Post.findById(postId, function(err, post){
-    if (err){
-      res.send(500, err);
-    }else{
-      if (!post.tags) post.tags=[];
-      post.tags.push(newTag);
-      post.save(function(err){
-        if (err) return validationError(res, err);
-        res.send(200);
-      });
-    }
-  });
-};
-
-exports.removeTech = function(req, res){
-  var postId = req.params.id;
-  var oldTag = req.params.tag;
-  Post.findById(postId, function(err, post){
-    if (err){
-      res.send(500, err);
-    }else{
-      if (!post.tags) post.tags = [];
-      post.tags.splice(post.tags.indexOf(oldTag), 1);
-      post.save(function(err){
-        if (err) return validationError(res, err);
-        res.send(200);
-      });
-    }
   });
 };
 

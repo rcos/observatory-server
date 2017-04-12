@@ -2,9 +2,10 @@
 <div class="tech-tags">
   <div class='tech-boxes' ng-show="tags.length || canEdit()">
       <span ng-repeat="tag in tags track by $index">
-        {{tag}}
+        <a href="">{{tag}} </a>
         <g class="glyphicon glyphicon-remove" ng-show='canEdit()' class='btn btn=default btn-xs' ng-click='removeTech(tag)' aria-hidden="true"></g>
       </span>
-      <input ng-enter="addTechBubble()" ng-show="canEdit()&& id" placeholder='new tag' ng-model="insertTechContent" size='6' type='text' />
+      <input ng-enter="addTechBubble()" ng-show="canEdit()" placeholder='new tag' ng-model="insertTechContent" size='6' type='text' />
+      <button ng-click="addTechBubble()" ng-show="canEdit()&& endpoint!='posts'" class="btn btn-default btn-xs">+</button>
   </div>
 </div>

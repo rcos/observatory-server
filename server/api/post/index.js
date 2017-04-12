@@ -13,6 +13,4 @@ router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(), controller.update);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
-router.put('/addTechBubble/:id/:tag', auth.isAuthenticated(), controller.addTechBubble);
-router.put('/:id/:tech/removeTech', auth.isAuthenticated(), controller.removeTech);
 module.exports = router;
