@@ -12,13 +12,13 @@
 
         <div class="form-group" ng-class="{ 'has-success': editProjectForm.githubUsername.$valid && submitted,
         'has-error': editProjectForm.githubUsername.$invalid && submitted }">
-          <input type="text" name="githubUsername" class="form-control" ng-model="project.githubUsername" required/>
+          <input type="text" name="githubUsername" class="form-control" ng-model="project.githubUsername" no-slashes required/>
         </div>
         <span class="input-group-addon">/</span>
 
         <div class="form-group" ng-class="{ 'has-success': editProjectForm.githubProjectName.$valid && submitted,
         'has-error': editProjectForm.githubProjectName.$invalid && submitted }">
-          <input type="text" name="githubProjectName" id="githubProjectName" class="form-control" ng-model="project.githubProjectName" required/>
+          <input type="text" name="githubProjectName" id="githubProjectName" class="form-control" ng-model="project.githubProjectName" no-slashes required/>
         </div>
       </div>
 
@@ -33,6 +33,13 @@
         <p class="help-block" ng-show="editProjectForm.githubProjectName.$error.required && submitted">
           The project's github name is required
         </p>
+      </div>
+      <div class="form-group" ng-class="{
+          'has-success': editProjectForm.githubUsername.$valid && editProjectForm.githubProjectName.$valid && submitted,
+          'has-error': (editProjectForm.githubUsername.$invalid || editProjectForm.githubProjectName.$invalid) && submitted }">
+          <p class="help-block" ng-show="(editProjectForm.githubUsername.$error.mongoose || editProjectForm.githubProjectName.$error.mongoose) && submitted">
+              This field cannot have a '/' character
+          </p>
       </div>
 
       <div id="getInfo" align="right">
@@ -69,12 +76,9 @@
       'has-error': editProjectForm.proposalUrl.$invalid && submitted }">
         <label>Link to your project's proposal</label>
 
-        <input type="url" name="proposalUrl" class="form-control" ng-model="project.proposalUrl" required />
+        <input type="url" name="proposalUrl" class="form-control" ng-model="project.proposalUrl"/>
         <p class="help-block" ng-show="editProjectForm.proposalUrl.$error.url && submitted">
           Doesn't look like a valid url.
-        </p>
-        <p class="help-block" ng-show="editProjectForm.proposalUrl.$error.required && submitted">
-          Project homepage is required
         </p>
       </div>
 

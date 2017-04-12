@@ -45,4 +45,16 @@ var ProjectSchema = new Schema({
   tech: [String]
 },{ timestamps: true});
 
+ProjectSchema
+.path('githubUsername')
+.validate(function(githubUsername) {
+    return githubUsername.indexOf('/') === -1;
+}, 'github username cannot contain the \'/\' character');
+
+ProjectSchema
+.path('githubProjectName')
+.validate(function(githubProjectName) {
+    return githubProjectName.indexOf('/') === -1;
+}, 'github project name cannot contain the \'/\' character');
+
 module.exports = mongoose.model('Project', ProjectSchema);

@@ -80,7 +80,6 @@
     "grunt-newer": "^1.1.1",
     "grunt-ng-annotate": "^1.0.1",
     "grunt-ng-constant": "^2.0.1",
-    "grunt-node-inspector": "^0.4.1",
     "grunt-nodemon": "^0.4.0",
     "grunt-npm-install": "^0.3.0",
     "grunt-open": "~0.2.3",
