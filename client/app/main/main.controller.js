@@ -9,7 +9,7 @@ angular.module('observatory3App')
       $scope.projectStats = stats;
     });
 
-    $http.get('/api/projects/email').success(function(stats) {
+    $http.get('/api/static/email').success(function(stats) {
       $scope.email = stats;
     });
 });
