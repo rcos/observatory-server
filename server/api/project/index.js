@@ -8,6 +8,7 @@ var router = express.Router();
 
 router.get('/', controller.index);
 router.get('/stats', controller.stats);
+router.get('/email', controller.email);
 router.get('/defaults', controller.defaults)
 router.get('/past', controller.indexOld);
 router.get('/:id/authors', controller.authors);

@@ -22,6 +22,13 @@ exports.index = function(req, res) {
   });
 };
 
+// Gets gmail
+exports.email = function(req, res) {
+    var email = {};
+    email.address = config.contactEmail;
+    return res.status(200).send(email);
+}
+
 // Gets various stats for projects
 exports.stats = function(req, res) {
   async.parallel([

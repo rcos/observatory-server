@@ -42,6 +42,8 @@ var all = {
 
   serverEmail: process.env.SERVER_EMAIL || "no-reply@rcos.io",
 
+  contactEmail: process.env.CONTACT_EMAIL || "coordinators@rcos.io",
+
   addr: process.env.SERVER_ADDRESS || "https://rcos.io",
 
   // Secret for session, you will want to change this and make it an environment variable
