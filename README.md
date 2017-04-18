@@ -31,6 +31,8 @@ Key Features Include
 npm install -g grunt-cli grunt bower
 ```
 
+> For Windows we recommend following these instructions to get MongoDB running: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+
 ### Developing
 1. Run `npm install` to install server dependencies.
 
