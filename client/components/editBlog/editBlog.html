@@ -16,7 +16,7 @@
       <div class="form-group" ng-class="{ 'has-success': addPostForm.content.$valid && submitted,
       'has-error': addPostForm.content.$invalid && submitted }">
         <label>Content</label>
-        <textarea name="content" class="form-control" rows="3" ng-model="blog.content" placeholder="Today I learned ...." required></textarea>
+        <textarea name="content" class="form-control" rows="3" ng-model="blog.content" markdown-editor="{'iconlibrary': 'fa', addExtraButtons: true, resize: 'vertical', hiddenButtons: 'cmdPreview'}" placeholder="Today I learned ...." required></textarea>
         <p class="help-block" ng-show="addPostForm.content.$error.required && submitted">
           What did you want to write about?
         </p>
