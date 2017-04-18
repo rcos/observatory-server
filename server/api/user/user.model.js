@@ -34,9 +34,19 @@ var UserSchema = new Schema({
   tech: [String],
 
   projects: [{
-    type : Schema.Types.ObjectId,
-    ref: 'Project',
-    index: true
+    project: {
+      type : Schema.Types.ObjectId,
+      ref: 'Project',
+      index: true,
+     },
+     classYears: [{
+       id:{
+         type : Schema.Types.ObjectId,
+         ref: 'ClassYear',
+         index: true
+       },
+       joinDate: Date
+     }]
   }], // project id
 
   favoriteProjects: [{

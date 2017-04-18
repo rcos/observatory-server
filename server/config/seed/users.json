@@ -2,6 +2,12 @@
     "provider": "local",
     "name": "Test User",
     "email": "test@test.com",
+    "projects": [{
+      "project": "000000000000000000000010",
+       "classYears": [{"id":"000000000000000000000001",
+                        "joinDate": "this is totally a date string"}],
+       
+    }],
     "password": "test",
     "github": {
         "login": "test"
