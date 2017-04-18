@@ -9,6 +9,8 @@ angular.module('observatory3App')
   if (editBlog) {
     $scope.blog = editBlog;
     $scope.editing = true;
+  }else{
+    $scope.blog.tags = [];
   }
   $scope.submit = function(form) {
     $scope.submitted = true;
