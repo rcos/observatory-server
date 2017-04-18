@@ -1,6 +1,6 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container">
+<div class="container project-blogs">
   <div class="row">
   <div class="col-xs-3">
     <h2><a href="projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{ project.name }}</a></h2>
@@ -23,32 +23,30 @@
 
     <div class="col-md-9">
       <div ng-repeat="sem in listOfsem">
-      <h2 id = "{{sem}}"> {{sem}}</h2>
-        <div ng-repeat="post in semesters[sem] | orderBy:'-date' track by $index">
-          <div class="extra-content">
-            <h2 id="title" class="col-xs-6" btf-markdown="post.title"></h2>
-            <div ng-show='userInProject()'>
-              <div ng-show="userOwnsPost(post)"class="col-xs-6 text-right">
+        <h2 id = "{{sem}}"> {{sem}}</h2>
+        <div ng-repeat="post in semesters[sem] | orderBy:'-date' track by $index" class="extra-content">
+          <div class="row">
+            <h2 class="col-xs-6 title">{{post.title}}</h2>
+            <div ng-show="userInProject() && userOwnsPost(post)" class="col-xs-6 text-right">
               <div class="btn-group">
                 <button type="button" class='btn btn-default btn-sm' ng-click='editPost(post)'>Edit</button>
                 <button type="button" class='btn btn-default btn-sm' ng-click='savePost(post)'>Save</button>
                 <button type="button" class='btn btn-default btn-sm' ng-click='deletePost(post)'>Delete</button>
               </div>
-              </div>
             </div>
-            <div class="col-xs-9">
-              <tag class="blog-tag" endpoint="posts" id="post._id" can-Edit="readyOnly()" tags="post.tags"> </tag>
+            <div class="col-xs-12">
+              <tag endpoint="posts" id="post._id" can-Edit="readyOnly()" tags="post.tags"> </tag>
               <br>
             </div>
-            <div class="clear"></div>
-            <div  id="content" btf-markdown="post.content"></div>
-            <div class="bottom-bar">
-              <div class="bottom-bar-left">
-                <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
-              </div>
-              <div class="bottom-bar-right">
-                {{ post.date | date:'MMM dd yyyy HH:mm:ss' }}
-              </div>
+          </div>  
+          <div class="clear"></div>
+          <div btf-markdown="post.content"></div>
+          <div class="bottom-bar">
+            <div class="bottom-bar-left">
+              <a href="users/{{ post.author._id }}/profile"> {{ post.author.name }}</a>
+            </div>
+            <div class="bottom-bar-right">
+              {{ post.date | date:'MMM dd yyyy HH:mm:ss' }}
             </div>
           </div>
         </div>
