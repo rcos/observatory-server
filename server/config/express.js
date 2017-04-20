@@ -78,6 +78,15 @@ export default function(app) {
     app.use(require('connect-livereload')());
   }
 
+  if ('test' === env) {
+    // log requests and responses triggered from tests to use as examples for our API docs
+    const Docs = require('express-api-doc');
+    const doc = new Docs(app);
+    doc.track({
+      path: config.root + '/docs/api-examples.json', //responses and requests will save here
+    });
+  }
+
   if ('development' === env || 'test' === env) {
     app.use(express.static(path.join(config.root, '.tmp')));
     app.use(express.static(app.get('appPath')));
