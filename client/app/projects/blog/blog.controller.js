@@ -145,9 +145,11 @@ angular.module('observatory3App')
 
       });
     };
-    $scope.readOnly = function(){
+    
+    $scope.canEdit = function(){
       return false;
     }
+
     $scope.load();
 
   });
