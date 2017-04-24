@@ -6,9 +6,9 @@
 
 var config = require('../../config/environment');
 
-// Get email
-exports.email = function(req, res) {
-    var email = {};
-    email.address = config.contactEmail;
-    return res.status(200).send(email);
+// Get static infos, used phrase "statics" to avoid error
+exports.index = function(req, res) {
+    var statics = {};
+    statics.email = config.contactEmail;
+    return res.status(200).send(statics);
 }

@@ -7,6 +7,6 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-router.get('/email', controller.email);
+router.get('/', controller.index);
 
 module.exports = router;
