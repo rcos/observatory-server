@@ -13,7 +13,6 @@
     "angular-bootstrap": "~1.2.1",
     "font-awesome": ">=4.1.0",
     "lodash": "~2.4.1",
-    "angular-socket-io": "~0.7.0",
     "angular-ui-router": "~0.2.15",
     "angular-validation-match": "~1.5.2",
     "codemirror": "~5.1.0",
