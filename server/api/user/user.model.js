@@ -4,7 +4,6 @@ var crypto = require('crypto');
 var mongoose = require('bluebird').promisifyAll(require('mongoose'));
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-const authTypes = ['github', 'twitter', 'facebook', 'google'];
 
 var md5 = require('md5');
 var Project = require('../project/project.model');
@@ -288,9 +287,6 @@ UserSchema
 UserSchema
   .path('email')
   .validate(function(email) {
-    if (authTypes.indexOf(this.provider) !== -1) {
-      return true;
-    }
     return email.length;
   }, 'Email cannot be blank');
 
@@ -298,9 +294,6 @@ UserSchema
 UserSchema
   .path('password')
   .validate(function(password) {
-    if (authTypes.indexOf(this.provider) !== -1) {
-      return true;
-    }
     return password.length;
   }, 'Password cannot be blank');
 
