@@ -19,28 +19,7 @@
           around the world. Here are a few highlights from our members.
         </div>
       </div>
-      <!-- Add new achievement-->
-      <div class="panel panel-default" ng-show="isAdmin()">
-        <div class="panel-heading">Add New Achievement</div>
-        <div class="panel-body">
-          <form>
-            <div class="form-group">
-              <label for="titleInput">Event Title</label>
-              <input type="text" class="form-control" id="titleInput" placeholder="Event Title" ng-model="achievement.title">
-            </div>
-            <div class="form-group">
-              <label for="descriptionInput">Event Description</label>
-              <textarea class="form-control" placeholder="Event Description" rows="3" ng-model="achievement.description"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Date</label>
-              <input type="text" class="form-control" placeholder="01/24/2001" uib-datepicker-popup="MM/dd/yyyy" ng-model="achievement.date" />
-            </div>
-            <button type="submit" class="btn btn-default" ng-click="submit()">Submit</button>
-          </form>
-        </div>
-      </div>
-      <!-- Add new achievement-->
+      <edit-achievement ng-show="isAdmin()" achievement="achievement" achievements="achievements"></edit-achievement>
     </div>
     <div class="col-sm-7 col-md-8">
       <h2>Achievements</h2>
@@ -55,7 +34,11 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               {{ ach.title }}
-              <a href="#" class="pull-right" ng-click="delete(ach)" ng-show="isAdmin()"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+              <span class="pull-right">
+                <a href="#" ng-click="delete(ach)" ng-show="isAdmin()"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                &nbsp;
+                <a href="#" ng-click="edit(ach)" ng-show="isAdmin()"><i class="fa fa-edit" aria-hidden="true"></i></a>
+              </span>
             </div>
             <div class="panel-body">
               <div id="content" class="event-description" btf-markdown="ach.description"></div>

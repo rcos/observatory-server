@@ -1,0 +1,40 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+  {{projects }}
+  <div class="table-responsive">
+      <table class="table table-hover">
+      <thead>
+        <tr>
+            <td ng-click="setSortOrder('name')">Name</td>
+            <td ng-click="setSortOrder('email')">Email</td>
+            <td ng-click="setSortOrder('role')">Role</td>
+            <td ng-click="setSortOrder('github.login')">Github</td>
+            <td ng-click="setSortOrder('attendence')">Attendence</td>
+            <td ng-click="setSortOrder('github.events.length')">Events</td>
+            <td ng-click="setSortOrder('commits.length')">Commits</td>
+            <td ng-click="setSortOrder('active')">Active</td>
+        </tr>
+      </thead>
+      <tbody>
+          <tr ng-repeat="project in projects | orderBy:sortorder">
+              <td><a href="/projects/{{user._id}}/profile">{{ project.name }}</a></td>
+              <td> {{ user.email }}</td>
+              <td>
+              <select class="form-control" ng-model="user.role" ng-change="updateUserRole(user)">
+                    <option value="user">User</option>
+                    <option value="mentor">Mentor</option>
+                    <option value="admin">Admin</option>
+                </select>
+              </td>
+              <td><a href="http://github.com/{{user.github.login}}">{{user.github.login}}</a></td>
+              <td>{{ user.attendance }}</td>
+              <td>{{ user.github.events.length }}</td>
+              <td>{{ user.commits.length }}</td>
+              <td><a class="btn btn-warning" href="#" role="button" ng-click="toggle( user )">{{ user.active }}</a></td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div ng-include="'components/footer/footer.html'"></div>
