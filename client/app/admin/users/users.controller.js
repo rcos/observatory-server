@@ -75,13 +75,18 @@ angular.module('observatory3App')
     };
 
     $scope.addAttendence = function(user){
-      $uibModal.open({
-        templateUrl: 'components/addAttendance/addAttendance.html',
-        controller: 'addAttendanceController',
-        backdrop : 'static',
-        resolve : {
-          user: user
-        }
+      $http.get('/api/users/'+user._id+ '/private')
+      .success(function(aUser){
+        $uibModal.open({
+          templateUrl: 'components/addAttendance/addAttendance.html',
+          controller: 'addAttendanceController',
+          backdrop : 'static',
+          resolve : {
+            user: aUser
+          }
+        });
+      }).error(function(){
+          notify('unable to open calendar');
       });
     };
 

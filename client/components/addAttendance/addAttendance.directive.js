@@ -4,9 +4,14 @@ angular.module('observatory3App')
 .controller('addAttendanceController', function($scope, $location, $http, $uibModalInstance, Auth, user, notify){
   $scope.user = user;
   $scope.attend = {date:'',type:''};
+  var attended = {};
   $scope.submitted = false;
   $scope.formDateEmptyError = false;
   $scope.formTypeEmptyError = false;
+  $scope.calendarOptions = {
+    customClass: getAttendanceStatus,
+    showWeeks: false
+  };
 
   $scope.autofill = function() {
     //autofill the probable attendance type
@@ -24,6 +29,33 @@ angular.module('observatory3App')
   $scope.typeChanged = function() {
     $scope.formTypeEmptyError = !$scope.attend.type;
   };
+
+  function getAttendanceStatus(data) {
+    var date = data.date,
+    mode = data.mode;
+    if (mode === 'day') {
+      var dayToCheck = new Date(date).setHours(0,0,0,0);
+
+      for(var i = 0; i< $scope.user.attendance.length;i++){
+        var currentDay = new Date($scope.user.attendance[i].date).setHours(0,0,0,0);
+        var isVerified = $scope.user.attendance[i].verified;
+        if(dayToCheck ===currentDay){
+          if(isVerified){
+
+            if(!attended.hasOwnProperty(currentDay)){
+              attended[currentDay] = [];
+            }
+            attended[currentDay].push($scope.user.attendance[i]);
+
+            return 'attended';
+          } else {
+            return 'unverified';
+          }
+        }
+      }
+    }
+    return '';
+  }
 
   $scope.submit = function(form) {
     if($scope.submitted) {
@@ -44,14 +76,37 @@ angular.module('observatory3App')
     params.bonusday = $scope.attend.type === 'Bonus Day' || $scope.attend.type === 'Small Group Bonus Day';
 
     $http.post('/api/attendance/attend/'+user._id+'/manual', params)
+      .then(function(){
+        $uibModalInstance.close();
+        notify('Added attendance entry');
+      },function(){
+        notify('There was an error with adding the attendance entry');
+        $scope.submitted = false;
+      });
+  };
+
+  $scope.removeOne = function (day) {
+    $http.delete('/api/attendance/'+day._id)
     .then(function(){
-      $uibModalInstance.close();
-      notify('Added attendance entry');
-    },function(){
-      notify('There was an error with adding the attendance entry');
-      $scope.submitted = false;
+      notify('attendance removed');
+    },function() {
+      notify('attendance cannot be removed')
     });
   };
+
+  $scope.attendanceOn= function (date) {
+    date = new Date(date).setHours(0,0,0,0);
+    if(attended.hasOwnProperty(date)){
+      return attended[date];
+    }
+  };
+
+  $scope.isAttended = function(date){
+    date = new Date(date).setHours(0,0,0,0);
+    return attended.hasOwnProperty(date);
+  };
+
+
   $scope.close = function(){
     $uibModalInstance.dismiss('cancel');
   };
