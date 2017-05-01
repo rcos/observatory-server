@@ -43,9 +43,9 @@ angular.module('observatory3App')
           if(isVerified){
 
             if(!attended.hasOwnProperty(currentDay)){
-              attended[currentDay] = [];
+              attended[currentDay] = new Set();
             }
-            attended[currentDay].push($scope.user.attendance[i]);
+            attended[currentDay].add($scope.user.attendance[i]);
 
             return 'attended';
           } else {
@@ -97,7 +97,7 @@ angular.module('observatory3App')
   $scope.attendanceOn= function (date) {
     date = new Date(date).setHours(0,0,0,0);
     if(attended.hasOwnProperty(date)){
-      return attended[date];
+      return Array.from(attended[date]);
     }
   };
 

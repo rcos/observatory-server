@@ -26,11 +26,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat=" day in attendanceOn(attend.date) | orderBy:sortorder track by $index">
-              <td>{{ day.date | date:"MMM dd" }}</td>
-              <td>{{ day.smallgroup?"smallgroup":"Full" }}</td>
-              <td>{{ day.bonusDay?"Bonus":"Regular" }}</td>
-              <td><a href="" ng-click="removeOne(day)"><i class="fa fa-times"></i> Delete</a></td>
+            <tr ng-repeat=" attendance in attendanceOn(attend.date) | track by $index">
+              <td>{{ attendance.date | date:"MMM dd" }}</td>
+              <td>{{ attendance.smallgroup?"smallgroup":"Full" }}</td>
+              <td>{{ attendance.bonusDay?"Bonus":"Regular" }}</td>
+              <td><a href="" ng-click="removeOne(attendance)"><i class="fa fa-times"></i> Delete</a></td>
             </tr>
           </tbody>
         </table>
