@@ -60,10 +60,10 @@ var UserSchema = new Schema({
   refreshTokens: {
     activetokens: [{
       token: String,
-      expire: Date,
+      expire: Date
     }]
     // used tokens?
-  }
+  },
 
   provider: {
     type: String,

@@ -91,8 +91,13 @@ export function signToken(id, role) {
  */
 export function generateRefreshToken(userid) {
   var refreshToken = userid.toString() + '.' + crypto.randomBytes(40).toString('hex');
-  
-  return refreshToken;
+  var now = new Date();
+  var expireDate = new Date(now.getFullYear(), now.getMonth()+3, now.getDate());
+  return compose()
+  .use(isAuthenticated())
+  .use(function meetsRequirements(req, res, next) {
+    
+  });
 }
 
 /**

@@ -661,6 +661,29 @@ exports.addFavorite = function(req,res){
     });
 };
 
+
+/**
+ * Add a refresh token of user
+ */
+exports.addRefreshToken = function(req,res){
+    var userId = req.params.id;
+    var token = req.params.token;
+    var expire = req.params.expire;
+    User.findById(userId, function(err,user){
+        if (err){
+            res.send(500, err);
+        } else {
+            if (!user.refreshTokens) user.refreshTokens = {};
+            if (!user.refreshTokens.activetokens) user.refreshTokens.activetokens = [];
+            user.refreshTokens.activetokens.push({token, expire});
+            user.save(function(err) {
+                if (err) return validationError(res, err);
+                res.send(200);
+            });
+        }
+    });
+};
+
 /**
  * Remove an item from the tech array for a user
  */
@@ -700,27 +723,6 @@ exports.removeFavorite = function(req,res){
     });
 };
 
-/**
- * Remove an item from the favorite projects array for a user
- */
-exports.addRefreshToken = function(req,res){
-    var userId = req.params.id;
-    var token = req.params.token;
-    var expire = req.params.expire;
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        } else {
-            if (!user.refreshTokens) user.refreshTokens = {};
-            if (!user.refreshTokens.activetokens) user.refreshTokens.activetokens = [];
-            user.refreshTokens.activetokens.push({token, expire});
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-        }
-    });
-};
 
 /*
 Function that is called by removeUser api call
