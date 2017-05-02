@@ -12,10 +12,9 @@
           Please select a date
         </p>
       </div>
-      <div>
-        {{attend.date}}
-      </div>
+
       <div ng-show="isAttended(attend.date)">
+        <label> Remove Attendance </label>
         <table class="table table-hover">
           <thead>
             <tr>
@@ -26,18 +25,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat=" attendance in attendanceOn(attend.date) | track by $index">
+            <tr ng-repeat=" attendance in attendanceOn(attend.date) | orderBy:sortorder track by $index">
               <td>{{ attendance.date | date:"MMM dd" }}</td>
               <td>{{ attendance.smallgroup?"smallgroup":"Full" }}</td>
               <td>{{ attendance.bonusDay?"Bonus":"Regular" }}</td>
-              <td><a href="" ng-click="removeOne(attendance)"><i class="fa fa-times"></i> Delete</a></td>
+              <td><a href="" ng-click="confirmRemove(attendance)"><i class="fa fa-times"></i> Delete</a></td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <div class="form-group">
-        <label for="attendanceType">Attendance Type</label>
+        <label for="attendanceType">Add A {{attend.type}} Attendance</label>
         <select class="form-control" id="attendanceType" ng-model="attend.type" ng-change="typeChanged()" required>
           <option>Regular</option>
           <option>Small Group</option>

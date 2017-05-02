@@ -88,10 +88,18 @@ angular.module('observatory3App')
   $scope.removeOne = function (day) {
     $http.delete('/api/attendance/'+day._id)
     .then(function(){
+      $scope.close();
       notify('attendance removed');
     },function() {
       notify('attendance cannot be removed')
     });
+  };
+
+  $scope.confirmRemove=function(day){
+    var r = confirm("Are you sure removing "+$scope.user.name +"\'s attendance?");
+    if (r===true) {
+      $scope.removeOne(day);
+    }
   };
 
   $scope.attendanceOn= function (date) {
