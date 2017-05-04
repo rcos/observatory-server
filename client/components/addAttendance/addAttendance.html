@@ -1,6 +1,6 @@
 <div class="addModal attendance-adder">
   <div class="modal-header">
-    <h3 class="modal-title">Attendance for {{user.name}}</h3>
+    <h3 class="modal-title">{{user.name}}'s Attendance</h3>
   </div>
   <div class="modal-body">
     <form class="form" name="addAttendanceForm" ng-submit="submit(addAttendanceForm)" novalidate>
@@ -12,7 +12,6 @@
           Please select a date
         </p>
       </div>
-
       <div ng-show="isAttended(attend.date)">
         <label> Remove Attendance </label>
         <table class="table table-hover">
@@ -50,7 +49,7 @@
       <span class="text-muted">Please verify any autofilled data.</span>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="close()">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Add Attendance</button>
       </div>
     </form>
   </div>

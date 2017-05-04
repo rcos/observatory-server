@@ -2,9 +2,10 @@
 
 angular.module('observatory3App')
 .controller('addAttendanceController', function($scope, $location, $http, $uibModalInstance, $uibModal,Auth, user, notify){
+  fixUserAttendance(user);
   $scope.user = user;
   $scope.attend = {date:'',type:''};
-  var attended = {};
+  var attended = AttendedDay();
   $scope.submitted = false;
   $scope.formDateEmptyError = false;
   $scope.formTypeEmptyError = false;
@@ -34,19 +35,12 @@ angular.module('observatory3App')
     var date = data.date,
     mode = data.mode;
     if (mode === 'day') {
-      var dayToCheck = new Date(date).setHours(0,0,0,0);
-
-      for(var i = 0; i< $scope.user.attendance.length;i++){
-        var currentDay = new Date($scope.user.attendance[i].date).setHours(0,0,0,0);
+      var dayToCheck = new Date(date).toDateString();
+      for(var i = 0; i< $scope.user.attendance.length; i++){
+        var currentDay = new Date($scope.user.attendance[i].date).toDateString();
         var isVerified = $scope.user.attendance[i].verified;
         if(dayToCheck ===currentDay){
           if(isVerified){
-
-            if(!attended.hasOwnProperty(currentDay)){
-              attended[currentDay] = new Set();
-            }
-            attended[currentDay].add($scope.user.attendance[i]);
-
             return 'attended';
           } else {
             return 'unverified';
@@ -57,6 +51,32 @@ angular.module('observatory3App')
     return '';
   }
 
+  function fixOffByOneDay(daystring){
+    var OffByoneday = daystring.split('T');
+    var correctDay = OffByoneday[0] + "T04:00:00.000Z";
+    return correctDay;
+  }
+
+  function fixUserAttendance(user){
+    for(var i = 0; i < user.attendance.length;i++){
+      user.attendance[i].date = fixOffByOneDay(user.attendance[i].date);
+    }
+  }
+
+  function AttendedDay(){
+    var attended = {};
+    for(var i = 0; i< $scope.user.attendance.length; i++){
+      var currentDay = new Date($scope.user.attendance[i].date).toDateString();
+      var isVerified = $scope.user.attendance[i].verified;
+      if(isVerified){
+        if(!attended.hasOwnProperty(currentDay)){
+          attended[currentDay] = new Set();
+        }
+        attended[currentDay].add($scope.user.attendance[i]);
+        }
+      }
+      return attended;
+  }
   $scope.submit = function(form) {
     if($scope.submitted) {
       return;
@@ -113,14 +133,14 @@ angular.module('observatory3App')
   };
 
   $scope.attendanceOn= function (date) {
-    date = new Date(date).setHours(0,0,0,0);
+    date = new Date(date).toDateString();
     if(attended.hasOwnProperty(date)){
       return Array.from(attended[date]);
     }
   };
 
   $scope.isAttended = function(date){
-    date = new Date(date).setHours(0,0,0,0);
+    date = new Date(date).toDateString();
     return attended.hasOwnProperty(date);
   };
 
