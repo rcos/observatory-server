@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('observatory3App')
-.controller('addAttendanceController', function($scope, $location, $http, $uibModalInstance, Auth, user, notify){
+.controller('addAttendanceController', function($scope, $location, $http, $uibModalInstance, $uibModal,Auth, user, notify){
   $scope.user = user;
   $scope.attend = {date:'',type:''};
   var attended = {};
@@ -89,17 +89,27 @@ angular.module('observatory3App')
     $http.delete('/api/attendance/'+day._id)
     .then(function(){
       $scope.close();
-      notify('attendance removed');
+      notify('Attendance removed');
     },function() {
-      notify('attendance cannot be removed')
+      notify('Attendance cannot be removed');
     });
   };
 
   $scope.confirmRemove=function(day){
-    var r = confirm("Are you sure removing "+$scope.user.name +"\'s attendance?");
-    if (r===true) {
-      $scope.removeOne(day);
-    }
+    $scope.msg = {value:'Confirm remove '+user.name +' attendance?' };
+    $uibModal.open({
+      templateUrl: 'components/confirmDialog/confirmDialog.html',
+      controller: 'confirmDialogCtrl',
+      size: 'sm',
+      resolve : {
+        msg : $scope.msg
+      }
+    }).result.then(function(result){
+      $scope.value = result;
+      if(result){
+        $scope.removeOne(day);
+      }
+    });
   };
 
   $scope.attendanceOn= function (date) {
