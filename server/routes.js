@@ -27,7 +27,7 @@ export default function(app) {
   app.use('/auth', require('./auth'));
 
   // All undefined asset or api routes should return a 404
-  app.route('/:url(api|auth|components|app|bower_components|assets|uploads|static)/*')
+  app.route('/:url(api|auth|components|app|bower_components|assets|uploads)/*')
    .get(errors[404]);
 
   // All other routes should redirect to the index.html
