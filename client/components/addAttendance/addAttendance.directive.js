@@ -5,7 +5,7 @@ angular.module('observatory3App')
   fixUserAttendance(user);
   $scope.user = user;
   $scope.attend = {date:'',type:''};
-  var attended = AttendedDay();
+  var attended = userAttendance();
   $scope.submitted = false;
   $scope.formDateEmptyError = false;
   $scope.formTypeEmptyError = false;
@@ -51,19 +51,19 @@ angular.module('observatory3App')
     return '';
   }
 
-  function fixOffByOneDay(daystring){
+  function fixOffByOneDay(daystring) {
     var OffByoneday = daystring.split('T');
     var correctDay = OffByoneday[0] + "T04:00:00.000Z";
     return correctDay;
   }
 
-  function fixUserAttendance(user){
+  function fixUserAttendance(user) {
     for(var i = 0; i < user.attendance.length;i++){
       user.attendance[i].date = fixOffByOneDay(user.attendance[i].date);
     }
   }
 
-  function AttendedDay(){
+  function userAttendance() {
     var attended = {};
     for(var i = 0; i< $scope.user.attendance.length; i++){
       var currentDay = new Date($scope.user.attendance[i].date).toDateString();
@@ -77,6 +77,7 @@ angular.module('observatory3App')
       }
       return attended;
   }
+
   $scope.submit = function(form) {
     if($scope.submitted) {
       return;
@@ -115,8 +116,8 @@ angular.module('observatory3App')
     });
   };
 
-  $scope.confirmRemove=function(day){
-    $scope.msg = {value:'Confirm remove '+user.name +' attendance?' };
+  $scope.confirmRemove = function(day) {
+    $scope.msg = { body:'Confirm remove '+ user.name +' attendance?' };
     $uibModal.open({
       templateUrl: 'components/confirmDialog/confirmDialog.html',
       controller: 'confirmDialogCtrl',
@@ -125,7 +126,6 @@ angular.module('observatory3App')
         msg : $scope.msg
       }
     }).result.then(function(result){
-      $scope.value = result;
       if(result){
         $scope.removeOne(day);
       }
@@ -139,13 +139,13 @@ angular.module('observatory3App')
     }
   };
 
-  $scope.isAttended = function(date){
+  $scope.isAttended = function(date) {
     date = new Date(date).toDateString();
     return attended.hasOwnProperty(date);
   };
 
 
-  $scope.close = function(){
+  $scope.close = function() {
     $uibModalInstance.dismiss('cancel');
   };
 });

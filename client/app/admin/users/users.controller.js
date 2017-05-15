@@ -109,7 +109,7 @@ angular.module('observatory3App')
     };
 
     $scope.confirmDeativate=function(){
-      $scope.msg = {value:'Confirm deactivate all users?' };
+      $scope.msg = { body:'Confirm deactivate all users?' };
       $uibModal.open({
         templateUrl: 'components/confirmDialog/confirmDialog.html',
         controller: 'confirmDialogCtrl',
@@ -118,7 +118,6 @@ angular.module('observatory3App')
           msg : $scope.msg
         }
       }).result.then(function(result){
-        $scope.value = result;
         if(result){
           $scope.activateAll(false);
         }

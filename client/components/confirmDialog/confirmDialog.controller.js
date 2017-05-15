@@ -1,7 +1,10 @@
 'use strict'
 
 angular.module('observatory3App')
-.controller('confirmDialogCtrl', function($scope,$uibModalInstance,msg){
+.controller('confirmDialogCtrl', function($scope, $uibModalInstance, msg){
+  if(!msg.title){
+    msg.title = 'confirm';
+  }
   $scope.msg = msg;
 
   $scope.confirm = function () {
