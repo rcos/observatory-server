@@ -70,7 +70,7 @@ export default function(app) {
 
   if ('production' === env) {
     app.use(favicon(path.join(config.root, 'client', 'favicon.ico')));
-    app.use(express.static(app.get('appPath')));
+    app.use(express.static(app.get('appPath'), {maxAge: 31536000000}));
     app.use(morgan('common'));
   }
 
