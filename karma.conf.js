@@ -25,10 +25,8 @@ module.exports = function(config) {
       'client/bower_components/angular-sanitize/angular-sanitize.js',
       'client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'client/bower_components/lodash/dist/lodash.compat.js',
-      'client/bower_components/angular-socket-io/socket.js',
       'client/bower_components/angular-ui-router/release/angular-ui-router.js',
       'client/bower_components/angular-validation-match/dist/angular-validation-match.min.js',
-      'client/bower_components/codemirror/lib/codemirror.js',
       'client/bower_components/ng-file-upload/ng-file-upload.js',
       'client/bower_components/showdown/src/showdown.js',
       'client/bower_components/angular-markdown-directive/markdown.js',
@@ -36,7 +34,6 @@ module.exports = function(config) {
       'client/bower_components/github.commits.widget/js/github.commits.widget.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
       // endbower
-      'node_modules/socket.io-client/socket.io.js',
       'client/app/app.js',
       'client/{app,components}/**/*.module.js',
       'client/{app,components}/**/*.js',
