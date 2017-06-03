@@ -30,6 +30,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "promise": "^7.1.1",
+    "rollbar": "^2.0.4",
     "sendgrid": "^2.0.0",
     "serve-favicon": "^2.3.0",
     "valid-url": "^1.0.9"

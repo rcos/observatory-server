@@ -10,6 +10,7 @@ mongoose.Promise = require('bluebird');
 import config from './config/environment';
 import http from 'http';
 import seed from './config/seed';
+import rollbar from './components/rollbar';
 
 // Connect to MongoDB
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -26,6 +27,8 @@ var app = express();
 var server = http.createServer(app);
 require('./config/express')(app);
 require('./routes')(app);
+
+app.use(rollbar.errorHandler());
 
 // Start server
 function startServer() {

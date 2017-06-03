@@ -26,5 +26,8 @@ module.exports = {
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://localhost/observatory3'
-  }
+  },
+
+  // Rollbar server-side access token
+  rollbarServerAccessToken: process.env.ROLLBAR_SERVER_ACCESS_TOKEN || ''
 };
