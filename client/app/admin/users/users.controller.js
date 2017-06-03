@@ -75,13 +75,18 @@ angular.module('observatory3App')
     };
 
     $scope.addAttendence = function(user){
-      $uibModal.open({
-        templateUrl: 'components/addAttendance/addAttendance.html',
-        controller: 'addAttendanceController',
-        backdrop : 'static',
-        resolve : {
-          user: user
-        }
+      $http.get('/api/users/'+user._id+ '/private')
+      .success(function(aUser){
+        $uibModal.open({
+          templateUrl: 'components/addAttendance/addAttendance.html',
+          controller: 'addAttendanceController',
+          backdrop : 'static',
+          resolve : {
+            user: aUser
+          }
+        });
+      }).error(function(){
+          notify('unable to open calendar');
       });
     };
 
@@ -101,6 +106,22 @@ angular.module('observatory3App')
         }
       }
       $scope.viewActive(activate);
+    };
+
+    $scope.confirmDeativate=function(){
+      $scope.msg = { body:'Confirm deactivate all users?' };
+      $uibModal.open({
+        templateUrl: 'components/confirmDialog/confirmDialog.html',
+        controller: 'confirmDialogCtrl',
+        size: 'sm',
+        resolve : {
+          msg : $scope.msg
+        }
+      }).result.then(function(result){
+        if(result){
+          $scope.activateAll(false);
+        }
+      });
     };
 
     $scope.submit = function(user,activate){

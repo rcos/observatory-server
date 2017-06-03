@@ -1,19 +1,41 @@
-<div class="addModal">
+<div class="addModal attendance-adder">
   <div class="modal-header">
-    <h3 class="modal-title">Add Attendance for {{user.name}}</h3>
+    <h3 class="modal-title">{{user.name}}'s Attendance</h3>
   </div>
   <div class="modal-body">
     <form class="form" name="addAttendanceForm" ng-submit="submit(addAttendanceForm)" novalidate>
 
       <div>
         <label>Attendance Date</label>
-        <div uib-datepicker class="well well-sm" ng-model="attend.date" ng-change="autofill()" required></div>
+        <div uib-datepicker class="well well-sm" ng-model="attend.date" ng-change="autofill()" datepicker-options="calendarOptions" required></div>
         <p class="help-block has-error" ng-show="formDateEmptyError">
           Please select a date
         </p>
       </div>
+      <div ng-show="isAttended(attend.date)">
+        <label> Remove Attendance </label>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <td sort-arrow sortby='datetime' text='Date' sortorder='sortorder'></td>
+              <td sort-arrow sortby='smallgroup' text='Group' sortorder='sortorder'></td>
+              <td sort-arrow sortby='bonusDay' text='Type' sortorder='sortorder'></td>
+              <td text='Delete'>Delete</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat=" attendance in attendanceOn(attend.date) | orderBy:sortorder track by $index">
+              <td>{{ attendance.date | date:"MMM dd" }}</td>
+              <td>{{ attendance.smallgroup?"smallgroup":"Full" }}</td>
+              <td>{{ attendance.bonusDay?"Bonus":"Regular" }}</td>
+              <td><a href="" ng-click="confirmRemove(attendance)"><i class="fa fa-times"></i> Delete</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div class="form-group">
-        <label for="attendanceType">Attendance Type</label>
+        <label for="attendanceType">Add A {{attend.type}} Attendance</label>
         <select class="form-control" id="attendanceType" ng-model="attend.type" ng-change="typeChanged()" required>
           <option>Regular</option>
           <option>Small Group</option>
@@ -27,7 +49,7 @@
       <span class="text-muted">Please verify any autofilled data.</span>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="close()">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Add Attendance</button>
       </div>
     </form>
   </div>
