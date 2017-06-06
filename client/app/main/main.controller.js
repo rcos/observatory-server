@@ -8,4 +8,8 @@ angular.module('observatory3App')
     $http.get('/api/projects/stats').success(function(stats) {
       $scope.projectStats = stats;
     });
+
+    $http.get('/api/static').success(function(stats) {
+      $scope.statics = stats;
+    });
 });
