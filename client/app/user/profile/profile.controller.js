@@ -107,29 +107,6 @@ angular.module('observatory3App')
          });
       };
 
-      $scope.addTechBubble = function(){
-        if($scope.insertTechContent){
-          $http.put('/api/users/' + $stateParams.id + '/addTech', {
-              'tech': $scope.insertTechContent
-          }).success(function(){
-              $scope.user.tech.push($scope.insertTechContent);
-              $scope.insertTechContent = '';
-          }).error(function(){
-              notify({message: "Could not add tech!", classes: ["alert-danger"]});
-          });
-        }
-      };
-
-      $scope.removeTech = function(tech){
-          $http.put('/api/users/' + $stateParams.id + '/removeTech', {
-              'tech': tech
-          }).success(function(){
-              $scope.user.tech.splice($scope.user.tech.indexOf(tech),1);
-          }).error(function(){
-              notify({message: "Could not add tech!", classes: ["alert-danger"]});
-          });
-      };
-
       $scope.pastUser = function(user){
           var conf = confirm("Are you sure you want to make your account inactive?");
           if (conf){

@@ -80,6 +80,7 @@ exports.update = function(req, res) {
       if (err) { return handleError(res, err); }
 
       if (userId.equals(post.author) || user.role === 'mentor' || user.role === 'admin'){
+        post.tags = req.body.tags;
         var updated = _.merge(post, req.body);
         updated.save(function (err) {
           if (err) { return handleError(res, err); }

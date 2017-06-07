@@ -16,6 +16,7 @@ var PostSchema = new Schema({
     ref: 'User',
     index: true
   },
+  tags:[],
   date: {
     type: Date,
     default: Date.now,

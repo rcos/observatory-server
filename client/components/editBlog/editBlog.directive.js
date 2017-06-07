@@ -9,6 +9,8 @@ angular.module('observatory3App')
   if (editBlog) {
     $scope.blog = editBlog;
     $scope.editing = true;
+  }else{
+    $scope.blog.tags = [];
   }
   $scope.submit = function(form) {
     $scope.submitted = true;
@@ -37,7 +39,8 @@ angular.module('observatory3App')
       else{
         $http.put('/api/posts/' + $scope.blog._id, {
           'title': $scope.blog.title,
-          'content': $scope.blog.content
+          'content': $scope.blog.content,
+          'tags' : $scope.blog.tags
         }).then(function(){
           notify('Post updated!');
           $uibModalInstance.close($scope.project);
@@ -60,6 +63,10 @@ angular.module('observatory3App')
   $scope.close = function(){
     // $uibModalInstance.close($scope.event);
     $uibModalInstance.dismiss('cancel');
+  };
+
+  $scope.canEdit = function(){
+    return true;
   };
 
 });

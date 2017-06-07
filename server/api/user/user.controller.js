@@ -532,7 +532,7 @@ exports.authCallback = function(req, res, next) {
  */
 exports.addTech = function(req,res){
     var userId = req.params.id;
-    var newTech = req.body.tech;
+    var newTech = req.params.tech;
     User.findById(userId, function(err,user){
         if (err){
             res.send(500, err);
@@ -552,7 +552,7 @@ exports.addTech = function(req,res){
  */
 exports.removeTech = function(req,res){
     var userId = req.params.id;
-    var tech = req.body.tech;
+    var tech = req.params.tech;
     User.findById(userId, function(err,user){
         if (err){
             res.send(500, err);

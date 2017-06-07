@@ -46,7 +46,6 @@ angular.module('observatory3App')
     $scope.slides = slides;
   };
 
-  //end tech bubble code
   var updateProject = function(){
     Project.getProject($stateParams.username, $stateParams.project).then(function(result) {
       $scope.project = result.data;
@@ -94,7 +93,6 @@ angular.module('observatory3App')
     });
 
     modalInstance.result.then(function (projectAdded) {
-      // $window.location.reload();
       var redirectUsername = projectAdded.githubUsername;
       var redirectProjectName = projectAdded.githubProjectName;
       if (redirectUsername === $stateParams.username && redirectProjectName === $stateParams.project){
@@ -212,26 +210,7 @@ angular.module('observatory3App')
         });
     }
   };
-  //tech bubble code
   $scope.isMentor = Auth.isMentor;
-  $scope.addTechBubble = function(){
-    if($scope.insertTechContent){
-      $http.put('/api/projects/addTechBubble/' + $scope.project._id + '/' + $scope.insertTechContent).success(function(){
-        $scope.project.tech.push($scope.insertTechContent);
-        $scope.insertTechContent = '';
-      }).error(function(){
-        notify({message: 'Could not add tech!', classes: ['alert-danger']});
-      });
-    }
-  };
-  $scope.removeTech = function(tech){
-    $http.put('/api/projects/' + $scope.project._id + '/' + tech + '/removeTech').success(function(){
-      $scope.project.tech.splice($scope.project.tech.indexOf(tech),1);
-    }).error(function(){
-      notify({message: 'Could not remove tech!', classes: ['alert-danger']});
-    });
-  };
-
   updateProject();
 
 });
