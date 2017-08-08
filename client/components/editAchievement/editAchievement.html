@@ -1,0 +1,22 @@
+<!-- Add new achievement-->
+<div class="panel panel-default">
+  <div class="panel-heading">{{ title }}</div>
+  <div class="panel-body">
+    <form>
+      <div class="form-group">
+        <label for="titleInput">Event Title</label>
+        <input type="text" class="form-control" id="titleInput" placeholder="Event Title" ng-model="achievement.title">
+      </div>
+      <div class="form-group">
+        <label for="descriptionInput">Event Description</label>
+        <textarea class="form-control" placeholder="Event Description" rows="3" ng-model="achievement.description"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="text" class="form-control" placeholder="01/24/2001" uib-datepicker-popup="MM/dd/yyyy" ng-model="achievement.date" />
+      </div>
+      <button type="submit" class="btn btn-default" ng-click="submit()">Submit</button>
+      <a href="#" ng-click="cancel()">Cancel</a>
+    </form>
+  </div>
+</div>
