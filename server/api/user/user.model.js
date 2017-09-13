@@ -200,7 +200,7 @@ UserSchema
   .virtual('profile')
   .get(function() {
     return {
-      '_id':this._id.toString('binary'),
+      '_id':this._id.toString(),
       'name': this.name,
       'role': this.role,
       'active': this.active,
@@ -218,7 +218,7 @@ UserSchema
    .virtual('privateProfile')
    .get(function() {
      return {
-       '_id':this._id.toString('binary'),
+       '_id':this._id.toString(),
        'name': this.name,
        'email': this.email,
        'active': this.active,
