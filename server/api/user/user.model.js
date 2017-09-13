@@ -247,7 +247,7 @@ UserSchema
   .virtual('listInfo')
   .get(function() {
     return {
-      '_id':this._id.toString('binary'),
+      '_id':this._id.toString(),
       'name': this.name,
       'role': this.role,
       'avatar': this.avatar,

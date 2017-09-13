@@ -15,7 +15,7 @@ var SmallGroup = require('../smallgroup/smallgroup.model');
 
 // Return a standard error
 function handleError(res, err) {
-    return res.sendStatus(500, err);
+  return res.sendStatus(500, err);
 }
 
 var validationError = function(res, err) {
@@ -37,36 +37,36 @@ exports.index = function(req, res) {
  */
 exports.publicStats = function(req, res) {
   async.parallel([
-        // Count active users
-        function(callback) {
-          User.count({active:true}, function (err, aCount) {
-            if (err) return callback(err);
-            callback(null, aCount);
-          });
-        },
-        // Count past users
-        function(callback) {
-          User.count({active:false}, function (err, pCount) {
-            if (err) return callback(err);
-            callback(null, pCount);
-          });
-        },
-      ],
-      function(err, results){
-        if (err) {
-          return res.send(400);
-        }
+    // Count active users
+    function(callback) {
+      User.count({active:true}, function (err, aCount) {
+        if (err) return callback(err);
+        callback(null, aCount);
+      });
+    },
+    // Count past users
+    function(callback) {
+      User.count({active:false}, function (err, pCount) {
+        if (err) return callback(err);
+        callback(null, pCount);
+      });
+    },
+  ],
+  function(err, results){
+    if (err) {
+      return res.send(400);
+    }
 
-        if (results === null) {
-          return res.send(400);
-        }
+    if (results === null) {
+      return res.send(400);
+    }
 
-        //results contains [activeProjectCount, pastProjectCount]
-        var stats = {};
-        stats.activeUsers = results[0] || 0;
-        stats.pastUsers = results[1] || 0;
+    //results contains [activeProjectCount, pastProjectCount]
+    var stats = {};
+    stats.activeUsers = results[0] || 0;
+    stats.pastUsers = results[1] || 0;
 
-        return res.status(200).send(stats);
+    return res.status(200).send(stats);
   });
 };
 
@@ -75,25 +75,25 @@ exports.publicStats = function(req, res) {
  *
  * Takes {query:String, single:Boolean, limit:Integer}
  */
- // TODO Make this work with fuzzy queries, multiple results etc.
+// TODO Make this work with fuzzy queries, multiple results etc.
 exports.search = function(req, res){
-    if (!req.query.query) return res.send(400, "No query supplied");
-    var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
-    User.findOne({name: query}, function(err, user){
-        if (err) return res.send(500, err);
-        if (!user){
-            if (req.query.single){
-                return res.status(200).json(null);
-            }else{
-                return res.status(200).json([]);
-            }
-        }
-        if (req.query.single){
-            return res.status(200).json(user.profile);
-        }else{
-            return res.status(200).json([user.profile]);
-        }
-    });
+  if (!req.query.query) return res.send(400, "No query supplied");
+  var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
+  User.findOne({name: query}, function(err, user){
+    if (err) return res.send(500, err);
+    if (!user){
+      if (req.query.single){
+        return res.status(200).json(null);
+      }else{
+        return res.status(200).json([]);
+      }
+    }
+    if (req.query.single){
+      return res.status(200).json(user.profile);
+    }else{
+      return res.status(200).json([user.profile]);
+    }
+  });
 };
 
 /**
@@ -113,43 +113,43 @@ exports.stats = function(req, res) {
 
     var getCommits = function(user){
       Commit.find()
-            .where('author.login').equals(String(user.github.login))
-            .where('date').gt(twoWeeks)
-            .exec(function(err, commits){
-                var commitList = [];
-                commits.forEach(function (c){
-                    commitList.push(c.toObject());
-                  }
-                )
-                user.commits = commitList ;
-                count--;
-                userInfo.push(user);
-                if (count === 0){
-                  res.status(200).json(userInfo);
-                }
-            });
+      .where('author.login').equals(String(user.github.login))
+      .where('date').gt(twoWeeks)
+      .exec(function(err, commits){
+        var commitList = [];
+        commits.forEach(function (c){
+          commitList.push(c.toObject());
+        }
+                       )
+                       user.commits = commitList ;
+                       count--;
+                       userInfo.push(user);
+                       if (count === 0){
+                         res.status(200).json(userInfo);
+                       }
+      });
     }
 
     for (var i = 0; i < users.length; i++){
       var u = users[i].stats;
       getCommits(u);
-      }
-    });
+    }
+  });
 };
 
 /**
-* Get list of all users with stats including last commits
-* in previous 2 weeks including inactive
-* restriction: 'admin'
+ * Get list of all users with stats including last commits
+ * in previous 2 weeks including inactive
+ * restriction: 'admin'
  */
 exports.allStats = function(req, res) {
-    // Only return users who have a github login
+  // Only return users who have a github login
   ClassYear.getCurrent(function(err, classYear){
     var classYearId = classYear._id;
     User.find({})
     .exec(function (err, users) {
-        if(err) return res.status(500).json(err);
-        res.status(200).json(users);
+      if(err) return res.status(500).json(err);
+      res.status(200).json(users);
     });
   });
 };
@@ -171,14 +171,11 @@ exports.list = function(req, res) {
  */
 exports.past = function(req, res) {
   User.find({active: false})
+  .select('_id name role avatar email github.login')
   .exec(function (err, users) {
     if(err) return res.send(500, err);
-      var userInfo = [];
 
-      for (var i = 0; i < users.length; i++){
-        userInfo.push(users[i].listInfo);
-      }
-      res.status(200).json(userInfo);
+    res.status(200).json(users);
   });
 };
 
@@ -255,28 +252,28 @@ exports.privateProfile = function (req, res, next) {
     if (!user) {return res.send(404);}
     var profile = user.privateProfile;
     return ClassYear.getCurrent(function(err, classYear){
-        var classYearId = classYear._id;
-        return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
-          if (err) {return next(err);}
-          if (smallgroup) {
-            var responseObjectSmallgroup = smallgroup.toObject();
-            profile.smallgroup = responseObjectSmallgroup;
-          }
-          // Get how many total attendance days there have been
-          var data = user.getTotalDays(classYear, smallgroup);
-          profile.totalDates = data.totalDates;
-          profile.totalBonusDates = data.totalBonusDates;
-          profile.totalSmallDates = data.totalSmallDates;
-          profile.totalBonusSmallDates = data.totalBonusSmallDates;
+      var classYearId = classYear._id;
+      return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
+        if (err) {return next(err);}
+        if (smallgroup) {
+          var responseObjectSmallgroup = smallgroup.toObject();
+          profile.smallgroup = responseObjectSmallgroup;
+        }
+        // Get how many total attendance days there have been
+        var data = user.getTotalDays(classYear, smallgroup);
+        profile.totalDates = data.totalDates;
+        profile.totalBonusDates = data.totalBonusDates;
+        profile.totalSmallDates = data.totalSmallDates;
+        profile.totalBonusSmallDates = data.totalBonusSmallDates;
 
-          Attendance.find({classYear:classYearId, user: userId})
-          .exec(function (err, attendance) {
-              if(err) { return handleError(res, err); }
-              profile.attendance = attendance;
+        Attendance.find({classYear:classYearId, user: userId})
+        .exec(function (err, attendance) {
+          if(err) { return handleError(res, err); }
+          profile.attendance = attendance;
 
-              return res.json(profile);
-          });
+          return res.json(profile);
         });
+      });
     });
   });
 };
@@ -302,28 +299,28 @@ exports.favoriteProjects = function (req, res, next) {
 exports.smallgroup = function (req, res, next) {
   var userId = req.user.id;
   return ClassYear.getCurrent(function(err, classYear){
-      var classYearId = classYear._id;
-      var query = SmallGroup.findOne({"students":userId, "classYear":classYearId});
+    var classYearId = classYear._id;
+    var query = SmallGroup.findOne({"students":userId, "classYear":classYearId});
+    if (req.user.isMentor){
+      query.select('+dayCodes.code')
+    }
+    return query.exec(function(err, smallgroup){
+      if (err) return handleError(res, err);
+      if (!smallgroup) return res.json({});
+      var responseObject = smallgroup.toObject();
+      // If user is not a mentor or not authenticated, don't give dayCode
       if (req.user.isMentor){
-          query.select('+dayCodes.code')
-      }
-      return query.exec(function(err, smallgroup){
-        if (err) return handleError(res, err);
-        if (!smallgroup) return res.json({});
-        var responseObject = smallgroup.toObject();
-        // If user is not a mentor or not authenticated, don't give dayCode
-        if (req.user.isMentor){
-          // Mentors should get a day code
-          // Generate a day code if one does not already exist
-          if (smallgroup.dayCode){
-              responseObject.dayCode = smallgroup.dayCode;
-          }
-          if (smallgroup.bonusDayCode){
-              responseObject.bonusDayCode = smallgroup.bonusDayCode;
-          }
+        // Mentors should get a day code
+        // Generate a day code if one does not already exist
+        if (smallgroup.dayCode){
+          responseObject.dayCode = smallgroup.dayCode;
         }
-        res.status(200).json(responseObject);
-      });
+        if (smallgroup.bonusDayCode){
+          responseObject.bonusDayCode = smallgroup.bonusDayCode;
+        }
+      }
+      res.status(200).json(responseObject);
+    });
   });
 };
 
@@ -334,26 +331,26 @@ exports.smallgroup = function (req, res, next) {
 exports.userSmallgroup = function (req, res, next) {
   var userId = req.params.id;
   return ClassYear.getCurrent(function(err, classYear){
-      var classYearId = classYear._id;
-      var query = SmallGroup.findOne({"students":userId, "classYear":classYearId})
-      if (req.user.isMentor){
-          query.select('+dayCodes.code')
+    var classYearId = classYear._id;
+    var query = SmallGroup.findOne({"students":userId, "classYear":classYearId})
+    if (req.user.isMentor){
+      query.select('+dayCodes.code')
+    }
+    return query.exec(function(err, smallgroup){
+      if (err) return handleError(res, err);
+      if (!smallgroup) return res.json({});
+      var responseObject = smallgroup.toObject();
+      // If user is not a mentor or not authenticated, don't give dayCode
+      // Mentors should get a day code
+      // Generate a day code if one does not already exist
+      if (smallgroup.dayCode){
+        responseObject.dayCode = smallgroup.dayCode;
       }
-      return query.exec(function(err, smallgroup){
-        if (err) return handleError(res, err);
-        if (!smallgroup) return res.json({});
-        var responseObject = smallgroup.toObject();
-        // If user is not a mentor or not authenticated, don't give dayCode
-        // Mentors should get a day code
-        // Generate a day code if one does not already exist
-        if (smallgroup.dayCode){
-            responseObject.dayCode = smallgroup.dayCode;
-        }
-        if (smallgroup.bonusDayCode){
-            responseObject.bonusDayCode = smallgroup.bonusDayCode;
-        }
-        res.status(200).json(responseObject);
-      });
+      if (smallgroup.bonusDayCode){
+        responseObject.bonusDayCode = smallgroup.bonusDayCode;
+      }
+      res.status(200).json(responseObject);
+    });
   });
 };
 
@@ -388,12 +385,12 @@ exports.destroy = function(req, res) {
   .select('_id email password provider salt')
   .exec(function (err, user, db) {
     if(user.authenticate(pass)) {
-       SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
+      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
         if(err) {
-         return res.status(500).json({'error' : 'error in deleting address'});
+          return res.status(500).json({'error' : 'error in deleting address'});
         }
         User.findByIdAndRemove(userId, function(err, user) {
-           if(err) return res.send(500, err);
+          if(err) return res.send(500, err);
           return res.send(200);
         });
         //res.json(data);
@@ -410,25 +407,25 @@ exports.destroy = function(req, res) {
  * restriction: 'admin'
  */
 exports.role = function(req, res) {
-    var roles = ['user', 'mentor', 'admin'];
-    var userId = req.params.id;
-    var newRole = req.body.role;
-    // Check that role is valid
-    if (roles.indexOf(newRole) === -1){
-        res.send(400, {error: "Role does not exist."});
+  var roles = ['user', 'mentor', 'admin'];
+  var userId = req.params.id;
+  var newRole = req.body.role;
+  // Check that role is valid
+  if (roles.indexOf(newRole) === -1){
+    res.send(400, {error: "Role does not exist."});
+  }
+  User.findById(userId, function(err,user){
+    if (err){
+      res.send(500, err);
+    }else{
+      if (user.role === newRole) return;
+      user.role = newRole;
+      user.save(function(err) {
+        if (err) return validationError(res, err);
+        res.send(200);
+      });
     }
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
-            if (user.role === newRole) return;
-            user.role = newRole;
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-        }
-    });
+  });
 }
 /**
  * Change a users password
@@ -462,16 +459,16 @@ exports.changePassword = function(req, res, next) {
  * Deactivates a user
  */
 exports.deactivate = function(req,res) {
-      var userId = String(req.params.id);
-        User.findById(userId, function(err, user){
-          if (err) return res.send(500, err);
-          user.active = false;
-          user.save(function(err){
-          if (err) return res.send(500, err);
-          res.status(200).json({success: true});
-        })
-      });
-  };
+  var userId = String(req.params.id);
+  User.findById(userId, function(err, user){
+    if (err) return res.send(500, err);
+    user.active = false;
+    user.save(function(err){
+      if (err) return res.send(500, err);
+      res.status(200).json({success: true});
+    })
+  });
+};
 
 /**
  * Deactivates a user
@@ -484,7 +481,7 @@ exports.deactivate = function(req, res, next) {
 
     user.active = false;
     user.save(function(err){
-    if (err) return res.send(500, err);
+      if (err) return res.send(500, err);
       res.status(200).json({success: true});
     })
   });
@@ -499,7 +496,7 @@ exports.activate = function(req, res, next) {
     if (err) return res.send(500, err);
     user.active = true;
     user.save(function(err){
-    if (err) return res.send(500, err);
+      if (err) return res.send(500, err);
       res.status(200).json({success: true});
     })
   });
@@ -531,91 +528,91 @@ exports.authCallback = function(req, res, next) {
  * Add an item to the tech array for a user
  */
 exports.addTech = function(req,res){
-    var userId = req.params.id;
-    var newTech = req.body.tech;
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
-            if (!user.tech) user.tech = [];
-            user.tech.push(newTech);
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-        }
-    });
+  var userId = req.params.id;
+  var newTech = req.body.tech;
+  User.findById(userId, function(err,user){
+    if (err){
+      res.send(500, err);
+    }else{
+      if (!user.tech) user.tech = [];
+      user.tech.push(newTech);
+      user.save(function(err) {
+        if (err) return validationError(res, err);
+        res.send(200);
+      });
+    }
+  });
 };
 
 /**
  * Remove an item from the tech array for a user
  */
 exports.removeTech = function(req,res){
-    var userId = req.params.id;
-    var tech = req.body.tech;
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
-            if (!user.tech) user.tech = [];
-            user.tech.splice(user.tech.indexOf(tech), 1);
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-        }
-    });
+  var userId = req.params.id;
+  var tech = req.body.tech;
+  User.findById(userId, function(err,user){
+    if (err){
+      res.send(500, err);
+    }else{
+      if (!user.tech) user.tech = [];
+      user.tech.splice(user.tech.indexOf(tech), 1);
+      user.save(function(err) {
+        if (err) return validationError(res, err);
+        res.send(200);
+      });
+    }
+  });
 };
 
 /**
  * Set reset token for user and email it the password token will expire after 24 hours.
  */
 exports.resetPassword = function(req, res){
-    var userEmail = req.body.email;
-    User.findOne({
-        email: userEmail.toLowerCase()
-    }, function (err, user){
-        if (err) return res.status(401).json(err);
-        if (!user) return res.status(200).json({success: true});
+  var userEmail = req.body.email;
+  User.findOne({
+    email: userEmail.toLowerCase()
+  }, function (err, user){
+    if (err) return res.status(401).json(err);
+    if (!user) return res.status(200).json({success: true});
 
-        crypto.randomBytes(12, function(ex, buf) {
-            var token = buf.toString('hex');
-            user.passwordResetToken = token;
+    crypto.randomBytes(12, function(ex, buf) {
+      var token = buf.toString('hex');
+      user.passwordResetToken = token;
 
-            // Get tomorrow's date
-            var tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
+      // Get tomorrow's date
+      var tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
 
-            user.passwordResetExpiration = tomorrow;
+      user.passwordResetExpiration = tomorrow;
 
-            user.save(function(err){
-              if (err) return validationError(res,err);
+      user.save(function(err){
+        if (err) return validationError(res,err);
 
-              var sub = {
-                ":name": [user.name],
-                "[%address%]": [config.addr + "/login?token=" + user.passwordResetToken],
-              }
+        var sub = {
+          ":name": [user.name],
+          "[%address%]": [config.addr + "/login?token=" + user.passwordResetToken],
+        }
 
-              var filter = {
-                "templates": {
-                  "settings": {
-                    "enable": 1,
-                    "template_id": "2f31a6c8-770e-4da0-a71c-dc71385d549f"
-                  }
-                }
-              }
+        var filter = {
+          "templates": {
+            "settings": {
+              "enable": 1,
+              "template_id": "2f31a6c8-770e-4da0-a71c-dc71385d549f"
+            }
+          }
+        }
 
-              // email token to user
-              email.sendEmail(user.email, "RCOS.IO Forgot Password", sub, '<br>', filter, function(err, success){
-                if (err) return res.status(500).json(err);
+        // email token to user
+        email.sendEmail(user.email, "RCOS.IO Forgot Password", sub, '<br>', filter, function(err, success){
+          if (err) return res.status(500).json(err);
 
-                return res.status(200).json(success);
-              });
-            });
-
+          return res.status(200).json(success);
         });
+      });
 
     });
+
+  });
 
 };
 
@@ -623,85 +620,85 @@ exports.resetPassword = function(req, res){
  * Add an item to the projects array for the user
  */
 exports.addProject = function(req,res){
-    var userId = req.params.id;
-    var newProject = req.body.project;
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
-            if (!user.projects) user.projects = [];
-            if (user.projects.indexOf(newProject) !== -1) return;
-            user.projects.push(newProject);
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-        }
-    });
+  var userId = req.params.id;
+  var newProject = req.body.project;
+  User.findById(userId, function(err,user){
+    if (err){
+      res.send(500, err);
+    }else{
+      if (!user.projects) user.projects = [];
+      if (user.projects.indexOf(newProject) !== -1) return;
+      user.projects.push(newProject);
+      user.save(function(err) {
+        if (err) return validationError(res, err);
+        res.send(200);
+      });
+    }
+  });
 };
 
 /**
  * Add an item to the favorite projects array for the user
  */
 exports.addFavorite = function(req,res){
-    var userId = req.params.id;
-    var newFavorite = req.params.project;
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
-            if (!user.favoriteProjects) user.favoriteProjects = [];
-            if (user.favoriteProjects.indexOf(newFavorite) !== -1) return;
-            user.favoriteProjects.push(newFavorite);
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-        }
-    });
+  var userId = req.params.id;
+  var newFavorite = req.params.project;
+  User.findById(userId, function(err,user){
+    if (err){
+      res.send(500, err);
+    }else{
+      if (!user.favoriteProjects) user.favoriteProjects = [];
+      if (user.favoriteProjects.indexOf(newFavorite) !== -1) return;
+      user.favoriteProjects.push(newFavorite);
+      user.save(function(err) {
+        if (err) return validationError(res, err);
+        res.send(200);
+      });
+    }
+  });
 };
 
 /**
  * Remove an item from the tech array for a user
  */
 exports.removeProject = function(req,res){
-    var userId = req.params.id;
-    var project = req.body.project;
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
-            if (!user.projects) user.projects = [];
-            user.projects.splice(user.projects.indexOf(project), 1);
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-        }
-    });
+  var userId = req.params.id;
+  var project = req.body.project;
+  User.findById(userId, function(err,user){
+    if (err){
+      res.send(500, err);
+    }else{
+      if (!user.projects) user.projects = [];
+      user.projects.splice(user.projects.indexOf(project), 1);
+      user.save(function(err) {
+        if (err) return validationError(res, err);
+        res.send(200);
+      });
+    }
+  });
 };
 /**
  * Remove an item from the favorite projects array for a user
  */
 exports.removeFavorite = function(req,res){
-    var userId = req.params.id;
-    var project = req.params.project;
-    User.findById(userId, function(err,user){
-        if (err){
-            res.send(500, err);
-        }else{
-            if (!user.favoriteProjects) user.favoriteProjects = [];
-            user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
-            user.save(function(err) {
-                if (err) return validationError(res, err);
-                res.send(200);
-            });
-        }
-    });
+  var userId = req.params.id;
+  var project = req.params.project;
+  User.findById(userId, function(err,user){
+    if (err){
+      res.send(500, err);
+    }else{
+      if (!user.favoriteProjects) user.favoriteProjects = [];
+      user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
+      user.save(function(err) {
+        if (err) return validationError(res, err);
+        res.send(200);
+      });
+    }
+  });
 };
 /*
-Function that is called by removeUser api call
-*/
+   Function that is called by removeUser api call
+   */
 exports.deleteUser = function(req,res,next){
 
   var userId = req.user.id;
@@ -711,12 +708,12 @@ exports.deleteUser = function(req,res,next){
   .select('_id email password provider salt passwordResetToken passwordResetExpiration')
   .exec(function (err, user,db) {
     if(user.authenticate(pass)) {
-       SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
+      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
         if(err) {
-         return res.status(500).json({'error' : 'error in deleting address'});
+          return res.status(500).json({'error' : 'error in deleting address'});
         }
         User.findByIdAndRemove(userId, function(err, user) {
-           if(err) return res.send(500, err);
+          if(err) return res.send(500, err);
           return res.send(200);
         });
         //res.json(data);
