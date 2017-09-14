@@ -14,7 +14,7 @@ angular.module('observatory3App')
 
     $scope.edit = function(ach) {
       $scope.achievement = ach;
-    }
+    };
 
     $scope.isAdmin = Auth.isAdmin;
   });

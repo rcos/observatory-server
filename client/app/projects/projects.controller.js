@@ -97,35 +97,35 @@ angular.module('observatory3App')
         $http.put('api/users/' + $scope.user._id + '/favorite/'+project._id
         ).success(function(){
             $scope.favoriteProjects.push(project);
-            notify("Project added as a favorite");
+            notify('Project added as a favorite');
         }).error(function(){
             notify({ message: 'Error trying to mark as a favorite project', classes: ['alert-danger'] });
         });
-    }
+    };
 
     $scope.markNotFavorite = function(project) {
         $http.delete('api/users/' + $scope.user._id + '/favorite/'+project._id
         ).success(function(){
             for(var index = 0; index < $scope.favoriteProjects.length; index++) {
-                if($scope.favoriteProjects[index]._id == project._id) {
+                if($scope.favoriteProjects[index]._id === project._id) {
                   $scope.favoriteProjects.splice(index, 1);
                   break;
                 }
             }
-            notify("Project removed from favorites");
+            notify('Project removed from favorites');
         }).error(function(){
             notify({ message: 'Error trying to unmark as a favorite project', classes: ['alert-danger'] });
         });
-    }
+    };
 
     $scope.isFavorite = function(project) {
         for (var index = 0; index < $scope.favoriteProjects.length; index++) {
-            if ($scope.favoriteProjects[index]._id == project._id) {
+            if ($scope.favoriteProjects[index]._id === project._id) {
               return true;
             }
         }
         return false;
-    }
+    };
 
     if ($stateParams.state === 'past') {
       $scope.past = true;
