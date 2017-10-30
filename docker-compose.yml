@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+  mongodb:
+    image: mongo
+    container_name: observatory_mongo
+    ports:
+      - "27017:27017"
+
+  mongo_admin:
+    image: mongo-express
+    container_name: observatory_mongo_admin
+    links:
+      - mongodb:mongo
+    ports:
+      - "8081:8081"

@@ -22,16 +22,14 @@ Key Features Include
 ### Prerequisites
 - [Git](https://git-scm.com/)
 - [Node.js and npm](https://nodejs.org/) Node ^4.2.3, npm ^2.14.7  (nodejs-legacy for debian-based distributions)
-- [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
-
+- [Docker](http://https://docs.docker.com/engine/installation/)
+- [Docker-Compose](https://docs.docker.com/compose/install/)
 
 - [Bower](https://bower.io/) (`npm install --global bower`)
 - [Grunt](http://gruntjs.com/) (`npm install --global grunt-cli`)
 ```
 npm install -g grunt-cli grunt bower
 ```
-
-> For Windows we recommend following these instructions to get MongoDB running: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
 
 ### Developing
 1. Run `npm install` to install server dependencies.
@@ -42,12 +40,10 @@ npm install -g grunt-cli grunt bower
     > ```
 
 2. Run `bower install` to install front-end dependencies.
-3. Run `mongod` in a separate shell to keep an instance of the MongoDB Daemon running (or run continuously with `sudo service mongodb start` or equivalent if not on an ubuntu-based distribution)
-    > if mongodb fails to start, run the following line and retry:
-    >
-    > ```
-    > sudo mkdir -p /data/db
-    > ```
+
+3. Run `docker-compose up -d` to start a MongoDB instance.
+
+    This also starts a [Mongo-Express](https://github.com/mongo-express/mongo-express) admin interface available at [http://localhost:8081](http://localhost:8081).
 
 4. Run `grunt serve` to start the development server. It should automatically open the client in your browser when ready.
 
