@@ -73,7 +73,7 @@
                     {{student.name}}
                   </div>
                   <div class='projects'>
-                    <span ng-repeat='project in student.projects'> {{project.name}}, </span>
+                    <span ng-repeat='project in student.projects'> {{project.name}} {{$last ? '' : ', '}}</span>
                   </div>
                 </div>
                 <!-- TODO, switch to a modal with info -->
@@ -105,7 +105,7 @@
                     {{student.name}}
                   </div>
                   <div class='projects'>
-                    <span ng-repeat='project in student.projects'> {{project.name}}, </span>
+                    <span ng-repeat='project in student.projects'> {{project.name}} {{$last ? '' : ', '}}</span>
                   </div>
                 </div>
                 <!-- TODO, switch to a modal with info -->
