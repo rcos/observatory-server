@@ -1,0 +1,94 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container admin-users">
+  <div class="row">
+      <div class="col-sm-12 text-left">
+          <h2>{{ !past.active ? "Past " : "" }}RCOS Developers</h2>
+          <br>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <form class="form-inline" role="form">
+        <div class="left-inner-addon">
+          <i class="glyphicon glyphicon-search"></i>
+          <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer..." ng-model="searchString">
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-6 text-right">
+      <button type="button" class="btn btn-default" ng-click="viewActive(true)" ng-show="!past.active">
+        Show Current Developers
+      </button>
+      <button type="button" class="btn btn-default" ng-click="viewActive(false)" ng-show="past.active">
+        Show Past Developers
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 text-right">
+      <button type="button" class="btn btn-link btn-sm" ng-click="activateAll(true)" ng-show="!past.active">
+        Activate all
+      </button>
+      <button type="button" class="btn btn-link btn-sm" ng-click ="confirmDeativate()" ng-show="past.active">
+        Deactivate all
+      </button>
+
+    </div>
+  </div>
+  <div class="table-responsive">
+      <table class="table table-hover text-center table-striped table-bordered">
+      <thead>
+        <tr>
+            <td colspan="3">Info</td>
+            <td colspan="2">Full Group</td>
+            <td colspan="2">Small Group</td>
+            <td colspan="2">Contributions</td>
+            <td colspan="2">Edit</td>
+        </tr>
+        <tr>
+            <td sort-arrow sortby='name' text='Name' sortorder='sortorder'></td>
+            <td sort-arrow sortby='Github' text='Git' sortorder='sortorder'></td>
+            <td sort-arrow sortby='role' text='User Role' sortorder='sortorder'></td>
+            <td sort-arrow sortby='full.normal' text='' icon="fa fa-calendar-check-o" sortorder='sortorder' title="Full Group Attendance"></td>
+            <td sort-arrow sortby='full.bonus' text='+' sortorder='sortorder' title="Bonus Full Group Attendance"></td>
+            <td sort-arrow sortby='small.normal' text='' icon="fa fa-calendar-check-o" sortorder='sortorder' title="Small Group Attendance"></td>
+            <td sort-arrow sortby='small.bonus' text='+' sortorder='sortorder' title="Bonus Small Group Attendance"></td>
+            <td sort-arrow sortby='github.events.length' text='Events' sortorder='sortorder'></td>
+            <td sort-arrow sortby='commits.length' text='Commits' sortorder='sortorder'></td>
+            <td sort-arrow sortby='active' text='Active' sortorder='sortorder'></td>
+            <td sort-arrow sortby='active' text='Attendance' sortorder='sortorder'></td>
+        </tr>
+      </thead>
+      <tbody>
+          <tr ng-repeat="user in users | filter:searchString | orderBy:sortorder">
+              <td><a href="/users/{{user._id}}/profile">{{ user.name }}</a></td>
+              <td class="no-padding"><a class="btn btn-link large-text no-padding" role="button" ng-href="http://github.com/{{user.githubProfile}}" target="_blank"><i class="fa fa-github-square" ></i></a></td>
+              <td>
+              <select class="form-control" ng-model="user.role" ng-change="updateUserRole(user)">
+                    <option value="user">User</option>
+                    <option value="mentor">Mentor</option>
+                    <option value="admin">Admin</option>
+                </select>
+              </td>
+              <td>{{ user.full.normal }}</td>
+              <td>{{ user.full.bonus }}</td>
+              <td>{{ user.small.normal }}</td>
+              <td>{{ user.small.bonus }}</td>
+              <td>{{ user.github.events.length || 0  }}</td>
+              <td>{{ user.commits.length }}</td>
+              <td class="small-padding" ng-class="{'color-inactive':!user.active, 'color-active':user.active}" ng-click="toggle( user )">
+                <a class="btn btn-link md-text no-padding" role="button" ng-href="#" ><i class="fa"  ng-class="{'fa-minus-square-o':!user.active, 'fa-check-square-o':user.active}" ></i></a>
+                <!-- <input class="center-link" type="checkbox" ng-model="user.activeChange"></input> -->
+              </td>
+              <td class="no-padding">
+                <a class="btn btn-link md-text no-padding" role="button" ng-click="addAttendence(user)" title="Add Attendance">
+                  <i class="fa fa-calendar" ></i>
+                </a>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div ng-include="'components/footer/footer.html'"></div>

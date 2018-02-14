@@ -1,0 +1,155 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-md-offset-3 text-center">
+            <h3>Edit Profile</h3>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form class="profileForm" name="profileForm" ng-submit="editProfile(profileForm)" novalidate>
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" ng-class="">
+                <label>Name</label>
+
+                <input type="text" name="name" class="form-control" ng-model="user.name" mongoose-error/>
+              </div>
+
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+              ng-class="{
+                'has-success': profileForm.email.$valid && (submitted || profileForm.email.$dirty),
+                'has-error': profileForm.email.$invalid && (submitted || profileForm.email.$dirty) }">
+                <label>Email</label>
+
+                <input type="email" name="email" id="name" class="form-control" ng-model="user.email" mongoose-error/>
+              </div>
+
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                ng-class="{ 'has-success': profileForm.githubLogin.$valid && (submitted || profileForm.githubLogin.$dirty),
+                'has-error': profileForm.githubLogin.$invalid && (submitted || profileForm.githubLogin.$dirty) }">
+                <label>Github Login</label>
+
+                <input type="text" name="githubLogin" id="githubLogin" class="form-control" ng-model="user.github.login" ng-pattern="/^[a-zA-Z0-9-]+$/" mongoose-error/>
+              </div>
+
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                <label>Bio</label>
+
+                <textarea rows="4" name="bio" class="form-control" ng-model="user.bio" mongoose-error></textarea>
+              </div>
+
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                <label ng-click="toggleActive()" >Active Developer</label>
+                <input type="checkbox" ng-model="user.active"></input>
+              </div>
+
+              <button class="btn btn-lg btn-login" ng-class="{'disabled': !profileForm.$valid}" type="submit">
+                Save changes
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-md-offset-3 text-center">
+        <h3>Change Password</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form class="form" name="form" ng-submit="changePassword(form)" novalidate>
+              <div ng-hide='token' class="form-group">
+                <label>Current Password</label>
+
+                <input type="password" name="password" class="form-control" ng-model="user.oldPassword"
+                mongoose-error/>
+                <p class="help-block" ng-show="form.password.$error.mongoose">
+                  {{ errors.other }}
+                </p>
+              </div>
+
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                ng-class="{ 'has-success': form.password.$valid && (submitted || form.password.$dirty),
+                'has-error': form.password.$invalid && (submitted || form.password.$dirty) }">
+                <label>Password</label>
+
+                <input type="password" name="password" class="form-control" ng-model="user.password"
+                  ng-minlength="3"
+                  required
+                  mongoose-error/>
+
+                <p class="help-block"
+                  ng-show="(form.password.$error.minlength || form.password.$error.required) && (submitted || form.password.$dirty)">
+                  Password must be at least 3 characters.
+                </p>
+
+                <p class="help-block" ng-show="form.password.$error.mongoose">
+                  {{ errors.password }}
+                </p>
+              </div>
+
+              <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+              ng-class="{
+                'has-success': form.passwordverify.$valid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)),
+                'has-error': form.passwordverify.$invalid && (submitted || (form.password.$dirty && form.passwordverify.$dirty)) }">
+
+                <label>Re-type Password</label>
+
+                <input type="password" name="passwordverify" class="form-control" ng-model="user.passwordverify"
+                ng-minlength="3"
+                required
+                match-field="password"/>
+
+                <p class="help-block"
+                  ng-show="(form.passwordverify.$error.minlength || form.passwordverify.$error.required) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
+                  Password must be at least 3 characters.
+                </p>
+                <p class="help-block"
+                  ng-show="(form.passwordverify.$error.matchField) && (submitted || (form.password.$dirty && form.passwordverify.$dirty))">
+                  Passwords must match
+                </p>
+
+              </div>
+
+              <p class="help-block"> {{ message }} </p>
+
+              <button class="btn btn-lg btn-login" ng-class="{'disabled': !form.$valid}" type="submit">
+                Save changes
+              </button>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-md-offset-3 text-center">
+        <h3>Delete your Account</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <h4> Are you sure you want to do this?</h4>
+            <p>
+              <b>Deleting your account is permanent</b><br/>
+            </p>
+            <p>
+              <i>If you will no longer be using it, or are leaving RCOS, you should instead make yourself a past developer.</i>
+            </p>
+            <button class="btn btn-danger" ng-click="deleteUser()">
+              Delete account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div ng-include="'components/footer/footer.html'"></div>

@@ -1,0 +1,128 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class='container profile'>
+    <div class='row'>
+        <div class='col-sm-4 profile-sidebar'>
+            <img width='75%' ng-src='{{user.avatar}}&s=256px'/>
+            <span id='semester-count' ng-show="user.semesters">{{user.semesters}}</span>
+            <div class='sidebar-text name'>
+                {{user.name}}
+            </div>
+            <div class='sidebar-text title'>
+                <div ng-show="loggedInUserRole !== 'admin'">
+                    {{user.role}}
+                </div>
+                <div ng-show="loggedInUserRole === 'admin'">
+                    <select ng-model="user.role">
+                        <option value="user">User</option>
+                        <option value="mentor">Mentor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <button class='btn btn-default btn-xs' ng-click='setRole()' ng-disabled="originalRole === user.role">Save</button>
+                </div>
+            </div>
+            <div class='panel sidebar-text box'>
+              <div class='row'>
+                <div class='col-xs-12'>
+                  <p>
+                  <i class="fa fa-github"></i> <a target="_blank" href='http://github.com/{{user.githubProfile}}'>{{ user.githubProfile }}</a>
+                  </p>
+                </div>
+              </div>
+              <div class='row'>
+                <div class='col-xs-12'>
+                  <i class="fa fa-envelope"></i>
+                  <a ng-href="mailto:{{user.email}}">{{ user.email }}</a>
+                </div>
+              </div>
+              <div class='row'>
+                <div class='col-xs-12'>
+                  <div ng-show='canEdit()'>
+                    <br/>
+                    <a ng-href="/settings" class="btn btn-primary" type="button">Edit Profile</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class='col-sm-8'>
+            <div class="row">
+              <div class="col-sm-12">
+                <div ng-show="canEdit()">Add a new tech tag: </div>
+                <div class="tech-tags">
+                  <div class='tech-boxes' ng-show="user.tech.length || canEdit()">
+                      <span ng-repeat="tech in user.tech track by $index">
+                        {{tech}}
+                        <g class="glyphicon glyphicon-remove" ng-show='canEdit()' class='btn btn=default btn-xs' ng-click='removeTech(tech)' aria-hidden="true"></g>
+                      </span>
+                      <input ng-enter="addTechBubble()" ng-show='canEdit()' placeholder='html' ng-model="insertTechContent" size='4' type='text' />
+                      <button ng-click="addTechBubble()" ng-show='canEdit()' class="btn btn-default btn-xs">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ng-hide="user.bio">User has not written a bio</div>
+            <div ng-show="canEdit() || user.bio" class='panel content-box'>
+                <div class='content-title row'>
+                    <div class='col-xs-6'>Bio</div>
+                </div>
+                <div style="white-space:pre-wrap;" btf-markdown="user.bio"></div>
+            </div>
+            <div class='panel content-box' ng-repeat='project in projects'>
+                <div class='project row'>
+                    <div class='col-xs-3' style='text-align:center;'>
+                      <a href="#" class="thumbnail" ng-hide="project.photos.length === 0">
+                        <img class="img img-responsive full-width" ng-src='/uploads/{{ project.photos[0] }}'/>
+                      </a>
+                    </div>
+                    <div class='col-xs-9'>
+                        <div class='title'><a href="/projects/{{ project.githubUsername }}/{{ project.githubProjectName }}/profile"> {{project.name}} </a></div>
+                        <a ng-href='{{project.repositoryUrl}}' class='repo'> {{project.repositoryUrl}} </a>
+                        <div class='description'>{{project.description}}</div>
+                        <div class='project-tech-boxes'>
+                            <div ng-repeat='tech in project.tech'>{{tech}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='col-md-3'>
+            <div ng-hide='!canEdit()' class='panel content-box'>
+                <div class='content-title'>
+                    Attendance
+                </div>
+                <div>
+                    <div class='content-subtitle'>
+                        Large group <span class='attendance-score'>{{user.full.normal}} / {{user.full.all}} days + {{user.full.bonus}} bonus</span>
+                    </div>
+                    <div id='attendance-box-container'>
+                        <div ng-style="{ 'width' : user.full.greyWidth+'%'}" class='grey'></div>
+                        <div ng-style="{ 'width' : user.full.goodWidth+'%'}" class='good'></div>
+                        <div ng-style="{ 'width' : (100-user.full.greyWidth-user.full.goodWidth)+'%'}" class='bad'></div>
+
+                    </div>
+                </div>
+                <br>
+                <div ng-show="user.smallgroup">
+                    <div class='content-subtitle'>
+                        Small group <span class='attendance-score'>{{user.small.normal}} / {{user.small.all}} days + {{user.small.bonus}} bonus</span>
+                    </div>
+                    <div id='attendance-box-container'>
+                        <div ng-style="{ 'width' : user.small.greyWidth+'%'}" class='grey'></div>
+                        <div ng-style="{ 'width' : user.small.goodWidth+'%'}" class='good'></div>
+                        <div ng-style="{ 'width' : (100-user.small.greyWidth-user.small.goodWidth)+'%'}" class='bad'></div>
+
+                    </div>
+                </div>
+            </div>
+            <div ng-hide="user.commits.length == 0" class='panel content-box'>
+                <div class='content-title'>Commits</div>
+                <div>No commits yet...</div>
+                <div ng-repeat='event in user.github.events' class='commit'>
+                    <a href='{{event.url}}'>{{event.message}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="'components/footer/footer.html'"></div>

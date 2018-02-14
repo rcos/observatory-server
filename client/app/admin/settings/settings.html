@@ -1,0 +1,37 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container admin settings">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Current semester: {{ currentClass.semester }}</h2>
+
+            <div class='buttonLine'>
+                <button ng-hide='showNewSemester' ng-click='showNewSemester=true' class='btn btn-primary'>Create a New Semester</button>
+                <div ng-show="showNewSemester">
+                    <form class="form-inline" name="form" ng-submit="createNewSemester(form)" novalidate>
+                        <div class="form-group" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                        ng-class="{ 'has-success': form.semester.$valid && (submitted || form.semester.$dirty),
+                        'has-error': form.semester.$invalid && (submitted || form.semester.$dirty) }">
+                        <input type="text" class="form-control" id="semester" placeholder="{{todaySemester.semester}}" ng-model="newSemester.semester">
+                        </div>
+                        <div class="form-group"  ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                            ng-class="{ 'has-success': form.year.$valid && (submitted || form.year.$dirty),
+                            'has-error': form.year.$invalid && (submitted || form.year.$dirty) }">
+                            <input type="text" class="form-control" id="year" placeholder="{{todaySemester.year}}" ng-model="newSemester.year">
+                        </div>
+                        <button type="submit" class="btn btn-default">Create new semester</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 buttonLine">
+            <button ng-show= "!displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP'>Show URP Form</button>
+            <button ng-show= "displayURP" ng-click='URPDisplay()' class='btn btn-primary displayURP' >Hide URP Form</button>
+        </div>
+    </div>
+
+</div>
+
+<div ng-include="'components/footer/footer.html'"></div>

@@ -1,0 +1,27 @@
+- hosts: "{{ variable_host | default('rcos') }}"
+  remote_user: root
+  gather_facts: false
+  vars:
+    nodejs_version: "4.x"
+    domain_name: dev.rcos.io
+  roles:
+    - geerlingguy.nodejs
+    - nginx
+    - mongodb
+  pre_tasks:
+    - name: 'install python2'
+      raw: apt-get -y -qq install python
+    - name: 'gather facts'
+      setup:
+  tasks:
+    - name: Install forever
+      npm: name=forever global=yes state=latest
+
+    - name: Install grunt
+      npm: name=grunt global=yes state=latest
+
+    - name: Install grunt-cli
+      npm: name=grunt-cli global=yes state=latest
+
+    - name: Install bower
+      npm: name=bower global=yes state=latest

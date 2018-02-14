@@ -1,0 +1,45 @@
+[{
+	"_id": "57390399e07153b1a6f99055",
+	"classYear": "000000000000000000000001",
+	"user": "000000000000000000000100",
+	"date":"2016-05-15T04:00:00.000Z",
+	"datetime":"2016-05-15T23:17:45.408Z",
+	"code": "GDYK9P",
+	"present": true,
+	"verified": true,
+	"smallgroup": true,
+	"bonusDay": false
+}, {
+	"_id": "573903d2e07153b1a6f99056",
+	"classYear": "000000000000000000000001",
+	"user": "000000000000000000000200",
+	"date":"2016-05-15T04:00:00.000Z",
+	"datetime":"2016-05-15T23:18:42.454Z",
+	"code": "GDYK9P",
+	"present": true,
+	"verified": false,
+	"smallgroup": true,
+	"bonusDay": false
+}, {
+	"_id": "573903e7e07153b1a6f99057",
+	"classYear": "000000000000000000000001",
+	"user": "000000000000000000000400",
+	"date":"2016-05-15T04:00:00.000Z",
+	"datetime":"2016-05-15T23:19:03.505Z",
+	"code": "GDYK9P",
+	"present": true,
+	"verified": true,
+	"smallgroup": true,
+	"bonusDay": false
+}, {
+	"_id": "573903f9e07153b1a6f99058",
+	"classYear": "000000000000000000000001",
+	"user": "000000000000000000000400",
+	"date":"2016-05-15T04:00:00.000Z",
+	"datetime":"2016-05-15T23:19:21.022Z",
+	"code": "1W2O8J",
+	"present": true,
+	"verified": true,
+	"smallgroup": false,
+	"bonusDay": false
+}]

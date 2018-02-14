@@ -1,0 +1,25 @@
+- hosts: "{{ variable_host | default('rcos') }}"
+  remote_user: deploy
+  gather_facts: false
+  vars:
+    - log_file: "/home/deploy/observatory.log"
+    - server_dir: "/home/deploy/observatory/"
+    - port: 8443
+  tasks:
+    - local_action: shell npm install
+
+    - local_action: shell grunt build --force
+
+    - synchronize:
+        src: ../dist/
+        dest: "{{ server_dir }}"
+
+    - shell: "forever stopall"
+      args:
+        executable: /bin/bash
+
+    - npm:
+        path: "{{ server_dir }}"
+      ignore_errors: true
+
+    - shell: "NODE_ENV=production PORT={{ port }} forever -a -l {{ log_file }} start {{ server_dir }}server/app.js"

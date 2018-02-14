@@ -1,0 +1,91 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container developers">
+    <div class="row">
+        <div class="col-sm-12 text-left">
+            <h3>{{ past ? "Past " : "" }}RCOS Developers</h3>
+            <br>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-7 col-sm-6">
+        <form class="form-inline" role="form">
+          <div class="left-inner-addon">
+            <i class="glyphicon glyphicon-search"></i>
+            <input id="searchProjectsInput" type="text" class="form-control" placeholder="Search for a developer" ng-model="searchString.name" ng-change="onSearch(past)" tabindex="1">
+          </div>
+        </form>
+      </div>
+      <div class="col-xs-5 col-sm-6 text-right">
+        <div class="toolbar">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default" ng-click="toggleSortOrder()">
+              <i class="fa fa-sort-alpha-desc" aria-hidden="true" ng-show="sortOrder === '-name'"></i>
+              <i class="fa fa-sort-alpha-asc" aria-hidden="true" ng-show="sortOrder === 'name'"></i>
+            </button>
+          </div>
+          <div class="btn-group">
+            <a ng-href="/users/">
+              <button type="button" class="btn btn-default" ng-click="changeView('current')" ng-show="past">
+                Current
+              </button>
+            </a>
+          </div>
+          <div class="btn-group">
+            <a ng-href="/users/past">
+              <button type="button" class="btn btn-default" ng-show="!past">
+                Past
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-sm-6 text-left">
+          <div class="">
+              <span ng-show='numberOfPages() > 1'>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
+                  page {{ currentPage + 1 }} of {{ numberOfPages() }}
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all</button>
+              </span>
+              <span ng-hide='numberOfPages() > 1'>
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
+                </button>
+              </span>
+          </div>
+      </div>
+    </div>
+    <div class="row image-row">
+        <div ng-repeat="user in users | orderBy: sortOrder | startFrom:currentPage*pageSize | limitTo:pageSize">
+            <div class="col-md-2 col-sm-3 col-xs-4 text-center user-box">
+                <a href="/users/{{ user._id}}/profile" class="user-avatar">
+                    <img class="profile-img img-responsive placeholder-img" ng-src='{{user.avatar}}&s=248px'>
+                </a>
+                <p class="user-name">
+                <a href="/users/{{ user._id}}/profile">{{ user.name }}</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 text-left">
+          <div class="">
+              <span ng-show='numberOfPages() > 1'>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click='decrement()' ng-show='defaultPageSize < users.length'></span>
+                  page {{ currentPage + 1 }} of {{ numberOfPages() }}
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click='increment()' ng-show='defaultPageSize < users.length'></span>
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View all</button>
+              </span>
+              <span ng-hide='numberOfPages() > 1'>
+                <button type="button" class="btn btn-default btn-inverse" data-toggle="dropdown" ng-show="defaultPageSize < users.length" ng-click="toggleViewAll()">View less
+                </button>
+              </span>
+          </div>
+      </div>
+    </div>
+</div>
+
+<div ng-include="'components/footer/footer.html'"></div>

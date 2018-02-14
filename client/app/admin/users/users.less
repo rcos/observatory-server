@@ -1,0 +1,71 @@
+.trash { color:rgb(209, 91, 71); }
+
+.user-list {
+	li {
+		display: flex;
+		border: none;
+		border-bottom: 1px lightgray solid;
+		margin-bottom: 0;
+		&:last-child { border-bottom: none; }
+
+		.user-info {
+			flex-grow: 1;
+		}
+		.trash {
+			display: flex;
+			align-items: center;
+			text-decoration: none;
+		}
+	}
+}
+
+.has-error {
+	color: red;
+}
+
+.large-text{
+	font-size: 2.5em;
+}
+.md-text{
+	font-size: 2em;
+}
+.table > tbody > tr > td.no-padding{
+	padding: 0;
+}
+.no-padding{
+	padding: 0;
+}
+.table > tbody > tr > td.small-padding{
+	padding: .5em 0 0 0;
+}
+.small-padding{
+	padding: .5em 0 0 0;
+}
+
+.center-link{
+	margin-top: 10px;
+}
+.bottom-link{
+	bottom: 0;
+	font-size: .8em;
+}
+.table > tbody > tr > td.link-container{
+	padding-bottom: 0;
+}
+.table-striped > tbody > tr > td.color-inactive{
+	background-color: #ededed;
+}
+.table-striped > tbody > tr:nth-child(odd) > td.color-inactive{
+	background-color: #e6e6e6;
+}
+
+.table-striped > tbody > tr > td.color-active{
+	background-color: #e1f4dc;
+}
+.table-striped > tbody > tr:nth-child(odd) > td.color-active{
+	background-color: #d8f0d1;
+}
+
+.uib-daypicker {
+	margin: auto;
+}

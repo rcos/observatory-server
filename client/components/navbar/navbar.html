@@ -1,0 +1,81 @@
+<div class="navbar navbar-default navbar-static-top" ng-controller="NavbarCtrl">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" ng-click="isCollapsed = !isCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">RCOS</a>
+    </div>
+    <div uib-collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+        <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
+            <a ng-href="{{item.link}}">{{item.title}}</a>
+        </li>
+        <li ng-show="isLoggedIn() && !isMentor() && hasSmallGroup()">
+            <a ng-href='/smallgroup'>Small Group</a>
+        </li>
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/attend')}"><a href="/attend">Attend</a></li>
+        <li ng-show="displayURP"><a href='http://urp.rcos.xyz/'>URP Form</a></li>
+        <li ng-show="isMentor()" uib-dropdown is-open="mentorMenu">
+            <a uib-dropdown-toggle href="#">
+                Mentor <span class="caret"></span></a>
+            <ul uib-dropdown-menu>
+                <li ng-show="isMentor()" ng-class="{active: isActive('/mentor')}">
+                    <a href="/mentor">Verify Attendance</a>
+                </li>
+                <li ng-show="isLoggedIn() && (isMentor() || hasSmallGroup())">
+                    <a ng-href='/smallgroup'>Small Group</a>
+                </li>
+            </ul>
+        </li>
+        <li ng-show="isAdmin()" uib-dropdown is-open="adminMenu">
+            <a uib-dropdown-toggle href="#">
+                Admin <span class="caret"></span></a>
+            <ul uib-dropdown-menu>
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/users')}">
+                    <a href="/admin/users">Users</a>
+                </li>
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/settings')}">
+                    <a href="/admin/settings">Settings</a>
+                </li>
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin/attendance')}">
+                    <a href="/admin/attendance">Attendance</a>
+                </li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/signup')}">
+            <a href="/signup">Sign up</a>
+        </li>
+        <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/login')}">
+            <a href="/login">Login</a>
+        </li>
+        <li ng-show="isLoggedIn()" class="hidden-sm visible-xs visible-md visible-lg">
+            <a ng-href='/me'>Hello {{ getCurrentUser().name }}</a>
+        </li>
+        <li ng-show="isLoggedIn()" class="visible-sm">
+            <a ng-href='/me'><i class="fa fa-user" aria-hidden="true"></i></a>
+        </li>
+
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/settings')}" class="visible-xs">
+            <a href="/settings"><span class="glyphicon glyphicon-cog"></span> Settings</a>
+        </li>
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/settings')}" class="hidden-xs">
+            <a href="/settings"><span class="glyphicon glyphicon-cog"></span></a>
+        </li>
+
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/logout')}" class="visible-xs">
+            <a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out" title="Logout"></span> Logout</a>
+        </li>
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/logout')}" class="hidden-xs">
+            <a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out" title="Logout"></span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

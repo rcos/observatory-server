@@ -1,0 +1,111 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container project-profile">
+  <div class="row text-left">
+    <div class="col-sm-12">
+      <h1 >{{project.name}}</h1>
+    </div>
+    <div class="header-buttons">
+      <div class="col-sm-6 text-left">
+        <button type="button" ng-show='isLoggedIn() && !userOnProject' class="btn btn-success" ng-click='joinProject()'>Join Project</button>
+        <button type="button" ng-show='isLoggedIn() && userOnProject' class="btn btn-danger" ng-click='leaveProject()'>Leave Project</button>
+        <button type="button" ng-show='isAdmin() && project.markedDefault' class="btn btn-success" ng-click='unmarkDefault()'>Unmark Default</button>
+        <button type="button" ng-show='isAdmin() && !project.markedDefault' class="btn btn-success" ng-click='markDefault()'>Mark Default</button>
+        <button type="button" ng-show="(isMentor() || userOnProject ) && project.active" class="btn btn-warning" ng-click="markPast()">Mark Past Project</button>
+        <button type="button" ng-show="(isMentor() || userOnProject) && !project.active" class="btn btn-warning ng-hide" ng-click="markActive()">Mark Active Project</button>
+        <button type="button" class="btn btn-primary" ng-click="editProject()" ng-show="userOnProject">Edit Project</button>
+      </div>
+
+      <div class="col-sm-6 text-right">
+
+        <a class="btn btn-info" href="{{project.websiteUrl}}" title="" target="_blank">Website</a>
+
+        <a class="btn btn-info" href="https://github.com/{{project.githubUsername}}/{{project.githubProjectName}}" title="" ng-show="project.repositories.length === 1" target="_blank">Repository <span class="glyphicon glyphicon-menu-right"></span></a>
+
+        <div class="btn-group" uib-dropdown is-open="repositoryMenu" ng-show="project.repositories.length > 1">
+          <a class="btn btn-info dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+            Repositories <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu text-left" uib-dropdown-menu>
+            <li><a href="{{repo}}" ng-repeat="repo in project.repositories">{{repo}}<span class="glyphicon glyphicon-menu-right"></span></a></li>
+          </ul>
+        </div>
+
+        <a class="btn btn-info" href="{{project.proposalUrl}}" ng-show="project.proposalUrl" title="" target="_blank">Proposal</a>
+
+        <a class="btn btn-info" href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog" title="">Blog</a>
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div ng-show="canEdit()">Add a new tech tag: </div>
+      <div class="tech-tags">
+        <div class='tech-boxes' ng-show="project.tech.length || canEdit()">
+            <span ng-repeat="tech in project.tech track by $index">
+              {{tech}}
+              <g class="glyphicon glyphicon-remove" ng-show='canEdit()' class='btn btn=default btn-xs' ng-click='removeTech(tech)' aria-hidden="true"></g>
+            </span>
+            <input ng-enter="addTechBubble()" ng-show='canEdit()' placeholder='html' ng-model="insertTechContent" size='4' type='text' />
+            <button ng-click="addTechBubble()" ng-show='canEdit()' class="btn btn-default btn-xs">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="row-height">
+      <div class="col-xs-12 col-sm-7 col-sm-height col-sm-top">
+        <div class="project-image inside">
+          <uib-carousel active="active" no-wrap="true">
+            <uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id" active="slide.active">
+              <img ng-src="{{ slide.image }}" index="slide.id" style="margin:auto;">
+            </uib-slide>
+          </uib-carousel>
+
+          <button class="btn btn-sm btn-default" ng-click="selectImage()" ng-show="userOnProject">Upload Images</button>
+          <input id="uploadImage" type="file" ngf-max-size="4MB" ngf-select="upload($file)" />
+          <g class="glyphicon glyphicon-remove remove-photo btn btn-default" ng-show="userOnProject && project && !slides[0].placeholder" ng-click="deletePhoto()"></g>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-5 col-sm-height col-sm-top">
+        <div class="description inside-full-height">
+          <h3>About</h3>
+          <div class="description-text" btf-markdown="project.description"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-7">
+      <div class="contributors">
+        <div class="container-fluid">
+          <div class="row">
+            <h3>Contributors</h3>
+          </div>
+          <div class="row image-row">
+            <div ng-repeat="user in authors | orderBy: '+name'">
+              <div class="col-xs-4 col-sm-2 col-md-2 text-center user-box">
+                <a href="/users/{{ user._id}}/profile" class="user-avatar">
+                  <img class="profile-img img-responsive img-circle placeholder-img" ng-src='{{user.avatar}}&s=248px'>
+                </a>
+                <p class="user-name">
+                <a href="/users/{{ user._id}}/profile">{{ user.name }}</a>
+                </p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-5">
+      <div class="description inside-full-height">
+        <h3>Recent Commits</h3>
+        <div id="github-commits"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-include="'components/footer/footer.html'"></div>

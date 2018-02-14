@@ -1,0 +1,14 @@
+node_modules
+public
+.tmp
+.sass-cache
+.idea
+client/bower_components
+dist
+/server/config/local.env.js
+server/npm-debug.log
+server/static/uploads/
+/uploads
+.changed_cache
+npm-debug.log
+coverage

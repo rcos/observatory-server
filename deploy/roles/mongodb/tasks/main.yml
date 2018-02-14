@@ -1,0 +1,12 @@
+---
+
+- name: Install mongodb
+  apt:
+    name: mongodb
+    state: latest
+
+- cron:
+    name: "backup mongodb"
+    minute: "0"
+    hour: "5,19"
+    job: "mongodump"

@@ -1,0 +1,36 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+	<h3>Starter Projects</h3>
+    <div class='default-project' ng-repeat="project in defaultProjects">
+        <div class="extra-content">
+            <div class="row">
+                <div class="col-sm-3" id="name"><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/profile"><h2 class="default-project-title">{{ project.name }}</h2></a> </div>
+                <div class="col-sm-9 text-right">
+                    <div ng-show='isLoggedIn() && !checkUserProject(project)' class="btn btn-success" ng-click='joinProject(project)'>Join Project</div>
+                    <div ng-show='isLoggedIn() && checkUserProject(project)' class="btn btn-danger" ng-click='leaveProject(project)'>Leave Project</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-5 col-lg-4">
+                    <div ng-show="project.photos.length === 0">
+                    No images uploaded yet.
+                    </div>
+
+                    <div ng-show="project.photos.length > 0">
+                        <!-- <div style="background:url({{getImagePrefix(project)+url}}) center center;" class="slide" alt="{{url}}"></div> -->
+                    <img class="project-image" ng-src="{{project.photos.length > 0 && getImagePrefix(project)+project.photos[0]}}" >
+                    </div>
+
+                </div>
+                <div class="col-sm-6 col-md-7 col-lg-8" id="description" btf-markdown="project.description"></div>
+            </div>
+            <ul class="project-info">
+                <li><a href="{{ project.websiteUrl }}">Website</a></li>
+                <li><a href="/projects/{{project.githubUsername}}/{{project.githubProjectName}}/blog">Blog</a></li>
+                <li><a href="{{ project.repositoryUrl }}">Repository</a></li>
+            </ul>
+
+        </div>
+    </div>
+</div>
