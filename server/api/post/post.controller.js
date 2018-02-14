@@ -16,6 +16,14 @@ exports.showByProject = function(req, res) {
 };
 
 // Get list of posts
+exports.feed = function(req, res) {
+  Post.find({}, function (err, posts) {
+    if(err) { return handleError(res, err); }
+    return res.json(200, posts);
+  });
+};
+
+// Get list of posts
 exports.index = function(req, res) {
   Post.find({ project: req.params.project }, function (err, posts) {
     if(err) { return handleError(res, err); }
