@@ -25,8 +25,9 @@ Key Features Include
 - [Docker](http://https://docs.docker.com/engine/installation/)
 - [Docker-Compose](https://docs.docker.com/compose/install/)
 
-- [Bower](https://bower.io/) (`npm install --global bower`)
-- [Grunt](http://gruntjs.com/) (`npm install --global grunt-cli`)
+- [Bower](https://bower.io/) (`npm install --g bower`)
+- [Grunt](http://gruntjs.com/) (`npm install --g grunt-cli`)
+- [APIDoc](http://apidocjs.com) (`npm install --g apidoc`)
 ```
 npm install -g grunt-cli grunt bower
 ```
@@ -58,6 +59,9 @@ Run `grunt seed` to seed (populate) your mongoDB with dummy data
 
 ## Testing
 Running `npm test` will run the unit tests with karma.
+
+## Documentation
+Running `npm run apidoc` will run generate the `/docs` directory. See [APIDoc](http://apidocjs.com) for more information.
 
 Want to develop with us?
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 3.3.0.
