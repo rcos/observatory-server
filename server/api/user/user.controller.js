@@ -23,8 +23,14 @@ var validationError = function(res, err) {
 };
 
 /**
- * Get list of users
- */
+* @api {get} /api/users Index
+* @apiName commits
+* @apiGroup User
+* @apiDescription Get list of Users
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of all active Observatory Users.
+* @apiError (500) UnknownException Could not retrieve User collection
+*/
 exports.index = function(req, res) {
   User.find({}, function (err, users) {
     if(err) return res.send(500, err);

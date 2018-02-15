@@ -125,6 +125,7 @@
   "scripts": {
     "start": "node server",
     "test": "grunt test",
+    "apidoc": "apidoc -i ./server/api -o doc/",
     "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   },
   "private": true
