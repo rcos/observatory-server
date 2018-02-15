@@ -18,12 +18,15 @@
     "ng-file-upload": "~8.0.1",
     "angular-markdown-directive": "~0.3.1",
     "angular-notify": "~2.5.0",
-    "github.commits.widget": "*"
+    "github.commits.widget": "*",
+    "angular-markdown-editor-ghiscoding": "^1.1.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"
   },
   "resolutions": {
-    "angular": "1.4.10"
+    "angular": "1.4.10",
+    "bootstrap": "^3.3.6",
+    "angular-sanitize": "~1.4.0"
   }
 }
