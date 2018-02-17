@@ -16,16 +16,17 @@ exports.showByProject = function(req, res) {
 };
 
 // Get list of posts
-exports.feed = function(req, res) {
-  Post.find({}, function (err, posts) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, posts);
-  });
-};
-
-// Get list of posts
 exports.index = function(req, res) {
-  Post.find({ project: req.params.project }, function (err, posts) {
+  // Empty query for Posts
+  let query = {}
+
+  // Scope query to a specific Project
+  if (req.params.project) {
+    query.project = req.params.project
+  }
+
+  // Queries Posts and returns result
+  Post.find(query, function (err, posts) {
     if(err) { return handleError(res, err); }
     return res.json(200, posts);
   });
@@ -33,7 +34,6 @@ exports.index = function(req, res) {
 
 // Get a single post
 exports.show = function(req, res) {
-
   Post.findById(req.params.id)
   .populate('author')
   .exec(function (err, post) {
