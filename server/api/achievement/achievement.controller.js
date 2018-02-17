@@ -1,17 +1,10 @@
-/**
- * Using Rails-like standard naming convention for endpoints.
- * GET     /api/achievements              ->  index
- * POST    /api/achievements              ->  create
- * GET     /api/achievements/:id          ->  show
- * PUT     /api/achievements/:id          ->  update
- * DELETE  /api/achievements/:id          ->  destroy
- */
-
 'use strict';
 
+// TODO - use `const` instead of `var`
 var _ = require('lodash');
 var Achievement = require('./achievement.model');
 
+// TODO - abstract into /api/lib/helpers
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
@@ -19,6 +12,7 @@ function handleError(res, statusCode) {
   };
 }
 
+// TODO - abstract into /api/lib/helpers
 function responseWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
@@ -28,6 +22,7 @@ function responseWithResult(res, statusCode) {
   };
 }
 
+// TODO - abstract into /api/lib/helpers
 function handleEntityNotFound(res) {
   return function(entity) {
     if (!entity) {
@@ -38,6 +33,7 @@ function handleEntityNotFound(res) {
   };
 }
 
+// TODO - abstract into /api/lib/helpers
 function saveUpdates(updates) {
   return function(entity) {
     var updated = _.merge(entity, updates);
@@ -48,6 +44,7 @@ function saveUpdates(updates) {
   };
 }
 
+// TODO - abstract into /api/lib/helpers
 function removeEntity(res) {
   return function(entity) {
     if (entity) {
@@ -58,6 +55,8 @@ function removeEntity(res) {
     }
   };
 }
+
+// // // //
 
 // Gets a list of Achievements
 exports.index = function(req, res) {
