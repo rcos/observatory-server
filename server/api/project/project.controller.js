@@ -157,10 +157,10 @@ exports.create = (req, res) => {
     // Finds the user by whom this project was created
     User.findById(req.user._id).then((user, err) => {
 
-      // Short-circuits request if the current user isn't found
+      // Short-circuits the request if the current user isn't found
       if (err) return res.status(500).send(err)
 
-      // Collects the user's current projects
+      // Collects the user's projects
       let projects = user.projects || []
 
       // Appends the newly created project to the User's list of projects
@@ -179,10 +179,8 @@ exports.create = (req, res) => {
         // Returns the newly created project
         return res.status(201).json(project)
       })
-
     })
   })
-
 }
 
 // Updates an existing project in the DB.
