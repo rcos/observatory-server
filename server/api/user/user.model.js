@@ -10,7 +10,10 @@ var Project = require('../project/project.model');
 var util = require('../../components/utilities')
 
 var UserSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
 
   email: {
     type: String,
