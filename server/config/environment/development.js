@@ -5,7 +5,7 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/observatory3-dev'
+    uri: 'mongodb://localhost/observatory-dev'
   },
 
   // Server Address

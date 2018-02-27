@@ -43,7 +43,7 @@
     "chai-as-promised": "^5.1.0",
     "chai-things": "^0.2.0",
     "connect-livereload": "^0.5.3",
-    "grunt": "~0.4.5",
+    "grunt": "^0.4.5",
     "grunt-angular-templates": "^1.0.3",
     "grunt-asset-injector": "^0.1.0",
     "grunt-auto-install": "^0.3.0",
@@ -126,6 +126,7 @@
   "scripts": {
     "start": "node server",
     "test": "grunt test",
+    "apidoc": "apidoc -i ./server/api -o doc/",
     "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   },
   "private": true
