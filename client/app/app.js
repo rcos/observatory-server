@@ -12,7 +12,8 @@ angular.module('observatory3App', [
   'ui.router',
   'ui.bootstrap',
   'ngFileUpload',
-  'validation.match'
+  'validation.match',
+  'angular-markdown-editor'
 ])
   .config(function($urlRouterProvider, $locationProvider) {
     $urlRouterProvider
