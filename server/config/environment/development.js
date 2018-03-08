@@ -5,9 +5,10 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    // uri: 'mongodb://localhost/observatory-dev'
-    // uri: 'mongodb://localhost/observatory3-dev'
-    uri: 'mongodb://192.168.99.100:27017/observatory3-dev'
+    // OSX / Linux
+    uri: 'mongodb://localhost/observatory-dev'
+    // Windows + Docker-Machine
+    // uri: 'mongodb://192.168.99.100:27017/observatory-dev'
   },
 
   // Server Address
