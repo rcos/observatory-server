@@ -80,14 +80,14 @@ export function canEdit() {
  */
 export function signToken(id, role) {
   return jwt.sign({ _id: id, role: role }, config.secrets.session, {
-    expiresIn: 60 * 60 * 5
+    expiresIn: 60 * 60 * 5 // 5 hour expiration?
   });
 }
 
 /**
  * Set token cookie directly for oAuth strategies
  */
-
+// QUESTION - this is unused and should be removed
 export function setTokenCookie(req, res) {
   if (!req.user) {
     return res.status(404).send('It looks like you aren\'t logged in, please try again.');
