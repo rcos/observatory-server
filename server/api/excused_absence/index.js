@@ -4,6 +4,7 @@ const auth = require('../../auth/auth.service')
 const router = express.Router()
 
 router.get('/', auth.isAuthenticated(), controller.index)
+router.get('/admin', auth.hasRole('admin'), controller.index)
 router.get('/:id', auth.isAuthenticated(), controller.show)
 router.post('/', auth.isAuthenticated(), controller.create)
 router.put('/:id', auth.isAuthenticated(), controller.update)

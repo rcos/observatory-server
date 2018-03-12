@@ -22,8 +22,7 @@ const ExcusedAbsenceSchema = new Schema({
   },
   reviewed_by: {
     type : Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: 'User'
   },
   reviewer_note: {
     type: String
