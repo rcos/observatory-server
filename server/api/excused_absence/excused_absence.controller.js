@@ -52,13 +52,6 @@ exports.admin = (req, res) => {
 * @apiError (500) UnknownException Could not retrieve ExcusedAbsence model
 */
 exports.show = (req, res) => {
-  // Post.findById(req.params.id)
-  // .populate('author')
-  // .exec(function (err, post) {
-    // if(err) { return handleError(res, err); }
-    // if(!post) { return res.send(404); }
-    // return res.json(post);
-  // });
   return ExcusedAbsence.findById(req.params.id)
   .then((model) => {
     return res.json(200, model).end()
@@ -105,8 +98,7 @@ exports.create = (req, res) => {
 */
 exports.update = (req, res) => {
   // TODO - isolate valid attributes depending on user role
-  // Admin - update STATUS, DATE(?), REVIEWER_NOTE, REVIEWED_BY (automatic)
-  // User - update REASON, DATE(?)
+  // Admin - update STATUS, REVIEWER_NOTE, REVIEWED_BY (automatic)
   return ExcusedAbsence.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
   .then((response) => {
       return res.status(200).send(response).end()
