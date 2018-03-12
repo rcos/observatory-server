@@ -24,6 +24,25 @@ exports.index = (req, res) => {
 }
 
 /**
+* @api {get} /api/excused_absences/admin Admin
+* @apiName admin
+* @apiGroup Excused Absence
+* @apiDescription Get list of Excused Absences for all users
+* @apiPermission private
+* @apiSuccess {Collection} root Collection of all Excused Absences.
+* @apiError (500) UnknownException Could not retrieve ExcusedAbsence collection
+*/
+exports.admin = (req, res) => {
+  return ExcusedAbsence.find()
+  .then((collection) => {
+    return res.json(200, collection).end()
+  })
+  .catch((err) => {
+    return handleError(res, err)
+  })
+}
+
+/**
 * @api {get} /api/excused_absences/:id Show
 * @apiName show
 * @apiGroup Excused Absence
