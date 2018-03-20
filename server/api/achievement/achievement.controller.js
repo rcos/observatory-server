@@ -107,6 +107,15 @@ exports.create = function(req, res) {
     .catch(handleError(res));
 };
 
+/**
+* @api {get} /api/achievements Update
+* @apiName update
+* @apiGroup Achievements
+* @apiDescription Updates an existing Achievement
+* @apiPermission public
+* @apiSuccess {String} name Updated Achievement
+* @apiError (500) UnknownException Could not update the Achievement
+*/
 // Updates an existing Achievement in the DB
 exports.update = function(req, res) {
   if (req.body._id) {
@@ -119,6 +128,15 @@ exports.update = function(req, res) {
     .catch(handleError(res));
 };
 
+/**
+* @api {get} /api/achievements Destroy
+* @apiName destroy
+* @apiGroup Achievements
+* @apiDescription Deletes a selected achievement
+* @apiPermission public
+* @apiSuccess {String} name Deleted Achievement
+* @apiError (500) UnknownException Could not delete the Achievement
+*/
 // Deletes a Achievement from the DB
 exports.destroy = function(req, res) {
   Achievement.findByIdAsync(req.params.id)
