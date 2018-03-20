@@ -10,7 +10,10 @@ var Project = require('../project/project.model');
 var util = require('../../components/utilities')
 
 var UserSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
 
   email: {
     type: String,
@@ -486,18 +489,20 @@ UserSchema.methods = {
   * @api public
   */
  encryptPassword: function(password, callback) {
-   if (!password || !this.salt) {
-     return null;
-   }
+    if (!password || !this.salt) {
+      return null;
+    }
+
     var defaultIterations = 10000;
     var defaultKeyLength = 64;
+    var defaultDigest = 'sha512';
 
-   var salt = new Buffer(this.salt, 'base64');
-   if (!callback) {
-     return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength).toString('base64');
-   }
+    var salt = new Buffer(this.salt, 'base64');
+    if (!callback) {
+      return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength).toString('base64');
+    }
 
-    return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, (err, key) => {
+    return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, defaultDigest, (err, key) => {
       if (err) {
         callback(err);
       } else {

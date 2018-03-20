@@ -136,28 +136,52 @@ exports.authors = function(req, res) {
     });
 }
 
-// Creates a new project in the DB.
-exports.create = function(req, res) {
-  Project.create(req.body, function(err, project) {
-    if(err) { return handleError(res, err); }
+/**
+* @api {post} /api/projects Create
+* @apiName create
+* @apiGroup Project
+* @apiDescription Creates a new Project
+* @apiPermission authenticated
+* @apiSuccess {Model} root The newly created Project.
+* @apiError (500) UnknownException Could not retrieve find current User in database
+* @apiError (422) UnknownException User's projects could not be updated
+*/
+exports.create = (req, res) => {
 
-    //Add creator to any new project
-    var userId = req.user._id;
-    User.findById(userId, function(err, user){
-      if (err){
-        res.status(500).send(err);
-      }else{
-        if (!user.projects) user.projects = [];
-        if (user.projects.indexOf(project) !== -1) return;
-        user.projects.push(project);
-        user.save(function(err) {
-          if (err) return res.status(422).json(err);
-          return res.status(201).json(project);
-        });
-      }
-    });
-  });
-};
+  // Attempts to create new Project record
+  Project.create(req.body).then((project, err) => {
+
+    // Project.save() error - likely a validation failure
+    if (err) return handleError(res, err)
+
+    // Finds the user by whom this project was created
+    User.findById(req.user._id).then((user, err) => {
+
+      // Short-circuits the request if the current user isn't found
+      if (err) return res.status(500).send(err)
+
+      // Collects the user's projects
+      let projects = user.projects || []
+
+      // Appends the newly created project to the User's list of projects
+      if (projects.indexOf(project) !== -1) return
+      projects.push(project)
+
+      // Updates the user's 'projects' attribute
+      user.set('projects', projects)
+
+      // Persists User `projects` attribute changes
+      user.save().then((user, err) => {
+
+        // Handles User update error
+        if (err) return res.status(422).json(err)
+
+        // Returns the newly created project
+        return res.status(201).json(project)
+      })
+    })
+  })
+}
 
 // Updates an existing project in the DB.
 exports.update = function(req, res) {

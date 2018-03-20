@@ -1,0 +1,153 @@
+{
+	"info": {
+		"name": "Observatory",
+		"_postman_id": "3da98267-82d1-8a81-8ccd-4c21d733c98d",
+		"description": "Postman collection for RCOS Observatory.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User - Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e06e1fd9-8b5e-4ebe-94ed-381570807e5e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"foo@bar.com\",\n\t\"password\": \"abc123\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/auth/local",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"auth",
+						"local"
+					]
+				},
+				"description": "Authenticates a User by their `email` and `password`."
+			},
+			"response": []
+		},
+		{
+			"name": "User - Register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"foo@bar.com\",\n\t\"password\": \"abc123\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				},
+				"description": "Registers a new User - accepts `email` and `password` parameters."
+			},
+			"response": []
+		},
+		{
+			"name": "User - Profile",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d53541a7-ff7e-4f93-9807-969021dbcd81",
+						"type": "text/javascript",
+						"exec": [
+							"// Authenticates the user before this request",
+							"let requestObj = {",
+							"    url: pm.environment.get(\"host\") + '/auth/local',",
+							"    method: \"POST\",",
+							"    header: {",
+							"        'content-type': 'application/json'",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({ email: pm.environment.get(\"email\"), password: pm.environment.get(\"password\") })",
+							"    }",
+							"}",
+							"",
+							"// Authenticates the user and stores their token in the `auth_token` environment variable",
+							"pm.sendRequest(requestObj, function (err, response) {",
+							"    let json = response.json();",
+							"    pm.environment.set(\"auth_token\", \"Bearer \" + json.token); ",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{auth_token}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "foo@bar.com",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "abc123",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/users/me",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				},
+				"description": "Fetches the profile of the current user - requires `authorization` header."
+			},
+			"response": []
+		}
+	]
+}
