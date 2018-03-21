@@ -72,6 +72,16 @@ var saveAttendance = function(classYearId, userId, date, code, needsVerification
   },cb);
 };
 
+
+/**
+* @api {controller} /api/attendance/ index
+* @apiName index
+* @apiGroup Attendance
+* @apiDescription Get list of attendance submissions
+* @apiPermission Restricted to mentors
+* @apiSuccess {Collection} root Collection of all attendance submissions.
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Get list of attendance submissions
 // Restricted to mentors
@@ -90,6 +100,15 @@ exports.index = function(req, res) {
 
 // *******************************************************
 
+/**
+* @api {controller} /api/attendance/ show
+* @apiName show
+* @apiGroup Attendance
+* @apiDescription Get a single attendance submission by id
+* @apiPermission Restricted to authenticated users
+* @apiSuccess {json} root json for single attendance submission.
+* @apiError (500) {json} handleError Could not retrieve attendance submission and runs handleError function.
+*/
 // *******************************************************
 // Get a single attendance submission by id
 // Restricted to authenticated users
@@ -103,6 +122,15 @@ exports.show = function(req, res) {
 };
 // *******************************************************
 
+/**
+* @api {controller} /api/attendance/ destroy
+* @apiName destroy
+* @apiGroup Attendance
+* @apiDescription Deletes an attendance submission from the DB
+* @apiPermission Restricted to mentor
+* @apiSuccess root Removes an attendance submission.
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Deletes an attendance submission from the DB.
 // Restricted to mentor
@@ -119,6 +147,16 @@ exports.destroy = function(req, res) {
 };
 // *******************************************************
 
+
+/**
+* @api {controller} /api/attendance/ verifyAttendanceById
+* @apiName verifyAttendanceById
+* @apiGroup Attendance
+* @apiDescription Verifies an existing attendance submission in the database.
+* @apiPermission Restricted to mentors
+* @apiSuccess root Sets attendance.verified true and saves.
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Verifies an existing attendance submission in the DB.
 // Restricted to mentors
@@ -138,6 +176,14 @@ exports.verifyAttendanceById = function(req, res) {
 // *******************************************************
 
 
+/**
+* @api {controller} /api/attendance/ getAttendees
+* @apiName getAttendees
+* @apiGroup Attendance
+* @apiDescription Verifies an existing attendance submission in the database.
+* @apiPermission none
+* @apiSuccess root List of all attending students for a daycode
+*/
 // *******************************************************
 //get the list of attending students on a for a daycode
 //router.get('/code/attendees/:dateCode',auth.hasRole('mentor'), controller.getAttendees);
@@ -152,6 +198,16 @@ exports.getAttendees = function(req,res){
 }
 // *******************************************************
 
+
+/**
+* @api {controller} /api/attendance/ getAttendance
+* @apiName getAttendance
+* @apiGroup Attendance
+* @apiDescription For a specific (current) user, get all attendance for the current class year.
+* @apiPermission none
+* @apiSuccess root List of all attending students for a daycode
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Get all attendance for a specific user (or current user) in the current classyear
 // router.get('/present/me', auth.isAuthenticated(), controller.getAttendanceMe);
@@ -223,6 +279,19 @@ var getAttendance = function(userId, classYearId, cb){
   });
 };
 
+// *******************************************************
+
+
+/**
+* @api {controller} /api/attendance/ getAttendance
+* @apiName getAttendance
+* @apiGroup Attendance
+* @apiDescription For a specific (current) user, get all attendance for the current class year.
+* @apiPermission none
+* @apiSuccess {json} root Returns user's attendance
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
+// *******************************************************
 exports.getAttendance = function(req, res) {
   var userId = req.params.user;
   return ClassYear.getCurrent(function(err, classYear){
@@ -235,13 +304,32 @@ exports.getAttendance = function(req, res) {
   });
 };
 
+// *******************************************************
+/**
+* @api {controller} /api/attendance/ getAttendanceMe
+* @apiName getAttendanceMe
+* @apiGroup Attendance
+* @apiDescription For a specific (current) user, get all attendance for the current class year by calling getAttendance function.
+* @apiPermission none - Sets user id
+* @apiSuccess {json} root Returns user's attendance
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
+// *******************************************************
 exports.getAttendanceMe = function(req, res) {
   req.params.user = req.user._id
   exports.getAttendance(req,res);
 };
+
 // *******************************************************
-
-
+/**
+* @api {controller} /api/attendance/ present
+* @apiName present
+* @apiGroup Attendance
+* @apiDescription Confirms the attendance for a given day. 
+* @apiPermission none
+* @apiSuccess {json} root Returns user's attendance via userAttendance
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Get attendance for a specific user (or current user) on a date
 // router.get('/present/:user/today', auth.hasRole('mentor'), controller.present);
@@ -249,7 +337,6 @@ exports.getAttendanceMe = function(req, res) {
 //
 // router.get('/present/me/today', auth.isAuthenticated(), controller.presentMe);
 // router.get('/present/me/:date', auth.isAuthenticated(), controller.presentMe);
-
 
 exports.present = function(req, res) {
   var date = req.params.date;
@@ -269,12 +356,31 @@ exports.present = function(req, res) {
     });
   });
 };
+
+/**
+* @api {controller} /api/attendance/ presentMe
+* @apiName presentMe
+* @apiGroup Attendance
+* @apiDescription Confirms the attendance by user id for a given day by calling the present function. 
+* @apiPermission Sets user id
+* @apiSuccess {json} root Calls the present function for the user by id
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 exports.presentMe = function(req, res) {
   req.params.user = req.user._id
   exports.present(req,res);
 };
-// *******************************************************
 
+// *******************************************************
+/**
+* @api {controller} /api/attendance/ attend
+* @apiName attend
+* @apiGroup Attendance
+* @apiDescription Mark attendance as present, subject to verification 
+* @apiPermission none
+* @apiSuccess {json} root Confirms attendance code against current class year, checks if user needs to verify, check for full group/small group/bonus day, or creates attendance object
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Mark attendance as present, subject to verification
 // router.post('/attend', auth.isAuthenticated(), controller.attend);
@@ -400,6 +506,17 @@ exports.attend = function(req,res){
 };
 // *******************************************************
 
+// *******************************************************
+/**
+* @api /api/attendance/ joinGroupAndSubmit 
+* @apiName joinGroupAndSubmit
+* @apiGroup Attendance
+* @apiDescription Allows user to join group and submit attendance 
+* @apiPermission none
+* @apiSuccess root Returns the saveAttendance object with the parameters 
+* @apiError Returns callback error function for unverification
+*/
+// *******************************************************
 function joinGroupAndSubmit(user,code,classYear,needsVerification,callback){
   SmallGroup.findOne({"dayCodes.code":code,"classYear":classYear._id})
   .select('+dayCodes.code')
@@ -434,6 +551,15 @@ function joinGroupAndSubmit(user,code,classYear,needsVerification,callback){
 }
 
 // *******************************************************
+/**
+* @api {get} /api/attendance/ getUserAndDateParams
+* @apiName getUserAndDateParams
+* @apiGroup Attendance
+* @apiDescription Get data for submitting attendance as present, then pass it to saveAttendance
+* @apiPermission none
+* @apiSuccess root pass data for attendance submission to saveAttendance 
+*/
+// *******************************************************
 // Set attendance as present (no verification)
 // router.post('/attend/:user/small', auth.hasRole('mentor'), controller.setAttendanceSmall);
 // router.post('/attend/:user/full', auth.hasRole('mentor'), controller.setAttendanceFull);
@@ -461,6 +587,15 @@ var getUserAndDateParams = function(req, cb){
   });
 };
 
+/**
+* @api {controller} /api/attendance/ addManualAttendance
+* @apiName addManualAttendance
+* @apiGroup Attendance
+* @apiDescription Admin manually adding attendance 
+* @apiPermission Restricted to admins
+* @apiSuccess {json} Returns saveAttendance object, adds attendance for user id with given parameters.
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Adds an attendance entry with the given parameters
 //
@@ -501,7 +636,15 @@ exports.addManualAttendance = function(req, res) {
   });
 }
 // *******************************************************
-
+/**
+* @api {controller} /api/attendance/ getUnverifiedAttendanceUsers
+* @apiName getUnverifiedAttendanceUsers
+* @apiGroup Attendance
+* @apiDescription Gets all users with unverified attendance for the day 
+* @apiPermission none
+* @apiSuccess {json} root Returns attendance for unverified
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Gets all users with unverifed attendance for today
 // router.get('/unverified/:date', auth.hasRole('mentor'), controller.getUnverifiedAttendanceUsers);
@@ -527,8 +670,15 @@ exports.getUnverifiedAttendanceUsers = function(req,res){
   });
 };
 // *******************************************************
-
-
+/**
+* @api {controller} /api/attendance/ getUnverifiedFullAttendanceUsers
+* @apiName getUnverifiedFullAttendanceUsers
+* @apiGroup Attendance
+* @apiDescription Gets all users with full group unverified attendance for the day 
+* @apiPermission none
+* @apiSuccess {json} root Returns attendance for full group unverified
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Gets all users with full group unverifed attendance for today
 // router.get('/unverified/:date/full',  auth.hasRole('mentor'), controller.getUnverifiedFullAttendanceUsers);
@@ -556,8 +706,15 @@ exports.getUnverifiedFullAttendanceUsers = function(req,res){
   });
 };
 // *******************************************************
-
-
+/**
+* @api {controller} /api/attendance/ getUnverifiedSmallAttendanceUsers
+* @apiName getUnverifiedSmallAttendanceUsers
+* @apiGroup Attendance
+* @apiDescription Gets all users with unverified small group attendance for the day 
+* @apiPermission none
+* @apiSuccess {json} root Returns attendance for small group unverified
+* @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
+*/
 // *******************************************************
 // Gets all users with unverifed small group attendance for today
 // router.get('/unverified/today/small', auth.hasRole('mentor'), controller.getUnverifiedSmallAttendanceUsers);
@@ -585,7 +742,16 @@ exports.getUnverifiedSmallAttendanceUsers = function(req,res){
 };
 // *******************************************************
 
-
+// *******************************************************
+/**
+* @api /api/attendance/ handleError
+* @apiName handleError
+* @apiGroup Attendance
+* @apiDescription Handles errors
+* @apiPermission none
+* @apiSuccess {json} root Returns res.status(500).json(err)
+*/
+// *******************************************************
 function handleError(res, err) {
   return res.status(500).json(err);
 }
