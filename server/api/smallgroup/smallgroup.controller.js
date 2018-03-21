@@ -15,6 +15,14 @@ var util = require('../../components/utilities')
 // Restricted to authenticated users
 // router.get('/', auth.isAuthenticated(), controller.index);
 // TODO: only return smallgroups for this year
+/**
+* @api {GET} /api/smallgroup Index
+* @APIname index
+* @APIgroup SmallGroup Controller
+* @apidescription Get list of smallgroups
+* @apiSuccess {Collection} index List of smallgroups
+* @apiError (Error) 500 Unable to get list
+*/
 exports.index = function(req, res) {
     SmallGroup.find({}, function(err, smallgroups){
         if (err) { return handleError(res, err); }
@@ -25,6 +33,14 @@ exports.index = function(req, res) {
 // Create a new smallgroup for the current class year
 // Restricted to mentors
 // router.post('/', auth.hasRole('mentor'), controller.create);
+/**
+* @api {POST} /api/project Create
+* @APIname create
+* @APIgroup SmallGroup Controller
+* @apidescription Create a new smallgroup
+* @apiSuccess {HTTP} 200 Successfully created the smallgroup
+* @apiError (Error) 500 Unable to create smallgroup
+*/
 exports.create = function(req, res){
     var user = req.user;
     var memberId = req.body.memberId;
@@ -47,6 +63,16 @@ exports.create = function(req, res){
     });
 };
 
+/**
+* @api {POST} /api/project Modify
+* @APIname modify
+* @APIgroup SmallGroup Controller
+* @apidescription Modify the smallgroup
+* @apiPermission Mentors
+* @apiSuccess {HTTP} 200 Successfully modified the smallgroup
+* @apiError (Error) 500 Unable to modify smallgroup
+*/
+
 // Modify the smallgroup
 // Restricted to mentors
 // router.put('/:id', auth.hasRole('mentor'), controller.modify);
@@ -58,6 +84,15 @@ exports.modify = function(req, res){
     });
 };
 
+/**
+* @api {DELETE} /api/project Delete
+* @APIname delete
+* @APIgroup SmallGroup Controller
+* @apidescription Delete the smallgroup
+* @apiPermission Mentors
+* @apiSuccess {HTTP} 200 Successfully deleted the smallgroup
+* @apiError (Error) 500 Unable to delete smallgroup
+*/
 // Delete the smallgroup
 // Restricted to mentors
 // router.put('/:id', auth.hasRole('mentor'), controller.modify);
@@ -70,6 +105,15 @@ exports.delete = function(req, res){
     });
 };
 
+/**
+* @api {GET} /api/project getSmallGroup
+* @APIname getSmallGroup
+* @APIgroup SmallGroup Controller
+* @apidescription Get the smallgroup by its id
+* @apiPermission Authenticated users
+* @apiSuccess {json} Model Returns single smallgroup, returns daycode if mentor
+* @apiError (Error) 500 Unable to find smallgroup
+*/
 // Get the smallgroup by id
 // Restricted to authenticated users
 // Only return daycode is the user is a mentor
@@ -101,6 +145,16 @@ exports.getSmallGroup = function(req, res){
 // Generate a daycode or return the current day code for the smallgroups
 // Restricted to mentors
 // router.post('/daycode', auth.hasRole('mentor'), controller.daycode);
+
+/**
+* @api {GET} /api/project Daycode
+* @APIname daycode
+* @APIgroup SmallGroup Controller
+* @apidescription Get the daycode
+* @apiPermission Mentors
+* @apiSuccess {json} Model Returns the daycode
+* @apiError (Error) 500 Unable to find the daycode
+*/
 exports.daycode = function(req, res){
   var userId = req.user.id;
 
@@ -140,6 +194,16 @@ exports.daycode = function(req, res){
 // Delete a day code from a smallgroup and the corresponding daycode submission from attendance
 // Restricted to mentors
 // router.delete('/:id/day/:dayCode', auth.hasRole('mentor'), controller.deleteDay);
+
+/**
+* @api {DELETE} /api/project deleteDay
+* @APIname deleteDay
+* @APIgroup SmallGroup Controller
+* @apidescription Deletes a day/daycode
+* @apiPermission Mentors
+* @apiSuccess {HTTP} 200 Successfully deleted daycode
+* @apiError (Error) 500 Unable to find daycode
+*/
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
     var smallgroupId = req.params.id;
@@ -196,6 +260,15 @@ function getFullUserProfile(userId, mentor, callback){
 // Only returns private information if the user is a mentor
 // Restricted to mentors
 // router.get('/:id/members', auth.isAuthenticated(), controller.getSmallGroupMembers);
+/**
+* @api {GET} /api/project getSmallGroupMembers
+* @APIname getSmallGroupMembers
+* @APIgroup SmallGroup Controller
+* @apidescription Get the daycode
+* @apiPermission Mentors
+* @apiSuccess {Collection} root Returns list of smallgroup members
+* @apiError (Error) 500 Unable to find the smallgroup
+*/
 exports.getSmallGroupMembers = function(req, res){
     var id = req.params.id;
     SmallGroup.findById(id, function(err, smallgroup){
@@ -227,6 +300,15 @@ exports.getSmallGroupMembers = function(req, res){
 // Add a member to a smallgroup
 // Restricted to mentors
 // router.put('/:id/member', auth.hasRole('mentor'), controller.addMember);
+/**
+* @api {POST} /api/project addMember
+* @APIname addMember
+* @APIgroup SmallGroup Controller
+* @apidescription Add a member to the smallgroup
+* @apiPermission Mentors
+* @apiSuccess {HTTP} 200 Successfully added the member
+* @apiError (Error) 500 Unable to add the member
+*/
 exports.addMember = function(req, res){
     var memberId = req.body.memberId;
     var smallGroupId = req.params.id;
@@ -249,6 +331,16 @@ exports.addMember = function(req, res){
 // Delete a member from a smallgroup
 // Restricted to mentors
 // router.delete('/:id/member/:memberId', auth.isAuthenticated(), controller.deleteMember);
+/**
+* @api {DELETE} /api/project deleteMember
+* @APIname deleteMember
+* @APIgroup SmallGroup Controller
+* @apidescription Delete a member from the smallgroup
+* @apiPermission Mentors
+* @apiSuccess {HTTP} 200 Successfully removed the member
+* @apiError (Error) 500 Unable to remove the member
+* @apiError (Error) 403 Member not deleted
+*/
 exports.deleteMember = function(req, res){
     var memberId = req.params.memberId;
     var smallGroupId = req.params.id;
@@ -265,6 +357,15 @@ exports.deleteMember = function(req, res){
 // Change ths name of a smallgroup
 // Restricted to mentors
 // router.put('/:id/name', auth.isAuthenticated(), controller.changeName);
+/**
+* @api {GET} /api/project changeName
+* @APIname changeName
+* @APIgroup SmallGroup Controller
+* @apidescription Change the name of a smallgroup
+* @apiPermission Mentors
+* @apiSuccess {Text} Returns the new name of the smallgroup
+* @apiError (Error) 500 Unable to find the smallgroup
+*/
 exports.changeName = function(req,res){
   var id = req.params.id;
   var newName = String(req.body.smallGroupName);
