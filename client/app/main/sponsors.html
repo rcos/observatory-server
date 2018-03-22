@@ -1,0 +1,33 @@
+<!--Above banner login and home navigation bar-->
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<!--Top of Page Banner-->
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Rensselaer Center for Open Source</h1>
+    <p class="lead">Sponsors</p>
+  </div>
+</header>
+
+<!-- Page Content -->
+<div class="container">
+  <div class="row sponsors-wrapper">
+    <div class="col-sm-12 col-md-3 sponsor-col" ng-repeat="sponsor in sponsors">
+
+      <a ng-href="{{sponsor.url}}" target="_blank">
+        <img class="img-thumbnail" ng-src="{{sponsor.logo}}" ng-alt="{{sponsor.alt}}">
+      </a>
+
+      <p class="lead sponsor-name">
+        {{ sponsor.name }}
+      </p>
+
+      <p class='text-center sponsor-description'>
+        {{ sponsor.description }}
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<div ng-include="'components/footer/footer.html'"></div>
