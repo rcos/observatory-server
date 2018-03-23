@@ -11,6 +11,9 @@ angular.module('observatory3App')
     },{
       'title': 'Developers',
       'link': '/users/'
+    },{
+      'title': 'Sponsors',
+      'link': '/sponsors'
     }];
 
     $scope.isCollapsed = true;
