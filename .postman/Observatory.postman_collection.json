@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "Observatory",
-		"_postman_id": "3da98267-82d1-8a81-8ccd-4c21d733c98d",
+		"_postman_id": "6187cc8b-7370-7ac2-690a-e0b171c09de0",
 		"description": "Postman collection for RCOS Observatory.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -123,13 +123,11 @@
 						{
 							"key": "email",
 							"value": "foo@bar.com",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "password",
 							"value": "abc123",
-							"description": "",
 							"type": "text"
 						}
 					]
@@ -146,6 +144,143 @@
 					]
 				},
 				"description": "Fetches the profile of the current user - requires `authorization` header."
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/posts",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "265eed58-f88d-4cbe-8e2c-5559635f4f73",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": "Get api posts"
+			},
+			"response": []
+		},
+		{
+			"name": "GET /api/posts/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/api/posts/5738cefdffd7ec3b75f3349d",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"5738cefdffd7ec3b75f3349d"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST /api/posts",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1YWFiOTY4ZTdiNjJkNzViZjdjMzdmZTYiLCJpYXQiOjE1MjE1ODA2NTUsImV4cCI6MTUyMTU5ODY1NX0.WgHffxixT0j52Y0LT0SSz8gQpHBYNkl9CCPbcCKnq4w"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"*And this is fun*\",\n    \"content\": \"To use **markdown**\",\n    \"projectId\": \"000000000000000000000030\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /api/posts/:id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1YWFiOTY4ZTdiNjJkNzViZjdjMzdmZTYiLCJpYXQiOjE1MjE1ODA2NTUsImV4cCI6MTUyMTU5ODY1NX0.WgHffxixT0j52Y0LT0SSz8gQpHBYNkl9CCPbcCKnq4w"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/api/posts/5738cefdffd7ec3b75f3349d",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"5738cefdffd7ec3b75f3349d"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /api/posts/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1YWFiOTY4ZTdiNjJkNzViZjdjMzdmZTYiLCJpYXQiOjE1MjE1ODA2NTUsImV4cCI6MTUyMTU5ODY1NX0.WgHffxixT0j52Y0LT0SSz8gQpHBYNkl9CCPbcCKnq4w"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/api/posts/5738cefdffd7ec3b75f3349d",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"5738cefdffd7ec3b75f3349d"
+					]
+				},
+				"description": ""
 			},
 			"response": []
 		}
