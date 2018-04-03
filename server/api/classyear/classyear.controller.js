@@ -127,7 +127,16 @@ exports.create = function(req, res) {
   })
 };
 
-// Update class year
+
+/**
+* @api {post} /api/classyear Update
+* @apiName update
+* @apiGroup ClassYear
+* @apiDescription Update class year
+* @apiPermission admin
+* @apiSuccess {Model} Sends 204 Success response
+* @apiError (500) UnknownException Could not updata data.
+*/
 exports.update = function(req, res) {
   ClassYear.findOne({
     "semester": req.params.semester
@@ -145,7 +154,16 @@ exports.update = function(req, res) {
   });
 };
 
-// Deletes a class year from the DB.
+
+/**
+* @api {post} /api/classyear Destory
+* @apiName destory
+* @apiGroup ClassYear
+* @apiDescription Deletes a class year from the DB.
+* @apiPermission admin
+* @apiSuccess {Model} no response
+* @apiError (500) no response.
+*/
 exports.destroy = function(req, res) {
   return ClassYear.findOne({
     "semester": req.params.semester
@@ -154,8 +172,16 @@ exports.destroy = function(req, res) {
   });
 };
 
-// Generate a daycode or return the current day code for the
-// current class year
+
+/**
+* @api {post} /api/classyear Daycode
+* @apiName daycode
+* @apiGroup ClassYear
+* @apiDescription Generate a daycode or return the current day code for the current class year
+* @apiPermission admin
+* @apiSuccess {Model} returning day code for current day
+* @apiError (500) UnknownException Could not return a correct code.
+*/
 exports.daycode = function(req, res){
   ClassYear.getCurrentCodes(function(err, classYear){
     if (err) return handleError(res, err);
