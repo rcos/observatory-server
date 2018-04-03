@@ -64,6 +64,7 @@ exports.getClassYear = function(req, res) {
 * @apiSuccess {Model} The bonus days of a specific class year
 * @apiError (500) UnknownException Could not retrieve ClassYear collection
 */
+// NOTE - this controller function is not used
 exports.countBonusDays = function(req, res) {
   ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
@@ -76,8 +77,15 @@ exports.countBonusDays = function(req, res) {
 };
 
 
-
-// Creates new class year
+/**
+* @api {post} /api/classyear Create
+* @apiName create
+* @apiGroup ClassYear
+* @apiDescription Create a new ClassYear
+* @apiPermission admin
+* @apiSuccess {Model} Sends 204 Success response
+* @apiError (500) UnknownException Could not retrieve creat ClassYear
+*/
 exports.create = function(req, res) {
   var semester = req.body.semester;
   if (!semester) return handleError(res, "No Semester Specified");
