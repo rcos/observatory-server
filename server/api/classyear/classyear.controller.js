@@ -129,7 +129,7 @@ exports.create = function(req, res) {
 
 
 /**
-* @api {post} /api/classyear Update
+* @api {put} /api/classyear Update
 * @apiName update
 * @apiGroup ClassYear
 * @apiDescription Update class year
@@ -156,7 +156,7 @@ exports.update = function(req, res) {
 
 
 /**
-* @api {post} /api/classyear Destory
+* @api {delete} /api/classyear Destory
 * @apiName destory
 * @apiGroup ClassYear
 * @apiDescription Deletes a class year from the DB.
@@ -210,8 +210,16 @@ exports.daycode = function(req, res){
   });
 };
 
-// Delete a day code from a classyear and the corresponding daycode submission from attendance
-// Restricted to admins
+
+/**
+* @api {delete} /api/classyear DeleteDay
+* @apiName deleteDay
+* @apiGroup ClassYear
+* @apiDescription Delete a day code from a classyear and the corresponding daycode submission from attendance
+* @apiPermission admin
+* @apiSuccess {Model} returing deleted daycode
+* @apiError (500) UnknownException Could not delete successfully.
+*/
 // router.delete('/day/:dayCode', auth.hasRole('admin'), controller.deleteDay);
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
@@ -230,8 +238,15 @@ exports.deleteDay = function(req, res){
     });
 };
 
-
-// Toggles URP display
+/**
+* @api {put} /api/classyear DisplayURP
+* @apiName displayURP
+* @apiGroup ClassYear
+* @apiDescription Toggles URP display
+* @apiPermission admin
+* @apiSuccess {Model} returing 200
+* @apiError (500) UnknownException Could not display URP.
+*/
 exports.displayURP = function(req, res) {
   return ClassYear.getCurrent(function(err, classYear){
     if(err) { return handleError(res, err); }
@@ -242,7 +257,16 @@ exports.displayURP = function(req, res) {
   });
 };
 
-// Toggles URP display
+
+/**
+* @api {get} /api/classyear GetDisplayURP
+* @apiName getDisplayURP
+* @apiGroup ClassYear
+* @apiDescription Toggles URP display
+* @apiPermission public
+* @apiSuccess {Model} display URP
+* @apiError (500) UnknownException Could not display URP.
+*/
 exports.getDisplayURP = function(req, res) {
   return ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
@@ -263,6 +287,7 @@ function handleError(res, err) {
 function validationError(res, err) {
   return res.status(422).json(err);
 }
+
 
 //Generating non ambigious length sized code.
 function generateCode(codeLength){
