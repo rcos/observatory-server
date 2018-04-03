@@ -261,7 +261,6 @@ exports.displayURP = function(req, res) {
 /**
 * @api {get} /api/classyear GetDisplayURP
 * @apiName getDisplayURP
-* @apiGroup ClassYear
 * @apiDescription Toggles URP display
 * @apiPermission public
 * @apiSuccess {Model} display URP
