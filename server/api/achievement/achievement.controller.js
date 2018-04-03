@@ -57,7 +57,15 @@ function removeEntity(res) {
 }
 
 // // // //
-
+/**
+* @api {get} /api/achievements Index
+* @apiName index
+* @apiGroup Achievements
+* @apiDescription Get list of Achievements
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of all active Observatory Achievements.
+* @apiError (500) UnknownException Could not retrieve Achievement collection
+*/
 // Gets a list of Achievements
 exports.index = function(req, res) {
   Achievement.findAsync()
@@ -65,6 +73,16 @@ exports.index = function(req, res) {
     .catch(handleError(res));
 };
 
+// // // //
+/**
+* @api {get} /api/achievements Show
+* @apiName show
+* @apiGroup Achievements
+* @apiDescription Get a single achievement
+* @apiPermission public
+* @apiSuccess {String} name Single Achievement
+* @apiError (500) UnknownException Could not retrieve Achievement collection
+*/
 // Gets a single Achievement from the DB
 exports.show = function(req, res) {
   Achievement.findByIdAsync(req.params.id)
@@ -73,6 +91,15 @@ exports.show = function(req, res) {
     .catch(handleError(res));
 };
 
+/**
+* @api {get} /api/achievements Create
+* @apiName create
+* @apiGroup Achievements
+* @apiDescription Creates a new achievement
+* @apiPermission public
+* @apiSuccess {String} name New instance of an Achievement
+* @apiError (500) UnknownException Could not create the Achievement
+*/
 // Creates a new Achievement in the DB
 exports.create = function(req, res) {
   Achievement.createAsync(req.body)
@@ -80,6 +107,15 @@ exports.create = function(req, res) {
     .catch(handleError(res));
 };
 
+/**
+* @api {get} /api/achievements Update
+* @apiName update
+* @apiGroup Achievements
+* @apiDescription Updates an existing Achievement
+* @apiPermission public
+* @apiSuccess {String} name Updated Achievement
+* @apiError (500) UnknownException Could not update the Achievement
+*/
 // Updates an existing Achievement in the DB
 exports.update = function(req, res) {
   if (req.body._id) {
@@ -92,6 +128,15 @@ exports.update = function(req, res) {
     .catch(handleError(res));
 };
 
+/**
+* @api {get} /api/achievements Destroy
+* @apiName destroy
+* @apiGroup Achievements
+* @apiDescription Deletes a selected achievement
+* @apiPermission public
+* @apiSuccess {String} name Deleted Achievement
+* @apiError (500) UnknownException Could not delete the Achievement
+*/
 // Deletes a Achievement from the DB
 exports.destroy = function(req, res) {
   Achievement.findByIdAsync(req.params.id)

@@ -14,6 +14,14 @@ var validUrl = require('valid-url');
 var mongoose = require('mongoose');
 
 
+/**
+* @api {GET} /api/project Index
+* @APIname Index
+* @APIgroup Project Controller
+* @apidescription Gets list of current projects
+* @apiSuccess {json} index file with list of projects
+* @apiError (Error) 500 Internal server error
+*/
 // Get list of current projects
 exports.index = function(req, res) {
   Project.find({active:true},function (err, projects) {
@@ -21,7 +29,15 @@ exports.index = function(req, res) {
     return res.status(200).json(projects);
   });
 };
-
+/**
+* @api {GET} /api/project Stats
+* @APIname Stats
+* @APIgroup Project Controller
+* @apidescription Get various stats for projects
+* @apiSuccess {json} stats file with stats for projects
+* @apiError (Error) 400 No stats found
+* @apiError (Error) 500 Internal server error
+*/
 // Gets various stats for projects
 exports.stats = function(req, res) {
   async.parallel([
@@ -58,6 +74,15 @@ exports.stats = function(req, res) {
   });
 };
 
+/**
+* @api {GET} /api/project Defaults
+* @APIname Defaults
+* @APIgroup Project Controller
+* @apidescription Get list of default projects
+* @apiSuccess {json} defaults list of default projects
+* @apiError (Error) 500 Internal server error
+*/
+
 // Get list of default projects
 exports.defaults = function(req, res) {
   Project.find({markedDefault: true}, function (err, projects) {
@@ -65,7 +90,14 @@ exports.defaults = function(req, res) {
     return res.status(200).json(projects);
   });
 };
-
+/**
+* @api {GET} /api/project indexOld
+* @APIname indexOld
+* @APIgroup Project Controller
+* @apidescription Get list of past projects
+* @apiSuccess {json} indexOld list of past projects
+* @apiError (Error) 500 Internal server error
+*/
 // Get list of past projects
 exports.indexOld = function(req, res) {
   Project.find({active:false},function (err, projects) {
@@ -73,7 +105,15 @@ exports.indexOld = function(req, res) {
     return res.status(200).json(projects);
   });
 };
-
+/**
+* @api {GET} /api/project Show
+* @APIname Show
+* @APIgroup Project Controller
+* @apidescription Show a single project
+* @apiSuccess {json} show information about one project
+* @apiError (Error) 404 No project found
+* @apiError (Error) 500 Internal server error
+*/
 // Get a single project
 exports.show = function(req, res) {
   if (req.params.username && req.params.project){
@@ -90,7 +130,14 @@ exports.show = function(req, res) {
     });
   }
 };
-
+/**
+* @api {GET} /api/project myProjects
+* @APIname myProjects
+* @APIgroup Project Controller
+* @apidescription show the current user's projects
+* @apiSuccess {json} myProjects list of projects
+* @apiError (Error) 500 Internal server error
+*/
 exports.myProjects = function(req, res) {
   var userId = req.user._id;
   User.findById(userId).populate('projects').exec(function(err, user){
@@ -98,7 +145,14 @@ exports.myProjects = function(req, res) {
     return res.status(200).json(user.projects);
   });
 }
-
+/**
+* @api {GET} /api/project Mentees
+* @APIname mentees
+* @APIgroup Project Controller
+* @apidescription Get list of mentees
+* @apiSuccess {json} mentees list of mentees
+* @apiError (Error) 500 Error when finding mentees
+*/
 exports.mentees = function(req, res) {
   var userId = req.user._id;
 
@@ -127,6 +181,14 @@ exports.mentees = function(req, res) {
 
 }
 
+/**
+* @api {GET} /api/project Authors
+* @APIname authors
+* @APIgroup Project Controller
+* @apidescription Get authors on a project
+* @apiSuccess {json} authors list of authors on a project
+* @apiError (Error) 500 Unable to find authors
+*/
 // Get authors on a project
 exports.authors = function(req, res) {
     var projectId = req.params.id;
@@ -136,29 +198,63 @@ exports.authors = function(req, res) {
     });
 }
 
-// Creates a new project in the DB.
-exports.create = function(req, res) {
-  Project.create(req.body, function(err, project) {
-    if(err) { return handleError(res, err); }
+/**
+* @api {post} /api/projects Create
+* @apiName create
+* @apiGroup Project
+* @apiDescription Creates a new Project
+* @apiPermission authenticated
+* @apiSuccess {Model} root The newly created Project.
+* @apiError (500) UnknownException Could not retrieve find current User in database
+* @apiError (422) UnknownException User's projects could not be updated
+*/
+exports.create = (req, res) => {
 
-    //Add creator to any new project
-    var userId = req.user._id;
-    User.findById(userId, function(err, user){
-      if (err){
-        res.status(500).send(err);
-      }else{
-        if (!user.projects) user.projects = [];
-        if (user.projects.indexOf(project) !== -1) return;
-        user.projects.push(project);
-        user.save(function(err) {
-          if (err) return res.status(422).json(err);
-          return res.status(201).json(project);
-        });
-      }
-    });
-  });
-};
+  // Attempts to create new Project record
+  Project.create(req.body).then((project, err) => {
 
+    // Project.save() error - likely a validation failure
+    if (err) return handleError(res, err)
+
+    // Finds the user by whom this project was created
+    User.findById(req.user._id).then((user, err) => {
+
+      // Short-circuits the request if the current user isn't found
+      if (err) return res.status(500).send(err)
+
+      // Collects the user's projects
+      let projects = user.projects || []
+
+      // Appends the newly created project to the User's list of projects
+      if (projects.indexOf(project) !== -1) return
+      projects.push(project)
+
+      // Updates the user's 'projects' attribute
+      user.set('projects', projects)
+
+      // Persists User `projects` attribute changes
+      user.save().then((user, err) => {
+
+        // Handles User update error
+        if (err) return res.status(422).json(err)
+
+        // Returns the newly created project
+        return res.status(201).json(project)
+      })
+    })
+  })
+}
+
+/**
+* @api {GET} /api/project Update
+* @APIname update
+* @APIgroup Project Controller
+* @apidescription Updates an existing project
+* @apiPermission Mentors/project owners
+* @apiSuccess {json} updated information
+* @apiError (Error) 404 No project found
+* @apiError (Error) 500 Error updating the project
+*/
 // Updates an existing project in the DB.
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
@@ -201,6 +297,14 @@ exports.update = function(req, res) {
   });
 };
 
+/**
+* @api {GET} /api/project addTechBubble
+* @APIname addTechBubble
+* @APIgroup Project Controller
+* @apidescription Adds a tech bubble to the project
+* @apiSuccess {HTTP} 200 Successfully added tech bubble
+* @apiError (Error) 500 Error finding project
+*/
 //adds a tech bubble to the project
 exports.addTechBubble = function(req, res){
 	var projectId = req.params.id;
@@ -219,6 +323,14 @@ exports.addTechBubble = function(req, res){
 	});
 };
 
+/**
+* @api {GET} /api/project removeTech
+* @APIname removeTech
+* @APIgroup Project Controller
+* @apidescription Removes a tech bubble from the project
+* @apiSuccess {HTTP} 200 Successfully removed tech bubble
+* @apiError (Error) 500 Error finding project
+*/
 exports.removeTech = function(req, res){
 	var projectId = req.params.id;
 	var oldTech = req.params.tech;
@@ -236,6 +348,14 @@ exports.removeTech = function(req, res){
 	});
 };
 
+/**
+* @api {GET} /api/project Destroy
+* @APIname destroy
+* @APIgroup Project Controller
+* @apidescription Delete a project from the database
+* @apiSuccess {HTTP} 204 Successfully deleted the project
+* @apiError (Error) 404 Error finding project
+*/
 // Deletes a project from the DB.
 exports.destroy = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
@@ -252,6 +372,14 @@ function handleError(res, err) {
   return res.status(500).send(err);
 }
 
+/**
+* @api {GET} /api/project markPast
+* @APIname markPast
+* @APIgroup Project Controller
+* @apidescription Mark a project as a past project
+* @apiSuccess {HTTP} 200 Successfully marked the project
+* @apiError (Error) 404 Error finding project
+*/
 exports.markPast = function(req,res){
 
   var userId = req.user._id;
@@ -272,7 +400,14 @@ exports.markPast = function(req,res){
     });
   });
 };
-
+/**
+* @api {GET} /api/project markActive
+* @APIname markActive
+* @APIgroup Project Controller
+* @apidescription Mark a project as being active this semester
+* @apiSuccess {HTTP} 200 Successfully marked the project
+* @apiError (Error) 404 Error finding project
+*/
 exports.markActive = function(req,res){
   var userId = req.user._id;
   Project.findById(req.params.id,function(err,project){
@@ -293,6 +428,14 @@ exports.markActive = function(req,res){
   });
 };
 
+/**
+* @api {GET} /api/project markDefaults
+* @APIname markDefault
+* @APIgroup Project Controller
+* @apidescription Mark a project as a default project
+* @apiSuccess {HTTP} 200 Successfully marked the project
+* @apiError (Error) 404 Error finding project
+*/
 exports.markDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
@@ -304,6 +447,14 @@ exports.markDefault = function(req, res) {
   });
 };
 
+/**
+* @api {GET} /api/project unmarkDefault
+* @APIname markPast
+* @APIgroup Project Controller
+* @apidescription Unmark a default project
+* @apiSuccess {HTTP} 200 Successfully unmarked the project
+* @apiError (Error) 404 Error finding project
+*/
 exports.unmarkDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
@@ -315,6 +466,15 @@ exports.unmarkDefault = function(req, res) {
   });
 };
 
+/**
+* @api {GET} /api/project Upload
+* @APIname upload
+* @APIgroup Project Controller
+* @apidescription Upload an image
+* @apiSuccess {HTTP} 201 Successfully uploaded and save the image
+* @apiError (Error) 404 Error finding project
+* @apiError (Error) 500 Error verifying user
+*/
 exports.upload = function(req, res) {
   var form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
@@ -351,7 +511,15 @@ exports.upload = function(req, res) {
     });
   });
 };
-
+/**
+* @api {GET} /api/project deletePhoto
+* @APIname deletePhoto
+* @APIgroup Project Controller
+* @apidescription Delete a photo
+* @apiSuccess {HTTP} 200 Successfully deleted the photo
+* @apiError (Error) 404 Error finding project
+* @apiError (Error) 500 Error verifying user
+*/
 exports.deletePhoto = function(req, res) {
     var photoName = req.params.photoName;
     var username = req.params.username;
