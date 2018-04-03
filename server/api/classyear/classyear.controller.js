@@ -8,7 +8,15 @@ var ClassYear = require('./classyear.model');
 var Attendance = require('../attendance/attendance.model');
 var SmallGroup = require('../smallgroup/smallgroup.model');
 
-// Get current class year
+/**
+* @api {get} /api/classyear Index
+* @apiName index
+* @apiGroup ClassYear
+* @apiDescription Get current ClassYear
+* @apiPermission public
+* @apiSuccess {Model} The model of the current ClassYear
+* @apiError (500) UnknownException Could not retrieve ClassYear collection
+*/
 exports.index = function(req, res) {
   var query = ClassYear.findOne({"current": true});
   if (req.user && req.user.isAdmin){
@@ -47,7 +55,15 @@ exports.getClassYear = function(req, res) {
   })
 };
 
-// Get a specific class year's attendance bonus days
+/**
+* @api {get} /api/classyear Count Bonus Days
+* @apiName countBonusDays
+* @apiGroup ClassYear
+* @apiDescription Get a specific class year's attendance bonus days
+* @apiPermission public
+* @apiSuccess {Model} The bonus days of a specific class year
+* @apiError (500) UnknownException Could not retrieve ClassYear collection
+*/
 exports.countBonusDays = function(req, res) {
   ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
@@ -155,7 +171,7 @@ exports.daycode = function(req, res){
       return classYear.save(function(err, classYear){
         if (err) return handleError(res, err);
         return res.send(200,code);
-      });      
+      });
     });
   });
 };
@@ -223,7 +239,7 @@ function generateCode(codeLength){
   for(var i=0;i<codeLength;i++){
       var character = (Math.floor(Math.random() * characterOptions.length));
       code = code.concat(characterOptions[character.toString()]);
-  }  
+  }
   return code;
 }
 
@@ -246,5 +262,5 @@ function uniqueDayCode(codeLength,callback){
             return callback(null,code);
         });
       }
-  });  
+  });
 }
