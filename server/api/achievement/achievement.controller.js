@@ -66,7 +66,6 @@ function removeEntity(res) {
 * @apiSuccess {Collection} root Collection of all active Observatory Achievements.
 * @apiError (500) UnknownException Could not retrieve Achievement collection
 */
-// Gets a list of Achievements
 exports.index = function(req, res) {
   Achievement.findAsync()
     .then(responseWithResult(res))
@@ -83,7 +82,6 @@ exports.index = function(req, res) {
 * @apiSuccess {String} name Single Achievement
 * @apiError (500) UnknownException Could not retrieve Achievement collection
 */
-// Gets a single Achievement from the DB
 exports.show = function(req, res) {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
@@ -92,7 +90,7 @@ exports.show = function(req, res) {
 };
 
 /**
-* @api {get} /api/achievements Create
+* @api {post} /api/achievements Create
 * @apiName create
 * @apiGroup Achievements
 * @apiDescription Creates a new achievement
@@ -100,7 +98,6 @@ exports.show = function(req, res) {
 * @apiSuccess {String} name New instance of an Achievement
 * @apiError (500) UnknownException Could not create the Achievement
 */
-// Creates a new Achievement in the DB
 exports.create = function(req, res) {
   Achievement.createAsync(req.body)
     .then(responseWithResult(res, 201))
@@ -108,7 +105,7 @@ exports.create = function(req, res) {
 };
 
 /**
-* @api {get} /api/achievements Update
+* @api {put} /api/achievements Update
 * @apiName update
 * @apiGroup Achievements
 * @apiDescription Updates an existing Achievement
@@ -116,7 +113,6 @@ exports.create = function(req, res) {
 * @apiSuccess {String} name Updated Achievement
 * @apiError (500) UnknownException Could not update the Achievement
 */
-// Updates an existing Achievement in the DB
 exports.update = function(req, res) {
   if (req.body._id) {
     delete req.body._id;
@@ -129,7 +125,7 @@ exports.update = function(req, res) {
 };
 
 /**
-* @api {get} /api/achievements Destroy
+* @api {delete} /api/achievements Destroy
 * @apiName destroy
 * @apiGroup Achievements
 * @apiDescription Deletes a selected achievement
