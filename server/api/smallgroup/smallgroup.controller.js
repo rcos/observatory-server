@@ -43,27 +43,33 @@ exports.index = function(req, res) {
 * @apiSuccess {HTTP} 200 Successfully created the smallgroup
 * @apiError (Error) 500 Unable to create smallgroup
 */
-exports.create = function(req, res){
-    var user = req.user;
-    var memberId = req.body.memberId;
-    var smallGroupId = req.params.id;
-    return ClassYear.getCurrent(function(err, classYear){
-        var classYearId = classYear._id;
-        return SmallGroup.findOneAndUpdate({"students": memberId, "classYear":classYearId}, {
-            $pull: { students : memberId }
-        }, function(err, oldSmallgroup){
-          if (err) return handleError(res, err);
-          var smallgroup = new SmallGroup({
-              "name": user.name+"'s Small Group",
-              "classYear": classYear._id,
-              "enabled": true,
-              "students":[user._id],
-              "dayCodes": []
-          });
-          return smallgroup.save().then(()=>res.sendStatus(200));
-        });
-    });
-};
+// TODO - we may want to make this an admin-only controller action
+exports.create = (req, res) => {
+
+    const user = req.user
+    const memberId = req.user._id
+    let { name } = req.body
+
+    return ClassYear.getCurrent((err, classYear) => {
+
+        const smallgroup = new SmallGroup({
+            name: name, // TODO - pass name in req.body
+            classYear: classYear._id,
+            enabled: true,
+            students: [user._id],
+            dayCodes: []
+        })
+
+        return smallgroup.save()
+        .then((smallgroup) => {
+          res.status(200).json({ smallgroup }).end()
+        })
+        .catch((err) => {
+          return handleError(res, err)
+        })
+
+    })
+}
 
 /**
 * @api {POST} /api/project Modify
