@@ -4,11 +4,21 @@
 
 'use strict';
 
+import { handleError, validationError, generateCode, uniqueDayCode } from '../lib/helpers'
+
 var ClassYear = require('./classyear.model');
 var Attendance = require('../attendance/attendance.model');
 var SmallGroup = require('../smallgroup/smallgroup.model');
 
-// Get current class year
+/**
+* @api {get} /api/classyear Index
+* @apiName index
+* @apiGroup ClassYear
+* @apiDescription Get current ClassYear
+* @apiPermission public
+* @apiSuccess {Model} The model of the current ClassYear
+* @apiError (500) UnknownException Could not retrieve ClassYear collection
+*/
 exports.index = function(req, res) {
   var query = ClassYear.findOne({"current": true});
   if (req.user && req.user.isAdmin){
@@ -47,7 +57,16 @@ exports.getClassYear = function(req, res) {
   })
 };
 
-// Get a specific class year's attendance bonus days
+/**
+* @api {get} /api/classyear Count Bonus Days
+* @apiName countBonusDays
+* @apiGroup ClassYear
+* @apiDescription Get a specific class year's attendance bonus days
+* @apiPermission public
+* @apiSuccess {Model} The bonus days of a specific class year
+* @apiError (500) UnknownException Could not retrieve ClassYear collection
+*/
+// NOTE - this controller function is not used
 exports.countBonusDays = function(req, res) {
   ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
@@ -60,8 +79,15 @@ exports.countBonusDays = function(req, res) {
 };
 
 
-
-// Creates new class year
+/**
+* @api {post} /api/classyear Create
+* @apiName create
+* @apiGroup ClassYear
+* @apiDescription Create a new ClassYear
+* @apiPermission admin
+* @apiSuccess {Model} Sends 204 Success response
+* @apiError (500) UnknownException Could not retrieve creat ClassYear
+*/
 exports.create = function(req, res) {
   var semester = req.body.semester;
   if (!semester) return handleError(res, "No Semester Specified");
@@ -103,7 +129,16 @@ exports.create = function(req, res) {
   })
 };
 
-// Update class year
+
+/**
+* @api {put} /api/classyear Update
+* @apiName update
+* @apiGroup ClassYear
+* @apiDescription Update class year
+* @apiPermission admin
+* @apiSuccess {Model} Sends 204 Success response
+* @apiError (500) UnknownException Could not updata data.
+*/
 exports.update = function(req, res) {
   ClassYear.findOne({
     "semester": req.params.semester
@@ -121,7 +156,16 @@ exports.update = function(req, res) {
   });
 };
 
-// Deletes a class year from the DB.
+
+/**
+* @api {delete} /api/classyear Destory
+* @apiName destory
+* @apiGroup ClassYear
+* @apiDescription Deletes a class year from the DB.
+* @apiPermission admin
+* @apiSuccess {Model} no response
+* @apiError (500) no response.
+*/
 exports.destroy = function(req, res) {
   return ClassYear.findOne({
     "semester": req.params.semester
@@ -130,8 +174,16 @@ exports.destroy = function(req, res) {
   });
 };
 
-// Generate a daycode or return the current day code for the
-// current class year
+
+/**
+* @api {post} /api/classyear Daycode
+* @apiName daycode
+* @apiGroup ClassYear
+* @apiDescription Generate a daycode or return the current day code for the current class year
+* @apiPermission admin
+* @apiSuccess {Model} returning day code for current day
+* @apiError (500) UnknownException Could not return a correct code.
+*/
 exports.daycode = function(req, res){
   ClassYear.getCurrentCodes(function(err, classYear){
     if (err) return handleError(res, err);
@@ -155,13 +207,21 @@ exports.daycode = function(req, res){
       return classYear.save(function(err, classYear){
         if (err) return handleError(res, err);
         return res.send(200,code);
-      });      
+      });
     });
   });
 };
 
-// Delete a day code from a classyear and the corresponding daycode submission from attendance
-// Restricted to admins
+
+/**
+* @api {delete} /api/classyear DeleteDay
+* @apiName deleteDay
+* @apiGroup ClassYear
+* @apiDescription Delete a day code from a classyear and the corresponding daycode submission from attendance
+* @apiPermission admin
+* @apiSuccess {Model} returing deleted daycode
+* @apiError (500) UnknownException Could not delete successfully.
+*/
 // router.delete('/day/:dayCode', auth.hasRole('admin'), controller.deleteDay);
 exports.deleteDay = function(req, res){
     var dayCode = req.params.dayCode;
@@ -180,8 +240,15 @@ exports.deleteDay = function(req, res){
     });
 };
 
-
-// Toggles URP display
+/**
+* @api {put} /api/classyear DisplayURP
+* @apiName displayURP
+* @apiGroup ClassYear
+* @apiDescription Toggles URP display
+* @apiPermission admin
+* @apiSuccess {Model} returing 200
+* @apiError (500) UnknownException Could not display URP.
+*/
 exports.displayURP = function(req, res) {
   return ClassYear.getCurrent(function(err, classYear){
     if(err) { return handleError(res, err); }
@@ -192,7 +259,15 @@ exports.displayURP = function(req, res) {
   });
 };
 
-// Toggles URP display
+
+/**
+* @api {get} /api/classyear GetDisplayURP
+* @apiName getDisplayURP
+* @apiDescription Toggles URP display
+* @apiPermission public
+* @apiSuccess {Model} display URP
+* @apiError (500) UnknownException Could not display URP.
+*/
 exports.getDisplayURP = function(req, res) {
   return ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
@@ -204,47 +279,3 @@ exports.getDisplayURP = function(req, res) {
     }
   })
 };
-
-
-function handleError(res, err) {
-  return res.send(500, err);
-}
-
-function validationError(res, err) {
-  return res.status(422).json(err);
-}
-
-//Generating non ambigious length sized code.
-function generateCode(codeLength){
-  var characterOptions = "2346789ABCDEFGHJKMNPQRTUVWXYZ";
-  //Non ambigious characters and numbers Remove Some if you think they are ambigious given your font.
-
-  var code = ""; //Simple derivation based on previous code generation code.
-  for(var i=0;i<codeLength;i++){
-      var character = (Math.floor(Math.random() * characterOptions.length));
-      code = code.concat(characterOptions[character.toString()]);
-  }  
-  return code;
-}
-
-//Generating unique code.
-function uniqueDayCode(codeLength,callback){
-  var code = generateCode(codeLength);
-  ClassYear.findOne({"dayCodes.code":code})
-    .exec(function(err, classYear){
-      if (err) return callback("error when getting dayCode",null);
-      if(classYear) {
-        return uniqueDayCode(codeLength+1,callback);
-      }
-      else{
-        SmallGroup.findOne({"dayCodes.code":code})
-          .exec(function(err, smallgroup){
-            if (err) return callback("error when getting dayCode",null);
-            if(smallgroup){
-              return uniqueDayCode(codeLength+1,callback);
-            }
-            return callback(null,code);
-        });
-      }
-  });  
-}
