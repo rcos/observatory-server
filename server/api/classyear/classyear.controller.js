@@ -191,7 +191,7 @@ exports.daycode = function(req, res){
     today.setHours(0,0,0,0);
     for (var i = 0;i < classYear.dayCodes.length;i++){
       if (today.getTime() === classYear.dayCodes[i].date.getTime()){
-        return res.send(200, classYear.dayCodes[i].code);
+        return res.status(200).json({ code: classYear.dayCodes[i].code }).end()
       }
     }
     //unique code generator, function at the bottom.
@@ -204,6 +204,7 @@ exports.daycode = function(req, res){
         code: code,
         bonusDay: req.body.bonusDay ? true : false
       });
+
       return classYear.save(function(err, classYear){
         if (err) return handleError(res, err);
         return res.status(200).json({ code }).end()
