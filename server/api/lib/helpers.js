@@ -1,3 +1,5 @@
+import ClassYear from '../classyear/classyear.model'
+import SmallGroup from '../smallgroup/smallgroup.model'
 
 // handleError and other repeated function.
 // Generic error handling for API requests
