@@ -119,13 +119,13 @@ exports.show = function(req, res) {
   if (req.params.username && req.params.project){
     Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
       if(err) { return handleError(res, err); }
-      if(!project) { return res.sendStatus(404); }
+      if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
       return res.json(project);
     });
   }else if (req.params.id){
     Project.findById(req.params.id, function(err, project){
       if(err) { return handleError(res, err); }
-      if(!project) { return res.sendStatus(404); }
+      if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
       return res.json(project);
     });
   }
@@ -260,7 +260,7 @@ exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Project.findById(req.params.id, function (err, project) {
     if (err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
+    if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
 
     // Only mentors and project owners can update a project
     var userId = req.user._id;
@@ -360,7 +360,7 @@ exports.removeTech = function(req, res){
 exports.destroy = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
+    if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
     project.remove(function(err) {
       if(err) { return handleError(res, err); }
       return res.sendStatus(204);
@@ -385,14 +385,14 @@ exports.markPast = function(req,res){
   var userId = req.user._id;
   Project.findById(req.params.id,function(err,project){
     if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
+    if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
 
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
             project.update({ active: false }, function(err) {
               if(err) { return handleError(res, err); }
-              return res.sendStatus(200);
+              return res.status(200).json({ project }).end();
             });
       } else {
         return handleError(res, err);
@@ -412,14 +412,14 @@ exports.markActive = function(req,res){
   var userId = req.user._id;
   Project.findById(req.params.id,function(err,project){
     if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
+    if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
     User.findById(userId, function(err, user) {
       if (err) { return handleError(res, err); }
 
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
             project.update({ active: true }, function(err) {
               if(err) { return handleError(res, err); }
-              return res.sendStatus(200);
+              return res.status(200).json({ project }).end();
             });
       } else {
         return handleError(res, err);
@@ -439,10 +439,10 @@ exports.markActive = function(req,res){
 exports.markDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
+    if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
     project.update({ markedDefault: true }, function(err) {
       if(err) { return handleError(res, err); }
-      return res.sendStatus(200);
+      return res.status(200).json({ project }).end();
     });
   });
 };
@@ -458,10 +458,10 @@ exports.markDefault = function(req, res) {
 exports.unmarkDefault = function(req, res) {
   Project.findById(req.params.id, function (err, project) {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
+    if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
     project.update({ markedDefault: false }, function(err) {
       if(err) { return handleError(res, err); }
-      return res.sendStatus(200);
+      return res.status(200).json({ project }).end();
     });
   });
 };
@@ -497,7 +497,7 @@ exports.upload = function(req, res) {
 
     Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
       if(err) { return handleError(res, err); }
-      if(!project) { return res.sendStatus(404); }
+      if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
       if(project.photos.length>=10){
         var temp = project.photos.shift();
         var toRemove = path + '/' + temp;
@@ -530,7 +530,7 @@ exports.deletePhoto = function(req, res) {
 
     Project.findOne({'photos': name}, function (err, project) {
       if(err) { return handleError(res, err); }
-      if(!project) { return res.sendStatus(404); }
+      if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
       for (var i = 0; i < project.photos.length; i++){
           if (project.photos[i] === name){
             project.photos.splice(i, 1);
