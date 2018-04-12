@@ -1,8 +1,7 @@
 'use strict';
 
-// TODO - use `const` instead of `var`
-var _ = require('lodash');
-var Achievement = require('./achievement.model');
+const _ = require('lodash');
+const Achievement = require('./achievement.model');
 
 // TODO - abstract into /api/lib/helpers
 function handleError(res, statusCode) {
@@ -66,11 +65,11 @@ function removeEntity(res) {
 * @apiSuccess {Collection} root Collection of all active Observatory Achievements.
 * @apiError (500) UnknownException Could not retrieve Achievement collection
 */
-exports.index = function(req, res) {
+exports.index = (req, res) => {
   Achievement.findAsync()
     .then(responseWithResult(res))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
 
 // // // //
 /**
@@ -82,12 +81,12 @@ exports.index = function(req, res) {
 * @apiSuccess {String} name Single Achievement
 * @apiError (500) UnknownException Could not retrieve Achievement collection
 */
-exports.show = function(req, res) {
+exports.show = (req, res) => {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
 
 /**
 * @api {post} /api/achievements Create
@@ -98,11 +97,11 @@ exports.show = function(req, res) {
 * @apiSuccess {String} name New instance of an Achievement
 * @apiError (500) UnknownException Could not create the Achievement
 */
-exports.create = function(req, res) {
+exports.create = (req, res) => {
   Achievement.createAsync(req.body)
     .then(responseWithResult(res, 201))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
 
 /**
 * @api {put} /api/achievements Update
@@ -113,16 +112,16 @@ exports.create = function(req, res) {
 * @apiSuccess {String} name Updated Achievement
 * @apiError (500) UnknownException Could not update the Achievement
 */
-exports.update = function(req, res) {
+exports.update = (req, res) => {
   if (req.body._id) {
-    delete req.body._id;
+    delete req.body._id
   }
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
 
 /**
 * @api {delete} /api/achievements Destroy
@@ -134,9 +133,9 @@ exports.update = function(req, res) {
 * @apiError (500) UnknownException Could not delete the Achievement
 */
 // Deletes a Achievement from the DB
-exports.destroy = function(req, res) {
+exports.destroy = (req, res) => {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
