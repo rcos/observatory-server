@@ -6,7 +6,7 @@ import SmallGroup from '../smallgroup/smallgroup.model'
 
 // Return a standard error
 export const handleError = (res, err) => {
-  return res.json(500, err).end()
+  return res.status(500).json(err).end()
 }
 
 // Return a validation error
