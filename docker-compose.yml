@@ -17,8 +17,6 @@ services:
       - mongodb
     depends_on:
       - mongodb
-    deploy:
-      restart_policy: any
 
   mongo_admin:
     container_name: observatory_mongo_admin
