@@ -1,6 +1,9 @@
 'use strict';
 
+<<<<<<< HEAD
 // TODO - use `const` instead of `var`
+=======
+>>>>>>> 865585d4d0148ea2074907298a0ccdb4449e5626
 const _ = require('lodash');
 const Achievement = require('./achievement.model');
 
@@ -69,8 +72,8 @@ function removeEntity(res) {
 exports.index = (req, res) => {
   Achievement.findAsync()
     .then(responseWithResult(res))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
 
 // // // //
 /**
@@ -86,8 +89,8 @@ exports.show = (req, res) => {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
 
 /**
 * @api {post} /api/achievements Create
@@ -101,8 +104,8 @@ exports.show = (req, res) => {
 exports.create = (req, res) => {
   Achievement.createAsync(req.body)
     .then(responseWithResult(res, 201))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
 
 /**
 * @api {put} /api/achievements Update
@@ -115,14 +118,14 @@ exports.create = (req, res) => {
 */
 exports.update = (req, res) => {
   if (req.body._id) {
-    delete req.body._id;
+    delete req.body._id
   }
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
 
 /**
 * @api {delete} /api/achievements Destroy
@@ -138,5 +141,5 @@ exports.destroy = (req, res) => {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
-    .catch(handleError(res));
-};
+    .catch(handleError(res))
+}
