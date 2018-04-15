@@ -7,7 +7,15 @@ const Project = require('../project/project.model')
 
 import { handleError } from '../lib/helpers'
 
-// Get the posts corresponding to a project
+/**
+* @api {get} /api/posts/project/:projectId Show By Project
+* @apiName showByProject
+* @apiGroup BlogPost
+* @apiDescription Get list of Blog Post
+* @apiPermission public
+* @apiSuccess {Collection} root Get the posts corresponding to a project
+* @apiError (500) UnknownException Could not retrieve Blog Post collection
+*/
 exports.showByProject = (req, res) => {
   Post.find({ "projectId": req.params.projectId })
   .populate('author')
@@ -20,7 +28,15 @@ exports.showByProject = (req, res) => {
   })
 }
 
-// Get list of posts
+/**
+* @api {get} /api/posts Index
+* @apiName index
+* @apiGroup BlogPost
+* @apiDescription Get list of Blog Posts
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of all Observatory Blog Posts.
+* @apiError (500) UnknownException Could not retrieve Blog Post collection
+*/
 exports.index = (req, res) => {
   // Empty query for Posts
   let query = {}
@@ -41,7 +57,15 @@ exports.index = (req, res) => {
 
 }
 
-// Get a single post
+/**
+* @api {get} /api/posts/:id Show
+* @apiName show
+* @apiGroup BlogPost
+* @apiDescription Get a single blog post
+* @apiPermission public
+* @apiSuccess {Collection} root Returns a single blog post
+* @apiError (500) UnknownException Could not display Blog Post
+*/
 exports.show = (req, res) => {
   Post.findById(req.params.id)
   .populate('author')
@@ -52,7 +76,15 @@ exports.show = (req, res) => {
   })
 }
 
-// Creates a new post in the DB.
+/**
+* @api {post} /api/posts Create
+* @apiName create
+* @apiGroup BlogPost
+* @apiDescription Creates a new post in the DB
+* @apiPermission Authenticated
+* @apiSuccess {Model} root The newly created blog post
+* @apiError (500) UnknownException Could not create blog post
+*/
 exports.create = (req, res) => {
   req.body.author = req.user._id
 
@@ -96,7 +128,15 @@ exports.create = (req, res) => {
 
 }
 
-// Updates an existing post in the DB.
+/**
+* @api {put} /api/posts/:id Update
+* @apiName update
+* @apiGroup BlogPost
+* @apiDescription Updates a single blog post
+* @apiPermission Authenticated
+* @apiSuccess {Model} root The updated blog post
+* @apiError (500) UnknownException Could not update blog post
+*/
 exports.update = (req, res) => {
   // remove date field if client tries to set it.
   delete req.body.date
@@ -141,7 +181,15 @@ exports.update = (req, res) => {
   })
 }
 
-// Deletes a post from the DB.
+/**
+* @api {delete} /api/posts/:id Destroy
+* @apiName destroy
+* @apiGroup BlogPost
+* @apiDescription Deletes a post from the DB.
+* @apiPermission Authenticated
+* @apiSuccess {Model} root The deleted blog post
+* @apiError (500) UnknownException Could not delete Blog Post.
+*/
 exports.destroy = (req, res) => {
 
   Post.findById(req.params.id)
