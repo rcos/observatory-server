@@ -9,6 +9,14 @@ var md5 = require('md5');
 var Project = require('../project/project.model');
 var util = require('../../components/utilities')
 
+// // // //
+
+// Crypto library variables
+const defaultIterations = 10000;
+const defaultKeyLength = 64;
+const defaultDigest = 'sha512';
+
+// // // //
 var UserSchema = new Schema({
   name: {
     type: String,
@@ -477,7 +485,7 @@ UserSchema.methods = {
   encryptPasswordOld: function(password) {
     if (!password || !this.salt) return '';
     var salt = new Buffer(this.salt, 'base64');
-    return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+    return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength, defaultDigest).toString('base64');
   },
 
  /**
@@ -493,13 +501,9 @@ UserSchema.methods = {
       return null;
     }
 
-    var defaultIterations = 10000;
-    var defaultKeyLength = 64;
-    var defaultDigest = 'sha512';
-
     var salt = new Buffer(this.salt, 'base64');
     if (!callback) {
-      return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength).toString('base64');
+      return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength, defaultDigest).toString('base64');
     }
 
     return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, defaultDigest, (err, key) => {
