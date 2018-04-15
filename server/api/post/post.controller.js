@@ -1,22 +1,27 @@
-'use strict';
+'use strict'
 
-var _ = require('lodash');
-var Post = require('./post.model');
-var User = require('../user/user.model');
-var Project = require('../project/project.model');
+const _ = require('lodash')
+const Post = require('./post.model')
+const User = require('../user/user.model')
+const Project = require('../project/project.model')
+
+import { handleError } from '../lib/helpers'
 
 // Get the posts corresponding to a project
-exports.showByProject = function(req, res) {
+exports.showByProject = (req, res) => {
   Post.find({ "projectId": req.params.projectId })
   .populate('author')
-  .exec(function (err, posts) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, posts);
-  });
-};
+  .exec()
+  .then((posts) => {
+    return res.json(200, posts)
+  })
+  .catch((err) => {
+    return handleError(res, err)
+  })
+}
 
 // Get list of posts
-exports.index = function(req, res) {
+exports.index = (req, res) => {
   // Empty query for Posts
   let query = {}
 
@@ -26,104 +31,139 @@ exports.index = function(req, res) {
   }
 
   // Queries Posts and returns result
-  Post.find(query, function (err, posts) {
-    if(err) { return handleError(res, err); }
-    return res.json(200, posts);
-  });
-};
+  Post.find(query)
+  .then((posts) => {
+    return res.json(200, posts)
+  })
+  .catch((err) => {
+    return handleError(res, err)
+  })
+
+}
 
 // Get a single post
-exports.show = function(req, res) {
+exports.show = (req, res) => {
   Post.findById(req.params.id)
   .populate('author')
-  .exec(function (err, post) {
-    if(err) { return handleError(res, err); }
-    if(!post) { return res.send(404); }
-    return res.json(post);
-  });
-};
+  .exec((err, post) => {
+    if (err) { return handleError(res, err) }
+    if (!post) { return res.send(404) }
+    return res.json(post)
+  })
+}
 
 // Creates a new post in the DB.
-exports.create = function(req, res) {
-  req.body.author = req.user._id;
+exports.create = (req, res) => {
+  req.body.author = req.user._id
 
   // remove date field if client tries to set it.
-  delete req.body.date;
+  delete req.body.date
 
-  if (!req.body.projectId){ return res.status(400).send("Project not set"); }
-  Project.findOne({'_id': req.body.projectId }, function (err, project) {
-    if(err) { return handleError(res, err); }
-    if(!project) { return res.status(404).send("Project not found"); }
+  if (!req.body.projectId){
+    return res.status(400).send("Project not set")
+  }
 
+  Project.findOne({ '_id': req.body.projectId })
+  .then((project) => {
+
+    // Short-circuit if no project is found matching the ID
+    if (!project) {
+      return res.status(404).send("Project not found")
+    }
     // Only someone who is part of the project can write a blog post
-    User.findById(req.user._id, function(err, user) {
-      if (err) { return handleError(res, err); }
-
-      if ((user.projects && user.projects.indexOf(project._id) !== -1) || user.role === 'mentor' || user.role === 'admin'){
-        Post.create(req.body, function(err, post) {
-          if(err) { return handleError(res, err); }
-          return res.json(201, post);
-        });
-      } else {
-        return res.status(403).send("User not part of project");
+    // TODO - replace callback with Promise
+    User.findById(req.user._id)
+    .then((user) => {
+      if ((user.projects && user.projects.indexOf(project._id) !== -1) || user.role === 'mentor' || user.role === 'admin') {
+        // TODO - replace callback with Promise
+        Post.create(req.body)
+        .then((post) => {
+          return res.json(201, post)
+        })
+        .catch((err) => {
+          res.status(403).send("User not part of project")
+        })
       }
-    });
-  });
+    })
+    .catch((err) => {
+      return handleError(res, err)
+    })
 
-};
+  })
+  .catch((err) => {
+    return handleError(res, err)
+  })
+
+}
 
 // Updates an existing post in the DB.
-exports.update = function(req, res) {
+exports.update = (req, res) => {
   // remove date field if client tries to set it.
-  delete req.body.date;
+  delete req.body.date
 
-  if(req.body._id) { delete req.body._id; }
-  Post.findById(req.params.id, function (err, post) {
-    if (err) { return handleError(res, err); }
-    if(!post) { return res.send(404); }
+  if (req.body._id) { delete req.body._id }
+
+  Post.findById(req.params.id)
+  .then ((post) => {
+    if (!post){ return handleError(res, err) }
 
     // Only the post's author, a mentor, or an admin can edit the post
-    var userId = req.user._id;
-    User.findById(userId, function(err, user) {
-      if (err) { return handleError(res, err); }
+    var userId = req.user._id
+
+    // TODO - replace callback with Promise
+    User.findById(userId)
+    .then((user) => {
 
       if (userId.equals(post.author) || user.role === 'mentor' || user.role === 'admin'){
-        var updated = _.merge(post, req.body);
-        updated.save(function (err) {
-          if (err) { return handleError(res, err); }
-          return res.json(200, post);
-        });
+        var updated = _.merge(post, req.body)
+
+        // Saves the updated post
+        updated.save()
+        .then(() => {
+          return res.json(200, post)
+        })
+        .catch((err) => {
+          return handleError(res, err)
+        })
+
       } else {
-        return handleError(res, err);
+        return handleError(res, err)
       }
-    });
-  });
-};
+
+    })
+    .catch((err) => {
+      return handleError(res, err)
+    })
+
+  })
+  .catch((err) => {
+    return handleError(res, err)
+  })
+}
 
 // Deletes a post from the DB.
-exports.destroy = function(req, res) {
-  Post.findById(req.params.id, function (err, post) {
-    if(err) { return handleError(res, err); }
-    if(!post) { return res.send(404); }
+exports.destroy = (req, res) => {
+  // TODO - replace callback with Promise
+  Post.findById(req.params.id, (err, post) => {
+    if (err) { return handleError(res, err) }
+    if (!post) { return res.send(404) }
 
     // Only the post's author, a mentor, or an admin can delete the post
-    var userId = req.user._id;
-    User.findById(userId, function(err, user) {
-      if (err) { return handleError(res, err); }
+    var userId = req.user._id
+    // TODO - replace callback with Promise
+    User.findById(userId, (err, user) => {
+      if (err) { return handleError(res, err) }
       if (userId.equals(post.author) || user.role === 'mentor' || user.role === 'admin'){
-        post.remove(function(err) {
-          if(err) { return handleError(res, err); }
-          return res.send(204);
-        });
+        // TODO - replace callback with Promise
+        post.remove( (err) => {
+          if (err) { return handleError(res, err) }
+          return res.send(204)
+        })
       } else {
-        return handleError(res, err);
+        return handleError(res, err)
       }
 
-    });
+    })
 
-  });
-};
-
-function handleError(res, err) {
-  return res.send(500, err);
+  })
 }
