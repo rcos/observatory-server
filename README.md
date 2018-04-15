@@ -1,6 +1,6 @@
 # Observatory3
 
-[![Build Status](https://travis-ci.org/rcos/Observatory3.svg?branch=master)](https://travis-ci.org/rcos/Observatory3)
+[![Build Status](https://travis-ci.org/rcos/observatory-server.svg?branch=master)](https://travis-ci.org/rcos/observatory-server)
 
 A project tracking dashboard for Rensselaer Center for Open Source. A ground up rewrite.
 
