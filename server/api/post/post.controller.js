@@ -143,27 +143,36 @@ exports.update = (req, res) => {
 
 // Deletes a post from the DB.
 exports.destroy = (req, res) => {
-  // TODO - replace callback with Promise
-  Post.findById(req.params.id, (err, post) => {
-    if (err) { return handleError(res, err) }
+
+  Post.findById(req.params.id)
+  .then((post) => {
     if (!post) { return res.send(404) }
 
     // Only the post's author, a mentor, or an admin can delete the post
     var userId = req.user._id
-    // TODO - replace callback with Promise
-    User.findById(userId, (err, user) => {
-      if (err) { return handleError(res, err) }
+
+    User.findById(userId)
+    .then((user) => {
+
       if (userId.equals(post.author) || user.role === 'mentor' || user.role === 'admin'){
-        // TODO - replace callback with Promise
-        post.remove( (err) => {
-          if (err) { return handleError(res, err) }
-          return res.send(204)
+
+        // Removes the blog post
+        post.remove()
+        .then(() =>{
+          return res.status(204).json({ post }).end()
         })
-      } else {
-        return handleError(res, err)
+        .catch((err)=>{
+          return handleError(res, err)
+        })
       }
 
     })
+    .catch((err)=>{
+      return handleError(res, err)
+    })
 
+  })
+  .catch((err)=>{
+   return handleError(res, err)
   })
 }
