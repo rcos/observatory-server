@@ -108,14 +108,14 @@ exports.update = (req, res) => {
     if (!post){ return handleError(res, err) }
 
     // Only the post's author, a mentor, or an admin can edit the post
-    var userId = req.user._id
+    const userId = req.user._id
 
     // TODO - replace callback with Promise
     User.findById(userId)
     .then((user) => {
 
       if (userId.equals(post.author) || user.role === 'mentor' || user.role === 'admin'){
-        var updated = _.merge(post, req.body)
+        const updated = _.merge(post, req.body)
 
         // Saves the updated post
         updated.save()
@@ -149,7 +149,7 @@ exports.destroy = (req, res) => {
     if (!post) { return res.send(404) }
 
     // Only the post's author, a mentor, or an admin can delete the post
-    var userId = req.user._id
+    const userId = req.user._id
 
     User.findById(userId)
     .then((user) => {
