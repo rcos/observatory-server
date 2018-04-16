@@ -1,9 +1,7 @@
 'use strict';
 
-<<<<<<< HEAD
 // TODO - use `const` instead of `var`
-=======
->>>>>>> 865585d4d0148ea2074907298a0ccdb4449e5626
+
 const _ = require('lodash');
 const Achievement = require('./achievement.model');
 
@@ -12,7 +10,7 @@ function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
     res.status(statusCode).send(err);
-p  };
+  };
 }
 
 // TODO - abstract into /api/lib/helpers
