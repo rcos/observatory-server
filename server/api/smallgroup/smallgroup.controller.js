@@ -171,30 +171,34 @@ exports.daycode = function(req, res){
     return SmallGroup.findOne({"students":userId, "classYear":classYearId})
     .select('+dayCodes.code')
     .exec(function(err, smallgroup){
-        if (err) {return handleError(res, err);}
-        var today = new Date();
-        today.setHours(0,0,0,0);
-        for (var i = 0;i < smallgroup.dayCodes.length;i++){
-          if (today.getTime() === smallgroup.dayCodes[i].date.getTime()){
 
-            return res.status(200).json(smallgroup.dayCodes[i].code)
-          }
+      if (err) { return handleError(res, err); }
+
+      var today = new Date();
+      today.setHours(0,0,0,0);
+      for (var i = 0;i < smallgroup.dayCodes.length;i++){
+        if (today.getTime() === smallgroup.dayCodes[i].date.getTime()){
+          return res.status(200).json(smallgroup.dayCodes[i].code)
         }
-        //unique code generator, function at the bottom.
-        uniqueDayCode(6,function(err,dayCode){
-          if (err) return handleError(res, err);
-          var code = dayCode;
+      }
 
-          smallgroup.dayCodes.push({
-            date: today,
-            code: code,
-            bonusDay: req.body.bonusDay ? true : false
-          });
-          return smallgroup.save(function(err, classYear){
-            if (err) return handleError(res, err);
-            return res.status(200).json({'code': code})
+      //unique code generator, imported from api/lib/helpers.js
+      uniqueDayCode(6, function(err, dayCode) {
+        if (err) { return handleError(res, err); }
+        var code = dayCode;
+
+        smallgroup.dayCodes.push({
+          date: today,
+          code: code,
+          bonusDay: req.body.bonusDay ? true : false
+        });
+
+        return smallgroup.save( function (err, classYear) {
+          if (err) { return handleError(res, err); }
+          return res.status(200).json({ code: code })
         });
       });
+
     });
   });
 };
