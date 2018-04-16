@@ -3,6 +3,14 @@
 var _ = require('lodash');
 var Commit = require('./commit.model');
 
+/**
+* @api {GET} /api/commit/ Index
+* @APIname Index
+* @APIgroup Commit Controller
+* @apidescription Gets list of commits by using the Commit.find function. Send an error if it doesn't work, otherwise return json file of commits.
+* @apiSuccess {json} index File with list of commits
+* @apiError (Error) 500 Internal server error
+*/
 // Get list of commits
 exports.index = function(req, res) {
   Commit.find(function (err, commits) {
@@ -10,7 +18,15 @@ exports.index = function(req, res) {
     return res.json(200, commits);
   });
 };
-
+/**
+* @api {GET} /api/commit/ Show
+* @APIname Show
+* @APIgroup Commit Controller
+* @apidescription Shows a single commit.
+* @apiSuccess {json} show file with one commit
+* @apiError (Error) 404 no commits found
+* @apiError (Error) 500 Internal server error
+*/
 // Get a single commit
 exports.show = function(req, res) {
   Commit.findById(req.params.id, function (err, commit) {
@@ -29,6 +45,7 @@ exports.create = function(req, res) {
 };
 
 // Updates an existing commit in the DB.
+
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Commit.findById(req.params.id, function (err, commit) {
@@ -57,6 +74,14 @@ exports.destroy = function(req, res) {
 
 // Show a list of a projects Commits
 // Get a single commit
+/**
+* @api {GET} /api/commit/ showProjectCommits
+* @APIname showProjectCommits
+* @APIgroup Commit Controller
+* @apidescription Shows a list of a project's commits
+* @apiSuccess {json} showProjectCommits File with a list of commits
+* @apiError (Error) 404  no commits found
+*/
 exports.showProjectCommits = function(req, res) {
   Commit.findById(req.params.projectId, function (err, commits) {
     if(err) { return handleError(res, err); }
@@ -66,6 +91,13 @@ exports.showProjectCommits = function(req, res) {
 };
 
 // Get a list of a user Commits
+/**
+* @api {GET} /api/commit/ showUserCommits
+* @APIname showUserCommits
+* @APIgroup Commit Controller
+* @apidescription Shows a list of commits by a user within a certain timeperiod
+* @apiSuccess {json} showUserCommits File with a list of commits
+*/
 exports.showUserCommits = function(req, res) {
   var prevDays = new Date();
   if (req.params.timeperiod){

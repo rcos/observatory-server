@@ -24,11 +24,12 @@ Key Features Include
 - [Node.js and npm](https://nodejs.org/) Node ^4.2.3, npm ^2.14.7  (nodejs-legacy for debian-based distributions)
 - [Docker](http://https://docs.docker.com/engine/installation/)
 - [Docker-Compose](https://docs.docker.com/compose/install/)
+- [Bower](https://bower.io/) (`npm install --g bower`)
+- [Grunt](http://gruntjs.com/) (`npm install --g grunt-cli`)
+- [APIDoc](http://apidocjs.com) (`npm install --g apidoc`)
 
-- [Bower](https://bower.io/) (`npm install --global bower`)
-- [Grunt](http://gruntjs.com/) (`npm install --global grunt-cli`)
 ```
-npm install -g grunt-cli grunt bower
+npm install -g grunt-cli grunt bower apidoc
 ```
 
 ### Developing
@@ -58,6 +59,10 @@ Run `grunt seed` to seed (populate) your mongoDB with dummy data
 
 ## Testing
 Running `npm test` will run the unit tests with karma.
+
+## Documentation
+Running `npm run apidoc` will run generate the `/docs` directory. See [APIDoc](http://apidocjs.com) for more information.
+The latest Observatory documentation is hosted at [rcos.github.io/observatory-docs](http://rcos.github.io/observatory-docs)
 
 Want to develop with us?
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 3.3.0.
