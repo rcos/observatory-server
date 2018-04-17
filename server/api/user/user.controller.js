@@ -113,6 +113,7 @@ exports.stats = (req, res) => {
 	.exec((err, users) => {
     if (err) return res.send(500, err);
     const twoWeeks = new Date();
+
     twoWeeks.setDate(twoWeeks.getDate()-14);
     const userInfo = [];
     let count = users.length;
@@ -401,7 +402,7 @@ exports.destroy = (req, res) => {
         //res.json(data);
       });
     } else {
-      res.send(403);
+      res.status(403).json({forbidden: true});
     }
   });
 
@@ -427,7 +428,7 @@ exports.role = (req, res) => {
       user.role = newRole;
       user.save((err) => {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -452,10 +453,10 @@ exports.changePassword = (req, res, next) => {
       user.passwordResetToken = '';
       user.save((err) => {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     } else {
-      res.send(403);
+      res.status(403).json({forbidden: true});
     }
   });
 };
@@ -543,7 +544,7 @@ exports.addTech = (req,res) => {
       user.tech.push(newTech);
       user.save((err) => {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -563,7 +564,7 @@ exports.removeTech = (req,res) => {
       user.tech.splice(user.tech.indexOf(tech), 1);
       user.save((err) => {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -636,7 +637,7 @@ exports.addProject = (req,res) => {
       user.projects.push(newProject);
       user.save((err) => {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -657,7 +658,7 @@ exports.addFavorite = (req,res) => {
       user.favoriteProjects.push(newFavorite);
       user.save((err) => {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -666,6 +667,7 @@ exports.addFavorite = (req,res) => {
 /**
  * Remove an item from the tech array for a user
  */
+
 exports.removeProject = (req,res) => {
   const userId = req.params.id;
   const project = req.body.project;
@@ -677,7 +679,7 @@ exports.removeProject = (req,res) => {
       user.projects.splice(user.projects.indexOf(project), 1);
       user.save((err) => {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -696,7 +698,7 @@ exports.removeFavorite = (req,res) => {
       user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
       user.save((err) => {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -724,7 +726,7 @@ exports.deleteUser = (req,res,next) => {
         //res.json(data);
       });
     } else {
-      res.send(403);
+      res.status(403).json({forbidden: true});
     }
   });
 };
