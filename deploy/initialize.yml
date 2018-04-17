@@ -3,7 +3,7 @@
   gather_facts: false
   vars:
     nodejs_version: "4.x"
-    domain_name: dev.rcos.io
+    domain_name: rcos.io
   roles:
     - geerlingguy.nodejs
     - nginx
