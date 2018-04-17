@@ -1,24 +1,24 @@
 'use strict';
 
-var _ = require('lodash');
-var User = require('./user.model');
-var passport = require('passport');
-var config = require('../../config/environment');
-var jwt = require('jsonwebtoken');
-var crypto = require('crypto');
-var async = require('async');
-var email = require("../../components/email");
-var Commit = require('../commit/commit.model');
-var ClassYear = require('../classyear/classyear.model');
-var Attendance = require('../attendance/attendance.model');
-var SmallGroup = require('../smallgroup/smallgroup.model');
+const _ = require('lodash');
+const User = require('./user.model');
+const passport = require('passport');
+const config = require('../../config/environment');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const async = require('async');
+const email = require("../../components/email");
+const Commit = require('../commit/commit.model');
+const ClassYear = require('../classyear/classyear.model');
+const Attendance = require('../attendance/attendance.model');
+const SmallGroup = require('../smallgroup/smallgroup.model');
 
 // Return a standard error
 function handleError(res, err) {
   return res.sendStatus(500, err);
 }
 
-var validationError = function(res, err) {
+const validationError = (res, err) => {
   return res.status(422).json(err);
 };
 
@@ -31,9 +31,9 @@ var validationError = function(res, err) {
 * @apiSuccess {Collection} root Collection of all active Observatory Users.
 * @apiError (500) UnknownException Could not retrieve User collection
 */
-exports.index = function(req, res) {
-  User.find({}, function (err, users) {
-    if(err) return res.status(500).json({error: err});
+exports.index = (req, res) => {
+  User.find({}, (err, users) => {
+    if (err) return res.send(500, err);
     res.status(200).json(users);
   });
 };
@@ -41,24 +41,24 @@ exports.index = function(req, res) {
 /**
  * Get user stats
  */
-exports.publicStats = function(req, res) {
+exports.publicStats = (req, res) => {
   async.parallel([
     // Count active users
-    function(callback) {
-      User.count({active:true}, function (err, aCount) {
+      (callback) => {
+	  User.count({active:true}, (err, aCount) => {
         if (err) return callback(err);
         callback(null, aCount);
       });
     },
     // Count past users
-    function(callback) {
-      User.count({active:false}, function (err, pCount) {
+    (callback) => {
+      User.count({active:false}, (err, pCount) => {
         if (err) return callback(err);
         callback(null, pCount);
       });
     },
   ],
-  function(err, results){
+  (err, results) => {
     if (err) {
       return res.send(400);
     }
@@ -68,7 +68,7 @@ exports.publicStats = function(req, res) {
     }
 
     //results contains [activeProjectCount, pastProjectCount]
-    var stats = {};
+    const stats = {};
     stats.activeUsers = results[0] || 0;
     stats.pastUsers = results[1] || 0;
 
@@ -82,21 +82,21 @@ exports.publicStats = function(req, res) {
  * Takes {query:String, single:Boolean, limit:Integer}
  */
 // TODO Make this work with fuzzy queries, multiple results etc.
-exports.search = function(req, res){
-  if (!req.query.query) return res.send(400, "No query supplied");
-  var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
-  User.findOne({name: query}, function(err, user){
-    if (err) return res.status(500).json({error: err});//send(500, err);
+exports.search = (req, res) => {
+  if (!req.query.query) return res.send(400, 'No query supplied');
+    const query = new RegExp(['^', req.query.query, '$'].join(''), 'i')
+    User.findOne({name: query}, (err, user) => {
+    if (err) return res.send(500, err);
     if (!user){
       if (req.query.single){
         return res.status(200).json(null);
-      }else{
+      } else {
         return res.status(200).json([]);
       }
     }
     if (req.query.single){
       return res.status(200).json(user.profile);
-    }else{
+    } else {
       return res.status(200).json([user.profile]);
     }
   });
@@ -107,23 +107,24 @@ exports.search = function(req, res){
  * in previous 2 weeks
  * restriction: 'admin'
  */
-exports.stats = function(req, res) {
+exports.stats = (req, res) => {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
-  .exec(function (err, users) {
-    if(err) return res.status(500).json({error: err});//send(500, err);
-    var twoWeeks = new Date();
-    twoWeeks.setDate(twoWeeks.getDate()-14);
-    var userInfo = [];
-    var count = users.length;
+	.exec((err, users) => {
+    if (err) return res.send(500, err);
+    const twoWeeks = new Date();
 
-    var getCommits = function(user){
+    twoWeeks.setDate(twoWeeks.getDate()-14);
+    const userInfo = [];
+    let count = users.length;
+
+	    const getCommits = (user) => {
       Commit.find()
       .where('author.login').equals(String(user.github.login))
       .where('date').gt(twoWeeks)
-      .exec(function(err, commits){
-        var commitList = [];
-        commits.forEach(function (c){
+      .exec((err, commits) => {
+        const commitList = [];
+        commits.forEach((c) => {
           commitList.push(c.toObject());
         }
                        )
@@ -136,8 +137,8 @@ exports.stats = function(req, res) {
       });
     }
 
-    for (var i = 0; i < users.length; i++){
-      var u = users[i].stats;
+    for (let i = 0; i < users.length; i++){
+      const u = users[i].stats;
       getCommits(u);
     }
   });
@@ -148,13 +149,13 @@ exports.stats = function(req, res) {
  * in previous 2 weeks including inactive
  * restriction: 'admin'
  */
-exports.allStats = function(req, res) {
+exports.allStats = (req, res) => {
   // Only return users who have a github login
-  ClassYear.getCurrent(function(err, classYear){
-    var classYearId = classYear._id;
+  ClassYear.getCurrent((err, classYear) => {
+    const classYearId = classYear._id;
     User.find({})
-    .exec(function (err, users) {
-      if(err) return res.status(500).json(err);
+    .exec((err, users) => {
+      if (err) return res.status(500).json(err);
       res.status(200).json(users);
     });
   });
@@ -163,11 +164,11 @@ exports.allStats = function(req, res) {
 /**
  * Get list of active users
  */
-exports.list = function(req, res) {
+exports.list = (req, res) => {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
   .select('_id name role avatar email github.login')
-  .exec(function (err, users) {
+	.exec((err, users) => {
     res.status(200).json(users);
   });
 };
@@ -175,12 +176,11 @@ exports.list = function(req, res) {
 /**
  * Get list of all past users
  */
-exports.past = function(req, res) {
+exports.past = (req, res) => {
   User.find({active: false})
   .select('_id name role avatar email github.login')
-  .exec(function (err, users) {
-    if(err) return res.status(500).json({error: err});//send(500, err);
-
+	.exec((err, users) => {
+    if(err) return res.send(500, err);
     res.status(200).json(users);
   });
 };
@@ -188,11 +188,11 @@ exports.past = function(req, res) {
 /**
  * Get a list of all the recent RCOS commits for a user
  */
-exports.commits = function(req, res) {
-  var userId = String(req.params.id);
+exports.commits = (req, res) => {
+  const userId = String(req.params.id);
 
-  Commit.find({ userId: userId}, function(err, commits){
-    if (err) return res.status(500).json({error: err});//send(500, err);
+  Commit.find({ userId: userId}, (err, commits) => {
+    if (err) return res.send(500, err);
     res.status(200).json(commits);
   });
 };
@@ -200,13 +200,13 @@ exports.commits = function(req, res) {
 /**
  * Creates a new user
  */
-exports.create = function (req, res, next) {
-  var newUser = new User(req.body);
+exports.create = (req, res, next) => {
+  const newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
-  newUser.save(function(err, user) {
+  newUser.save((err, user) => {
     if (err) return validationError(res, err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+    const token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
     res.json(201, { token: token });
   });
 };
@@ -214,15 +214,15 @@ exports.create = function (req, res, next) {
 /**
  * Update an existing user
  */
-exports.update = function (req, res, next) {
+exports.update = (req, res, next) => {
   if(req.body._id) { delete req.body._id; }
 
-  User.findById(req.params.id, function(err, user){
+    User.findById(req.params.id, (err, user) => {
     if (err) { return handleError(res, err); }
-    if(!user) { return res.send(404); }
+    if (!user) { return res.send(404); }
 
-    var updated = _.merge(user, req.body);
-    updated.save(function(err) {
+    const updated = _.merge(user, req.body);
+    updated.save((err) => {
       if (err) { return handleError(res, err); }
       return res.json(200, updated);
     });
@@ -232,15 +232,15 @@ exports.update = function (req, res, next) {
 /**
  * Get a single user
  */
-exports.show = function (req, res, next) {
-  var userId = req.params.id;
+exports.show = (req, res, next) => {
+  const userId = req.params.id;
 
   User.findById(userId)
   .populate('smallgroup')
-  .exec(function (err, user) {
+  .exec((err, user) => {
     if (err) {return next(err);}
     if (!user) {return res.send(404);}
-    var profile = user.profile;
+    const profile = user.profile;
     return res.json(profile);
   });
 };
@@ -248,33 +248,33 @@ exports.show = function (req, res, next) {
 /**
  * Get a single user
  */
-exports.privateProfile = function (req, res, next) {
-  var userId = req.params.id;
+exports.privateProfile = (req, res, next) => {
+  const userId = req.params.id;
   User.findById(userId)
   .populate('projects')
   .populate('favoriteProjects')
-  .exec(function (err, user) {
+  .exec((err, user) => {
     if (err) {return next(err);}
     if (!user) {return res.send(404);}
-    var profile = user.privateProfile;
-    return ClassYear.getCurrent(function(err, classYear){
-      var classYearId = classYear._id;
-      return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
+    const profile = user.privateProfile;
+      return ClassYear.getCurrent((err, classYear) => {
+      const classYearId = classYear._id;
+      return SmallGroup.findOne({'students':userId, 'fclassYear':classYearId}, (err, smallgroup) => {
         if (err) {return next(err);}
         if (smallgroup) {
-          var responseObjectSmallgroup = smallgroup.toObject();
+          const responseObjectSmallgroup = smallgroup.toObject();
           profile.smallgroup = responseObjectSmallgroup;
         }
         // Get how many total attendance days there have been
-        var data = user.getTotalDays(classYear, smallgroup);
+        const data = user.getTotalDays(classYear, smallgroup);
         profile.totalDates = data.totalDates;
         profile.totalBonusDates = data.totalBonusDates;
         profile.totalSmallDates = data.totalSmallDates;
         profile.totalBonusSmallDates = data.totalBonusSmallDates;
 
         Attendance.find({classYear:classYearId, user: userId})
-        .exec(function (err, attendance) {
-          if(err) { return handleError(res, err); }
+        .exec((err, attendance) => {
+          if (err) { return handleError(res, err); }
           profile.attendance = attendance;
 
           return res.json(profile);
@@ -287,13 +287,13 @@ exports.privateProfile = function (req, res, next) {
 /**
  * Get a user's favorite projects
  */
-exports.favoriteProjects = function (req, res, next) {
-  var userId = req.params.id;
+exports.favoriteProjects = (req, res, next) => {
+  const userId = req.params.id;
   User.findById(userId)
   .populate('favoriteProjects')
-  .exec(function (err, user) {
-    if (err) {return next(err);}
-    if (!user) {return res.send(404);}
+  .exec((err, user) => {
+    if (err) { return next(err);}
+    if (!user) { return res.send(404);}
 
     return res.json(user.favoriteProjects);
   });
@@ -302,18 +302,18 @@ exports.favoriteProjects = function (req, res, next) {
 /**
  * Get a my smallgroup
  */
-exports.smallgroup = function (req, res, next) {
-  var userId = req.user.id;
-  return ClassYear.getCurrent(function(err, classYear){
-    var classYearId = classYear._id;
-    var query = SmallGroup.findOne({"students":userId, "classYear":classYearId});
-    if (req.user.isMentor){
+exports.smallgroup = (req, res, next) => {
+  const userId = req.user.id;
+  return ClassYear.getCurrent((err, classYear) => {
+    const classYearId = classYear._id;
+    const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
+    if (req.user.isMentor) {
       query.select('+dayCodes.code')
     }
-    return query.exec(function(err, smallgroup){
+    return query.exec((err, smallgroup) => {
       if (err) return handleError(res, err);
       if (!smallgroup) return res.json({});
-      var responseObject = smallgroup.toObject();
+      const responseObject = smallgroup.toObject();
       // If user is not a mentor or not authenticated, don't give dayCode
       if (req.user.isMentor){
         // Mentors should get a day code
@@ -334,15 +334,15 @@ exports.smallgroup = function (req, res, next) {
 /**
  * Get a single user's smallgroup
  */
-exports.userSmallgroup = function (req, res, next) {
-  var userId = req.params.id;
-  return ClassYear.getCurrent(function(err, classYear){
-    var classYearId = classYear._id;
-    var query = SmallGroup.findOne({"students":userId, "classYear":classYearId})
+exports.userSmallgroup = (req, res, next) => {
+  const userId = req.params.id;
+  return ClassYear.getCurrent((err, classYear) => {
+    const classYearId = classYear._id;
+    const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId})
     if (req.user.isMentor){
       query.select('+dayCodes.code')
     }
-    return query.exec(function(err, smallgroup){
+    return query.exec((err, smallgroup) => {
       if (err) return handleError(res, err);
       if (!smallgroup) return res.json({});
       var responseObject = smallgroup.toObject();
@@ -352,7 +352,7 @@ exports.userSmallgroup = function (req, res, next) {
       if (smallgroup.dayCode){
         responseObject.dayCode = smallgroup.dayCode;
       }
-      if (smallgroup.bonusDayCode){
+      if (smallgroup.bonusDayCode) {
         responseObject.bonusDayCode = smallgroup.bonusDayCode;
       }
       res.status(200).json(responseObject);
@@ -363,10 +363,10 @@ exports.userSmallgroup = function (req, res, next) {
 /**
  * Get a single user's avatar
  */
-exports.avatar = function (req, res, next) {
-  var userId = req.params.id;
+exports.avatar = (req, res, next) => {
+  const userId = req.params.id;
 
-  User.findById(userId, function (err, user) {
+  User.findById(userId, (err, user) => {
     if (err) return next(err);
     if (!user) return res.send(404);
     return res.json(user.avatar);
@@ -378,26 +378,26 @@ exports.avatar = function (req, res, next) {
  * Deletes a user
  * restriction: 'admin'
  */
-exports.destroy = function(req, res) {
-  User.findByIdAndRemove(req.params.id, function(err, user) {
-    if(err) return res.status(500).json({error: err});//send(500, err);
+exports.destroy = (req, res) => {
+  User.findByIdAndRemove(req.params.id, (err, user) => {
+    if (err) return res.send(500, err);
     return res.send(204);
   });
-  var userId = req.params.id;
-  var adminUserId = req.user.id;
-  var pass = String(req.body.password);
-  var query = {students:{ $in: [userId]}};
+  const userId = req.params.id;
+  const adminUserId = req.user.id;
+  const pass = String(req.body.password);
+  const query = {students:{ $in: [userId]}};
   User.findById(adminUserId)
   .select('_id email password provider salt')
-  .exec(function (err, user, db) {
+  .exec((err, user, db) => {
     if(user.authenticate(pass)) {
-      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
-        if(err) {
+      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, (err, data) => {
+        if (err) {
           return res.status(500).json({'error' : 'error in deleting address'});
         }
-        User.findByIdAndRemove(userId, function(err, user) {
-          if(err) return res.status(500).json({error: err});//send(500, err);
-          return res.status(200).json({success: true});
+        User.findByIdAndRemove(userId, (err, user) => {
+          if (err) return res.send(500, err);
+          return res.send(200);
         });
         //res.json(data);
       });
@@ -412,21 +412,21 @@ exports.destroy = function(req, res) {
  * Change what role the user is
  * restriction: 'admin'
  */
-exports.role = function(req, res) {
-  var roles = ['user', 'mentor', 'admin'];
-  var userId = req.params.id;
-  var newRole = req.body.role;
+exports.role = (req, res) => {
+  const roles = ['user', 'mentor', 'admin'];
+  const userId = req.params.id;
+  const newRole = req.body.role;
   // Check that role is valid
   if (roles.indexOf(newRole) === -1){
     res.send(400, {error: "Role does not exist."});
   }
-  User.findById(userId, function(err,user){
-    if (err){
-      res.status(500).json({error: err});//send(500, err);
-    }else{
+  User.findById(userId, (err,user) => {
+    if (err) {
+      res.send(500, err);
+    } else {
       if (user.role === newRole) return;
       user.role = newRole;
-      user.save(function(err) {
+      user.save((err) => {
         if (err) return validationError(res, err);
         res.status(200).json({success: true});
       });
@@ -439,19 +439,19 @@ exports.role = function(req, res) {
  * This can be done with either the reset token or the user's old
  * password
  */
-exports.changePassword = function(req, res, next) {
-  var userId = req.user._id;
-  var oldPass = String(req.body.oldPassword);
-  var token   = String(req.body.token);
-  var newPass = String(req.body.newPassword);
+exports.changePassword = (req, res, next) => {
+  const userId = req.user._id;
+  const oldPass = String(req.body.oldPassword);
+  const token   = String(req.body.token);
+  const newPass = String(req.body.newPassword);
 
   User.findById(userId)
   .select('_id email password provider salt passwordResetToken passwordResetExpiration')
-  .exec(function (err, user) {
+  .exec((err, user) => {
     if(user.authenticate(oldPass) || user.validResetToken(token)) {
       user.password = newPass;
       user.passwordResetToken = '';
-      user.save(function(err) {
+      user.save((err) => {
         if (err) return validationError(res, err);
         res.status(200).json({success: true});
       });
@@ -464,13 +464,13 @@ exports.changePassword = function(req, res, next) {
 /**
  * Deactivates a user
  */
-exports.deactivate = function(req,res) {
-  var userId = String(req.params.id);
-  User.findById(userId, function(err, user){
-    if (err) return res.status(500).json({error: err});
+exports.deactivate = (req,res) => {
+  const userId = String(req.params.id);
+  User.findById(userId, (err, user) => {
+    if (err) return res.send(500, err);
     user.active = false;
-    user.save(function(err){
-      if (err) return res.status(500).json({error: err});
+    user.save((err) => {
+      if (err) return res.send(500, err);
       res.status(200).json({success: true});
     })
   });
@@ -479,15 +479,15 @@ exports.deactivate = function(req,res) {
 /**
  * Deactivates a user
  */
-exports.deactivate = function(req, res, next) {
-  var userId = String(req.params.id);
+exports.deactivate = (req, res, next) => {
+  const userId = String(req.params.id);
 
-  User.findOne({ '_id': userId}, function(err, user){
-    if (err) return res.status(500).json({error: err});
+  User.findOne({ '_id': userId}, (err, user) => {
+    if (err) return res.send(500, err);
 
     user.active = false;
-    user.save(function(err){
-      if (err) return res.status(500).json({error: err});
+    user.save((err) => {
+      if (err) return res.send(500, err);
       res.status(200).json({success: true});
     })
   });
@@ -496,13 +496,13 @@ exports.deactivate = function(req, res, next) {
 /**
  * Activates a user
  */
-exports.activate = function(req, res, next) {
-  var userId = String(req.params.id);
-  User.findOne({ '_id': userId}, function(err, user){
-    if (err) return res.status(500).json({error: err});
+exports.activate = (req, res, next) => {
+  let userId = String(req.params.id);
+    User.findOne({ '_id': userId}, (err, user) => {
+    if (err) return res.send(500, err);
     user.active = true;
-    user.save(function(err){
-      if (err) return res.status(500).json({error: err});
+    user.save((err) => {
+      if (err) return res.send(500, err);
       res.status(200).json({success: true});
     })
   });
@@ -511,12 +511,12 @@ exports.activate = function(req, res, next) {
 /**
  * Get my info
  */
-exports.me = function(req, res, next) {
-  var userId = req.user._id;
+exports.me = (req, res, next) => {
+  const userId = req.user._id;
   User.findOne({
     _id: userId
   })
-  .exec(function(err, user) {
+  .exec((err, user) => {
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);
@@ -526,23 +526,23 @@ exports.me = function(req, res, next) {
 /**
  * Authentication callback
  */
-exports.authCallback = function(req, res, next) {
+exports.authCallback = (req, res, next) => {
   res.redirect('/');
 };
 
 /**
  * Add an item to the tech array for a user
  */
-exports.addTech = function(req,res){
-  var userId = req.params.id;
-  var newTech = req.body.tech;
-  User.findById(userId, function(err,user){
-    if (err){
-      res.status(500).json({error: err});
-    }else{
+exports.addTech = (req,res) => {
+  const userId = req.params.id;
+  const newTech = req.body.tech;
+  User.findById(userId, (err,user) => {
+    if (err) {
+      res.send(500, err);
+    } else {
       if (!user.tech) user.tech = [];
       user.tech.push(newTech);
-      user.save(function(err) {
+      user.save((err) => {
         if (err) return validationError(res, err);
         res.status(200).json({success: true});
       });
@@ -553,16 +553,16 @@ exports.addTech = function(req,res){
 /**
  * Remove an item from the tech array for a user
  */
-exports.removeTech = function(req,res){
-  var userId = req.params.id;
-  var tech = req.body.tech;
-  User.findById(userId, function(err,user){
+exports.removeTech = (req,res) => {
+  const userId = req.params.id;
+  const tech = req.body.tech;
+  User.findById(userId, (err,user) => {
     if (err){
-      res.status(500).json({error: err});
-    }else{
+      res.send(500, err);
+    } else {
       if (!user.tech) user.tech = [];
       user.tech.splice(user.tech.indexOf(tech), 1);
-      user.save(function(err) {
+      user.save((err) => {
         if (err) return validationError(res, err);
         res.status(200).json({success: true});
       });
@@ -573,43 +573,43 @@ exports.removeTech = function(req,res){
 /**
  * Set reset token for user and email it the password token will expire after 24 hours.
  */
-exports.resetPassword = function(req, res){
-  var userEmail = req.body.email;
+exports.resetPassword = (req, res) => {
+  const userEmail = req.body.email;
   User.findOne({
     email: userEmail.toLowerCase()
-  }, function (err, user){
+  }, (err, user) => {
     if (err) return res.status(401).json(err);
     if (!user) return res.status(200).json({success: true});
 
-    crypto.randomBytes(12, function(ex, buf) {
-      var token = buf.toString('hex');
+    crypto.randomBytes(12, (ex, buf) => {
+      const token = buf.toString('hex');
       user.passwordResetToken = token;
 
       // Get tomorrow's date
-      var tomorrow = new Date();
+      const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       user.passwordResetExpiration = tomorrow;
 
-      user.save(function(err){
+      user.save((err) => {
         if (err) return validationError(res,err);
 
-        var sub = {
-          ":name": [user.name],
-          "[%address%]": [config.addr + "/login?token=" + user.passwordResetToken],
+        const sub = {
+          ':name': [user.name],
+          '[%address%]': [config.addr + '/login?token=' + user.passwordResetToken],
         }
 
-        var filter = {
-          "templates": {
-            "settings": {
-              "enable": 1,
-              "template_id": "2f31a6c8-770e-4da0-a71c-dc71385d549f"
+        const filter = {
+          'templates': {
+            'settings': {
+              'enable': 1,
+              'template_id': '2f31a6c8-770e-4da0-a71c-dc71385d549f'
             }
           }
         }
 
         // email token to user
-        email.sendEmail(user.email, "RCOS.IO Forgot Password", sub, '<br>', filter, function(err, success){
+        email.sendEmail(user.email, 'RCOS.IO Forgot Password', sub, '<br>', filter, (err, success) => {
           if (err) return res.status(500).json(err);
 
           return res.status(200).json(success);
@@ -625,17 +625,17 @@ exports.resetPassword = function(req, res){
 /**
  * Add an item to the projects array for the user
  */
-exports.addProject = function(req,res){
-  var userId = req.params.id;
-  var newProject = req.body.project;
-  User.findById(userId, function(err,user){
-    if (err){
-      res.status(500).json({error: err});
-    }else{
+exports.addProject = (req,res) => {
+  const userId = req.params.id;
+  const newProject = req.body.project;
+  User.findById(userId, (err,user) => {
+    if (err) {
+      res.send(500, err);
+    } else {
       if (!user.projects) user.projects = [];
       if (user.projects.indexOf(newProject) !== -1) return;
       user.projects.push(newProject);
-      user.save(function(err) {
+      user.save((err) => {
         if (err) return validationError(res, err);
         res.status(200).json({success: true});
       });
@@ -646,17 +646,17 @@ exports.addProject = function(req,res){
 /**
  * Add an item to the favorite projects array for the user
  */
-exports.addFavorite = function(req,res){
-  var userId = req.params.id;
-  var newFavorite = req.params.project;
-  User.findById(userId, function(err,user){
+exports.addFavorite = (req,res) => {
+  const userId = req.params.id;
+  const newFavorite = req.params.project;
+  User.findById(userId, (err,user) => {
     if (err){
-      res.status(500).json({error: err});
-    }else{
+      res.send(500, err);
+    } else {
       if (!user.favoriteProjects) user.favoriteProjects = [];
       if (user.favoriteProjects.indexOf(newFavorite) !== -1) return;
       user.favoriteProjects.push(newFavorite);
-      user.save(function(err) {
+      user.save((err) => {
         if (err) return validationError(res, err);
         res.status(200).json({success: true});
       });
@@ -667,16 +667,17 @@ exports.addFavorite = function(req,res){
 /**
  * Remove an item from the tech array for a user
  */
-exports.removeProject = function(req,res){
-  var userId = req.params.id;
-  var project = req.body.project;
-  User.findById(userId, function(err,user){
-    if (err){
-      res.status(500).json({error: err});
-    }else{
+
+exports.removeProject = (req,res) => {
+  const userId = req.params.id;
+  const project = req.body.project;
+  User.findById(userId, (err,user) => {
+    if (err) {
+      res.send(500, err);
+    } else {
       if (!user.projects) user.projects = [];
       user.projects.splice(user.projects.indexOf(project), 1);
-      user.save(function(err) {
+      user.save((err) => {
         if (err) return validationError(res, err);
         res.status(200).json({success: true});
       });
@@ -686,16 +687,16 @@ exports.removeProject = function(req,res){
 /**
  * Remove an item from the favorite projects array for a user
  */
-exports.removeFavorite = function(req,res){
-  var userId = req.params.id;
-  var project = req.params.project;
-  User.findById(userId, function(err,user){
-    if (err){
-      res.status(500).json({error: err});
-    }else{
+exports.removeFavorite = (req,res) => {
+  const userId = req.params.id;
+  const project = req.params.project;
+  User.findById(userId, (err,user) => {
+    if (err) {
+      res.send(500, err);
+    } else {
       if (!user.favoriteProjects) user.favoriteProjects = [];
       user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
-      user.save(function(err) {
+      user.save((err) => {
         if (err) return validationError(res, err);
         res.status(200).json({success: true});
       });
@@ -705,22 +706,22 @@ exports.removeFavorite = function(req,res){
 /*
    Function that is called by removeUser api call
    */
-exports.deleteUser = function(req,res,next){
+exports.deleteUser = (req,res,next) => {
 
-  var userId = req.user.id;
-  var pass = String(req.body.password);
-  var query = {students:{ $in: [userId]}};
+  const userId = req.user.id;
+  const pass = String(req.body.password);
+  const query = {students:{ $in: [userId]}};
   User.findById(userId)
   .select('_id email password provider salt passwordResetToken passwordResetExpiration')
-  .exec(function (err, user,db) {
+  .exec((err, user,db) => {
     if(user.authenticate(pass)) {
-      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
-        if(err) {
+      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, (err, data) => {
+        if (err) {
           return res.status(500).json({'error' : 'error in deleting address'});
         }
-        User.findByIdAndRemove(userId, function(err, user) {
-          if(err) return res.status(500).json({error: err});
-          return res.status(200).json({success: true});
+        User.findByIdAndRemove(userId, (err, user) => {
+          if (err) return res.send(500, err);
+          return res.send(200);
         });
         //res.json(data);
       });

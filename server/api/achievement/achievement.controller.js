@@ -1,5 +1,7 @@
 'use strict';
 
+// TODO - use `const` instead of `var`
+
 const _ = require('lodash');
 const Achievement = require('./achievement.model');
 
@@ -35,7 +37,7 @@ function handleEntityNotFound(res) {
 // TODO - abstract into /api/lib/helpers
 function saveUpdates(updates) {
   return function(entity) {
-    var updated = _.merge(entity, updates);
+    const updated = _.merge(entity, updates);
     return updated.saveAsync()
       .spread(function(updated) {
         return updated;
