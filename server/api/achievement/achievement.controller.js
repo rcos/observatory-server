@@ -1,16 +1,10 @@
 'use strict';
 
+import { handleError } from '../lib/helpers'
+
 // TODO - use `const` instead of `var`
 var _ = require('lodash');
 var Achievement = require('./achievement.model');
-
-// TODO - abstract into /api/lib/helpers
-function handleError(res, statusCode) {
-  statusCode = statusCode || 500;
-  return function(err) {
-    res.status(statusCode).send(err);
-  };
-}
 
 // TODO - abstract into /api/lib/helpers
 function responseWithResult(res, statusCode) {
@@ -70,8 +64,10 @@ function removeEntity(res) {
 exports.index = function(req, res) {
   Achievement.findAsync()
     .then(responseWithResult(res))
-    .catch(handleError(res));
+    .catch((err) => handleError(res, err));
 };
+
+
 
 // // // //
 /**
@@ -88,7 +84,7 @@ exports.show = function(req, res) {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
-    .catch(handleError(res));
+    .catch((err) => handleError(res, err));
 };
 
 /**
@@ -104,7 +100,7 @@ exports.show = function(req, res) {
 exports.create = function(req, res) {
   Achievement.createAsync(req.body)
     .then(responseWithResult(res, 201))
-    .catch(handleError(res));
+    .catch((err) => handleError(res, err));
 };
 
 /**
@@ -125,7 +121,7 @@ exports.update = function(req, res) {
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
-    .catch(handleError(res));
+    .catch((err) => handleError(res, err));
 };
 
 /**
@@ -142,5 +138,5 @@ exports.destroy = function(req, res) {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
-    .catch(handleError(res));
+    .catch((err) => handleError(res, err));
 };
