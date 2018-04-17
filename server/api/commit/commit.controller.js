@@ -1,7 +1,8 @@
 'use strict';
 
-var _ = require('lodash');
-var Commit = require('./commit.model');
+import { handleError } from '../lib/helpers'
+const _ = require('lodash');
+const Commit = require('./commit.model');
 
 /**
 * @api {GET} /api/commit/ Index
@@ -12,8 +13,8 @@ var Commit = require('./commit.model');
 * @apiError (Error) 500 Internal server error
 */
 // Get list of commits
-exports.index = function(req, res) {
-  Commit.find(function (err, commits) {
+exports.index = (req, res) => {
+  Commit.find( (err, commits) => {
     if(err) { return handleError(res, err); }
     return res.json(200, commits);
   });
@@ -28,8 +29,8 @@ exports.index = function(req, res) {
 * @apiError (Error) 500 Internal server error
 */
 // Get a single commit
-exports.show = function(req, res) {
-  Commit.findById(req.params.id, function (err, commit) {
+exports.show = (req, res) => {
+  Commit.findById( req.params.id, (err, commit) => {
     if(err) { return handleError(res, err); }
     if(!commit) { return res.send(404); }
     return res.json(commit);
@@ -37,8 +38,8 @@ exports.show = function(req, res) {
 };
 
 // Creates a new commit in the DB.
-exports.create = function(req, res) {
-  Commit.create(req.body, function(err, commit) {
+exports.create = (req, res) => {
+  Commit.create(req.body, (err, commit) => {
     if(err) { return handleError(res, err); }
     return res.json(201, commit);
   });
@@ -46,13 +47,13 @@ exports.create = function(req, res) {
 
 // Updates an existing commit in the DB.
 
-exports.update = function(req, res) {
+exports.update = (req, res) => {
   if(req.body._id) { delete req.body._id; }
-  Commit.findById(req.params.id, function (err, commit) {
+  Commit.findById(req.params.id, (err, commit) => {
     if (err) { return handleError(res, err); }
     if(!commit) { return res.send(404); }
-    var updated = _.merge(commit, req.body);
-    updated.save(function (err) {
+    let updated = _.merge(commit, req.body);
+    updated.save( (err) => {
       if (err) { return handleError(res, err); }
       return res.json(200, commit);
     });
@@ -60,11 +61,11 @@ exports.update = function(req, res) {
 };
 
 // Deletes a commit from the DB.
-exports.destroy = function(req, res) {
-  Commit.findById(req.params.id, function (err, commit) {
+exports.destroy = (req, res) => {
+  Commit.findById(req.params.id, (err, commit) => {
     if(err) { return handleError(res, err); }
     if(!commit) { return res.send(404); }
-    commit.remove(function(err) {
+    commit.remove( (err) => {
       if(err) { return handleError(res, err); }
       return res.send(204);
     });
@@ -82,8 +83,8 @@ exports.destroy = function(req, res) {
 * @apiSuccess {json} showProjectCommits File with a list of commits
 * @apiError (Error) 404  no commits found
 */
-exports.showProjectCommits = function(req, res) {
-  Commit.findById(req.params.projectId, function (err, commits) {
+exports.showProjectCommits = (req, res) => {
+  Commit.findById(req.params.projectId, (err, commits) => {
     if(err) { return handleError(res, err); }
     if(!commits) { return res.send(404); }
     return res.json(commits);
@@ -98,8 +99,8 @@ exports.showProjectCommits = function(req, res) {
 * @apidescription Shows a list of commits by a user within a certain timeperiod
 * @apiSuccess {json} showUserCommits File with a list of commits
 */
-exports.showUserCommits = function(req, res) {
-  var prevDays = new Date();
+exports.showUserCommits = (req, res) => {
+  let prevDays = new Date();
   if (req.params.timeperiod){
     prevDays.setDate(prevDays.getDate()-Number(req.params.timeperiod));
   }
@@ -113,9 +114,9 @@ exports.showUserCommits = function(req, res) {
         .exec(function(err, commits){
           if(err) { return handleError(res, err); }
           if(!commits) { return res.json([]); }
-            var commitList = [];
-            commits.forEach(function (c){
-                var commitObj = c.toObject();
+            let commitList = [];
+            commits.forEach( (c) => {
+                let commitObj = c.toObject();
                 commitObj.link = "#";
                 commitList.push(commitObj);
               });
@@ -124,6 +125,3 @@ exports.showUserCommits = function(req, res) {
 };
 
 
-function handleError(res, err) {
-  return res.send(500, err);
-}

@@ -6,9 +6,9 @@
 
 import { handleError, validationError, generateCode, uniqueDayCode } from '../lib/helpers'
 
-const ClassYear = require('./classyear.model');
-const Attendance = require('../attendance/attendance.model');
-const SmallGroup = require('../smallgroup/smallgroup.model');
+var ClassYear = require('./classyear.model');
+var Attendance = require('../attendance/attendance.model');
+var SmallGroup = require('../smallgroup/smallgroup.model');
 
 /**
 * @api {get} /api/classyear Index
@@ -19,14 +19,14 @@ const SmallGroup = require('../smallgroup/smallgroup.model');
 * @apiSuccess {Model} The model of the current ClassYear
 * @apiError (500) UnknownException Could not retrieve ClassYear collection
 */
-exports.index = (req, res) => {
-  let query = ClassYear.findOne({ "current": true });
-  if ( req.user && req.user.isAdmin ){
+exports.index = function(req, res) {
+  var query = ClassYear.findOne({"current": true});
+  if (req.user && req.user.isAdmin){
       query.select('+dayCodes.code')
   }
-  return query.exec( (err, classYear) => {
+  return query.exec(function(err, classYear){
   	if(err) { return handleError(res, err); }
-    let responseObject = classYear.toObject();
+    var responseObject = classYear.toObject();
     // Admins should get a day code
     // Generate a day code if one does not already exist
     if (req.user.isAdmin){
@@ -44,15 +44,15 @@ exports.index = (req, res) => {
 };
 
 // Get a specific class year, Limited to Admins
-exports.getClassYear = (req, res) => {
+exports.getClassYear = function(req, res) {
   ClassYear.findOne({
     "semester": req.params.semester
   })
   .select('+dayCodes.code')
-  .exec( (err, classYear) => {
+  .exec(function (err, classYear){
     if(err) { return handleError(res, err); }
     if (!classYear) return res.send(404);
-    let responseObject = classYear.toObject();
+    var responseObject = classYear.toObject();
     res.json(responseObject);
   })
 };
@@ -67,11 +67,11 @@ exports.getClassYear = (req, res) => {
 * @apiError (500) UnknownException Could not retrieve ClassYear collection
 */
 // NOTE - this controller function is not used
-exports.countBonusDays = (req, res) => {
-  ClassYear.getCurrent( (err, classYear) => {
+exports.countBonusDays = function(req, res) {
+  ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
     if (!classYear) return res.send(404);
-    let bonusDays  = classYear.dayCodes.reduce( (previousValue, currentValue) => {
+    var bonusDays  = classYear.dayCodes.reduce(function(previousValue, currentValue) {
       return previousValue + (currentValue.bonusDay ? 1 : 0); // Add 1 to the count for each bonusday in classYear.dayCodes
     }, 0);
     res.json(bonusDays);
@@ -88,12 +88,12 @@ exports.countBonusDays = (req, res) => {
 * @apiSuccess {Model} Sends 204 Success response
 * @apiError (500) UnknownException Could not retrieve creat ClassYear
 */
-exports.create = (req, res) => {
-  let semester = req.body.semester;
+exports.create = function(req, res) {
+  var semester = req.body.semester;
   if (!semester) return handleError(res, "No Semester Specified");
   ClassYear.findOne({
     "semester": req.body.semester
-  }, (err, classYear) => {
+  }, function(err, classYear){
     if (classYear){
       // Set existing class year as current class year and do not create
       // a new class year
@@ -103,24 +103,24 @@ exports.create = (req, res) => {
       classYear = new ClassYear(req.body);
       classYear.current = true;
     }
-    classYear.save( (err, classYear) => {
+    classYear.save(function(err, classYear){
       if (err) return validationError(res, err);
 
       // Make sure there are no other current class years
       ClassYear.find({
         "current": true,
         "semester": {$ne : classYear.semester}
-      }, (err, otherClassYears) => {
+      }, function(err, otherClassYears){
 
-        for (let i = 0 ; i < otherClassYears.length ; i++){
-          let otherClassYear = otherClassYears[i];
+        for (var i = 0 ; i < otherClassYears.length ; i++){
+          var otherClassYear = otherClassYears[i];
           if (classYear.semester !== otherClassYear.semester){
             otherClassYear.current = false;
             otherClassYear.save();
           }
         }
       });
-      ClassYear.getCurrent( (err, currentClassYear) => {
+      ClassYear.getCurrent(function(err, currentClassYear){
           global.currentClassYear = currentClassYear;
           res.send(204);
       });
@@ -139,14 +139,14 @@ exports.create = (req, res) => {
 * @apiSuccess {Model} Sends 204 Success response
 * @apiError (500) UnknownException Could not updata data.
 */
-exports.update = (req, res) => {
+exports.update = function(req, res) {
   ClassYear.findOne({
     "semester": req.params.semester
-  }, (err, classYear) => {
+  },function(err, classYear){
     if(err) { return handleError(res, err); }
-    classYear.update(req.body, (err) => {
+    classYear.update(req.body, function(err){
       if(err) { return handleError(res, err); }
-      ClassYear.getCurrent( (err, currentClassYear) => {
+      ClassYear.getCurrent(function(err, currentClassYear){
           global.currentClassYear = currentClassYear;
           res.send(204);
 
@@ -158,18 +158,18 @@ exports.update = (req, res) => {
 
 
 /**
-* @api {delete} /api/classyear Destroy
-* @apiName destroy
+* @api {delete} /api/classyear Destory
+* @apiName destory
 * @apiGroup ClassYear
 * @apiDescription Deletes a class year from the DB.
 * @apiPermission admin
 * @apiSuccess {Model} no response
 * @apiError (500) no response.
 */
-exports.destroy = (req, res) => {
+exports.destroy = function(req, res) {
   return ClassYear.findOne({
     "semester": req.params.semester
-  }, (err, classYear) => {
+  }, function(err, classYear){
     classYear.delete();
   });
 };
@@ -184,20 +184,20 @@ exports.destroy = (req, res) => {
 * @apiSuccess {Model} returning day code for current day
 * @apiError (500) UnknownException Could not return a correct code.
 */
-exports.daycode = (req, res) => {
-  ClassYear.getCurrentCodes( (err, classYear) => {
+exports.daycode = function(req, res){
+  ClassYear.getCurrentCodes(function(err, classYear){
     if (err) return handleError(res, err);
-    let today = new Date();
+    var today = new Date();
     today.setHours(0,0,0,0);
-    for (let i = 0;i < classYear.dayCodes.length;i++){
+    for (var i = 0;i < classYear.dayCodes.length;i++){
       if (today.getTime() === classYear.dayCodes[i].date.getTime()){
         return res.status(200).json({ code: classYear.dayCodes[i].code }).end()
       }
     }
     //unique code generator, function at the bottom.
-    uniqueDayCode(6, (err,dayCode) => {
+    uniqueDayCode(6,function(err,dayCode){
       if (err) return handleError(res, err);
-      let code = dayCode;
+      var code = dayCode;
 
       classYear.dayCodes.push({
         date: today,
@@ -205,7 +205,7 @@ exports.daycode = (req, res) => {
         bonusDay: req.body.bonusDay ? true : false
       });
 
-      return classYear.save( (err, classYear) => {
+      return classYear.save(function(err, classYear){
         if (err) return handleError(res, err);
         return res.status(200).json({ code }).end()
       });
@@ -224,17 +224,17 @@ exports.daycode = (req, res) => {
 * @apiError (500) UnknownException Could not delete successfully.
 */
 // router.delete('/day/:dayCode', auth.hasRole('admin'), controller.deleteDay);
-exports.deleteDay = (req, res) => {
-    let dayCode = req.params.dayCode;
+exports.deleteDay = function(req, res){
+    var dayCode = req.params.dayCode;
 
     return ClassYear.findOneAndUpdate({"current": true}, {
         $pull: { dayCodes: {code : dayCode }}
     })
     .select('+dayCodes.code')
-    .exec( (err, classYear) => {
+    .exec(function(err, classYear){
         if (err) return handleError(res, err);
 
-        return Attendance.remove({code : dayCode},  (err) => {
+        return Attendance.remove({code : dayCode}, function (err){
           if (err) return handleError(res, err);
            return res.status(200).json(classYear);
         });
@@ -250,10 +250,10 @@ exports.deleteDay = (req, res) => {
 * @apiSuccess {Model} returing 200
 * @apiError (500) UnknownException Could not display URP.
 */
-exports.displayURP = (req, res) => {
-  return ClassYear.getCurrent( (err, classYear) => {
+exports.displayURP = function(req, res) {
+  return ClassYear.getCurrent(function(err, classYear){
     if(err) { return handleError(res, err); }
-    return classYear.update(req.body, (err) => {
+    return classYear.update(req.body, function(err){
       if(err) { return handleError(res, err); }
       res.send(200);
     });
@@ -269,8 +269,8 @@ exports.displayURP = (req, res) => {
 * @apiSuccess {Model} display URP
 * @apiError (500) UnknownException Could not display URP.
 */
-exports.getDisplayURP = (req, res) => {
-  return ClassYear.getCurrent( (err, classYear) => {
+exports.getDisplayURP = function(req, res) {
+  return ClassYear.getCurrent(function (err, classYear){
     if(err) { return handleError(res, err); }
     // if no class year is defined then don't show urp
     if(!classYear) {
