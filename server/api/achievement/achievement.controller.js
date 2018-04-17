@@ -3,8 +3,9 @@
 import { handleError } from '../lib/helpers'
 
 // TODO - use `const` instead of `var`
-var _ = require('lodash');
-var Achievement = require('./achievement.model');
+
+const _ = require('lodash');
+const Achievement = require('./achievement.model');
 
 // TODO - abstract into /api/lib/helpers
 function responseWithResult(res, statusCode) {
@@ -30,7 +31,7 @@ function handleEntityNotFound(res) {
 // TODO - abstract into /api/lib/helpers
 function saveUpdates(updates) {
   return function(entity) {
-    var updated = _.merge(entity, updates);
+    const updated = _.merge(entity, updates);
     return updated.saveAsync()
       .spread(function(updated) {
         return updated;
@@ -60,8 +61,7 @@ function removeEntity(res) {
 * @apiSuccess {Collection} root Collection of all active Observatory Achievements.
 * @apiError (500) UnknownException Could not retrieve Achievement collection
 */
-// Gets a list of Achievements
-exports.index = function(req, res) {
+exports.index = (req, res) => {
   Achievement.findAsync()
     .then(responseWithResult(res))
     .catch((err) => handleError(res, err));
@@ -79,8 +79,7 @@ exports.index = function(req, res) {
 * @apiSuccess {String} name Single Achievement
 * @apiError (500) UnknownException Could not retrieve Achievement collection
 */
-// Gets a single Achievement from the DB
-exports.show = function(req, res) {
+exports.show = (req, res) => {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
@@ -88,7 +87,7 @@ exports.show = function(req, res) {
 };
 
 /**
-* @api {get} /api/achievements Create
+* @api {post} /api/achievements Create
 * @apiName create
 * @apiGroup Achievements
 * @apiDescription Creates a new achievement
@@ -96,15 +95,14 @@ exports.show = function(req, res) {
 * @apiSuccess {String} name New instance of an Achievement
 * @apiError (500) UnknownException Could not create the Achievement
 */
-// Creates a new Achievement in the DB
-exports.create = function(req, res) {
+exports.create = (req, res) => {
   Achievement.createAsync(req.body)
     .then(responseWithResult(res, 201))
     .catch((err) => handleError(res, err));
 };
 
 /**
-* @api {get} /api/achievements Update
+* @api {put} /api/achievements Update
 * @apiName update
 * @apiGroup Achievements
 * @apiDescription Updates an existing Achievement
@@ -112,10 +110,9 @@ exports.create = function(req, res) {
 * @apiSuccess {String} name Updated Achievement
 * @apiError (500) UnknownException Could not update the Achievement
 */
-// Updates an existing Achievement in the DB
-exports.update = function(req, res) {
+exports.update = (req, res) => {
   if (req.body._id) {
-    delete req.body._id;
+    delete req.body._id
   }
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
@@ -125,7 +122,7 @@ exports.update = function(req, res) {
 };
 
 /**
-* @api {get} /api/achievements Destroy
+* @api {delete} /api/achievements Destroy
 * @apiName destroy
 * @apiGroup Achievements
 * @apiDescription Deletes a selected achievement
@@ -134,7 +131,7 @@ exports.update = function(req, res) {
 * @apiError (500) UnknownException Could not delete the Achievement
 */
 // Deletes a Achievement from the DB
-exports.destroy = function(req, res) {
+exports.destroy = (req, res) => {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))

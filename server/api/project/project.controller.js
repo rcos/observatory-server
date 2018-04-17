@@ -1,17 +1,17 @@
 'use strict';
 
-var _ = require('lodash');
-var Project = require('./project.model');
-var User = require('../user/user.model');
-var ClassYear = require('../classyear/classyear.model');
-var SmallGroup = require('../smallgroup/smallgroup.model');
-var multiparty = require('multiparty');
-var fs = require('fs');
-var mkdirp = require('mkdirp');
-var async = require('async');
-var config = require('../../config/environment');
-var validUrl = require('valid-url');
-var mongoose = require('mongoose');
+const _ = require('lodash');
+const Project = require('./project.model');
+const User = require('../user/user.model');
+const ClassYear = require('../classyear/classyear.model');
+const SmallGroup = require('../smallgroup/smallgroup.model');
+const multiparty = require('multiparty');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const async = require('async');
+const config = require('../../config/environment');
+const validUrl = require('valid-url');
+const mongoose = require('mongoose');
 
 
 /**
@@ -23,9 +23,9 @@ var mongoose = require('mongoose');
 * @apiError (Error) 500 Internal server error
 */
 // Get list of current projects
-exports.index = function(req, res) {
-  Project.find({active:true},function (err, projects) {
-    if(err) { return handleError(res, err); }
+exports.index = (req, res) => {
+    Project.find({active:true}, (err, projects) => {
+    if (err) { return handleError(res, err); }
     return res.status(200).json(projects);
   });
 };
@@ -39,24 +39,24 @@ exports.index = function(req, res) {
 * @apiError (Error) 500 Internal server error
 */
 // Gets various stats for projects
-exports.stats = function(req, res) {
+exports.stats = (req, res) => {
   async.parallel([
         // Count active projects
-        function(callback) {
-          Project.count({active:true}, function (err, aCount) {
+        (callback) => {
+            Project.count({active:true}, (err, aCount) => {
             if (err) return callback(err);
             callback(null, aCount);
           });
         },
         // Count past projects
-        function(callback) {
-          Project.count({active:false}, function (err, pCount) {
+        (callback) => {
+          Project.count({active:false}, (err, pCount) => {
             if (err) return callback(err);
             callback(null, pCount);
           });
         },
       ],
-      function(err, results){
+		 (err, results) => {
         if (err) {
           return res.sendStatus(400);
         }
@@ -66,7 +66,7 @@ exports.stats = function(req, res) {
         }
 
         //results contains [activeProjectCount, pastProjectCount]
-        var stats = {};
+        const stats = {};
         stats.activeProjects = results[0] || 0;
         stats.pastProjects = results[1] || 0;
 
@@ -84,9 +84,9 @@ exports.stats = function(req, res) {
 */
 
 // Get list of default projects
-exports.defaults = function(req, res) {
-  Project.find({markedDefault: true}, function (err, projects) {
-    if(err) { return handleError(res, err); }
+exports.defaults = (req, res) => {
+    Project.find({markedDefault: true}, (err, projects) => {
+    if (err) { return handleError(res, err); }
     return res.status(200).json(projects);
   });
 };
@@ -99,9 +99,9 @@ exports.defaults = function(req, res) {
 * @apiError (Error) 500 Internal server error
 */
 // Get list of past projects
-exports.indexOld = function(req, res) {
-  Project.find({active:false},function (err, projects) {
-    if(err) { return handleError(res, err); }
+exports.indexOld = (req, res) => {
+    Project.find({active:false}, (err, projects) => {
+    if (err) { return handleError(res, err); }
     return res.status(200).json(projects);
   });
 };
@@ -115,17 +115,17 @@ exports.indexOld = function(req, res) {
 * @apiError (Error) 500 Internal server error
 */
 // Get a single project
-exports.show = function(req, res) {
-  if (req.params.username && req.params.project){
-    Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
-      if(err) { return handleError(res, err); }
-      if(!project) { return res.sendStatus(404); }
+exports.show = (req, res) => {
+  if (req.params.username && req.params.project) {
+    Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, (err, project) => {
+      if (err) { return handleError(res, err); }
+      if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
       return res.json(project);
     });
-  }else if (req.params.id){
-    Project.findById(req.params.id, function(err, project){
-      if(err) { return handleError(res, err); }
-      if(!project) { return res.sendStatus(404); }
+  } else if (req.params.id){
+      Project.findById(req.params.id, (err, project) => {
+      if (err) { return handleError(res, err); }
+      if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
       return res.json(project);
     });
   }
@@ -138,9 +138,9 @@ exports.show = function(req, res) {
 * @apiSuccess {json} myProjects list of projects
 * @apiError (Error) 500 Internal server error
 */
-exports.myProjects = function(req, res) {
-  var userId = req.user._id;
-  User.findById(userId).populate('projects').exec(function(err, user){
+exports.myProjects = (req, res) => {
+  const userId = req.user._id;
+  User.findById(userId).populate('projects').exec((err, user) => {
     if (err) { return handleError(res, err); }
     return res.status(200).json(user.projects);
   });
@@ -153,25 +153,25 @@ exports.myProjects = function(req, res) {
 * @apiSuccess {json} mentees list of mentees
 * @apiError (Error) 500 Error when finding mentees
 */
-exports.mentees = function(req, res) {
-  var userId = req.user._id;
+exports.mentees = (req, res) => {
+  const userId = req.user._id;
 
-  return ClassYear.getCurrent(function(err, classYear) {
-      if(err) { return handleError(res, err); }
-      var classYearId = classYear._id;
-      var query = SmallGroup.findOne({"students":userId, "classYear":classYearId});
+  return ClassYear.getCurrent((err, classYear) => {
+      if (err) { return handleError(res, err); }
+      const classYearId = classYear._id;
+      const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
 
-      return query.select('students').exec(function(err, smallgroup){
+      return query.select('students').exec((err, smallgroup) => {
         if (err) return handleError(res, err);
         if (!smallgroup.students) return res.json([]);
-        var mentees_ids = smallgroup.students.map(function(s) {
+        const mentees_ids = smallgroup.students.map((s) => {
           return mongoose.Types.ObjectId(s);
         });
-        User.find({ "_id": { $in: mentees_ids }} )
+        User.find({ '_id': { $in: mentees_ids }} )
           .distinct('projects')
-          .exec(function(err, projectIds){
+          .exec((err, projectIds) => {
             if (err) return handleError(res, err);
-            Project.find({"_id": {$in: projectIds}}).exec(function(err, projects){
+              Project.find({'_id': {$in: projectIds}}).exec((err, projects) => {
               if (err) return handleError(res, err);
               return res.json(projects);
             });
@@ -190,9 +190,9 @@ exports.mentees = function(req, res) {
 * @apiError (Error) 500 Unable to find authors
 */
 // Get authors on a project
-exports.authors = function(req, res) {
-    var projectId = req.params.id;
-    User.find({projects: projectId}, 'name email', function(err, authors) {
+exports.authors = (req, res) => {
+    const projectId = req.params.id;
+    User.find({projects: projectId}, 'name email', (err, authors) => {
         if (err) { return handleError(res, err); }
         return res.status(200).json(authors);
     });
@@ -256,24 +256,24 @@ exports.create = (req, res) => {
 * @apiError (Error) 500 Error updating the project
 */
 // Updates an existing project in the DB.
-exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  Project.findById(req.params.id, function (err, project) {
+exports.update = (req, res) => {
+  if (req.body._id) { delete req.body._id; }
+    Project.findById(req.params.id, (err, project) => {
     if (err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
+    if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
 
     // Only mentors and project owners can update a project
-    var userId = req.user._id;
-    User.findById(userId, function(err, user) {
+    const userId = req.user._id;
+	User.findById(userId, (err, user) => {
       if (err) { return handleError(res, err); }
 
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
 
-        var urls = req.body.repositories;
+        const urls = req.body.repositories;
 
         // validate urls, change only if all urls are valid
-        var valid = false;
-        for (var i = 0; i < urls.length; i++) {
+        let valid = false;
+        for (let i = 0; i < urls.length; i++) {
           if (validUrl.isUri(urls[i])) {
             valid = true;
           } else {
@@ -285,8 +285,8 @@ exports.update = function(req, res) {
           project.repositories = req.body.repositories;
         }
 
-        var updated = _.merge(project, req.body);
-        updated.save(function (err) {
+        const updated = _.merge(project, req.body);
+        updated.save((err) => {
           if (err) { return handleError(res, err); }
           return res.json(200, project);
         });
@@ -306,16 +306,16 @@ exports.update = function(req, res) {
 * @apiError (Error) 500 Error finding project
 */
 //adds a tech bubble to the project
-exports.addTechBubble = function(req, res){
-	var projectId = req.params.id;
-	var newTech = req.params.tech;
-	Project.findById(projectId, function(err, project){
+exports.addTechBubble = (req, res) => {
+	const projectId = req.params.id;
+	const newTech = req.params.tech;
+	Project.findById(projectId, (err, project) => {
 		if (err){
 			res.status(500).send(err);
-		}else{
+		} else {
 			if (!project.tech) project.tech=[];
 			project.tech.push(newTech);
-			project.save(function(err){
+			project.save((err) => {
 				if (err) return validationError(res, err);
 				res.sendStatus(200);
 			});
@@ -331,16 +331,16 @@ exports.addTechBubble = function(req, res){
 * @apiSuccess {HTTP} 200 Successfully removed tech bubble
 * @apiError (Error) 500 Error finding project
 */
-exports.removeTech = function(req, res){
-	var projectId = req.params.id;
-	var oldTech = req.params.tech;
-	Project.findById(projectId, function(err, project){
+exports.removeTech = (req, res) => {
+	const projectId = req.params.id;
+	const oldTech = req.params.tech;
+    Project.findById(projectId, (err, project) => {
 		if (err){
 			res.status(500).send(err);
-		}else{
+		} else {
 			if (!project.tech) project.tech = [];
 			project.tech.splice(project.tech.indexOf(oldTech), 1);
-			project.save(function(err){
+		    project.save((err) => {
 				if (err) return validationError(res, err);
 				res.sendStatus(200);
 			});
@@ -357,12 +357,12 @@ exports.removeTech = function(req, res){
 * @apiError (Error) 404 Error finding project
 */
 // Deletes a project from the DB.
-exports.destroy = function(req, res) {
-  Project.findById(req.params.id, function (err, project) {
+exports.destroy = (req, res) => {
+  Project.findById(req.params.id, (err, project) => {
     if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
-    project.remove(function(err) {
-      if(err) { return handleError(res, err); }
+    if(!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
+      project.remove((err) => {
+      if (err) { return handleError(res, err); }
       return res.sendStatus(204);
     });
   });
@@ -380,19 +380,19 @@ function handleError(res, err) {
 * @apiSuccess {HTTP} 200 Successfully marked the project
 * @apiError (Error) 404 Error finding project
 */
-exports.markPast = function(req,res){
+exports.markPast = (req,res) => {
 
-  var userId = req.user._id;
-  Project.findById(req.params.id,function(err,project){
-    if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
-    User.findById(userId, function(err, user) {
+  const userId = req.user._id;
+    Project.findById(req.params.id, (err,project) => { 
+    if (err) { return handleError(res, err); }
+    if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
+	User.findById(userId, (err, user) => {
       if (err) { return handleError(res, err); }
 
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
-            project.update({ active: false }, function(err) {
-              if(err) { return handleError(res, err); }
-              return res.sendStatus(200);
+            project.update({ active: false }, (err) => {
+              if (err) { return handleError(res, err); }
+              return res.status(200).json({ project }).end();
             });
       } else {
         return handleError(res, err);
@@ -408,18 +408,18 @@ exports.markPast = function(req,res){
 * @apiSuccess {HTTP} 200 Successfully marked the project
 * @apiError (Error) 404 Error finding project
 */
-exports.markActive = function(req,res){
-  var userId = req.user._id;
-  Project.findById(req.params.id,function(err,project){
-    if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
-    User.findById(userId, function(err, user) {
+exports.markActive = (req,res) => {
+  const userId = req.user._id;
+  Project.findById(req.params.id, (err,project) => {
+    if (err) { return handleError(res, err); }
+    if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
+      User.findById(userId, (err, user) => {
       if (err) { return handleError(res, err); }
 
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
-            project.update({ active: true }, function(err) {
-              if(err) { return handleError(res, err); }
-              return res.sendStatus(200);
+            project.update({ active: true }, (err) => {
+              if (err) { return handleError(res, err); }
+              return res.status(200).json({ project }).end();
             });
       } else {
         return handleError(res, err);
@@ -436,13 +436,13 @@ exports.markActive = function(req,res){
 * @apiSuccess {HTTP} 200 Successfully marked the project
 * @apiError (Error) 404 Error finding project
 */
-exports.markDefault = function(req, res) {
-  Project.findById(req.params.id, function (err, project) {
-    if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
-    project.update({ markedDefault: true }, function(err) {
-      if(err) { return handleError(res, err); }
-      return res.sendStatus(200);
+exports.markDefault = (req, res) => {
+  Project.findById(req.params.id, (err, project) => {
+    if (err) { return handleError(res, err); }
+    if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
+    project.update({ markedDefault: true }, (err) => {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json({ project }).end();
     });
   });
 };
@@ -455,13 +455,13 @@ exports.markDefault = function(req, res) {
 * @apiSuccess {HTTP} 200 Successfully unmarked the project
 * @apiError (Error) 404 Error finding project
 */
-exports.unmarkDefault = function(req, res) {
-  Project.findById(req.params.id, function (err, project) {
-    if(err) { return handleError(res, err); }
-    if(!project) { return res.sendStatus(404); }
-    project.update({ markedDefault: false }, function(err) {
-      if(err) { return handleError(res, err); }
-      return res.sendStatus(200);
+exports.unmarkDefault = (req, res) => {
+  Project.findById(req.params.id, (err, project) => {
+    if (err) { return handleError(res, err); }
+    if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
+      project.update({ markedDefault: false }, (err) => {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json({ project }).end();
     });
   });
 };
@@ -475,36 +475,36 @@ exports.unmarkDefault = function(req, res) {
 * @apiError (Error) 404 Error finding project
 * @apiError (Error) 500 Error verifying user
 */
-exports.upload = function(req, res) {
-  var form = new multiparty.Form();
+exports.upload = (req, res) => {
+  const form = new multiparty.Form();
   form.parse(req, function(err, fields, files) {
-    var file = files.file[0];
-    var subDir = req.params.username + '/' + req.params.project + '/';
-    var name = subDir + file.path.substring(file.path.lastIndexOf('/')).substring(1);
-    var path = config.imageUploadPath;
-    var destPath = path + name;
-    if(!fs.existsSync(path+subDir)){
+    const file = files.file[0];
+    const subDir = req.params.username + '/' + req.params.project + '/';
+    const name = subDir + file.path.substring(file.path.lastIndexOf('/')).substring(1);
+    const path = config.imageUploadPath;
+    const destPath = path + name;
+      if (!fs.existsSync(path+subDir)) {
       mkdirp.sync(path+subDir);
     }
     // Copy file from temp to uploads folder with streams.
     // Allows upload across partitions unlike fs.renameSync
-    var is = fs.createReadStream(file.path);
-    var os = fs.createWriteStream(destPath);
+    const is = fs.createReadStream(file.path);
+    const os = fs.createWriteStream(destPath);
     is.pipe(os);
-    is.on('end', function() {
+      is.on('end', () => {
         fs.unlinkSync(file.path);
     });
 
-    Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, function (err, project) {
-      if(err) { return handleError(res, err); }
-      if(!project) { return res.sendStatus(404); }
+      Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, (err, project) => {
+	  if (err) { return handleError(res, err); }
+      if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
       if(project.photos.length>=10){
-        var temp = project.photos.shift();
-        var toRemove = path + '/' + temp;
+        const temp = project.photos.shift();
+        const toRemove = path + '/' + temp;
         fs.unlinkSync(toRemove);
       }
       project.photos.push(name);
-      project.save(function (err) {
+	  project.save((err) => {
           // TODO handle project saving error
           return res.json(201, name);
       });
@@ -520,31 +520,31 @@ exports.upload = function(req, res) {
 * @apiError (Error) 404 Error finding project
 * @apiError (Error) 500 Error verifying user
 */
-exports.deletePhoto = function(req, res) {
-    var photoName = req.params.photoName;
-    var username = req.params.username;
-    var project = req.params.project;
-    var userId = req.user._id;
-    var path = config.imageUploadPath;
-    var name = username + '/' + project + '/' + photoName;
+exports.deletePhoto = (req, res) => {
+    const photoName = req.params.photoName;
+    const username = req.params.username;
+    const project = req.params.project;
+    const userId = req.user._id;
+    const path = config.imageUploadPath;
+    const name = username + '/' + project + '/' + photoName;
 
-    Project.findOne({'photos': name}, function (err, project) {
-      if(err) { return handleError(res, err); }
-      if(!project) { return res.sendStatus(404); }
-      for (var i = 0; i < project.photos.length; i++){
+    Project.findOne({'photos': name}, (err, project) => {
+      if (err) { return handleError(res, err); }
+      if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
+      for (let i = 0; i < project.photos.length; i++){
           if (project.photos[i] === name){
             project.photos.splice(i, 1);
-            var toRemove = path + '/' + name;
+            const toRemove = path + '/' + name;
             fs.unlinkSync(toRemove);
           }
       }
-      project.save(function (err) {
-        User.findById(userId, function(err, user) {
+      project.save((err) => {
+        User.findById(userId, (err, user) => {
           if (err) { return handleError(res, err); }
 
           if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
-            var updated = _.merge(project, req.body);
-            updated.save(function (err) {
+            const updated = _.merge(project, req.body);
+            updated.save((err) => {
             if (err) { return handleError(res, err); }
               return res.json(200, project);
             });

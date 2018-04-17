@@ -1,10 +1,12 @@
+import ClassYear from '../classyear/classyear.model'
+import SmallGroup from '../smallgroup/smallgroup.model'
 
 // handleError and other repeated function.
 // Generic error handling for API requests
 
 // Return a standard error
 export const handleError = (res, err) => {
-  return res.json(500, err).end()
+  return res.status(500).json(err).end()
 }
 
 // Return a validation error
