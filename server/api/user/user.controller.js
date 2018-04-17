@@ -33,7 +33,7 @@ var validationError = function(res, err) {
 */
 exports.index = function(req, res) {
   User.find({}, function (err, users) {
-    if(err) return res.send(500, err);
+    if(err) return res.status(500).json({error: err});
     res.status(200).json(users);
   });
 };
@@ -86,7 +86,7 @@ exports.search = function(req, res){
   if (!req.query.query) return res.send(400, "No query supplied");
   var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
   User.findOne({name: query}, function(err, user){
-    if (err) return res.send(500, err);
+    if (err) return res.status(500).json({error: err});//send(500, err);
     if (!user){
       if (req.query.single){
         return res.status(200).json(null);
@@ -111,7 +111,7 @@ exports.stats = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
   .exec(function (err, users) {
-    if(err) return res.send(500, err);
+    if(err) return res.status(500).json({error: err});//send(500, err);
     var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
     var userInfo = [];
@@ -179,7 +179,7 @@ exports.past = function(req, res) {
   User.find({active: false})
   .select('_id name role avatar email github.login')
   .exec(function (err, users) {
-    if(err) return res.send(500, err);
+    if(err) return res.status(500).json({error: err});//send(500, err);
 
     res.status(200).json(users);
   });
@@ -192,7 +192,7 @@ exports.commits = function(req, res) {
   var userId = String(req.params.id);
 
   Commit.find({ userId: userId}, function(err, commits){
-    if (err) return res.send(500, err);
+    if (err) return res.status(500).json({error: err});//send(500, err);
     res.status(200).json(commits);
   });
 };
@@ -380,7 +380,7 @@ exports.avatar = function (req, res, next) {
  */
 exports.destroy = function(req, res) {
   User.findByIdAndRemove(req.params.id, function(err, user) {
-    if(err) return res.send(500, err);
+    if(err) return res.status(500).json({error: err});//send(500, err);
     return res.send(204);
   });
   var userId = req.params.id;
@@ -396,13 +396,13 @@ exports.destroy = function(req, res) {
           return res.status(500).json({'error' : 'error in deleting address'});
         }
         User.findByIdAndRemove(userId, function(err, user) {
-          if(err) return res.send(500, err);
-          return res.send(200);
+          if(err) return res.status(500).json({error: err});//send(500, err);
+          return res.status(200).json({success: true});
         });
         //res.json(data);
       });
     } else {
-      res.send(403);
+      res.status(403).json({forbidden: true});
     }
   });
 
@@ -422,13 +422,13 @@ exports.role = function(req, res) {
   }
   User.findById(userId, function(err,user){
     if (err){
-      res.send(500, err);
+      res.status(500).json({error: err});//send(500, err);
     }else{
       if (user.role === newRole) return;
       user.role = newRole;
       user.save(function(err) {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -453,10 +453,10 @@ exports.changePassword = function(req, res, next) {
       user.passwordResetToken = '';
       user.save(function(err) {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     } else {
-      res.send(403);
+      res.status(403).json({forbidden: true});
     }
   });
 };
@@ -467,10 +467,10 @@ exports.changePassword = function(req, res, next) {
 exports.deactivate = function(req,res) {
   var userId = String(req.params.id);
   User.findById(userId, function(err, user){
-    if (err) return res.send(500, err);
+    if (err) return res.status(500).json({error: err});
     user.active = false;
     user.save(function(err){
-      if (err) return res.send(500, err);
+      if (err) return res.status(500).json({error: err});
       res.status(200).json({success: true});
     })
   });
@@ -483,11 +483,11 @@ exports.deactivate = function(req, res, next) {
   var userId = String(req.params.id);
 
   User.findOne({ '_id': userId}, function(err, user){
-    if (err) return res.send(500, err);
+    if (err) return res.status(500).json({error: err});
 
     user.active = false;
     user.save(function(err){
-      if (err) return res.send(500, err);
+      if (err) return res.status(500).json({error: err});
       res.status(200).json({success: true});
     })
   });
@@ -499,10 +499,10 @@ exports.deactivate = function(req, res, next) {
 exports.activate = function(req, res, next) {
   var userId = String(req.params.id);
   User.findOne({ '_id': userId}, function(err, user){
-    if (err) return res.send(500, err);
+    if (err) return res.status(500).json({error: err});
     user.active = true;
     user.save(function(err){
-      if (err) return res.send(500, err);
+      if (err) return res.status(500).json({error: err});
       res.status(200).json({success: true});
     })
   });
@@ -538,13 +538,13 @@ exports.addTech = function(req,res){
   var newTech = req.body.tech;
   User.findById(userId, function(err,user){
     if (err){
-      res.send(500, err);
+      res.status(500).json({error: err});
     }else{
       if (!user.tech) user.tech = [];
       user.tech.push(newTech);
       user.save(function(err) {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -558,13 +558,13 @@ exports.removeTech = function(req,res){
   var tech = req.body.tech;
   User.findById(userId, function(err,user){
     if (err){
-      res.send(500, err);
+      res.status(500).json({error: err});
     }else{
       if (!user.tech) user.tech = [];
       user.tech.splice(user.tech.indexOf(tech), 1);
       user.save(function(err) {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -630,14 +630,14 @@ exports.addProject = function(req,res){
   var newProject = req.body.project;
   User.findById(userId, function(err,user){
     if (err){
-      res.send(500, err);
+      res.status(500).json({error: err});
     }else{
       if (!user.projects) user.projects = [];
       if (user.projects.indexOf(newProject) !== -1) return;
       user.projects.push(newProject);
       user.save(function(err) {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -651,14 +651,14 @@ exports.addFavorite = function(req,res){
   var newFavorite = req.params.project;
   User.findById(userId, function(err,user){
     if (err){
-      res.send(500, err);
+      res.status(500).json({error: err});
     }else{
       if (!user.favoriteProjects) user.favoriteProjects = [];
       if (user.favoriteProjects.indexOf(newFavorite) !== -1) return;
       user.favoriteProjects.push(newFavorite);
       user.save(function(err) {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -672,13 +672,13 @@ exports.removeProject = function(req,res){
   var project = req.body.project;
   User.findById(userId, function(err,user){
     if (err){
-      res.send(500, err);
+      res.status(500).json({error: err});
     }else{
       if (!user.projects) user.projects = [];
       user.projects.splice(user.projects.indexOf(project), 1);
       user.save(function(err) {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -691,13 +691,13 @@ exports.removeFavorite = function(req,res){
   var project = req.params.project;
   User.findById(userId, function(err,user){
     if (err){
-      res.send(500, err);
+      res.status(500).json({error: err});
     }else{
       if (!user.favoriteProjects) user.favoriteProjects = [];
       user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
       user.save(function(err) {
         if (err) return validationError(res, err);
-        res.send(200);
+        res.status(200).json({success: true});
       });
     }
   });
@@ -719,13 +719,13 @@ exports.deleteUser = function(req,res,next){
           return res.status(500).json({'error' : 'error in deleting address'});
         }
         User.findByIdAndRemove(userId, function(err, user) {
-          if(err) return res.send(500, err);
-          return res.send(200);
+          if(err) return res.status(500).json({error: err});
+          return res.status(200).json({success: true});
         });
         //res.json(data);
       });
     } else {
-      res.send(403);
+      res.status(403).json({forbidden: true});
     }
   });
 };
