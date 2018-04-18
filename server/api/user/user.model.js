@@ -109,7 +109,7 @@ var UserSchema = new Schema({
 
   githubLogin: {}
 
-}, { timestamps: true });
+}, { timestamps: true, usePushEach: true });
 
 UserSchema.set('toJSON', {
   transform: function(doc, ret, options) {
