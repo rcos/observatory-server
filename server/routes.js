@@ -20,7 +20,6 @@ export default function(app) {
   app.use('/api/classyear', require('./api/classyear'));
   app.use('/api/smallgroup', require('./api/smallgroup'));
   app.use('/api/attendance', require('./api/attendance'));
-  app.use('/api/excused_absences', require('./api/excused_absence'));
   app.use('/api/static', require('./api/static'));
 
   app.use('/uploads', express.static(config.imageUploadPath));

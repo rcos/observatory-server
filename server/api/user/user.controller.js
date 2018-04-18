@@ -1,70 +1,58 @@
 'use strict';
 
-const _ = require('lodash');
-const User = require('./user.model');
-const passport = require('passport');
-const config = require('../../config/environment');
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const async = require('async');
-const email = require("../../components/email");
-const Commit = require('../commit/commit.model');
-const ClassYear = require('../classyear/classyear.model');
-const Attendance = require('../attendance/attendance.model');
-const SmallGroup = require('../smallgroup/smallgroup.model');
+var _ = require('lodash');
+var User = require('./user.model');
+var passport = require('passport');
+var config = require('../../config/environment');
+var jwt = require('jsonwebtoken');
+var crypto = require('crypto');
+var async = require('async');
+var email = require("../../components/email");
+var Commit = require('../commit/commit.model');
+var ClassYear = require('../classyear/classyear.model');
+var Attendance = require('../attendance/attendance.model');
+var SmallGroup = require('../smallgroup/smallgroup.model');
 
 // Return a standard error
 function handleError(res, err) {
   return res.sendStatus(500, err);
 }
 
-const validationError = (res, err) => {
+var validationError = function(res, err) {
   return res.status(422).json(err);
 };
 
 /**
-* @api {get} /api/users Index
-* @apiName index
-* @apiGroup User
-* @apiDescription Get list of Users
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of all active Observatory Users.
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
-exports.index = (req, res) => {
-  User.find({}, (err, users) => {
-    if (err) return res.send(500, err);
+ * Get list of users
+ */
+exports.index = function(req, res) {
+  User.find({}, function (err, users) {
+    if(err) return res.send(500, err);
     res.status(200).json(users);
   });
 };
 
 /**
-* @api {get} /api/users PublicStats
-* @apiName publicStats
-* @apiGroup User
-* @apiDescription Get user stats (public)
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of all active Observervatory user stats.
-* @apiError (500) UnknownException Could not retrieve user stats
-*/
-exports.publicStats = (req, res) => {
+ * Get user stats
+ */
+exports.publicStats = function(req, res) {
   async.parallel([
     // Count active users
-      (callback) => {
-	  User.count({active:true}, (err, aCount) => {
+    function(callback) {
+      User.count({active:true}, function (err, aCount) {
         if (err) return callback(err);
         callback(null, aCount);
       });
     },
     // Count past users
-    (callback) => {
-      User.count({active:false}, (err, pCount) => {
+    function(callback) {
+      User.count({active:false}, function (err, pCount) {
         if (err) return callback(err);
         callback(null, pCount);
       });
     },
   ],
-  (err, results) => {
+  function(err, results){
     if (err) {
       return res.send(400);
     }
@@ -74,7 +62,7 @@ exports.publicStats = (req, res) => {
     }
 
     //results contains [activeProjectCount, pastProjectCount]
-    const stats = {};
+    var stats = {};
     stats.activeUsers = results[0] || 0;
     stats.pastUsers = results[1] || 0;
 
@@ -83,62 +71,53 @@ exports.publicStats = (req, res) => {
 };
 
 /**
-* @api {get} /api/users Search
-* @apiName search
-* @apiGroup User
-* @apiDescription Gets user or list of users that match a supplied query
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of Observatory User(s).
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
+ * Returns user or list of users that match a supplied query
+ *
+ * Takes {query:String, single:Boolean, limit:Integer}
+ */
 // TODO Make this work with fuzzy queries, multiple results etc.
-exports.search = (req, res) => {
-  if (!req.query.query) return res.send(400, 'No query supplied');
-    const query = new RegExp(['^', req.query.query, '$'].join(''), 'i')
-    User.findOne({name: query}, (err, user) => {
+exports.search = function(req, res){
+  if (!req.query.query) return res.send(400, "No query supplied");
+  var query = new RegExp(["^", req.query.query, "$"].join(""), "i")
+  User.findOne({name: query}, function(err, user){
     if (err) return res.send(500, err);
     if (!user){
       if (req.query.single){
         return res.status(200).json(null);
-      } else {
+      }else{
         return res.status(200).json([]);
       }
     }
     if (req.query.single){
       return res.status(200).json(user.profile);
-    } else {
+    }else{
       return res.status(200).json([user.profile]);
     }
   });
 };
 
 /**
-* @api {get} /api/users Stats
-* @apiName stats
-* @apiGroup User
-* @apiDescription Gets list of users with stats including last commits in previous two weeks
-* @apiPermission admin
-* @apiSuccess {Collection} root Collection of Observatory User(s).
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
-exports.stats = (req, res) => {
+ * Get list of users with stats including last commits
+ * in previous 2 weeks
+ * restriction: 'admin'
+ */
+exports.stats = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
-	.exec((err, users) => {
-    if (err) return res.send(500, err);
-    const twoWeeks = new Date();
-
+  .exec(function (err, users) {
+    if(err) return res.send(500, err);
+    var twoWeeks = new Date();
     twoWeeks.setDate(twoWeeks.getDate()-14);
-    const userInfo = [];
-    let count = users.length;
+    var userInfo = [];
+    var count = users.length;
 
-	    const getCommits = (user) => {
+    var getCommits = function(user){
       Commit.find()
       .where('author.login').equals(String(user.github.login))
       .where('date').gt(twoWeeks)
-      .exec((err, commits) => {
-        const commitList = [];
-        commits.forEach((c) => {
+      .exec(function(err, commits){
+        var commitList = [];
+        commits.forEach(function (c){
           commitList.push(c.toObject());
         }
                        )
@@ -151,126 +130,93 @@ exports.stats = (req, res) => {
       });
     }
 
-    for (let i = 0; i < users.length; i++){
-      const u = users[i].stats;
+    for (var i = 0; i < users.length; i++){
+      var u = users[i].stats;
       getCommits(u);
     }
   });
 };
 
 /**
-* @api {get} /api/users AllStats
-* @apiName allStats
-* @apiGroup User
-* @apiDescription Gets list of all users with stats including last commits in previous two weeks (including inactive)
-* @apiPermission admin
-* @apiSuccess {Collection} root Collection of Observatory User(s).
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
-exports.allStats = (req, res) => {
+ * Get list of all users with stats including last commits
+ * in previous 2 weeks including inactive
+ * restriction: 'admin'
+ */
+exports.allStats = function(req, res) {
   // Only return users who have a github login
-  ClassYear.getCurrent((err, classYear) => {
-    const classYearId = classYear._id;
+  ClassYear.getCurrent(function(err, classYear){
+    var classYearId = classYear._id;
     User.find({})
-    .exec((err, users) => {
-      if (err) return res.status(500).json(err);
+    .exec(function (err, users) {
+      if(err) return res.status(500).json(err);
       res.status(200).json(users);
     });
   });
 };
 
 /**
-* @api {get} /api/users List
-* @apiName list
-* @apiGroup User
-* @apiDescription Gets list of all active users (with github login)
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of Observatory User(s).
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
-exports.list = (req, res) => {
+ * Get list of active users
+ */
+exports.list = function(req, res) {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
   .select('_id name role avatar email github.login')
-	.exec((err, users) => {
+  .exec(function (err, users) {
     res.status(200).json(users);
   });
 };
 
 /**
-* @api {get} /api/users Past
-* @apiName past
-* @apiGroup User
-* @apiDescription Gets list of all past users (with github login)
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of Observatory User(s).
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
-exports.past = (req, res) => {
+ * Get list of all past users
+ */
+exports.past = function(req, res) {
   User.find({active: false})
   .select('_id name role avatar email github.login')
-	.exec((err, users) => {
+  .exec(function (err, users) {
     if(err) return res.send(500, err);
+
     res.status(200).json(users);
   });
 };
 
 /**
-* @api {get} /api/users Commits
-* @apiName commits
-* @apiGroup User
-* @apiDescription Gets list of all the recent RCOS commits for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of Observatory Users commits.
-* @apiError (500) UnknownException Could not retrieve User commits
-*/
-exports.commits = (req, res) => {
-  const userId = String(req.params.id);
+ * Get a list of all the recent RCOS commits for a user
+ */
+exports.commits = function(req, res) {
+  var userId = String(req.params.id);
 
-  Commit.find({ userId: userId}, (err, commits) => {
+  Commit.find({ userId: userId}, function(err, commits){
     if (err) return res.send(500, err);
     res.status(200).json(commits);
   });
 };
 
 /**
-* @api {get} /api/users Create
-* @apiName create
-* @apiGroup User
-* @apiDescription Creates a new user
-* @apiPermission public
-* @apiSuccess {Collection} root Create a new user
-* @apiError (500) UnknownException Could not create a new user
-*/
-exports.create = (req, res, next) => {
-  const newUser = new User(req.body);
+ * Creates a new user
+ */
+exports.create = function (req, res, next) {
+  var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
-  newUser.save((err, user) => {
+  newUser.save(function(err, user) {
     if (err) return validationError(res, err);
-    const token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
     res.json(201, { token: token });
   });
 };
 
 /**
-* @api {get} /api/users Update
-* @apiName update
-* @apiGroup User
-* @apiDescription Updates user
-* @apiPermission private
-* @apiSuccess {Collection} root Updates a user
-* @apiError (500) UnknownException Could not update a user
-*/
-exports.update = (req, res, next) => {
+ * Update an existing user
+ */
+exports.update = function (req, res, next) {
   if(req.body._id) { delete req.body._id; }
 
-    User.findById(req.params.id, (err, user) => {
+  User.findById(req.params.id, function(err, user){
     if (err) { return handleError(res, err); }
-    if (!user) { return res.send(404); }
+    if(!user) { return res.send(404); }
 
-    const updated = _.merge(user, req.body);
-    updated.save((err) => {
+    var updated = _.merge(user, req.body);
+    updated.save(function(err) {
       if (err) { return handleError(res, err); }
       return res.json(200, updated);
     });
@@ -278,23 +224,17 @@ exports.update = (req, res, next) => {
 }
 
 /**
-* @api {get} /api/users Show
-* @apiName show
-* @apiGroup User
-* @apiDescription Get a single user
-* @apiPermission public
-* @apiSuccess {Collection} root Get a single user
-* @apiError (500) UnknownException Could not get a user
-*/
-exports.show = (req, res, next) => {
-  const userId = req.params.id;
+ * Get a single user
+ */
+exports.show = function (req, res, next) {
+  var userId = req.params.id;
 
   User.findById(userId)
   .populate('smallgroup')
-  .exec((err, user) => {
+  .exec(function (err, user) {
     if (err) {return next(err);}
     if (!user) {return res.send(404);}
-    const profile = user.profile;
+    var profile = user.profile;
     return res.json(profile);
   });
 };
@@ -302,43 +242,33 @@ exports.show = (req, res, next) => {
 /**
  * Get a single user
  */
-
-/**
-* @api {get} /api/users PrivateProfile
-* @apiName privateProfile
-* @apiGroup User
-* @apiDescription Get a single private profile
-* @apiPermission private
-* @apiSuccess {Collection} root Get a private profile
-* @apiError (500) UnknownException Could not get a private profile
-*/
-exports.privateProfile = (req, res, next) => {
-  const userId = req.params.id;
+exports.privateProfile = function (req, res, next) {
+  var userId = req.params.id;
   User.findById(userId)
   .populate('projects')
   .populate('favoriteProjects')
-  .exec((err, user) => {
+  .exec(function (err, user) {
     if (err) {return next(err);}
     if (!user) {return res.send(404);}
-    const profile = user.privateProfile;
-      return ClassYear.getCurrent((err, classYear) => {
-      const classYearId = classYear._id;
-      return SmallGroup.findOne({'students':userId, 'fclassYear':classYearId}, (err, smallgroup) => {
+    var profile = user.privateProfile;
+    return ClassYear.getCurrent(function(err, classYear){
+      var classYearId = classYear._id;
+      return SmallGroup.findOne({"students":userId, "classYear":classYearId}, function(err, smallgroup){
         if (err) {return next(err);}
         if (smallgroup) {
-          const responseObjectSmallgroup = smallgroup.toObject();
+          var responseObjectSmallgroup = smallgroup.toObject();
           profile.smallgroup = responseObjectSmallgroup;
         }
         // Get how many total attendance days there have been
-        const data = user.getTotalDays(classYear, smallgroup);
+        var data = user.getTotalDays(classYear, smallgroup);
         profile.totalDates = data.totalDates;
         profile.totalBonusDates = data.totalBonusDates;
         profile.totalSmallDates = data.totalSmallDates;
         profile.totalBonusSmallDates = data.totalBonusSmallDates;
 
         Attendance.find({classYear:classYearId, user: userId})
-        .exec((err, attendance) => {
-          if (err) { return handleError(res, err); }
+        .exec(function (err, attendance) {
+          if(err) { return handleError(res, err); }
           profile.attendance = attendance;
 
           return res.json(profile);
@@ -348,49 +278,36 @@ exports.privateProfile = (req, res, next) => {
   });
 };
 
-
 /**
-* @api {get} /api/users FavoriteProjects
-* @apiName favoriteProjects
-* @apiGroup User
-* @apiDescription Get a user's favorite projects
-* @apiPermission public
-* @apiSuccess {Collection} root Get a user's favorite projects
-* @apiError (500) UnknownException Could not get a user's favorite projects
-*/
-exports.favoriteProjects = (req, res, next) => {
-  const userId = req.params.id;
+ * Get a user's favorite projects
+ */
+exports.favoriteProjects = function (req, res, next) {
+  var userId = req.params.id;
   User.findById(userId)
   .populate('favoriteProjects')
-  .exec((err, user) => {
-    if (err) { return next(err);}
-    if (!user) { return res.send(404);}
+  .exec(function (err, user) {
+    if (err) {return next(err);}
+    if (!user) {return res.send(404);}
 
     return res.json(user.favoriteProjects);
   });
 };
 
 /**
-* @api {get} /api/users Smallgroup
-* @apiName smallgroup
-* @apiGroup User
-* @apiDescription Get a user's smallgroup
-* @apiPermission public
-* @apiSuccess {Collection} root Get a user's smallgroup
-* @apiError (500) UnknownException Could not get a user's smallgroup
-*/
-exports.smallgroup = (req, res, next) => {
-  const userId = req.user.id;
-  return ClassYear.getCurrent((err, classYear) => {
-    const classYearId = classYear._id;
-    const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
-    if (req.user.isMentor) {
+ * Get a my smallgroup
+ */
+exports.smallgroup = function (req, res, next) {
+  var userId = req.user.id;
+  return ClassYear.getCurrent(function(err, classYear){
+    var classYearId = classYear._id;
+    var query = SmallGroup.findOne({"students":userId, "classYear":classYearId});
+    if (req.user.isMentor){
       query.select('+dayCodes.code')
     }
-    return query.exec((err, smallgroup) => {
+    return query.exec(function(err, smallgroup){
       if (err) return handleError(res, err);
       if (!smallgroup) return res.json({});
-      const responseObject = smallgroup.toObject();
+      var responseObject = smallgroup.toObject();
       // If user is not a mentor or not authenticated, don't give dayCode
       if (req.user.isMentor){
         // Mentors should get a day code
@@ -409,23 +326,17 @@ exports.smallgroup = (req, res, next) => {
 
 
 /**
-* @api {get} /api/users UserSmallgroup
-* @apiName userSmallgroup
-* @apiGroup User
-* @apiDescription Get a single user's smallgroup
-* @apiPermission public
-* @apiSuccess {Collection} root Get a single user's smallgroup
-* @apiError (500) UnknownException Could not get a single user's smallgroup
-*/
-exports.userSmallgroup = (req, res, next) => {
-  const userId = req.params.id;
-  return ClassYear.getCurrent((err, classYear) => {
-    const classYearId = classYear._id;
-    const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId})
+ * Get a single user's smallgroup
+ */
+exports.userSmallgroup = function (req, res, next) {
+  var userId = req.params.id;
+  return ClassYear.getCurrent(function(err, classYear){
+    var classYearId = classYear._id;
+    var query = SmallGroup.findOne({"students":userId, "classYear":classYearId})
     if (req.user.isMentor){
       query.select('+dayCodes.code')
     }
-    return query.exec((err, smallgroup) => {
+    return query.exec(function(err, smallgroup){
       if (err) return handleError(res, err);
       if (!smallgroup) return res.json({});
       var responseObject = smallgroup.toObject();
@@ -435,7 +346,7 @@ exports.userSmallgroup = (req, res, next) => {
       if (smallgroup.dayCode){
         responseObject.dayCode = smallgroup.dayCode;
       }
-      if (smallgroup.bonusDayCode) {
+      if (smallgroup.bonusDayCode){
         responseObject.bonusDayCode = smallgroup.bonusDayCode;
       }
       res.status(200).json(responseObject);
@@ -444,140 +355,115 @@ exports.userSmallgroup = (req, res, next) => {
 };
 
 /**
-* @api {get} /api/users Avatar
-* @apiName avatar
-* @apiGroup User
-* @apiDescription Get a user's avatar
-* @apiPermission admin
-* @apiSuccess {Collection} root Get a user's avatar
-* @apiError (500) UnknownException Could not get a user's avatar
-*/
-exports.avatar = (req, res, next) => {
-  const userId = req.params.id;
+ * Get a single user's avatar
+ */
+exports.avatar = function (req, res, next) {
+  var userId = req.params.id;
 
-  User.findById(userId, (err, user) => {
+  User.findById(userId, function (err, user) {
     if (err) return next(err);
     if (!user) return res.send(404);
     return res.json(user.avatar);
   });
 };
 
+
 /**
-* @api {get} /api/users Destroy
-* @apiName destroy
-* @apiGroup User
-* @apiDescription Deletes a user
-* @apiPermission public
-* @apiSuccess {Collection} root Deletes a user
-* @apiError (500) UnknownException Could not delete a user
-*/
-exports.destroy = (req, res) => {
-  User.findByIdAndRemove(req.params.id, (err, user) => {
-    if (err) return res.send(500, err);
+ * Deletes a user
+ * restriction: 'admin'
+ */
+exports.destroy = function(req, res) {
+  User.findByIdAndRemove(req.params.id, function(err, user) {
+    if(err) return res.send(500, err);
     return res.send(204);
   });
-  const userId = req.params.id;
-  const adminUserId = req.user.id;
-  const pass = String(req.body.password);
-  const query = {students:{ $in: [userId]}};
+  var userId = req.params.id;
+  var adminUserId = req.user.id;
+  var pass = String(req.body.password);
+  var query = {students:{ $in: [userId]}};
   User.findById(adminUserId)
   .select('_id email password provider salt')
-  .exec((err, user, db) => {
+  .exec(function (err, user, db) {
     if(user.authenticate(pass)) {
-      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, (err, data) => {
-        if (err) {
+      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
+        if(err) {
           return res.status(500).json({'error' : 'error in deleting address'});
         }
-        User.findByIdAndRemove(userId, (err, user) => {
-          if (err) return res.send(500, err);
+        User.findByIdAndRemove(userId, function(err, user) {
+          if(err) return res.send(500, err);
           return res.send(200);
         });
         //res.json(data);
       });
     } else {
-      res.status(403).json({forbidden: true});
+      res.send(403);
     }
   });
 
 };
 
 /**
-* @api {get} /api/users Role
-* @apiName role
-* @apiGroup User
-* @apiDescription Change what role the user is
-* @apiPermission admin
-* @apiSuccess {Collection} root Changes the role of a user
-* @apiError (500) UnknownException Could not change the role of the user
-*/
-exports.role = (req, res) => {
-  const roles = ['user', 'mentor', 'admin'];
-  const userId = req.params.id;
-  const newRole = req.body.role;
+ * Change what role the user is
+ * restriction: 'admin'
+ */
+exports.role = function(req, res) {
+  var roles = ['user', 'mentor', 'admin'];
+  var userId = req.params.id;
+  var newRole = req.body.role;
   // Check that role is valid
   if (roles.indexOf(newRole) === -1){
     res.send(400, {error: "Role does not exist."});
   }
-  User.findById(userId, (err,user) => {
-    if (err) {
+  User.findById(userId, function(err,user){
+    if (err){
       res.send(500, err);
-    } else {
+    }else{
       if (user.role === newRole) return;
       user.role = newRole;
-      user.save((err) => {
+      user.save(function(err) {
         if (err) return validationError(res, err);
-        res.status(200).json({success: true});
+        res.send(200);
       });
     }
   });
 }
-
 /**
-* @api {get} /api/users ChangePassword
-* @apiName changePassword
-* @apiGroup User
-* @apiDescription Changes the password of a user, either with reset token or the user's old password
-* @apiPermission public
-* @apiSuccess {Collection} root Changes the password of a user
-* @apiError (500) UnknownException Could not change the password of a user
-*/
-exports.changePassword = (req, res, next) => {
-  const userId = req.user._id;
-  const oldPass = String(req.body.oldPassword);
-  const token   = String(req.body.token);
-  const newPass = String(req.body.newPassword);
+ * Change a users password
+ *
+ * This can be done with either the reset token or the user's old
+ * password
+ */
+exports.changePassword = function(req, res, next) {
+  var userId = req.user._id;
+  var oldPass = String(req.body.oldPassword);
+  var token   = String(req.body.token);
+  var newPass = String(req.body.newPassword);
 
   User.findById(userId)
   .select('_id email password provider salt passwordResetToken passwordResetExpiration')
-  .exec((err, user) => {
+  .exec(function (err, user) {
     if(user.authenticate(oldPass) || user.validResetToken(token)) {
       user.password = newPass;
       user.passwordResetToken = '';
-      user.save((err) => {
+      user.save(function(err) {
         if (err) return validationError(res, err);
-        res.status(200).json({success: true});
+        res.send(200);
       });
     } else {
-      res.status(403).json({forbidden: true});
+      res.send(403);
     }
   });
 };
 
 /**
-* @api {get} /api/users Deactivate
-* @apiName deactivate
-* @apiGroup User
-* @apiDescription Deactivates a user
-* @apiPermission public
-* @apiSuccess {Collection} root Deactivates a user
-* @apiError (500) UnknownException Could not deactivate a user
-*/
-exports.deactivate = (req,res) => {
-  const userId = String(req.params.id);
-  User.findById(userId, (err, user) => {
+ * Deactivates a user
+ */
+exports.deactivate = function(req,res) {
+  var userId = String(req.params.id);
+  User.findById(userId, function(err, user){
     if (err) return res.send(500, err);
     user.active = false;
-    user.save((err) => {
+    user.save(function(err){
       if (err) return res.send(500, err);
       res.status(200).json({success: true});
     })
@@ -585,44 +471,31 @@ exports.deactivate = (req,res) => {
 };
 
 /**
-* @api {get} /api/users Deactivate
-* @apiName deactivate
-* @apiGroup User
-* @apiDescription Deactivates a user
-* @apiPermission public
-* @apiSuccess {Collection} root Deactivates a user
-* @apiError (500) UnknownException Could not deactivate a user
-*/
-exports.deactivate = (req, res, next) => {
-  const userId = String(req.params.id);
+ * Deactivates a user
+ */
+exports.deactivate = function(req, res, next) {
+  var userId = String(req.params.id);
 
-  User.findOne({ '_id': userId}, (err, user) => {
+  User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
 
     user.active = false;
-    user.save((err) => {
+    user.save(function(err){
       if (err) return res.send(500, err);
       res.status(200).json({success: true});
     })
   });
 };
 
-
 /**
-* @api {get} /api/users Activate
-* @apiName Activate
-* @apiGroup User
-* @apiDescription Activates a user
-* @apiPermission public
-* @apiSuccess {Collection} root Activates a user
-* @apiError (500) UnknownException Could not activate a user
-*/
-exports.activate = (req, res, next) => {
-  let userId = String(req.params.id);
-    User.findOne({ '_id': userId}, (err, user) => {
+ * Activates a user
+ */
+exports.activate = function(req, res, next) {
+  var userId = String(req.params.id);
+  User.findOne({ '_id': userId}, function(err, user){
     if (err) return res.send(500, err);
     user.active = true;
-    user.save((err) => {
+    user.save(function(err){
       if (err) return res.send(500, err);
       res.status(200).json({success: true});
     })
@@ -630,140 +503,107 @@ exports.activate = (req, res, next) => {
 };
 
 /**
-* @api {get} /api/users Me
-* @apiName me
-* @apiGroup User
-* @apiDescription Get my info
-* @apiPermission public
-* @apiSuccess {Collection} root Get my info
-* @apiError (500) UnknownException Could not get my info
-*/
-exports.me = (req, res, next) => {
-  const userId = req.user._id;
+ * Get my info
+ */
+exports.me = function(req, res, next) {
+  var userId = req.user._id;
   User.findOne({
     _id: userId
   })
-  .exec((err, user) => {
+  .exec(function(err, user) {
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);
   });
 };
 
-
 /**
-* @api {get} /api/users AuthCallback
-* @apiName authCallback
-* @apiGroup User
-* @apiDescription Authenticates callback
-* @apiPermission public
-* @apiSuccess {Collection} root Authenticates callback
-* @apiError (500) UnknownException Could not authenticate callback
-*/
-exports.authCallback = (req, res, next) => {
+ * Authentication callback
+ */
+exports.authCallback = function(req, res, next) {
   res.redirect('/');
 };
 
-
 /**
-* @api {get} /api/users AddTech
-* @apiName addTech
-* @apiGroup User
-* @apiDescription Add an item to the tech array for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Item added to tech array for a user
-* @apiError (500) UnknownException Could not add item to tech array for a user
-*/
-exports.addTech = (req,res) => {
-  const userId = req.params.id;
-  const newTech = req.body.tech;
-  User.findById(userId, (err,user) => {
-    if (err) {
-      res.send(500, err);
-    } else {
-      if (!user.tech) user.tech = [];
-      user.tech.push(newTech);
-      user.save((err) => {
-        if (err) return validationError(res, err);
-        res.status(200).json({success: true});
-      });
-    }
-  });
-};
-
-
-/**
-* @api {get} /api/users RemoveTech
-* @apiName removeTech
-* @apiGroup User
-* @apiDescription Remove an item to the tech array for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Item removed to tech array for a user
-* @apiError (500) UnknownException Could not removed item to tech array for a user
-*/
-exports.removeTech = (req,res) => {
-  const userId = req.params.id;
-  const tech = req.body.tech;
-  User.findById(userId, (err,user) => {
+ * Add an item to the tech array for a user
+ */
+exports.addTech = function(req,res){
+  var userId = req.params.id;
+  var newTech = req.body.tech;
+  User.findById(userId, function(err,user){
     if (err){
       res.send(500, err);
-    } else {
+    }else{
       if (!user.tech) user.tech = [];
-      user.tech.splice(user.tech.indexOf(tech), 1);
-      user.save((err) => {
+      user.tech.push(newTech);
+      user.save(function(err) {
         if (err) return validationError(res, err);
-        res.status(200).json({success: true});
+        res.send(200);
       });
     }
   });
 };
 
 /**
-* @api {get} /api/users ResetPassword
-* @apiName resetPassword
-* @apiGroup User
-* @apiDescription Set reset token for user and email it the password token will expire after 24 hours.
-* @apiPermission public
-* @apiSuccess {Collection} root Reset token for user
-* @apiError (500) UnknownException Could not reset token for user
-*/
-exports.resetPassword = (req, res) => {
-  const userEmail = req.body.email;
+ * Remove an item from the tech array for a user
+ */
+exports.removeTech = function(req,res){
+  var userId = req.params.id;
+  var tech = req.body.tech;
+  User.findById(userId, function(err,user){
+    if (err){
+      res.send(500, err);
+    }else{
+      if (!user.tech) user.tech = [];
+      user.tech.splice(user.tech.indexOf(tech), 1);
+      user.save(function(err) {
+        if (err) return validationError(res, err);
+        res.send(200);
+      });
+    }
+  });
+};
+
+/**
+ * Set reset token for user and email it the password token will expire after 24 hours.
+ */
+exports.resetPassword = function(req, res){
+  var userEmail = req.body.email;
   User.findOne({
     email: userEmail.toLowerCase()
-  }, (err, user) => {
+  }, function (err, user){
     if (err) return res.status(401).json(err);
     if (!user) return res.status(200).json({success: true});
 
-    crypto.randomBytes(12, (ex, buf) => {
-      const token = buf.toString('hex');
+    crypto.randomBytes(12, function(ex, buf) {
+      var token = buf.toString('hex');
       user.passwordResetToken = token;
 
       // Get tomorrow's date
-      const tomorrow = new Date();
+      var tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       user.passwordResetExpiration = tomorrow;
 
-      user.save((err) => {
+      user.save(function(err){
         if (err) return validationError(res,err);
 
-        const sub = {
-          ':name': [user.name],
-          '[%address%]': [config.addr + '/login?token=' + user.passwordResetToken],
+        var sub = {
+          ":name": [user.name],
+          "[%address%]": [config.addr + "/login?token=" + user.passwordResetToken],
         }
 
-        const filter = {
-          'templates': {
-            'settings': {
-              'enable': 1,
-              'template_id': '2f31a6c8-770e-4da0-a71c-dc71385d549f'
+        var filter = {
+          "templates": {
+            "settings": {
+              "enable": 1,
+              "template_id": "2f31a6c8-770e-4da0-a71c-dc71385d549f"
             }
           }
         }
 
         // email token to user
-        email.sendEmail(user.email, 'RCOS.IO Forgot Password', sub, '<br>', filter, (err, success) => {
+        email.sendEmail(user.email, "RCOS.IO Forgot Password", sub, '<br>', filter, function(err, success){
           if (err) return res.status(500).json(err);
 
           return res.status(200).json(success);
@@ -777,144 +617,109 @@ exports.resetPassword = (req, res) => {
 };
 
 /**
-* @api {get} /api/users AddProject
-* @apiName addProject
-* @apiGroup User
-* @apiDescription Add an item to the projects array for the user
-* @apiPermission public
-* @apiSuccess {Collection} root Adds an item to the projects array for the user
-* @apiError (500) UnknownException Could not add an item to the projects array for the user
-*/
-exports.addProject = (req,res) => {
-  const userId = req.params.id;
-  const newProject = req.body.project;
-  User.findById(userId, (err,user) => {
-    if (err) {
+ * Add an item to the projects array for the user
+ */
+exports.addProject = function(req,res){
+  var userId = req.params.id;
+  var newProject = req.body.project;
+  User.findById(userId, function(err,user){
+    if (err){
       res.send(500, err);
-    } else {
+    }else{
       if (!user.projects) user.projects = [];
       if (user.projects.indexOf(newProject) !== -1) return;
       user.projects.push(newProject);
-      user.save((err) => {
+      user.save(function(err) {
         if (err) return validationError(res, err);
-        res.status(200).json({success: true});
+        res.send(200);
       });
     }
   });
 };
 
 /**
-* @api {get} /api/users AddFavorite
-* @apiName addFavorite
-* @apiGroup User
-* @apiDescription Add an item to the favorites projects array for the user
-* @apiPermission public
-* @apiSuccess {Collection} root Adds an item to the favorties projects array for the user
-* @apiError (500) UnknownException Could not add an item to the favorites projects array for the user
-*/
-exports.addFavorite = (req,res) => {
-  const userId = req.params.id;
-  const newFavorite = req.params.project;
-  User.findById(userId, (err,user) => {
+ * Add an item to the favorite projects array for the user
+ */
+exports.addFavorite = function(req,res){
+  var userId = req.params.id;
+  var newFavorite = req.params.project;
+  User.findById(userId, function(err,user){
     if (err){
       res.send(500, err);
-    } else {
+    }else{
       if (!user.favoriteProjects) user.favoriteProjects = [];
       if (user.favoriteProjects.indexOf(newFavorite) !== -1) return;
       user.favoriteProjects.push(newFavorite);
-      user.save((err) => {
+      user.save(function(err) {
         if (err) return validationError(res, err);
-        res.status(200).json({success: true});
+        res.send(200);
       });
     }
   });
 };
 
-
 /**
-* @api {get} /api/users RemoveProject
-* @apiName removeProject
-* @apiGroup User
-* @apiDescription Remove an item from the tech array for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Remove an item from the tech array for a user
-* @apiError (500) UnknownException Could not remove an item from the tech array for a user
-*/
-exports.removeProject = (req,res) => {
-  const userId = req.params.id;
-  const project = req.body.project;
-  User.findById(userId, (err,user) => {
-    if (err) {
+ * Remove an item from the tech array for a user
+ */
+exports.removeProject = function(req,res){
+  var userId = req.params.id;
+  var project = req.body.project;
+  User.findById(userId, function(err,user){
+    if (err){
       res.send(500, err);
-    } else {
+    }else{
       if (!user.projects) user.projects = [];
       user.projects.splice(user.projects.indexOf(project), 1);
-      user.save((err) => {
+      user.save(function(err) {
         if (err) return validationError(res, err);
-        res.status(200).json({success: true});
+        res.send(200);
       });
     }
   });
 };
-
-
 /**
-* @api {get} /api/users RemoveFavorite
-* @apiName removeFavorite
-* @apiGroup User
-* @apiDescription Remove an item from the favortie projects array for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Remove an item from the favorite array for a user
-* @apiError (500) UnknownException Could not remove an item from the favorite array for a user
-*/
-exports.removeFavorite = (req,res) => {
-  const userId = req.params.id;
-  const project = req.params.project;
-  User.findById(userId, (err,user) => {
-    if (err) {
+ * Remove an item from the favorite projects array for a user
+ */
+exports.removeFavorite = function(req,res){
+  var userId = req.params.id;
+  var project = req.params.project;
+  User.findById(userId, function(err,user){
+    if (err){
       res.send(500, err);
-    } else {
+    }else{
       if (!user.favoriteProjects) user.favoriteProjects = [];
       user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
-      user.save((err) => {
+      user.save(function(err) {
         if (err) return validationError(res, err);
-        res.status(200).json({success: true});
+        res.send(200);
       });
     }
   });
 };
+/*
+   Function that is called by removeUser api call
+   */
+exports.deleteUser = function(req,res,next){
 
-   
-/**
-* @api {get} /api/users DeleteUser
-* @apiName deleteUser
-* @apiGroup User
-* @apiDescription Function that is called by removeUser api call to delete user
-* @apiPermission public
-* @apiSuccess {Collection} root Deletes user
-* @apiError (500) UnknownException Could not delete user
-*/
-exports.deleteUser = (req,res,next) => {
-
-  const userId = req.user.id;
-  const pass = String(req.body.password);
-  const query = {students:{ $in: [userId]}};
+  var userId = req.user.id;
+  var pass = String(req.body.password);
+  var query = {students:{ $in: [userId]}};
   User.findById(userId)
   .select('_id email password provider salt passwordResetToken passwordResetExpiration')
-  .exec((err, user,db) => {
+  .exec(function (err, user,db) {
     if(user.authenticate(pass)) {
-      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, (err, data) => {
-        if (err) {
+      SmallGroup.findOneAndUpdate(query, {$pull: {students: userId}}, function(err, data){
+        if(err) {
           return res.status(500).json({'error' : 'error in deleting address'});
         }
-        User.findByIdAndRemove(userId, (err, user) => {
-          if (err) return res.send(500, err);
+        User.findByIdAndRemove(userId, function(err, user) {
+          if(err) return res.send(500, err);
           return res.send(200);
         });
         //res.json(data);
       });
     } else {
-      res.status(403).json({forbidden: true});
+      res.send(403);
     }
   });
 };

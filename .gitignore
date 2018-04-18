@@ -12,4 +12,3 @@ server/static/uploads/
 .changed_cache
 npm-debug.log
 coverage
-doc/

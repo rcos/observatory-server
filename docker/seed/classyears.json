@@ -1,1 +1,0 @@
-[{"_id":{ "$oid": "000000000000000000000001" },"updatedAt":"2016-09-02T22:42:21.655Z","createdAt":"2016-09-02T22:42:21.655Z","semester":"Fall 2016","__v":0,"dayCodes":[{"date":"2016-05-15T04:00:00.000Z","code":"1W2O8J","_id":{ "$oid": "5a88f532e67f52570f954e30" },"bonusDay":false}],"displayURP":false,"current":true}]
