@@ -179,6 +179,7 @@ exports.allStats = (req, res) => {
   });
 };
 
+
 /**
 * @api {get} /api/users List
 * @apiName list
@@ -190,12 +191,16 @@ exports.allStats = (req, res) => {
 */
 exports.list = (req, res) => {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}})
-  .select('_id name role avatar email github.login')
-	.exec((err, users) => {
-    res.status(200).json(users);
-  });
-};
+  User.find({ active: true, 'github.login': { $exists: true }})
+  .select('_id name role avatar email tech github.login')
+  .exec()
+  .then((users) => {
+    res.status(200).json(users).end()
+  })
+  .catch((err) => {
+    res.status(500).json({ err }).end()
+  })
+}
 
 /**
 * @api {get} /api/users Past

@@ -1,17 +1,11 @@
 'use strict';
 
+import { handleError } from '../lib/helpers'
+
 // TODO - use `const` instead of `var`
 
 const _ = require('lodash');
 const Achievement = require('./achievement.model');
-
-// TODO - abstract into /api/lib/helpers
-function handleError(res, statusCode) {
-  statusCode = statusCode || 500;
-  return function(err) {
-    res.status(statusCode).send(err);
-  };
-}
 
 // TODO - abstract into /api/lib/helpers
 function responseWithResult(res, statusCode) {
@@ -70,8 +64,10 @@ function removeEntity(res) {
 exports.index = (req, res) => {
   Achievement.findAsync()
     .then(responseWithResult(res))
-    .catch(handleError(res))
-}
+    .catch((err) => handleError(res, err));
+};
+
+
 
 // // // //
 /**
@@ -87,8 +83,8 @@ exports.show = (req, res) => {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(responseWithResult(res))
-    .catch(handleError(res))
-}
+    .catch((err) => handleError(res, err));
+};
 
 /**
 * @api {post} /api/achievements Create
@@ -102,8 +98,8 @@ exports.show = (req, res) => {
 exports.create = (req, res) => {
   Achievement.createAsync(req.body)
     .then(responseWithResult(res, 201))
-    .catch(handleError(res))
-}
+    .catch((err) => handleError(res, err));
+};
 
 /**
 * @api {put} /api/achievements Update
@@ -122,8 +118,8 @@ exports.update = (req, res) => {
     .then(handleEntityNotFound(res))
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
-    .catch(handleError(res))
-}
+    .catch((err) => handleError(res, err));
+};
 
 /**
 * @api {delete} /api/achievements Destroy
@@ -139,5 +135,5 @@ exports.destroy = (req, res) => {
   Achievement.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
-    .catch(handleError(res))
-}
+    .catch((err) => handleError(res, err));
+};
