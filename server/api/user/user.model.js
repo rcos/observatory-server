@@ -98,18 +98,23 @@ var UserSchema = new Schema({
       url: String,
       date: Date
     }],
-    login: {type: String, lowercase: true, index: true},
+
+    login: {
+      type: String,
+      lowercase: true,
+      index: true
+    },
     profile: String,
-},
-  facebookLogin: {},
-  googleLogin: {},
+  },
+
   githubLogin: {}
 
-},{ timestamps: true});
+}, { timestamps: true });
+
 UserSchema.set('toJSON', {
   transform: function(doc, ret, options) {
-      ret.avatar = doc.avatar;
-      return ret;
+    ret.avatar = doc.avatar;
+    return ret;
   }
 });
 
@@ -225,25 +230,25 @@ UserSchema
     };
   });
 
- UserSchema
-   .virtual('privateProfile')
-   .get(function() {
-     return {
-       '_id':this._id.toString(),
-       'name': this.name,
-       'email': this.email,
-       'active': this.active,
-       'role': this.role,
-       'tech': this.tech,
-       'avatar': this.avatar,
-       'projects': this.projects,
-       'favoriteProjects': this.favoriteProjects,
-       'bio': this.bio,
-       'semesters': this.semesterCount,
-       'rcosStyle': this.rcosStyle,
-       'githubProfile': this.github.login
-     };
-   });
+UserSchema
+.virtual('privateProfile')
+.get(function() {
+  return {
+    '_id':this._id.toString(),
+    'name': this.name,
+    'email': this.email,
+    'active': this.active,
+    'role': this.role,
+    'tech': this.tech,
+    'avatar': this.avatar,
+    'projects': this.projects,
+    'favoriteProjects': this.favoriteProjects,
+    'bio': this.bio,
+    'semesters': this.semesterCount,
+    'rcosStyle': this.rcosStyle,
+    'githubProfile': this.github.login
+  };
+});
 
 UserSchema
   .virtual('stats')

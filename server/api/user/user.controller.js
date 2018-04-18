@@ -22,21 +22,6 @@ const validationError = (res, err) => {
   return res.status(422).json(err);
 };
 
-/**
-* @api {get} /api/users Index
-* @apiName commits
-* @apiGroup User
-* @apiDescription Get list of Users
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of all active Observatory Users.
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
-exports.index = (req, res) => {
-  User.find({}, (err, users) => {
-    if (err) return res.send(500, err);
-    res.status(200).json(users);
-  });
-};
 
 /**
  * Get user stats
@@ -161,17 +146,28 @@ exports.allStats = (req, res) => {
   });
 };
 
+
 /**
- * Get list of active users
- */
+* @api {get} /api/users Index
+* @apiName list
+* @apiGroup User
+* @apiDescription Get list of active Users
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of all active Observatory Users.
+* @apiError (500) UnknownException Could not retrieve User collection
+*/
 exports.list = (req, res) => {
   // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}})
-  .select('_id name role avatar email github.login')
-	.exec((err, users) => {
-    res.status(200).json(users);
-  });
-};
+  User.find({ active: true, 'github.login': { $exists: true }})
+  .select('_id name role avatar email tech github.login')
+  .exec()
+  .then((users) => {
+    res.status(200).json(users).end()
+  })
+  .catch((err) => {
+    res.status(500).json({ err }).end()
+  })
+}
 
 /**
  * Get list of all past users
