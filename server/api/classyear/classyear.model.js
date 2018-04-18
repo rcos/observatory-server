@@ -29,7 +29,7 @@ var ClassSchema = new Schema({
       default:false,
     }
   }]
-},{ timestamps: true, usePushEach: true });
+},{ timestamps: true});
 
 /*
 	Virtuals

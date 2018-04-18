@@ -32,11 +32,6 @@ module.exports = function(config) {
       'client/bower_components/angular-markdown-directive/markdown.js',
       'client/bower_components/angular-notify/dist/angular-notify.js',
       'client/bower_components/github.commits.widget/js/github.commits.widget.js',
-      'client/bower_components/angular-highlightjs/build/angular-highlightjs.js',
-      'client/bower_components/marked/lib/marked.js',
-      'client/bower_components/angular-marked/dist/angular-marked.js',
-      'client/bower_components/bootstrap-markdown/js/bootstrap-markdown.js',
-      'client/bower_components/angular-markdown-editor-ghiscoding/src/angular-markdown-editor.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'client/app/app.js',

@@ -30,7 +30,7 @@ var SmallGroupSchema = new Schema({
       default:false,
     },
   }]
-}, { usePushEach: true });
+});
 
 /*
 	Virtuals
