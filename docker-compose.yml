@@ -3,15 +3,27 @@ version: "3"
 services:
 
   mongodb:
-    image: mongo
     container_name: observatory_mongo
+    image: mongo
     ports:
       - "27017:27017"
 
+  mongo-seed:
+    container_name: observatory_mongo_seed
+    build:
+      context: ./docker
+      dockerfile: Dockerfile-MongoSeed
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+
   mongo_admin:
-    image: mongo-express
     container_name: observatory_mongo_admin
+    image: mongo-express
     links:
       - mongodb:mongo
     ports:
       - "8081:8081"
+    depends_on:
+      - mongodb
