@@ -24,7 +24,7 @@ const validationError = (res, err) => {
 
 /**
 * @api {get} /api/users Index
-* @apiName commits
+* @apiName index
 * @apiGroup User
 * @apiDescription Get list of Users
 * @apiPermission public
@@ -39,8 +39,14 @@ exports.index = (req, res) => {
 };
 
 /**
- * Get user stats
- */
+* @api {get} /api/users PublicStats
+* @apiName publicStats
+* @apiGroup User
+* @apiDescription Get user stats (public)
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of all active Observervatory user stats.
+* @apiError (500) UnknownException Could not retrieve user stats
+*/
 exports.publicStats = (req, res) => {
   async.parallel([
     // Count active users
@@ -77,10 +83,14 @@ exports.publicStats = (req, res) => {
 };
 
 /**
- * Returns user or list of users that match a supplied query
- *
- * Takes {query:String, single:Boolean, limit:Integer}
- */
+* @api {get} /api/users Search
+* @apiName search
+* @apiGroup User
+* @apiDescription Gets user or list of users that match a supplied query
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of Observatory User(s).
+* @apiError (500) UnknownException Could not retrieve User collection
+*/
 // TODO Make this work with fuzzy queries, multiple results etc.
 exports.search = (req, res) => {
   if (!req.query.query) return res.send(400, 'No query supplied');
@@ -103,10 +113,14 @@ exports.search = (req, res) => {
 };
 
 /**
- * Get list of users with stats including last commits
- * in previous 2 weeks
- * restriction: 'admin'
- */
+* @api {get} /api/users Stats
+* @apiName stats
+* @apiGroup User
+* @apiDescription Gets list of users with stats including last commits in previous two weeks
+* @apiPermission admin
+* @apiSuccess {Collection} root Collection of Observatory User(s).
+* @apiError (500) UnknownException Could not retrieve User collection
+*/
 exports.stats = (req, res) => {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
@@ -145,10 +159,14 @@ exports.stats = (req, res) => {
 };
 
 /**
- * Get list of all users with stats including last commits
- * in previous 2 weeks including inactive
- * restriction: 'admin'
- */
+* @api {get} /api/users AllStats
+* @apiName allStats
+* @apiGroup User
+* @apiDescription Gets list of all users with stats including last commits in previous two weeks (including inactive)
+* @apiPermission admin
+* @apiSuccess {Collection} root Collection of Observatory User(s).
+* @apiError (500) UnknownException Could not retrieve User collection
+*/
 exports.allStats = (req, res) => {
   // Only return users who have a github login
   ClassYear.getCurrent((err, classYear) => {
@@ -162,8 +180,14 @@ exports.allStats = (req, res) => {
 };
 
 /**
- * Get list of active users
- */
+* @api {get} /api/users List
+* @apiName list
+* @apiGroup User
+* @apiDescription Gets list of all active users (with github login)
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of Observatory User(s).
+* @apiError (500) UnknownException Could not retrieve User collection
+*/
 exports.list = (req, res) => {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
@@ -174,8 +198,14 @@ exports.list = (req, res) => {
 };
 
 /**
- * Get list of all past users
- */
+* @api {get} /api/users Past
+* @apiName past
+* @apiGroup User
+* @apiDescription Gets list of all past users (with github login)
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of Observatory User(s).
+* @apiError (500) UnknownException Could not retrieve User collection
+*/
 exports.past = (req, res) => {
   User.find({active: false})
   .select('_id name role avatar email github.login')
@@ -186,8 +216,14 @@ exports.past = (req, res) => {
 };
 
 /**
- * Get a list of all the recent RCOS commits for a user
- */
+* @api {get} /api/users Commits
+* @apiName commits
+* @apiGroup User
+* @apiDescription Gets list of all the recent RCOS commits for a user
+* @apiPermission public
+* @apiSuccess {Collection} root Collection of Observatory Users commits.
+* @apiError (500) UnknownException Could not retrieve User commits
+*/
 exports.commits = (req, res) => {
   const userId = String(req.params.id);
 
@@ -198,8 +234,14 @@ exports.commits = (req, res) => {
 };
 
 /**
- * Creates a new user
- */
+* @api {get} /api/users Create
+* @apiName create
+* @apiGroup User
+* @apiDescription Creates a new user
+* @apiPermission public
+* @apiSuccess {Collection} root Create a new user
+* @apiError (500) UnknownException Could not create a new user
+*/
 exports.create = (req, res, next) => {
   const newUser = new User(req.body);
   newUser.provider = 'local';
@@ -212,8 +254,14 @@ exports.create = (req, res, next) => {
 };
 
 /**
- * Update an existing user
- */
+* @api {get} /api/users Update
+* @apiName update
+* @apiGroup User
+* @apiDescription Updates user
+* @apiPermission private
+* @apiSuccess {Collection} root Updates a user
+* @apiError (500) UnknownException Could not update a user
+*/
 exports.update = (req, res, next) => {
   if(req.body._id) { delete req.body._id; }
 
@@ -230,8 +278,14 @@ exports.update = (req, res, next) => {
 }
 
 /**
- * Get a single user
- */
+* @api {get} /api/users Show
+* @apiName show
+* @apiGroup User
+* @apiDescription Get a single user
+* @apiPermission public
+* @apiSuccess {Collection} root Get a single user
+* @apiError (500) UnknownException Could not get a user
+*/
 exports.show = (req, res, next) => {
   const userId = req.params.id;
 
@@ -248,6 +302,16 @@ exports.show = (req, res, next) => {
 /**
  * Get a single user
  */
+
+/**
+* @api {get} /api/users PrivateProfile
+* @apiName privateProfile
+* @apiGroup User
+* @apiDescription Get a single private profile
+* @apiPermission private
+* @apiSuccess {Collection} root Get a private profile
+* @apiError (500) UnknownException Could not get a private profile
+*/
 exports.privateProfile = (req, res, next) => {
   const userId = req.params.id;
   User.findById(userId)
@@ -284,9 +348,16 @@ exports.privateProfile = (req, res, next) => {
   });
 };
 
+
 /**
- * Get a user's favorite projects
- */
+* @api {get} /api/users FavoriteProjects
+* @apiName favoriteProjects
+* @apiGroup User
+* @apiDescription Get a user's favorite projects
+* @apiPermission public
+* @apiSuccess {Collection} root Get a user's favorite projects
+* @apiError (500) UnknownException Could not get a user's favorite projects
+*/
 exports.favoriteProjects = (req, res, next) => {
   const userId = req.params.id;
   User.findById(userId)
@@ -300,8 +371,14 @@ exports.favoriteProjects = (req, res, next) => {
 };
 
 /**
- * Get a my smallgroup
- */
+* @api {get} /api/users Smallgroup
+* @apiName smallgroup
+* @apiGroup User
+* @apiDescription Get a user's smallgroup
+* @apiPermission public
+* @apiSuccess {Collection} root Get a user's smallgroup
+* @apiError (500) UnknownException Could not get a user's smallgroup
+*/
 exports.smallgroup = (req, res, next) => {
   const userId = req.user.id;
   return ClassYear.getCurrent((err, classYear) => {
@@ -332,8 +409,14 @@ exports.smallgroup = (req, res, next) => {
 
 
 /**
- * Get a single user's smallgroup
- */
+* @api {get} /api/users UserSmallgroup
+* @apiName userSmallgroup
+* @apiGroup User
+* @apiDescription Get a single user's smallgroup
+* @apiPermission public
+* @apiSuccess {Collection} root Get a single user's smallgroup
+* @apiError (500) UnknownException Could not get a single user's smallgroup
+*/
 exports.userSmallgroup = (req, res, next) => {
   const userId = req.params.id;
   return ClassYear.getCurrent((err, classYear) => {
@@ -361,8 +444,14 @@ exports.userSmallgroup = (req, res, next) => {
 };
 
 /**
- * Get a single user's avatar
- */
+* @api {get} /api/users Avatar
+* @apiName avatar
+* @apiGroup User
+* @apiDescription Get a user's avatar
+* @apiPermission admin
+* @apiSuccess {Collection} root Get a user's avatar
+* @apiError (500) UnknownException Could not get a user's avatar
+*/
 exports.avatar = (req, res, next) => {
   const userId = req.params.id;
 
@@ -373,11 +462,15 @@ exports.avatar = (req, res, next) => {
   });
 };
 
-
 /**
- * Deletes a user
- * restriction: 'admin'
- */
+* @api {get} /api/users Destroy
+* @apiName destroy
+* @apiGroup User
+* @apiDescription Deletes a user
+* @apiPermission public
+* @apiSuccess {Collection} root Deletes a user
+* @apiError (500) UnknownException Could not delete a user
+*/
 exports.destroy = (req, res) => {
   User.findByIdAndRemove(req.params.id, (err, user) => {
     if (err) return res.send(500, err);
@@ -409,9 +502,14 @@ exports.destroy = (req, res) => {
 };
 
 /**
- * Change what role the user is
- * restriction: 'admin'
- */
+* @api {get} /api/users Role
+* @apiName role
+* @apiGroup User
+* @apiDescription Change what role the user is
+* @apiPermission admin
+* @apiSuccess {Collection} root Changes the role of a user
+* @apiError (500) UnknownException Could not change the role of the user
+*/
 exports.role = (req, res) => {
   const roles = ['user', 'mentor', 'admin'];
   const userId = req.params.id;
@@ -433,12 +531,16 @@ exports.role = (req, res) => {
     }
   });
 }
+
 /**
- * Change a users password
- *
- * This can be done with either the reset token or the user's old
- * password
- */
+* @api {get} /api/users ChangePassword
+* @apiName changePassword
+* @apiGroup User
+* @apiDescription Changes the password of a user, either with reset token or the user's old password
+* @apiPermission public
+* @apiSuccess {Collection} root Changes the password of a user
+* @apiError (500) UnknownException Could not change the password of a user
+*/
 exports.changePassword = (req, res, next) => {
   const userId = req.user._id;
   const oldPass = String(req.body.oldPassword);
@@ -462,8 +564,14 @@ exports.changePassword = (req, res, next) => {
 };
 
 /**
- * Deactivates a user
- */
+* @api {get} /api/users Deactivate
+* @apiName deactivate
+* @apiGroup User
+* @apiDescription Deactivates a user
+* @apiPermission public
+* @apiSuccess {Collection} root Deactivates a user
+* @apiError (500) UnknownException Could not deactivate a user
+*/
 exports.deactivate = (req,res) => {
   const userId = String(req.params.id);
   User.findById(userId, (err, user) => {
@@ -477,8 +585,14 @@ exports.deactivate = (req,res) => {
 };
 
 /**
- * Deactivates a user
- */
+* @api {get} /api/users Deactivate
+* @apiName deactivate
+* @apiGroup User
+* @apiDescription Deactivates a user
+* @apiPermission public
+* @apiSuccess {Collection} root Deactivates a user
+* @apiError (500) UnknownException Could not deactivate a user
+*/
 exports.deactivate = (req, res, next) => {
   const userId = String(req.params.id);
 
@@ -493,9 +607,16 @@ exports.deactivate = (req, res, next) => {
   });
 };
 
+
 /**
- * Activates a user
- */
+* @api {get} /api/users Activate
+* @apiName Activate
+* @apiGroup User
+* @apiDescription Activates a user
+* @apiPermission public
+* @apiSuccess {Collection} root Activates a user
+* @apiError (500) UnknownException Could not activate a user
+*/
 exports.activate = (req, res, next) => {
   let userId = String(req.params.id);
     User.findOne({ '_id': userId}, (err, user) => {
@@ -509,8 +630,14 @@ exports.activate = (req, res, next) => {
 };
 
 /**
- * Get my info
- */
+* @api {get} /api/users Me
+* @apiName me
+* @apiGroup User
+* @apiDescription Get my info
+* @apiPermission public
+* @apiSuccess {Collection} root Get my info
+* @apiError (500) UnknownException Could not get my info
+*/
 exports.me = (req, res, next) => {
   const userId = req.user._id;
   User.findOne({
@@ -523,16 +650,30 @@ exports.me = (req, res, next) => {
   });
 };
 
+
 /**
- * Authentication callback
- */
+* @api {get} /api/users AuthCallback
+* @apiName authCallback
+* @apiGroup User
+* @apiDescription Authenticates callback
+* @apiPermission public
+* @apiSuccess {Collection} root Authenticates callback
+* @apiError (500) UnknownException Could not authenticate callback
+*/
 exports.authCallback = (req, res, next) => {
   res.redirect('/');
 };
 
+
 /**
- * Add an item to the tech array for a user
- */
+* @api {get} /api/users AddTech
+* @apiName addTech
+* @apiGroup User
+* @apiDescription Add an item to the tech array for a user
+* @apiPermission public
+* @apiSuccess {Collection} root Item added to tech array for a user
+* @apiError (500) UnknownException Could not add item to tech array for a user
+*/
 exports.addTech = (req,res) => {
   const userId = req.params.id;
   const newTech = req.body.tech;
@@ -550,9 +691,16 @@ exports.addTech = (req,res) => {
   });
 };
 
+
 /**
- * Remove an item from the tech array for a user
- */
+* @api {get} /api/users RemoveTech
+* @apiName removeTech
+* @apiGroup User
+* @apiDescription Remove an item to the tech array for a user
+* @apiPermission public
+* @apiSuccess {Collection} root Item removed to tech array for a user
+* @apiError (500) UnknownException Could not removed item to tech array for a user
+*/
 exports.removeTech = (req,res) => {
   const userId = req.params.id;
   const tech = req.body.tech;
@@ -571,8 +719,14 @@ exports.removeTech = (req,res) => {
 };
 
 /**
- * Set reset token for user and email it the password token will expire after 24 hours.
- */
+* @api {get} /api/users ResetPassword
+* @apiName resetPassword
+* @apiGroup User
+* @apiDescription Set reset token for user and email it the password token will expire after 24 hours.
+* @apiPermission public
+* @apiSuccess {Collection} root Reset token for user
+* @apiError (500) UnknownException Could not reset token for user
+*/
 exports.resetPassword = (req, res) => {
   const userEmail = req.body.email;
   User.findOne({
@@ -623,8 +777,14 @@ exports.resetPassword = (req, res) => {
 };
 
 /**
- * Add an item to the projects array for the user
- */
+* @api {get} /api/users AddProject
+* @apiName addProject
+* @apiGroup User
+* @apiDescription Add an item to the projects array for the user
+* @apiPermission public
+* @apiSuccess {Collection} root Adds an item to the projects array for the user
+* @apiError (500) UnknownException Could not add an item to the projects array for the user
+*/
 exports.addProject = (req,res) => {
   const userId = req.params.id;
   const newProject = req.body.project;
@@ -644,8 +804,14 @@ exports.addProject = (req,res) => {
 };
 
 /**
- * Add an item to the favorite projects array for the user
- */
+* @api {get} /api/users AddFavorite
+* @apiName addFavorite
+* @apiGroup User
+* @apiDescription Add an item to the favorites projects array for the user
+* @apiPermission public
+* @apiSuccess {Collection} root Adds an item to the favorties projects array for the user
+* @apiError (500) UnknownException Could not add an item to the favorites projects array for the user
+*/
 exports.addFavorite = (req,res) => {
   const userId = req.params.id;
   const newFavorite = req.params.project;
@@ -664,10 +830,16 @@ exports.addFavorite = (req,res) => {
   });
 };
 
-/**
- * Remove an item from the tech array for a user
- */
 
+/**
+* @api {get} /api/users RemoveProject
+* @apiName removeProject
+* @apiGroup User
+* @apiDescription Remove an item from the tech array for a user
+* @apiPermission public
+* @apiSuccess {Collection} root Remove an item from the tech array for a user
+* @apiError (500) UnknownException Could not remove an item from the tech array for a user
+*/
 exports.removeProject = (req,res) => {
   const userId = req.params.id;
   const project = req.body.project;
@@ -684,9 +856,17 @@ exports.removeProject = (req,res) => {
     }
   });
 };
+
+
 /**
- * Remove an item from the favorite projects array for a user
- */
+* @api {get} /api/users RemoveFavorite
+* @apiName removeFavorite
+* @apiGroup User
+* @apiDescription Remove an item from the favortie projects array for a user
+* @apiPermission public
+* @apiSuccess {Collection} root Remove an item from the favorite array for a user
+* @apiError (500) UnknownException Could not remove an item from the favorite array for a user
+*/
 exports.removeFavorite = (req,res) => {
   const userId = req.params.id;
   const project = req.params.project;
@@ -703,9 +883,17 @@ exports.removeFavorite = (req,res) => {
     }
   });
 };
-/*
-   Function that is called by removeUser api call
-   */
+
+   
+/**
+* @api {get} /api/users DeleteUser
+* @apiName deleteUser
+* @apiGroup User
+* @apiDescription Function that is called by removeUser api call to delete user
+* @apiPermission public
+* @apiSuccess {Collection} root Deletes user
+* @apiError (500) UnknownException Could not delete user
+*/
 exports.deleteUser = (req,res,next) => {
 
   const userId = req.user.id;
