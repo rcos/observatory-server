@@ -1,7 +1,3 @@
-/**
- * Class Year Controller
- */
-
 'use strict';
 
 import { handleError, validationError, generateCode, uniqueDayCode } from '../lib/helpers'
@@ -43,6 +39,15 @@ exports.index = function(req, res) {
   });
 };
 
+/**
+* @api {get} /api/classyear GetClassYear
+* @apiName getClassYear
+* @apiGroup ClassYear
+* @apiDescription Get current ClassYear
+* @apiPermission admin
+* @apiSuccess {Model} The model of the current ClassYear
+* @apiError (500) UnknownException Could not retrieve ClassYear collection
+*/
 // Get a specific class year, Limited to Admins
 exports.getClassYear = function(req, res) {
   ClassYear.findOne({
