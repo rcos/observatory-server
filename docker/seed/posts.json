@@ -1,1 +1,2499 @@
-[{"_id":{ "$oid": "5738cf0effd7ec3b75f3349e" },"updatedAt":"2018-02-18T03:38:26.425Z","createdAt":"2018-02-18T03:38:26.425Z","title":"*And this is fun*","content":"To use **markdown**","projectId":{ "$oid": "000000000000000000000030" },"author":{ "$oid": "5738ce217328682a75cc0a79" },"date":"2016-05-15T19:33:34.946Z","__v":0},{"_id":{ "$oid": "5738cefdffd7ec3b75f3349d" },"updatedAt":"2018-02-18T03:38:26.425Z","createdAt":"2018-02-18T03:38:26.425Z","title":"Also noted this","content":"_**in markdown**_","projectId":{ "$oid": "000000000000000000000030" },"author":{ "$oid": "5738ce217328682a75cc0a79" },"date":"2015-09-15T19:33:17.838Z","__v":0},{"_id":{ "$oid": "5738cf0effd7ec3b75f33491" },"updatedAt":"2018-02-18T03:38:26.425Z","createdAt":"2018-02-18T03:38:26.425Z","title":"*And this is fun*","content":"To use **markdown**","projectId":{ "$oid": "000000000000000000000030" },"author":{ "$oid": "5738ce217328682a75cc0a79" },"date":"2016-12-15T19:33:34.946Z","__v":0},{"_id":{ "$oid": "5738cedfffd7ec3b75f3349c" },"updatedAt":"2018-02-18T03:38:26.424Z","createdAt":"2018-02-18T03:38:26.424Z","title":"My awesome post","content":"This is great!","projectId":{ "$oid": "000000000000000000000030" },"author":{ "$oid": "5738ce217328682a75cc0a79" },"date":"2015-01-15T19:32:47.647Z","__v":0}]
+[
+  {
+    "_id":"565e0f934bd5283e023af6e8",
+    "title":"Thanksgiving Update",
+    "content":"Hi guys! \n        I hope everyone had an awesome Thanksgiving. Over Thanksgiving, the Observatory team was going through issues and  a couple pull requests were made. I worked on users being able to tag their own project as a 'past' or 'present' project as well as fixing up some simple console error issues. I also tried to work on adding a feature so that a user could make their account inactive. However, I am running into server authentication errors. In terms of other Observatory issues, a PR has been submitted to make attendance work again with the smallgroup feature that has been added. This week I hope to fix that server error and get working on my search issue! \n\n-Varun",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e60740b997149c20e59afd",
+      "name":"Varun Rao",
+      "email":"raov3@rpi.edu",
+      "__v":24,
+      "bio":"undefined",
+      "createdAt":"2016-09-06T20:52:48.974Z",
+      "updatedAt":"2018-02-07T00:11:37.870Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"vkr96",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+        "Python",
+        "C++"
+      ],
+      "role":"mentor",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/ed5b3b87e2bda189018c473dfc14cb82?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-01T21:22:30.828Z"
+  },
+  {
+    "_id":"565e224b4bd5283e023af6f7",
+    "title":"Starter Projects",
+    "content":"One common problem for people new to RCOS is finding a project to join. To solve this, I've added a feature to let admins and mentors mark certain projects as 'starter projects'. These are presented in a list with their description and images to users right after they register an account, so that they can immediately join one that suits their interests and skill set. Hopefully the feature will be useful for future semesters, especially as RCOS grows with new members and projects.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e9f8fedacfb1eb7f49d4b5",
+      "name":"Zaran Lalvani",
+      "email":"lalvaz@rpi.edu",
+      "__v":28,
+      "smallgroup":"56ba5e8cd619811b2dae80e8",
+      "createdAt":"2016-09-13T21:31:14.487Z",
+      "updatedAt":"2017-07-27T03:33:47.722Z",
+      "github":{
+        "login":"zlalvani",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "56bd85e5f168cc3448b29f14",
+        "57d8708ed08eb76d6fd9d73e"
+      ],
+      "tech":[
+
+      ],
+      "role":"mentor",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/bf831d619d8de5eda9a736381d228f15?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-01T22:42:11.338Z"
+  },
+  {
+    "_id":"565f719c4bd5283e023af6fd",
+    "title":"We all make mistakes",
+    "content":"Hey everyone! One problem people face when using Observatory is that they sometimes enter the wrong information or it needs to be updated. This was especially relevant for the users github accounts as this is used to track commit's and is needed by other members of the project.  To fix this I added the functionality to change your github account information on Observatory so you can always have the most updated contact info. I hope everyone enjoys the new feature and keeps their github's updated!",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55f31df2dacfb1eb7f49d4f2",
+      "name":"Nicholas Koulopoulos",
+      "email":"nickkoul13@gmail.com",
+      "__v":19,
+      "createdAt":"2016-05-06T16:16:01.355Z",
+      "updatedAt":"2016-05-06T16:16:01.355Z",
+      "github":{
+        "login":"nickkoul",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/c0edb6bc15bec821f275970a76b42a93?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-02T22:33:00.853Z"
+  },
+  {
+    "_id":"5660293b4bd5283e023af704",
+    "title":"Blog fixes",
+    "content":"A critical issue with the Observatory blog feature recently came up: regular users can't edit or delete blog posts, even if they wrote them. This is especially important as the semester is coming to a close and people are writing up their progress. I made a fix within a couple hours of hearing of it, but as of now it's not yet on the live site. \n\nI'm making this post on the off chance that people who are running into this problem come to this blog. Hopefully, the fix will soon be live.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e9f8fedacfb1eb7f49d4b5",
+      "name":"Zaran Lalvani",
+      "email":"lalvaz@rpi.edu",
+      "__v":28,
+      "smallgroup":"56ba5e8cd619811b2dae80e8",
+      "createdAt":"2016-09-13T21:31:14.487Z",
+      "updatedAt":"2017-07-27T03:33:47.722Z",
+      "github":{
+        "login":"zlalvani",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "56bd85e5f168cc3448b29f14",
+        "57d8708ed08eb76d6fd9d73e"
+      ],
+      "tech":[
+
+      ],
+      "role":"mentor",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/bf831d619d8de5eda9a736381d228f15?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-03T11:36:35.392Z"
+  },
+  {
+    "_id":"5660bdae4bd5283e023af70b",
+    "title":"Editing Title",
+    "content":"One of the first issues that I fixed on Observatory was the issue that no one could edit the title of a project. This could mean that the project name could be incorrectly spelled or the project's name could change after the initial post and the project could be stuck with a name that is not correct. To do this I had to learn some basic HTML, CSS, AngularJS, and NodeJS. I had to write server API endpoints and play with the HTML formatting. Learning and using AngularJS was an interesting experience since I had never used AngularJS up to that point. I used Angular commands like ng-show and ng-click to implement this feature. By now, this feature has been deployed to the main Observatory site so now everyone can now edit the title of their project.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e60740b997149c20e59afd",
+      "name":"Varun Rao",
+      "email":"raov3@rpi.edu",
+      "__v":24,
+      "bio":"undefined",
+      "createdAt":"2016-09-06T20:52:48.974Z",
+      "updatedAt":"2018-02-07T00:11:37.870Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"vkr96",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+        "Python",
+        "C++"
+      ],
+      "role":"mentor",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/ed5b3b87e2bda189018c473dfc14cb82?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-03T22:09:55.232Z"
+  },
+  {
+    "_id":"5660c2b54bd5283e023af70c",
+    "title":"Filtering",
+    "content":"One feature that was of high importance for Observatory was sorting through all of the wonderful projects we have made in RCOS. To do this I created a search bar on the projects page. I had never completed a feature like this before so I did some research on how to implement a search bar. I decided upon using filters on the client side. This allowed me to filter all the objects displayed to the client and only show the ones that had a title with the search string somewhere in it. After completing this I also integrated filtering through tech tags. In the same search box you can type a tech such as \"python\" or \"MongoDB\" and see all the projects that contain this tech. To do this I added onto my filter. I had the filter to check that the project name contained the search string or one of the tech's in each project contained the search string. With these changes you can now find projects by name or by what technology they are using. I hope everyone enjoys the new feature.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55f31df2dacfb1eb7f49d4f2",
+      "name":"Nicholas Koulopoulos",
+      "email":"nickkoul13@gmail.com",
+      "__v":19,
+      "createdAt":"2016-05-06T16:16:01.355Z",
+      "updatedAt":"2016-05-06T16:16:01.355Z",
+      "github":{
+        "login":"nickkoul",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/c0edb6bc15bec821f275970a76b42a93?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-03T22:31:17.135Z"
+  },
+  {
+    "_id":"5660fa924bd5283e023af70f",
+    "title":"Footer Control",
+    "content":"So, now on Observatory there should footers on every page. One of the features that was missing from the Observatory site was that there was not a footer on every page. To solve this problem, I had to add a new client component, a footer. This component simply had the HTML of the original footer. With this, it was very easy to apply footers to every page since this meant just adding the component to every page. The footer consists of the name of the website (Observatory), a link to the GitHub, and a link back to the main Observatory page. Another small feature that was added was the donate link which is now on the main page.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e60740b997149c20e59afd",
+      "name":"Varun Rao",
+      "email":"raov3@rpi.edu",
+      "__v":24,
+      "bio":"undefined",
+      "createdAt":"2016-09-06T20:52:48.974Z",
+      "updatedAt":"2018-02-07T00:11:37.870Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"vkr96",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+        "Python",
+        "C++"
+      ],
+      "role":"mentor",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/ed5b3b87e2bda189018c473dfc14cb82?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-04T02:29:42.117Z"
+  },
+  {
+    "_id":"566109644bd5283e023af710",
+    "title":"Fixing bugs",
+    "content":"Outside of working on features, I've been fixing a few bugs around Observatory. These include fixing the blog, some style modifications, and some backend fixes. \n\nFor for those of you who need to use Observatory as part of RCOS: please don't be afraid to report bugs by making issues on Github. Sometimes critical bugs don't get discovered by people working on Observatory until after they've been live for quite some time. Issues and bug reports really help us and are always appreciated. Fixing them also helps me get better at using Angular and Express/Node. :P\n\nAdditionally, if you want to make pull requests please go ahead.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e9f8fedacfb1eb7f49d4b5",
+      "name":"Zaran Lalvani",
+      "email":"lalvaz@rpi.edu",
+      "__v":28,
+      "smallgroup":"56ba5e8cd619811b2dae80e8",
+      "createdAt":"2016-09-13T21:31:14.487Z",
+      "updatedAt":"2017-07-27T03:33:47.722Z",
+      "github":{
+        "login":"zlalvani",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "56bd85e5f168cc3448b29f14",
+        "57d8708ed08eb76d6fd9d73e"
+      ],
+      "tech":[
+
+      ],
+      "role":"mentor",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/bf831d619d8de5eda9a736381d228f15?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-04T03:33:02.046Z"
+  },
+  {
+    "_id":"5661c3f94bd5283e023af71d",
+    "title":"Overall Design",
+    "content":"One problem that is sometimes overlooked when implementing new features is the visual design and layout for the user. It is something that I am still working on focusing on when I implement new features. One thing people can do to help Observatory is not only create issues for features that need to be implemented or fixed. They should also add issues for UI changes, and other design changes. We want Observatory to be easy to use and design improvements can help us reach this goal.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55f31df2dacfb1eb7f49d4f2",
+      "name":"Nicholas Koulopoulos",
+      "email":"nickkoul13@gmail.com",
+      "__v":19,
+      "createdAt":"2016-05-06T16:16:01.355Z",
+      "updatedAt":"2016-05-06T16:16:01.355Z",
+      "github":{
+        "login":"nickkoul",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/c0edb6bc15bec821f275970a76b42a93?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-04T16:48:57.566Z"
+  },
+  {
+    "_id":"56624bd54bd5283e023af74d",
+    "title":"Observatory Ending Notes",
+    "content":"Over the past semester, we added some pretty key features to Observatory, which are the following: \n\n1. A functional small-group system\n2. Ability to mark a project as a default project, letting mentors choose good projects for beginner RCOS members \n3. Numerous editable features on user profile \n4. Ability to search through the available projects \n5. Added Project Tech Tags \n6. Multiple Repository Support \n7. Attendance Support \n8. Added HTTPS protocol\n\nThese were some of the major changes to Observatory, however, there were other numerous smaller bug fixes as well as feature changes. Many of these changes have simply not been deployed yet on the main site. In terms of features we hope to add to the main site, we hope to add more functionality to the small-group feature and maybe even adding the ability to view the project presentation schedule on the rcos main site. \n\nOverall working on this project has been awesome! I have learned so much from this project. Specifically I learned a lot about the MEAN stack, git, and how to work in an opens source project. \n\nIf anybody has any issue with Observatory please post your issues on our github: https://github.com/rcos/Observatory3 \nSee you next semester!",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e60740b997149c20e59afd",
+      "name":"Varun Rao",
+      "email":"raov3@rpi.edu",
+      "__v":24,
+      "bio":"undefined",
+      "createdAt":"2016-09-06T20:52:48.974Z",
+      "updatedAt":"2018-02-07T00:11:37.870Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"vkr96",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+        "Python",
+        "C++"
+      ],
+      "role":"mentor",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/ed5b3b87e2bda189018c473dfc14cb82?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-05T02:28:42.484Z"
+  },
+  {
+    "_id":"56674dfd4bd5283e023af775",
+    "title":"Notes on issues",
+    "content":"As I was browsing for issues I was quite surprised to see one that looked just like the one I finished. While its better to get more than fewer, we do need to check that the issue isn't a repeat before we start coding.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e60646b997149c20e59afa",
+      "name":"Alexander",
+      "email":"alexanderslanski@sbcglobal.net",
+      "__v":17,
+      "bio":"undefined",
+      "github":{
+        "login":"istyatur",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/028c52a631fd216a1c6b542b26331ea4?d=identicon"
+    },
+    "__v":0,
+    "date":"2015-12-08T21:39:09.183Z"
+  },
+  {
+    "_id":"56df564f8a97e21f2212952a",
+    "title":"User Interface Changes",
+    "content":"Recently I have been working on change involving the look and feel of the website. This has included, but is not limited to the small group, project and attendance pages.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5654aa164bd5283e023af6c1",
+      "name":"Cole Baxter",
+      "email":"baxtec2@rpi.edu",
+      "__v":19,
+      "bio":"I am typing a bio",
+      "createdAt":"2016-09-06T20:52:40.291Z",
+      "updatedAt":"2017-07-27T03:33:47.935Z",
+      "smallgroup":"57d85be52c22bf496e8c4368",
+      "github":{
+        "login":"gitcole",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "5654a9aa4bd5283e023af6bf",
+        "55e5a093c47024f712047b06",
+        "588cfe03903dd0ed366a9171"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/ced06dd0a1acb34d682a84f2d28ec6fe?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-03-08T22:46:39.421Z"
+  },
+  {
+    "_id":"572b5c837f63f991054fec5b",
+    "updatedAt":"2016-05-05T14:45:23.277Z",
+    "createdAt":"2016-05-05T14:45:23.277Z",
+    "content":"I'm finally getting around to doing blog posts, so expect a blog post for each task of the semester, all done in one day.\n\nThis semester was my first semester with both Observatory and RCOS, so this meant that I had to get more familiarized with both github and the technologies used in Observatory.\n\nTo get started, I was assigned a couple easy issues, such as adding a view all button to the developers page. The developers page was originally sorted by pages, but I added a view all button that allows an Observatory user to view all developers on one page. The button switches between view all and view less, depending on which mode viewing is in. Overall, it was a pretty simple update but it helped me to understand how Observatory's structure works.",
+    "title":"My introduction to Observatory",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5654ab8d4bd5283e023af6c4",
+      "name":"Brian",
+      "email":"kovacb@rpi.edu",
+      "__v":19,
+      "createdAt":"2016-09-06T20:52:30.830Z",
+      "updatedAt":"2016-09-06T20:52:30.830Z",
+      "github":{
+        "login":"bkovacik",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "5654ab494bd5283e023af6c3",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/4c9bc27214f86bdfdab1cf0d0b1dfc52?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-05-05T14:45:23.275Z"
+  },
+  {
+    "_id":"572b62bd7f63f991054fec5d",
+    "updatedAt":"2016-05-05T15:11:57.425Z",
+    "createdAt":"2016-05-05T15:11:57.425Z",
+    "title":"Fun with modals",
+    "content":"The next large task I tackled was adding a modal to the project page. Originally, the project page was littered with stopgap buttons, with one button for each action.\n\nA lot of users were complaining about not being able to edit their project page, like when their website had changed or they had created the project with an error or typo. Adding additional actions would clutter up the page more, and what the project page ultimately needed was a modal where an Observatory user could edit any field he or she wished.\n\nI copy and pasted the preexisting modal from the add projects area, but was informed that the modal should probably be extended to a separate component so that the same one can be used in both places. I was able to do so, but the edit modal needed to be populated when used so that the user would not have to fill out all the already-filled fields out again. I needed Aaron's help here. In the process of adding this population, some strange form nesting occurred, which Aaron also fixed.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5654ab8d4bd5283e023af6c4",
+      "name":"Brian",
+      "email":"kovacb@rpi.edu",
+      "__v":19,
+      "createdAt":"2016-09-06T20:52:30.830Z",
+      "updatedAt":"2016-09-06T20:52:30.830Z",
+      "github":{
+        "login":"bkovacik",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "5654ab494bd5283e023af6c3",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/4c9bc27214f86bdfdab1cf0d0b1dfc52?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-05-05T15:11:57.424Z"
+  },
+  {
+    "_id":"572b6aed7f63f991054fec5e",
+    "updatedAt":"2016-05-05T15:46:53.591Z",
+    "createdAt":"2016-05-05T15:46:53.591Z",
+    "content":"I fixed a couple small issues, like adding the large groups link to the homepage and fixing the view all button, which in the couple months since its addition had become bugged.\n\nMy last big feature of the semester will be the sorted blog posts. On some long-standing projects, there are many blog posts, which can make it difficult to scroll through and find particular blog posts. I added a semester selector so that Observatory users can either view all blog posts, or select a particular semester's worth of blog posts to view.\n\nThe difficult part of implementing the sorting was not the actual sorting, but rather finding the actual syntax to make it work. The example in the javascript documentation was for strict by-word filtering, which is not what I wanted, so I had to tinker and search until I found a Slack Overflow post which had the syntax of the custom filtering.\n\nI need to make sure that my implementation works correctly with past semesters, so I am currently trying to modify the blog seed files to allow me to test past semester functionality.",
+    "title":"Sorting blog posts",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5654ab8d4bd5283e023af6c4",
+      "name":"Brian",
+      "email":"kovacb@rpi.edu",
+      "__v":19,
+      "createdAt":"2016-09-06T20:52:30.830Z",
+      "updatedAt":"2016-09-06T20:52:30.830Z",
+      "github":{
+        "login":"bkovacik",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "5654ab494bd5283e023af6c3",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/4c9bc27214f86bdfdab1cf0d0b1dfc52?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-05-05T15:46:53.589Z"
+  },
+  {
+    "_id":"57d6e3740cf0c6083055a85b",
+    "updatedAt":"2016-09-12T17:18:44.952Z",
+    "createdAt":"2016-09-12T17:18:44.952Z",
+    "title":"Fall 2016 Project Proposal",
+    "content":"https://paper.dropbox.com/doc/Observatory-Project-Proposal-vvGAKuujKKgODGMG8VI1Y",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55f790d0152081d8678c5b42",
+      "name":"Kiana McNellis",
+      "email":"kmcnellis@me.com",
+      "__v":114,
+      "createdAt":"2016-04-26T18:56:00.708Z",
+      "updatedAt":"2017-07-27T03:34:01.544Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"kmcnellis",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+
+      ],
+      "role":"admin",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/9f32ebb693bd5c5b816f8852a7854ce7?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-09-12T17:18:44.950Z"
+  },
+  {
+    "_id":"581b900d3da7a8fb1c305f74",
+    "updatedAt":"2016-11-03T19:29:17.366Z",
+    "createdAt":"2016-11-03T19:29:17.366Z",
+    "title":"Writing Tests",
+    "content":"Over the past couple weeks I have been writing tests to make sure that our achievement and project endpoints work correctly. Writing tests is very important to making sure that nothing unexpected breaks after making a big change. Without tests, one could run into the embarrassing situation where the user finds site-breaking bugs that you didn't know existed. For the next couple weeks I will keep writing tests. Our goal is to get 75% test coverage for all our endpoints, so, we still have a long way to go!",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e60740b997149c20e59afd",
+      "name":"Varun Rao",
+      "email":"raov3@rpi.edu",
+      "__v":24,
+      "bio":"undefined",
+      "createdAt":"2016-09-06T20:52:48.974Z",
+      "updatedAt":"2018-02-07T00:11:37.870Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"vkr96",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+        "Python",
+        "C++"
+      ],
+      "role":"mentor",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/ed5b3b87e2bda189018c473dfc14cb82?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-11-03T19:29:17.361Z"
+  },
+  {
+    "_id":"581baeac3da7a8fb1c305f75",
+    "updatedAt":"2016-11-03T21:39:56.272Z",
+    "createdAt":"2016-11-03T21:39:56.272Z",
+    "title":"Progress Update: Github Integration",
+    "content":"Over the past few weeks I've been working on implementing github integration. More specifically, I've been working on implementing getting commits for an RCOS project and storing them in our database. This provides us with data which we can use in many different ways. One example would be monitoring how active a project is (or isn't). It will also make it much easier for mentors to know the status for the projects that they are mentoring. \n\nCommit integration is only the first step. Within the next few weeks I am also planning to integrate more activity based aspects of github, such as issues, pull requests, etc...",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57c5ece57f63f991054fed41",
+      "updatedAt":"2017-07-27T03:33:48.307Z",
+      "createdAt":"2016-08-30T20:30:29.617Z",
+      "name":"Michael Zemsky",
+      "email":"zmike808@gmail.com",
+      "__v":4,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"zmike808",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/65649a869a64b58c6bbb0c1a967ad298?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-11-03T21:39:56.271Z"
+  },
+  {
+    "_id":"582223cdde8ccfb3149b2179",
+    "updatedAt":"2016-11-08T19:13:17.539Z",
+    "createdAt":"2016-11-08T19:13:17.539Z",
+    "title":"Attendance",
+    "content":"Turns out that a system written by several people, over several semesters, often in a rush to fix something, creates a rather piecemeal system with many small holes. Over the past couple of weeks I've been trying to find and fix the most prominent of issues (for instance, if you submitted a bonus code, it gave a regular attendance  instead). Unfortunately, I think the biggest issue is one that needs a pretty major refactor - much of the code is spaghetti-like, with multiple front-end pages and back-end apis duplicating the same functionality for different purposes. Starting to segment that code better greatly helps use ability and future developers, but unfortunately it will hamper current ones that are trying to add functionality and running into merge conflicts.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55f790d0152081d8678c5b42",
+      "name":"Kiana McNellis",
+      "email":"kmcnellis@me.com",
+      "__v":114,
+      "createdAt":"2016-04-26T18:56:00.708Z",
+      "updatedAt":"2017-07-27T03:34:01.544Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"kmcnellis",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+
+      ],
+      "role":"admin",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/9f32ebb693bd5c5b816f8852a7854ce7?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-11-08T19:13:17.533Z"
+  },
+  {
+    "_id":"58224812de8ccfb3149b219e",
+    "updatedAt":"2016-11-08T21:48:02.785Z",
+    "createdAt":"2016-11-08T21:48:02.785Z",
+    "title":"Seed Files",
+    "content":"Over the past week I added a PR which added achievement seed files to our local website. However, I had only added one seed file which was a simple description. I did not test all possible cases for achievements. When mentors were reviewing my PR this was something they noted, and, I added three new local seed files. One which had a picture embedded in it, another which had a picture with a multi-line description, and one with just a mult-line description. The PR is not complete yet because I have forgot to add the title characteristic to the the achievements; this should get done by today since it is a very easy fix.  I would not have a caught it if a mentor had not peer-reviewed my PR. Thanks Kiana!",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e60740b997149c20e59afd",
+      "name":"Varun Rao",
+      "email":"raov3@rpi.edu",
+      "__v":24,
+      "bio":"undefined",
+      "createdAt":"2016-09-06T20:52:48.974Z",
+      "updatedAt":"2018-02-07T00:11:37.870Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"vkr96",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+        "Python",
+        "C++"
+      ],
+      "role":"mentor",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/ed5b3b87e2bda189018c473dfc14cb82?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-11-08T21:48:02.784Z"
+  },
+  {
+    "_id":"58224863de8ccfb3149b21a0",
+    "updatedAt":"2016-11-08T21:49:23.687Z",
+    "createdAt":"2016-11-08T21:49:23.687Z",
+    "title":"Additional Repositories",
+    "content":"As a developer new to web technologies, I’m very excited to be given the opportunity to expand my skill set and broaden my horizons in that area. In my latest achievement, I’ve implemented functionality to add multiple repositories URLs to project profiles with validation on the back and front end. Since, I wasn’t familiar with server side, it took some guidance from mentors to figure out that the backend was not updating the data correctly. After fixing this, clicking the add and remove buttons started to work. I then implemented validation to make sure the additional repositories could not be submitted if they were not complete URLs. Finally, I refactored the existing code into a custom directive. This actually wasn’t too hard, but it took me a while to figure out the element tag should be named after the directive name, not the html file! I’m really excited to see this functionality deployed for everyone.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57c616e47f63f991054fed46",
+      "updatedAt":"2017-09-19T20:17:15.728Z",
+      "createdAt":"2016-08-30T23:29:40.760Z",
+      "name":"Jessa Marie Barré",
+      "email":"barrej4@rpi.edu",
+      "__v":2,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"jessamarie",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "javascript",
+        "react",
+        "angularjs",
+        "css3",
+        "html5",
+        "ruby",
+        "ruby on rails",
+        "express",
+        "node.js",
+        "mongoDB"
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/a502e5496d57ca471f6e01679ce45013?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-11-08T21:49:23.686Z"
+  },
+  {
+    "_id":"58225185de8ccfb3149b21e8",
+    "updatedAt":"2016-11-08T22:28:21.994Z",
+    "createdAt":"2016-11-08T22:28:21.994Z",
+    "title":"Deep copy in AngularJS",
+    "content":"I was trying to get the smallgroup's coloring blocks to change color for different days. I got so close to make it work. I found a way to change the isPresent value for everyone corresponding to the day. But I couldn't change it back to the original value. I tried \"_.clone() and Angular.Copy() \". None of them was able to deep copy the entire object recursively and completely (the user.attendance field was still link to the original user object, i.e. if you make change to the original object the clone copy would also gets the change). So not really a deep copy. I was pretty bummed about it. it looks pretty cool when it works, but if there isn't a less expensive or viable option to implement it, I might drop it.\n\n\"#1st post",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da47c5ab89e6eedca59",
+      "updatedAt":"2018-01-30T21:50:38.800Z",
+      "createdAt":"2016-09-13T20:12:20.812Z",
+      "name":"Jia Yong Zeng",
+      "email":"nomyemail@fakemail.com",
+      "__v":20,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"1010",
+      "github":{
+        "login":"yongabyte",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "5a70e00025c2e932e9841e8d"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/b9108328a472fa5c9fd2610ead38bf1e?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-11-08T22:28:21.993Z"
+  },
+  {
+    "_id":"582b66f2d21ca1d30c228cf8",
+    "updatedAt":"2016-11-15T19:50:10.652Z",
+    "createdAt":"2016-11-15T19:50:10.652Z",
+    "title":"Onboarding New Developers",
+    "content":"As the semester continues it is awesome to see all the developers on Observatory contribute. Often Observatory had only one or two developers working a lot with minor fixes from others. This semester after getting developers on-boarded with increasingly challenging issues we have a strong team. For future semesters I definitely think that students should work hard to have new developers on-boarding gradually scale up with code reviews and pair programming.\n\nOther things helping new developers this semester is improving code quality and more tests. Observatory has taken some time to step back and refine older features as well as rewrite and create tests for components. I think this is an important step to enable the future success of the project.\n\nAlways looking to improve the developer productivity and experience I would love to hear what went well and what needs improvement for future semesters.\n\nThanks,\nAaron",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e5a06cc47024f712047b05",
+      "name":"Aaron Gunderson",
+      "email":"aaron@agundy.com",
+      "__v":33,
+      "bio":"Full stack developer. I enjoy building powerful web applications. Find me @ [www.agundy.com](https://www.agundy.com)",
+      "createdAt":"2016-04-22T16:41:10.922Z",
+      "updatedAt":"2018-04-07T18:07:11.833Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"agundy",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "Python",
+        "Javascript",
+        "Go",
+        "HTML/CSS",
+        "Mongodb",
+        "Ruby"
+      ],
+      "role":"admin",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/15a2993f9c35d3a7194bf1d362548e1c?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-11-15T19:50:10.651Z"
+  },
+  {
+    "_id":"582b999580017a9a15d09209",
+    "updatedAt":"2016-11-15T23:26:13.286Z",
+    "createdAt":"2016-11-15T23:26:13.286Z",
+    "title":"Github API Wrapper Woes",
+    "content":"After finishing a basic implementation for getting commits from github, I ran into some blocks. We wanted to add more functionality to control what commits we get for a project, like commits since date x, or commits before date y. The github API supports this, and so do many wrappers, including the one I had been using. However, the wrapper which I am using supports this in a very impractical (and undocumented) way. Despite being listed by github as one of the recommended API wrappers for javascript. \n\nSo, long story short, it looks like I will have to switch to a different (and more user friendly) github API wrapper. Thankfully, it should only require a minor amount of refactoring.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57c5ece57f63f991054fed41",
+      "updatedAt":"2017-07-27T03:33:48.307Z",
+      "createdAt":"2016-08-30T20:30:29.617Z",
+      "name":"Michael Zemsky",
+      "email":"zmike808@gmail.com",
+      "__v":4,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"zmike808",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/65649a869a64b58c6bbb0c1a967ad298?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-11-15T23:26:13.285Z"
+  },
+  {
+    "_id":"584b25585c9cdc317996a94b",
+    "updatedAt":"2016-12-09T21:43:43.782Z",
+    "createdAt":"2016-12-09T21:42:48.646Z",
+    "title":"Progress Update 12/9: Github Integration - The Final Stretch!",
+    "content":"In my last blog post, I talked (complained) about the issues I was having with the github API. Thankfully, I have resolved all those issues, and it was actually much less tidious than I expected. In fact, due to the switch I was able to refactor my github code to make it much less bloated and more streamline. \n\nNow, for my progress update. Currently I have a hardcoded P.O.C working perfectly. All that is left is for me to integrate my github code into our REST api. Now, that's where I've been having issues. I am very familiar with Observatory's server archicture, REST API, MVC design, etc... However, what I am not familiar with is javascript. While I have been learning and improving my javascript skills throughout this semester, it has been a slow and bumpy ride. What I mean by that, is if I was attempting to do all of this in python, I probably would have been done weeks ago. Thankfully, I'm almost done, all I need to do is spend a few more hours googling, tinkering and debugging. So, I will definitely be done before the end of the semester!",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57c5ece57f63f991054fed41",
+      "updatedAt":"2017-07-27T03:33:48.307Z",
+      "createdAt":"2016-08-30T20:30:29.617Z",
+      "name":"Michael Zemsky",
+      "email":"zmike808@gmail.com",
+      "__v":4,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"zmike808",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/65649a869a64b58c6bbb0c1a967ad298?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-12-09T21:42:48.645Z"
+  },
+  {
+    "_id":"584b6e485c9cdc317996a997",
+    "updatedAt":"2016-12-10T02:54:00.524Z",
+    "createdAt":"2016-12-10T02:54:00.524Z",
+    "title":"The World of Web Development",
+    "content":"I joined Observatory this semester with limited knowledge of just HTML and CSS. I've had a great experience learning about new frameworks and technologies like AngularJS, Bootstrap, and Grunt. At first, I was a bit nervous that I wouldn't be able to contribute much, but everyone was very helpful with any questions I had (thank you, mentors!). I think the biggest accomplishment I made this semester was either adding functionality to add additional repositories to projects, or maybe adding the user pages to browser history (to help with user experience). Next semester, I want to work a little more on the back end and perhaps learn how to make tests.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57c616e47f63f991054fed46",
+      "updatedAt":"2017-09-19T20:17:15.728Z",
+      "createdAt":"2016-08-30T23:29:40.760Z",
+      "name":"Jessa Marie Barré",
+      "email":"barrej4@rpi.edu",
+      "__v":2,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"jessamarie",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "javascript",
+        "react",
+        "angularjs",
+        "css3",
+        "html5",
+        "ruby",
+        "ruby on rails",
+        "express",
+        "node.js",
+        "mongoDB"
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/a502e5496d57ca471f6e01679ce45013?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-12-10T02:54:00.523Z"
+  },
+  {
+    "_id":"584c931c5c9cdc317996a99b",
+    "updatedAt":"2017-03-04T07:48:22.840Z",
+    "createdAt":"2016-12-10T23:43:24.492Z",
+    "title":"The Attendance Submission Bug",
+    "content":"Last week, I (well, I and the rest of the internet) fixed the attendance submission bug which would call the attendance api countless times if the user wouldn't stop pressing Enter. Thanks to Angular's awesome two-way data binding and dirty-checking, I was able to get it fixed within 3 lines. No need to hand write two listeners (model to view, view to model) which could be quite a bit of work. \nVery nice, AngularJs. :)",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da47c5ab89e6eedca59",
+      "updatedAt":"2018-01-30T21:50:38.800Z",
+      "createdAt":"2016-09-13T20:12:20.812Z",
+      "name":"Jia Yong Zeng",
+      "email":"nomyemail@fakemail.com",
+      "__v":20,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"1010",
+      "github":{
+        "login":"yongabyte",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "5a70e00025c2e932e9841e8d"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/b9108328a472fa5c9fd2610ead38bf1e?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-12-10T23:43:24.491Z"
+  },
+  {
+    "_id":"584fa1f35c9cdc317996a99e",
+    "updatedAt":"2016-12-13T07:23:43.085Z",
+    "createdAt":"2016-12-13T07:23:31.897Z",
+    "title":"End of Semester Wrap Up",
+    "content":"Wow, my third semester at RCOS is already over. This semester I focused on writing tests and didn't really work on adding new features to Observatory. I wrote tests for all achievement endpoints and wrote tests for project endpoints. Last week I wrote a test for an attendance endpoint. I also had to update the seed files for the achievements on our test page since those were not up yet. It's been an educational experience this semester, since I have learned just how time consuming it can be to write tests for a software project. Next semester I would like to write more tests as well as fix more back-end related issues.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55e60740b997149c20e59afd",
+      "name":"Varun Rao",
+      "email":"raov3@rpi.edu",
+      "__v":24,
+      "bio":"undefined",
+      "createdAt":"2016-09-06T20:52:48.974Z",
+      "updatedAt":"2018-02-07T00:11:37.870Z",
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"vkr96",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "569347a34bd5283e023af787"
+      ],
+      "tech":[
+        "Python",
+        "C++"
+      ],
+      "role":"mentor",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/ed5b3b87e2bda189018c473dfc14cb82?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-12-13T07:23:31.895Z"
+  },
+  {
+    "_id":"585007eb5c9cdc317996a9a0",
+    "updatedAt":"2016-12-13T23:00:00.795Z",
+    "createdAt":"2016-12-13T14:38:35.677Z",
+    "title":"Observatory is huge",
+    "content":"This is my first semester at RCOS as well as on Observatory. I met a lot of awesome people; ate yummy ice cream cake, learned new things, 10/10 would do again. web development is harder that I expected and the codebase of Observatory is huge but well-organized. I don't think I even read 1/2 of the codebase. There's so much to learn: I just figured out what's a callback and I'm still not sure how auth.service works. I very enjoyed my time on the project. As of next year, I kind of want to do something with Michael's github data, perhaps some sort of data visualization page.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da47c5ab89e6eedca59",
+      "updatedAt":"2018-01-30T21:50:38.800Z",
+      "createdAt":"2016-09-13T20:12:20.812Z",
+      "name":"Jia Yong Zeng",
+      "email":"nomyemail@fakemail.com",
+      "__v":20,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"1010",
+      "github":{
+        "login":"yongabyte",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "5a70e00025c2e932e9841e8d"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/b9108328a472fa5c9fd2610ead38bf1e?d=identicon"
+    },
+    "__v":0,
+    "date":"2016-12-13T14:38:35.675Z"
+  },
+  {
+    "_id":"58dd68e47605342fc62717b7",
+    "updatedAt":"2017-03-30T20:21:56.379Z",
+    "createdAt":"2017-03-30T20:21:56.379Z",
+    "title":"Project creation input validation",
+    "content":"####Background\nBefore my most recent contribution, I had been working on Github integration, but due to how little time I have had this semester to dedicate to the project, I have since taken a break from that feature and moved on to less complicated ones. A while ago, a user found a bug when creating a project: inputting a string with a forward slash into either of the URL fields when creating the project breaks our database.\n####Contribution\nI have created a system for validating input into those fields. I have learned about custom validators in AngularJS (you need to create a new directive in which you set the validity of the input field) and learned about validation in schemas in mongoose (you simply need to call Schema.path().validate(function) in the API model where the function returns true or false).",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"55f86819152081d8678c5b43",
+      "name":"Jacob Fucci",
+      "email":"fuccij@rpi.edu",
+      "__v":29,
+      "bio":"",
+      "createdAt":"2016-09-06T20:38:37.858Z",
+      "updatedAt":"2017-07-27T03:33:49.835Z",
+      "smallgroup":"57d85be52c22bf496e8c4368",
+      "github":{
+        "login":"jfucci",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "Javascript",
+        "HTML",
+        "C++",
+        "Python"
+      ],
+      "role":"admin",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/eaa29400553295eb60e640c1d5b2564b?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-03-30T20:21:56.375Z"
+  },
+  {
+    "_id":"58dffdd57605342fc627180f",
+    "updatedAt":"2017-04-01T19:21:57.103Z",
+    "createdAt":"2017-04-01T19:21:57.103Z",
+    "title":"What I Expect to Learn from Observatory This Year",
+    "content":"Observatory is a huge project. Before I can even start working on it, I need to read through most of its code and understand how codebase works. For instance, I need to know how saving to database should be implemented, and see if we have a public function or api that handles all database calls in order to prevent me writing duplicated code. On the other hand, I also need to know what builds up the observatory. Such as the technology used, including nodejs and angularjs. \n\nSo when I started working on this project earlier this year, I mostly dedicated on learning the project and fixing small bugs. But there are definitely more that I can work on.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da07c5ab89e6eedca58",
+      "updatedAt":"2017-07-27T03:33:48.572Z",
+      "createdAt":"2016-09-13T20:12:16.819Z",
+      "name":"Yitong Wu",
+      "email":"wuy13@rpi.edu",
+      "__v":12,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"Usagi",
+      "github":{
+        "login":"connection-lost",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55ef410edacfb1eb7f49d4d7",
+        "5818bcfbae5659ae7d0fd0ba",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "Java",
+        "C艹",
+        "C#",
+        "Python",
+        "PHP",
+        "HTML",
+        "CSS"
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/070c0c177fd51e5250d9dcaf5737a606?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-04-01T19:21:57.098Z"
+  },
+  {
+    "_id":"58ed39a112e67311690629c6",
+    "updatedAt":"2017-04-11T20:16:33.930Z",
+    "createdAt":"2017-04-11T20:16:33.930Z",
+    "title":"\"Remember Me\" Feature",
+    "content":"Remember me feature sounds simple, a small checkbox at user login form. By checking the checkbox, user's browser will remember the session and keep user logged in. Technically, it let the browser save a long term cookie and log in automatically next time user connect to the website.\n\nThe implementation is designed as follows:\n\n1. There is a remember me checkbox in the login section, that sends a boolean to server to identify whether the user want server to remember him.\n2. If server see the checkbox is set to true, it will generate a refresh token for the server and ask user to save both the token and his user id as a cookie. The expire time is 3 months (for now) and configurable.\n3. The server will save the refresh token under each user. It will be saved in a list. Each list item contains the token and the expire date. The maximum token a user can have is 5 (for now) and configurable. Oldest token will be invalidated if more than 5 tokens are generated.\nIt is possible to save some other secret information along with the token, such as user agent information.\n4. Upon user visit the website, not logged in but has a refresh token with user ID, the website will try to validate the token. If the token is valid, then log him in. Move the token to another list \"used tokens\" (optional), then issue a new refresh token and ask user to overwrite the old token.\n5. If we save used tokens from step 4, we will also check token whether it is used or not. In case a used token is used again, invalidate all active tokens from the user and leave some warning for us to check later.\n6. Changing the password will remove all active refresh tokens.\n7. Clicking logout in the browser will invalidate current user's refresh token and remove it from user's cookie (if applicable).\n\nThe challenges:\n\n1. Implementing the feature requires a lot of AngularJS knowledge. \n2. My code should be consistent with the existing code. Which means I need to use the same way of sending cookies, saving data, etc..",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da07c5ab89e6eedca58",
+      "updatedAt":"2017-07-27T03:33:48.572Z",
+      "createdAt":"2016-09-13T20:12:16.819Z",
+      "name":"Yitong Wu",
+      "email":"wuy13@rpi.edu",
+      "__v":12,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"Usagi",
+      "github":{
+        "login":"connection-lost",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55ef410edacfb1eb7f49d4d7",
+        "5818bcfbae5659ae7d0fd0ba",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "Java",
+        "C艹",
+        "C#",
+        "Python",
+        "PHP",
+        "HTML",
+        "CSS"
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/070c0c177fd51e5250d9dcaf5737a606?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-04-11T20:16:33.920Z"
+  },
+  {
+    "_id":"58ffaef3bf02087901b16a81",
+    "updatedAt":"2017-04-25T20:37:00.607Z",
+    "createdAt":"2017-04-25T20:17:55.950Z",
+    "title":"What I did",
+    "content":"I adjusted the layout of the blog page. added a shortcut panel to allow user jump to posts of different semesters. Then I refactored and unified the tag code on different pages and created a tag directive and added tag into blog posts.\n\nFuture work: make tags searchable on the entire observatory.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da47c5ab89e6eedca59",
+      "updatedAt":"2018-01-30T21:50:38.800Z",
+      "createdAt":"2016-09-13T20:12:20.812Z",
+      "name":"Jia Yong Zeng",
+      "email":"nomyemail@fakemail.com",
+      "__v":20,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"1010",
+      "github":{
+        "login":"yongabyte",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "5a70e00025c2e932e9841e8d"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/b9108328a472fa5c9fd2610ead38bf1e?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-04-25T20:17:55.946Z"
+  },
+  {
+    "_id":"58ffaf03bf02087901b16a82",
+    "updatedAt":"2017-04-25T21:01:09.032Z",
+    "createdAt":"2017-04-25T20:18:11.125Z",
+    "title":"What I am doing",
+    "content":"I am working on improving the attendance component on the admin/user page. The PR should be up in the next few day.  Admin will be able to check on each student's attendance record on the attendance calendar and add/remove attendance as they wish. As Kiana graduating, we might need to focus on minimizing direct manipulation over the database by observatory developer.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da47c5ab89e6eedca59",
+      "updatedAt":"2018-01-30T21:50:38.800Z",
+      "createdAt":"2016-09-13T20:12:20.812Z",
+      "name":"Jia Yong Zeng",
+      "email":"nomyemail@fakemail.com",
+      "__v":20,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"1010",
+      "github":{
+        "login":"yongabyte",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "5a70e00025c2e932e9841e8d"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/b9108328a472fa5c9fd2610ead38bf1e?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-04-25T20:18:11.123Z"
+  },
+  {
+    "_id":"58ffb5a0bf02087901b16a9e",
+    "updatedAt":"2017-04-25T20:46:24.657Z",
+    "createdAt":"2017-04-25T20:46:24.657Z",
+    "title":"API Calls inside Applications and Performance Optimization",
+    "content":"During my development with Observatory, it was critical to understand AngularJS and some existing technologies I used. Since I had a hard time turning my mind from object-oriented programming, I slowed down my implementation on Persistent Login feature and worked on some side features and bug fixes.\n\nOne job that assigned to me was to change the homepage format so that we are able to show a contact e-mail. However this simple job leads to more interesting things to discover.  \nIt is obviously a bad idea to put the e-mail on the website using plain text. This will make that e-mail address vulnerable to spam crawlers. I first tried to obfuscate the e-mail with javascript but my suggestion was rejected because of messy and confusing code, while we currently have better ways to fetch the e-mail using a REST call. Since it is expensive for crawlers to load up all javascript of the website, using this way may make the e-mail address slightly not as vulnerable compared to plain text. I have setup a new entrance of api calls called static, which will be used to serve all static information of the website. The static file will be fetched only once and all page loaded will have access to that data afterwards.  \nDuring the implementation, I have learned how to create a back-end accepting api calls. I also learned even requests inside the server may still consider using an api call in order to make both side of the code consistent and not likely to break after some method has changed.  \nI have also found a performance-impacting issue that every time the homepage is loaded, the database will do a query counting existing project. My next step is to expand the static api to include the number of projects. The number of projects will only be calculated when server starts, or a project is created/deleted.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da07c5ab89e6eedca58",
+      "updatedAt":"2017-07-27T03:33:48.572Z",
+      "createdAt":"2016-09-13T20:12:16.819Z",
+      "name":"Yitong Wu",
+      "email":"wuy13@rpi.edu",
+      "__v":12,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"Usagi",
+      "github":{
+        "login":"connection-lost",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55ef410edacfb1eb7f49d4d7",
+        "5818bcfbae5659ae7d0fd0ba",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "Java",
+        "C艹",
+        "C#",
+        "Python",
+        "PHP",
+        "HTML",
+        "CSS"
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/070c0c177fd51e5250d9dcaf5737a606?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-04-25T20:46:24.654Z"
+  },
+  {
+    "_id":"58ffb6a2bf02087901b16a9f",
+    "updatedAt":"2017-04-25T20:50:42.259Z",
+    "createdAt":"2017-04-25T20:50:42.259Z",
+    "title":"Tests, tests, tests.",
+    "content":"This semester I've been working on a few different issues for Observatory, mainly focusing on increasing our test coverage and documentation.\n\nThe goal:\n\nAdd tests for all of our current API end points (i.e. /api/users/, /api/projects/, etc...). While we are still lacking test coverage throughout our code base, API tests are the priority. Now, you may be wondering why are API tests so important? It's because they will let us know if any new code breaks any of our current API functionality. While API tests won't tell us what exactly broke and where, they will tell us if something broke. \n\nThe challenge:\n\nWriting a test case by itself does not require very difficult or complex code. However, the problem is before I can write a test for a piece of code, I need to know what that piece of code should be doing. Only once I understand what the proper functionality for a piece of code is, can I write a test case for it. In a smaller project this wouldn't big that big of a deal, but Observatory is a very large project with a gigantic code base. Combine this with the fact that I am very unfamiliar with javascript, and writing tests goes from being an easy and boring task to an extremely challenging and time consuming one. \n\nI am hoping to write as many tests as I can before the end of the semester. But, I want to make sure that they are written correctly, since having incorrect tests is the same as having no tests.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57c5ece57f63f991054fed41",
+      "updatedAt":"2017-07-27T03:33:48.307Z",
+      "createdAt":"2016-08-30T20:30:29.617Z",
+      "name":"Michael Zemsky",
+      "email":"zmike808@gmail.com",
+      "__v":4,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "github":{
+        "login":"zmike808",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/65649a869a64b58c6bbb0c1a967ad298?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-04-25T20:50:42.256Z"
+  },
+  {
+    "_id":"5907decc89ba9a12c0277079",
+    "updatedAt":"2017-05-02T01:36:35.549Z",
+    "createdAt":"2017-05-02T01:20:12.602Z",
+    "title":"End of Semester Summary and Reflection - <code>Yitong Wu</code>",
+    "content":"It is almost time for the end of this semester. Looking back on what I have done, I can say I surely learned a lot. The observatory project brings me new challenges that I have never experienced before. Here is a short summary about what I did, what I learned and what I expect to carry on.\n\n**Technology**  \nI have never touched AngularJS before I started working on the project, and I was used to expect to work on normal html/js/css. As an object-oriented programmer, AngularJs was very hard to pick up. The consistency measure is different from other programming languages. But I still went through and solved a lot of issues thanks to the help from group members (fast) and search engine (slow).  \nSome other technology I learned include basic html/css/js, Less.js, refresh token authentication, Javascript Web Token etc..\n\n**Contribution**  \nI have actively engaged in team discussion, providing ideas and update my current status. Minor contribution in code includes some bug fixes, such as [fixing broken developer sort](https://github.com/rcos/Observatory3/commit/f1690e6bc9f2fbf490c97263497c39a98d270bf4), [fix editing blog posts](https://github.com/rcos/Observatory3/commit/e12b2f1009cea1b8e615271df767bdd14b535018) etc..  \nSome other change or addition to the project includes [adding e-mail and presentation schedule button to the homepage](https://github.com/rcos/Observatory3/pull/624) but end up [adding new api end-point](https://github.com/rcos/Observatory3/pull/624#issuecomment-294648613) and also [finding a potential performance issue](https://github.com/rcos/Observatory3/issues/647).  \nThe biggest part I was doing the semester was trying to implement the [persistent login feature](https://github.com/rcos/Observatory3/issues/612) (was called \"remember me\"). The implementation is almost finished and there is only one file that needs to change but I am still [currently stuck on](https://github.com/rcos/Observatory3/issues/612#issuecomment-297161235). I will look back to this after I can get some time from finals.\n\n**Future**  \nIf I have time in the next semester, I will try to fix more issues and look into the [live attendence](https://github.com/rcos/Observatory3/issues/611) feature. \n\n**Looking back**  \nObservatory taught me a lot, mostly new technologies. Even though I have not planned to become a web developer, but the knowledge of modern API is critical in order to fit into more projects.\n\n**Others**  \n[I can use code blog in the blog post title and it is so cool.](https://github.com/rcos/Observatory3/issues/656)",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da07c5ab89e6eedca58",
+      "updatedAt":"2017-07-27T03:33:48.572Z",
+      "createdAt":"2016-09-13T20:12:16.819Z",
+      "name":"Yitong Wu",
+      "email":"wuy13@rpi.edu",
+      "__v":12,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"Usagi",
+      "github":{
+        "login":"connection-lost",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55ef410edacfb1eb7f49d4d7",
+        "5818bcfbae5659ae7d0fd0ba",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "Java",
+        "C艹",
+        "C#",
+        "Python",
+        "PHP",
+        "HTML",
+        "CSS"
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/070c0c177fd51e5250d9dcaf5737a606?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-05-02T01:20:12.600Z"
+  },
+  {
+    "_id":"590b93e189ba9a12c02770ed",
+    "updatedAt":"2017-05-04T21:01:24.273Z",
+    "createdAt":"2017-05-04T20:49:37.764Z",
+    "title":"Second Semester On Observtory",
+    "content":"**Last term** I was more focusing on small fixes while I was reading codes and learning the mechanics of the project. I am still hoping to see that the system gives a attendance code of length of 7. Making sure no duplicate codes was my biggest project of that term.\n\n**This term**  I have been building new components, creating new functionalities and making visible changes such as tag on posts, sort posts into semesters, and a more useful attendance calendar. It's been great. \n\nThanks everyone for helping me among the way.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"57d85da47c5ab89e6eedca59",
+      "updatedAt":"2018-01-30T21:50:38.800Z",
+      "createdAt":"2016-09-13T20:12:20.812Z",
+      "name":"Jia Yong Zeng",
+      "email":"nomyemail@fakemail.com",
+      "__v":20,
+      "smallgroup":"57d75ef30cf0c6083055a85c",
+      "bio":"1010",
+      "github":{
+        "login":"yongabyte",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06",
+        "5a70e00025c2e932e9841e8d"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":false,
+      "avatar":"//www.gravatar.com/avatar/b9108328a472fa5c9fd2610ead38bf1e?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-05-04T20:49:37.763Z"
+  },
+  {
+    "_id":"59cabf93d387f90562df1011",
+    "updatedAt":"2017-09-26T20:58:59.800Z",
+    "createdAt":"2017-09-26T20:58:59.800Z",
+    "title":"Get to know everything",
+    "content":"We divided into 2 groups and assigned our missions. Installed everything and trying to learn Angular.js.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59af0f7e66d2b876ea9d5af8",
+      "updatedAt":"2017-09-12T16:27:52.691Z",
+      "createdAt":"2017-09-05T20:56:30.567Z",
+      "name":"Shichen You",
+      "email":"yous2@rpi.edu",
+      "__v":2,
+      "github":{
+        "login":"exturalyon",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/af8e508beecace6e473adc9939e3e91b?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-09-26T20:58:59.799Z"
+  },
+  {
+    "_id":"59cac0e6d387f90562df1048",
+    "updatedAt":"2017-09-26T21:04:38.379Z",
+    "createdAt":"2017-09-26T21:04:38.379Z",
+    "title":"First Semester Joining Observatory",
+    "content":"So far, I have been going through the work that has been done. I have made new repo for refactoring. Starting from this week, I will be working on refactoring back end. Frankie will be working on the front end refactoring and Sajiel will be testing the new framework. Other team members will be working on a bug fix/ managing current observatory.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9c460b43309501978f332",
+      "updatedAt":"2017-09-26T20:53:09.586Z",
+      "createdAt":"2017-09-01T20:34:40.341Z",
+      "name":"Jihoo Brian Park",
+      "email":"parkj15@rpi.edu",
+      "__v":3,
+      "github":{
+        "login":"jhbp",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/802f2e75ee3b8cea30359020005575f9?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-09-26T21:04:38.379Z"
+  },
+  {
+    "_id":"59cac45bd387f90562df1061",
+    "updatedAt":"2017-10-30T22:11:12.198Z",
+    "createdAt":"2017-09-26T21:19:23.503Z",
+    "title":"What I have learned in the first 3 weeks",
+    "content":"My experience at RCOS has been more educational than a full semester in most classes. Our project mentor referred newcomers to an awesome course on CodeSchool to learn AngularJS. He also shared some JavaScript resources to understand higher-level processes such as the popular \"Event-loop\" used in delay functions to prevent code blockage.\n\nOur whole team learned a ton about the existing Observatory workspace after getting the environment set up. We also read about much of the existing bugs and the most important features that should be added--namely expanding the website beyond RCOS by making features optional.\n\nI was very intimidated when I first discussed our project proposal but the two small project meetings we had make it seem far more approachable. \n\nLooking forward to working on such a frequently used website to make it higher-tech!!",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9cd8db43309501978f3bb",
+      "updatedAt":"2017-10-31T03:10:33.979Z",
+      "createdAt":"2017-09-01T21:13:49.097Z",
+      "name":"Francis Guzikowski",
+      "email":"guzikf@rpi.edu",
+      "__v":5,
+      "github":{
+        "login":"frankie-guz",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "588bc04d903dd0ed366a9124",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/700f32ebc026c444749766a4d19b4fd1?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-09-26T21:19:23.502Z"
+  },
+  {
+    "_id":"59f7e9fc01ac6f2598e87112",
+    "updatedAt":"2017-10-31T03:11:56.339Z",
+    "createdAt":"2017-10-31T03:11:56.339Z",
+    "content":"During the weeks that our team was not making commits, I was spending many hours re-learning the basics of JavaScript through CodeCademy. This is a 35-hour course so I had to be very deliberate with selecting which lessons were worthwhile. CodeCademy is a very introductory-level learning website so I skipped over the first two-thirds of the content. This included Control Flow, Functions, Scope, Arrays, Loops, and Iterators. I found the end of the course useful because I had a working knowledge of Objects and Classes from Java but wanted to make sure JavaScript did not have different syntax. The final units covered completely unseen content for me (Browser Compatibility & Transpilation, Modules, and Requests). These lessons were very useful because they are relevant for Observatory when organizing the code structure and requesting user input.\n\nNext, as per Aaron’s suggestion I worked through the 5-6 hour course, Shaping Up with AngularJS, by CodeSchool. This was sort of a pre-requisite to understanding the working Observatory website As a new web developer I had never heard of directives, controllers, or services. The introductory AngularJS course teaching Angular 1.2.x consisted of 5 units, creating a basic responsive website, built-in directives, forms, custom directives, and finally services. After completing this course, I was able to understand the logic behind example code in the client directory of the Observatory3 master repository.\n\nAs my most advanced learning experience for RCOS I worked through the videos, problems, and quizzes of Learning Vue.js on Lynda.com:\n-This content was significantly harder to take in because it is a course designed for experienced web developers. It started out with two-way data binding with the v-model, event handling and binding to the style and class attribute. I could follow these ideas because binding was well covered in the AngularJS course because it is essential for websites. \n\n-Next the website covered Vue Instance features such as reactive and computed properties, adding watchers, and using lifecycle hooks. These seemed more complex but very relevant for Observatory as much user input require watchers to fetch from an API if a state is changed.\n\n-The third unit of the course covered Vue components, which are one of the most powerful features of Vue allowing encapsulation of data and behavior. I learned about component props, composing/swapping components, managing contents with slots, and most importantly handling events. Handling events seemed to be the most crucial of the latter because this is what makes Observatory functional! Events happen all the time whenever a user clicks on a modification tool, logs in, marks attendance…\n\n-Finally the longest portion of the course covers “advanced Vue applications”. It explains how to install vue-cli and how to understand the Vue app skeleton. My favorite part of this explanation was the bit on Babel and Webpack getting the Vue core library from Node. It is a good idea to know the gist of how the framework you are heavily depending upon works. This will hopefully help me understand issues we run into later on as well as how to maximize efficiency of Observatory. Next the course teaches how to convert to and use the acclaimed single-file components. Generally this will consist of a template, a script element with export statements, and then an optional style (done with CSS). Amongst my friends, this seems to be a go-to neat feature of Vue’s UI. It makes things easy to modify and understand, as well as compartmentalizes different blocks allow easy modifications and debugging. Last but not least is what ties together separate components, the vue-router! I have already had some experience using a router to link different components together to the Observatory skeleton in Vue. Until I include the new components into the router they are not actually part of the website.",
+    "title":"Learning with Codecademy, CodeSchool, and Lynda.com",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9cd8db43309501978f3bb",
+      "updatedAt":"2017-10-31T03:10:33.979Z",
+      "createdAt":"2017-09-01T21:13:49.097Z",
+      "name":"Francis Guzikowski",
+      "email":"guzikf@rpi.edu",
+      "__v":5,
+      "github":{
+        "login":"frankie-guz",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "588bc04d903dd0ed366a9124",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/700f32ebc026c444749766a4d19b4fd1?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-10-31T03:11:56.336Z"
+  },
+  {
+    "_id":"59f8d79b01ac6f2598e87118",
+    "updatedAt":"2017-10-31T20:05:47.665Z",
+    "createdAt":"2017-10-31T20:05:47.665Z",
+    "content":"I have learned an invaluable lesson that I have been told many times by the mentors and speakers during large group meetings. Our group has had a very hard time gaining traction partly because only three of us are taking RCOS for credit, as well as the fact that our leader is a full-time employee that is no longer at RPI.\n\nWe have been told many times that if we need help, we must acknowledge so as early as possible and ask for help from a mentor. Considering that none of the team members have any prior experience with web development, our initial milestones were extremely over-ambitious. We were somewhat skeptical of the timeline but assumed it would work out with five team-members dedicating 6-10 hours a week on the project--especially because our project leader suggested it would be feasible. \n\nOur first deliverable consisted of front-end refactoring from AngularJS to Vue.js, which we had as a two-week goal. Once the first week went by without any lines of code being written, I knew that I had to seek out significant help. I asked both coordinating professors if they could find a mentor to help us get the ball rolling. This was difficult because they were unsure if a past Observatory developer was willing to help our team get up to speed. He had attended one of the small-group meetings early in the semester in order to help the team get the dev environment setup. After about a week, I was informed that he was mentoring another group and was unable to receive pay for more than one group in a semester. I had received help from a mentor (Alex) in Casual Coding sessions and suggested that he become our day-to-day leader that would coordinate with Aaron for big-picture planning of Observatory.\n\nThanks to the new mentor Alex, the refactoring has finally started coming along. I helped build the skeleton of Observatory with Alex including the following pages:\n\nHomepage, Achievement List, Project List, Project New, Project Show, Project Edit, Blog List, Blog New, Blog Show, Blog Edit, Users List, Users Show, Users Settings, Auth Login, Auth Register, Attend, Mentor Small Group, Mentor Verify, and the basic layout of the home page with the Mission Statement in Jumbotron, and the three main headers below. I am currently tasked with filling out the rest of the home page without functionality (making the statistics and meeting times static).\n\nI regret not having Alex as our mentor earlier on; however, I am very optimistic that with his help my team can make up the lost time and get back on track!",
+    "title":"Gaining momentum",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9cd8db43309501978f3bb",
+      "updatedAt":"2017-10-31T03:10:33.979Z",
+      "createdAt":"2017-09-01T21:13:49.097Z",
+      "name":"Francis Guzikowski",
+      "email":"guzikf@rpi.edu",
+      "__v":5,
+      "github":{
+        "login":"frankie-guz",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "588bc04d903dd0ed366a9124",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/700f32ebc026c444749766a4d19b4fd1?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-10-31T20:05:47.663Z"
+  },
+  {
+    "_id":"5a02323a01ac6f2598e87266",
+    "updatedAt":"2017-11-07T23:00:51.711Z",
+    "createdAt":"2017-11-07T22:22:50.237Z",
+    "title":"Starting Refactoring using vue",
+    "content":"After meeting with Alex Schwartzberg on Saturday casual coding session, I got a good understanding how we should approach the Observatory refactoring problem. \n\nI have been taking introduction courses for Angular and Vue from Lynda.com. I finally have a good understanding of those two. Also I am in a progress of learning Docker.   \n\nNew readme is getting updated for the future developers. We are using VueJs Webpack starter template as our starting point. Instead of splitting team in to different group,(Front-End,Back-End, and Testing) we have decided to work on same sub-directory and create our own test cases. This decision was made since we are now down to group of 3 people.\n\nFor this week, I will be refactoring the \"Achievements\" page.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9c460b43309501978f332",
+      "updatedAt":"2017-09-26T20:53:09.586Z",
+      "createdAt":"2017-09-01T20:34:40.341Z",
+      "name":"Jihoo Brian Park",
+      "email":"parkj15@rpi.edu",
+      "__v":3,
+      "github":{
+        "login":"jhbp",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/802f2e75ee3b8cea30359020005575f9?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-11-07T22:22:50.235Z"
+  },
+  {
+    "_id":"5a0235df01ac6f2598e87267",
+    "updatedAt":"2017-11-07T22:38:23.573Z",
+    "createdAt":"2017-11-07T22:38:23.573Z",
+    "title":"Getting more and more into this",
+    "content":"I've got connection with one member of Canary. Actually I've already fixed it locally but I don't know if it fit their expectance, so I'm still trying to talk to them to work this out. I'm still working on a formatting problem. I'm trying to figure out if this is the js problem or the html problem. I think what I'm gonna do next is to find something similar to this web and trying to fix it.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59af0f7e66d2b876ea9d5af8",
+      "updatedAt":"2017-09-12T16:27:52.691Z",
+      "createdAt":"2017-09-05T20:56:30.567Z",
+      "name":"Shichen You",
+      "email":"yous2@rpi.edu",
+      "__v":2,
+      "github":{
+        "login":"exturalyon",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/af8e508beecace6e473adc9939e3e91b?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-11-07T22:38:23.562Z"
+  },
+  {
+    "_id":"5a089f4c01ac6f2598e872d4",
+    "updatedAt":"2017-11-12T22:31:30.870Z",
+    "createdAt":"2017-11-12T19:21:48.315Z",
+    "content":"Our presentation of Observatory was a very interesting experience. The most challenging aspect was fitting all the information into the five minute time frame.\n\nWe split up the power point into three parts because three of the group members are in RCOS for credit. I was personally responsible for introducing our group, discussing the main points of our refactoring process, and giving a conclusion.\n\nI was slightly nervous to present an ongoing robust project that I have only been part of for 2 months. I was very careful not to take credit for the functioning website that many students have spent hours developing. I did however take pride in the fact that I could be the face of Observatory for a day.\n\nAs the group member discussing out refactoring decision, I attempted giving the main technical reasons for this decision in terms of\n\n-Performance:\n\nAngularJS is extremely robust compared to the Vue.js lightweight library. Two way data binding is achieved without the digest cycle that AngularJS uses to loop through any watchers when anything in the scope changes.\n\nLater versions of Angular require using TypeScript which is great for static type checking in large-scale apps. Again Observatory is a relatively small-scale case and introducing a type system will result in significant overhead.\n\nI was very tempted to show compiled performance data in one of the slides but these tables are overwhelming so I decided to briefly speak about which fields Due excels in with respect to Angular and React. An extremely extensive comparison covering  “keyed” and “non-keyed” implementations. This refers to the link between the domain data and a DOM element by assigning a 'key'. If data changes the associated DOM element with that key will be updated. Thus inserting, changing, or deleting an element in the data array causes a change to the DOM. This is of interest because these actions take time to run that become significant as volume increases.\nVue\nhttps://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts/table.html\nTesting source code may be found here (this developer is very influential—his first comparison of JS frameworks caused one of the creators of Vue to restructure the product making it faster in certain regards):\nhttps://github.com/krausest/js-framework-benchmark\n\nThe comparison includes the slowdown in milliseconds to create rows, replace rows, make partial updates, select rows, swap rows, remove rows, clear rows. Vue v2 is pretty much up to par with all of the other frameworks; however, Angular and React are over twice as slow  when it comes to clearing a large amount of rows (772 ms  and 415 ms rather than 248 ms in Vue). Memory allocation in MBs is another week spot of Angular1/2 as well as React v15.4.2-keyed/mobX/redux in terms of memory usage after page load and adding rows.\n\n\n-Future plans:\n\nObservatory’s most important concern is scalability—as we hope to someday expand out project to other clubs and groups at RPI and beyond.\nSimilarly to Redux in React making apps scalable, Vue has the library Vuex drawing inspiration form Flux, Redux, and the Elm architecture. Of course, like the “store” in Flux, shared state is managed in one location, allowing the component tree to be read by component regardless of it’s location in the tree. Writing to the store is done by a state update using mutations (Vuex change functions). As a side note Vue has great cross-platform app dev thanks to Weex (this is still in progress today). There is also jsmod providing high degree of freedom UI components, and unified desktop/mobile usage—it is a client-side component library after all! Finally, Observatory needs a TON more testing done on both front and back-end and Vue with anything compatible with module-based build systems (this includes Karma).",
+    "title":"Observatory Large Group Presentation",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9cd8db43309501978f3bb",
+      "updatedAt":"2017-10-31T03:10:33.979Z",
+      "createdAt":"2017-09-01T21:13:49.097Z",
+      "name":"Francis Guzikowski",
+      "email":"guzikf@rpi.edu",
+      "__v":5,
+      "github":{
+        "login":"frankie-guz",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "588bc04d903dd0ed366a9124",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/700f32ebc026c444749766a4d19b4fd1?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-11-12T19:21:48.309Z"
+  },
+  {
+    "_id":"5a0bb69e01ac6f2598e87350",
+    "updatedAt":"2017-11-15T03:38:06.246Z",
+    "createdAt":"2017-11-15T03:38:06.246Z",
+    "title":"Second Group meeting with Alex Schwartzberg",
+    "content":"For the past week, I have been refactoring the Achievements page on my local machine since Alex has been setting up server side.\n\nOur group had a meeting with Alex today. Alex went over the general structure of how Vue works and what will be the best way to re factor the website. We got assigned to work on  mock up pages. We are finally putting Alex's work and mock up pages. We also setup the local sever for the re factored observatory.\n\nI want to thank Alex for putting a lot of effort in to the refactoring and guiding our team. Without his guidance we would be still figuring out what procedure we need to take.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9c460b43309501978f332",
+      "updatedAt":"2017-09-26T20:53:09.586Z",
+      "createdAt":"2017-09-01T20:34:40.341Z",
+      "name":"Jihoo Brian Park",
+      "email":"parkj15@rpi.edu",
+      "__v":3,
+      "github":{
+        "login":"jhbp",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/802f2e75ee3b8cea30359020005575f9?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-11-15T03:38:06.240Z"
+  },
+  {
+    "_id":"5a14941701ac6f2598e873d0",
+    "updatedAt":"2017-11-21T21:01:11.188Z",
+    "createdAt":"2017-11-21T21:01:11.188Z",
+    "title":"Achievements Page Refactored",
+    "content":"There was some problem with npm livesync and creating dummy data in MongoDB. Alex and I had a short meeting during casual coding session and fixed the problem.\n\nAchievements Page has been re-factored to Vue. We decided not to focus on the design for now and just finish up the skeleton of the page. Next I will be working on refactoring user page.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9c460b43309501978f332",
+      "updatedAt":"2017-09-26T20:53:09.586Z",
+      "createdAt":"2017-09-01T20:34:40.341Z",
+      "name":"Jihoo Brian Park",
+      "email":"parkj15@rpi.edu",
+      "__v":3,
+      "github":{
+        "login":"jhbp",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/802f2e75ee3b8cea30359020005575f9?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-11-21T21:01:11.183Z"
+  },
+  {
+    "_id":"5a2b023801ac6f2598e87563",
+    "updatedAt":"2017-12-08T21:20:56.273Z",
+    "createdAt":"2017-12-08T21:20:56.273Z",
+    "title":"Documentation for future developers",
+    "content":"I have start organizing the document for the future developers. From my experience developing Observatory, one of the challenge was learning curve. since I had no experience in developing a web page, it was much harder for me to refactor the existing page. Learning all the programming languages, tools and understanding new framework vue were few challenges I had.\n\nUseful skills, Things to install/how to install(For Linux, For Mac, For Windows), Command line, Useful tools, Understanding Vue, Bootstrap4, particularly containers/components, Developer Procedure.\n\nThis will be added to repository once it is complete.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9c460b43309501978f332",
+      "updatedAt":"2017-09-26T20:53:09.586Z",
+      "createdAt":"2017-09-01T20:34:40.341Z",
+      "name":"Jihoo Brian Park",
+      "email":"parkj15@rpi.edu",
+      "__v":3,
+      "github":{
+        "login":"jhbp",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/802f2e75ee3b8cea30359020005575f9?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-12-08T21:20:56.270Z"
+  },
+  {
+    "_id":"5a2c469901ac6f2598e875cf",
+    "updatedAt":"2017-12-09T20:29:43.925Z",
+    "createdAt":"2017-12-09T20:24:57.648Z",
+    "title":"End of Semester Summary and Reflection - Jihoo Park",
+    "content":"Being a first time RCOS member, there was a few difficulty I had to overcome but overall it was successful semester. Having no previous developer in our team was very rough since none of our team member had any experience in web development. Due to this, there was a very steep learning curve that we as a team had to over come. Because of this, few weeks at the beginning of the semester were spent on learning basic webdev skills.\n\nAlex.S joined our team middle of the semester and that changed our team momentum in positive direction. Alex had a lot of experience in web development and knew previous developers.  Our team had several weekend meetings and worked on refactoring the old observatory webpage. As today's date, we have re factored about 70% of the old webpage.\n\nOur team decided to make a Documentation for the future developer. We felt strong need for this since we had a hard time figuring out just setting up the development environment. Francis and I have worked on this document on a google doc but we will soon add this to Readme.md on our main Observatory3-dev repository.\n\nFrom my experience, I learned a lot about web development from front end to back end. But most importantly, I learned how important it is to document the development process and have at least one previous developer on a team when one is trying to re-factor the previous code. \n\nFor the future observatory developers, please read the document first and if you have any questions, don't hesitate to contact me. You can contact me through Rcos slack channel @jhbp.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9c460b43309501978f332",
+      "updatedAt":"2017-09-26T20:53:09.586Z",
+      "createdAt":"2017-09-01T20:34:40.341Z",
+      "name":"Jihoo Brian Park",
+      "email":"parkj15@rpi.edu",
+      "__v":3,
+      "github":{
+        "login":"jhbp",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/802f2e75ee3b8cea30359020005575f9?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-12-09T20:24:57.645Z"
+  },
+  {
+    "_id":"5a2ef98d01ac6f2598e875dd",
+    "updatedAt":"2017-12-14T04:35:51.812Z",
+    "createdAt":"2017-12-11T21:33:01.186Z",
+    "title":"What I have learned in the past month",
+    "content":"Brian and I worked together in the final Casual Coding session on a new readme going over the necessary background knowledge and information to work on the new Observatory-Vue. We had a very hard time getting started this semester because we were tasked with remaking an already well-designed website having no web dev experience. Out project leader wanted to give us a simulation of real world experience by leaving a lot of choices in our hands. This would have been great for a team that knew their way around AngularJS as well as the basics of back-end design; however, this lead to several weeks of us completing online courses to attempt taking in a pile of knowledge. Furthermore, getting the environment setup was a struggle due to the lacking documentation for Mac and Linux.\n\nSo in the new documentation, Brian and I wrote out the basic steps for the three operating systems and described the procedure for making changes to Observatory using Vue. I will be working on Observatory again next semester and I will be sure to  convey the necessity of learning HTML, JS, and some basics of Observatory, Vue, MongoDB and Docker to the new dev team early on!\n \nIn the last meeting with Varun and Alex I got a brief look into exactly why we are implementing the Flux pattern into the refactored Observatory. I was shown a simple schematic of how the front-end is broken into two pieces to avoid any confusion between functionality and pure UI. This isn't a concern with small applications as each element has its independent role to play. However when scaling and allowing numerous relationships among models and views, an extreme (and exponential) complexity occurs involving the interdependencies and communication of multiple components in an application that share data. The interconnection chaos leads to the state of the data being sporadic and incomprehensible.\nThis was a large source of infinite loops and debugging nightmares Facebook dealt with years ago. This caused the infamous Zombie Notifications (as the name indicates, message notifications for already read messages)--demonstrating a flawed system architecture that needed an immediate solution.  \n\nTo truly understand the idea of Flux it must be broken down into three large sections:\n\nThe dispatcher, the stores, and the views (Vue components e.g. containers).\n\nViews found at the top of the hierarchy tasked with retrieving data from the stores and passing down the information to their “children”. The dispatcher, also known as, the action creator is used to support a semantic API knowing and describing all of the possible state changes. \n\n\nFlux is almost opposite to the model-view-controller principle and adopts a data flow in a single direction! When a user interacts with a view, the view propagates an action through a central dispatcher, to the multiple stores holding the app's logic, which updates all of the other affected views. This pairs nicely with Vue’s declarative programming (the store sends updates independently of the manner in which to transition states of views).\n\n\nWe originally set out to deal correctly with derived data such as showing a tally of attended RCOS sessions for a particular student while another view displays the overall list of meetings and total attendees. Say then the admin accessing the student’s records corrects a faulty absence of the student. The communication between the two views is complex when using the model-view-controller model. These dependencies even in a small application such as Observatory are a source of jumbled perplexing data flow and thus unpredictable results.\n\nSo to avoid this in our new refactored Observatory, Flux (and similarly VueX)  has inverted control thank to stores! The stores are updated and reconcile conflicting changes internally. Stores do NOT have setter methods; the register callbacks are go-to manner of getting new data into their self-contained universe. So I believe the real beauty of VueX is the encapsulation of the store keeping an airtight separation of concerns; that is, nothing whatsoever has access into how the store manages data.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9cd8db43309501978f3bb",
+      "updatedAt":"2017-10-31T03:10:33.979Z",
+      "createdAt":"2017-09-01T21:13:49.097Z",
+      "name":"Francis Guzikowski",
+      "email":"guzikf@rpi.edu",
+      "__v":5,
+      "github":{
+        "login":"frankie-guz",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "588bc04d903dd0ed366a9124",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/700f32ebc026c444749766a4d19b4fd1?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-12-11T21:33:01.182Z"
+  },
+  {
+    "_id":"5a323d1301ac6f2598e87611",
+    "updatedAt":"2017-12-14T08:57:55.673Z",
+    "createdAt":"2017-12-14T08:57:55.673Z",
+    "title":"Be careful with the console.log command in Vue!",
+    "content":"One would hope that adding some basic console.log statements when a button is clicked should be extremely straightforward. Unfortunately in view there is NO dynamic adding of root-level reactive properties. One must initialize Vue instances by declaring every root-level reactive data property upfront, even with an empty value:\n\nLuckily if the message is accidentally not declared in the data option, Vue will throw an error accompanied by a warning that the render function is trying to access a property that doesn’t exist (I saw this by using the Chrome developer console).\n\nI was curious as to the technical reasons behind this. I found in the Vue documentation that this qwerk eliminates a class of edge cases in the dependency tracking system. Furthermore it makes Vue instances behave well with type checking systems! Finally, following the Vue montra of code maintainability, the data object is the archetype of the considered component’s state. Being forced into declaring reactive properties off the bat leads to a readily understandable component code.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9cd8db43309501978f3bb",
+      "updatedAt":"2017-10-31T03:10:33.979Z",
+      "createdAt":"2017-09-01T21:13:49.097Z",
+      "name":"Francis Guzikowski",
+      "email":"guzikf@rpi.edu",
+      "__v":5,
+      "github":{
+        "login":"frankie-guz",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "588bc04d903dd0ed366a9124",
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/700f32ebc026c444749766a4d19b4fd1?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-12-14T08:57:55.666Z"
+  },
+  {
+    "_id":"5a34a66701ac6f2598e87617",
+    "updatedAt":"2017-12-16T04:51:51.181Z",
+    "createdAt":"2017-12-16T04:51:51.181Z",
+    "content":"Before I joined rcos what I wanted to do was to learn something about front end. And I do think the semester I spent on observatory is successful. I barely knew anything about html, javascript, AngularJS, DOM, etc, which is everything in front end before I came in to observatory-dev. So at the beginning of the semester, it was very hard of me to get to know everything. I mean, I couldn't even read the code and understood them at that time. We separated out team, I was doing debugging and they were doing refactoring. It was a very steep learning curve, I spent a lot of time watching tons of videos, went through various forums and searched a lot of Wikipedia to do just one thing, know what the code is doing. I really learnt a lot by myself to know the basic languages, the data structure and how these files connect to each other. \n\nIn the middle of the semester, Alex joined us. I know it's a turning point for refactoring, cuz as a previous developer, he knows way lot than us. He has been kind of helpful to me, helped me solved some essential problems when I was doing debugging. But I know I can't ask him everything, I still need to solve the problem by myself, think by myself. So I don't think I've made some fast progress but what I've learned are pretty solid. I've fixed some bugs by the end of the semester, they might not be so hard but they mean a lot to me.\n\nI think the semester I spent on observatory is definitely worth it and I'm considering to continue doing it for the next semester.",
+    "title":"End semester blog post",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59af0f7e66d2b876ea9d5af8",
+      "updatedAt":"2017-09-12T16:27:52.691Z",
+      "createdAt":"2017-09-05T20:56:30.567Z",
+      "name":"Shichen You",
+      "email":"yous2@rpi.edu",
+      "__v":2,
+      "github":{
+        "login":"exturalyon",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/af8e508beecace6e473adc9939e3e91b?d=identicon"
+    },
+    "__v":0,
+    "date":"2017-12-16T04:51:51.179Z"
+  },
+  {
+    "_id":"5ab194b73f493b1f84581daf",
+    "updatedAt":"2018-03-20T23:09:43.664Z",
+    "createdAt":"2018-03-20T23:09:43.664Z",
+    "title":"Project's actions.js & JavaScript Object Destructuring",
+    "content":"Object destructuring is a very useful feature of javascript that improves the readability and clarity of code. I personally used it within the actions.js projects file. With object destructuring, I was able to select which parts I wanted access to from the context object that is passed to every VueX action. In the following example, I reference the fetchCollection function I\ncreated, although it has been shortened to one line to demonstrate object destructuring.\n\nfetchCollection without object destructuring:\n```\nfetchCollection: (context) => {\n\t  <some code>\n\t  context.commit('fetching', false)\n\t  <more code>\n\t}\n```\nfetchCollection with object destructuring:\n```\n\tfetchCollection: ({ commit, <additional params>}) => {\n\t  <some code>\n\t  commit('fetching', false)\n\t  <more code>\n\t}\n```\nAs you can see, we simply extract the parts of the context object that we want to use, and the result is shortened code (from context.commit to just commit) that is easier to read and understand. I used this feature for pretty much every action in the project actions.js file. It helped a ton!",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a626232411e301f4d3d83a6",
+      "updatedAt":"2018-02-13T22:06:54.313Z",
+      "createdAt":"2018-01-19T21:25:06.137Z",
+      "name":"Charlie Schmitter",
+      "email":"schmic6@rpi.edu",
+      "__v":1,
+      "github":{
+        "login":"ratchet12340",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/d62eaf2b8753507df8389ed65524b9ae?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-03-20T23:09:43.656Z"
+  },
+  {
+    "_id":"5ab47ab64e9d2935c9bce00b",
+    "updatedAt":"2018-03-23T03:55:34.758Z",
+    "createdAt":"2018-03-23T03:55:34.758Z",
+    "title":"### Vue Components and Containers",
+    "content":"<p> I found the best thing about Vue components is to help self-explain the code. <p/></br><p>Vue component provide the ability to extend the html elements and box reusable codes. Each component is combination of custom elements. </p>\n```JavaScript\nvar myComponent = Vue.component ({})\n```\n<p> By using component, each boxed container and components are able to communicate with it upper layer and lower layer. That is each child will be able to emit events to its parent layer and to pass props to its children.</p>\n```\nexport default {\n  name: 'myComponent',\n  props: ['model', 'this'],\n}\n```\n```\nmethods: {\n  this.$emit('input', value)\n}\n```\n<p>For Observatory, we added component like ProjectForm, FormInput, and BlogForm, and for each component it can be reused in different containers like Project-New container or Blog-New container. Based this, if we want to revise or add element or functions for one components, all containers update automatically. </p>\n```\n<script>\nimport InputTag from 'vue-input-tag'\nimport PageHeader from '@/components/PageHeader'\nimport FormSubmit from '@/components/FormSubmit'\nimport ProjectSelect from '@/components/ProjectSelect'\nimport MarkdownInput from '@/components/MarkdownInput'\nimport { mapGetters } from 'vuex'\n\nexport default {\n  name: 'BlogForm',\n  props: ['onSubmit'],\n  components: {\n    InputTag,\n    PageHeader,\n    FormSubmit,\n    ProjectSelect,\n    MarkdownInput\n  },\n  computed: mapGetters({\n    model: 'blog/model'\n  }),\n  data () {\n    return {\n      tags: [\n        'HTML', 'JS', 'Bootstrap'\n      ]\n    }\n  }\n}\n</script>\n```\n<p>The BlogForm component I developed is a perfect example of how component is used globally and communicate with upper layer and each other.  </p></br> Overall, working with Observatory team really helped me learning tons of new materials. It's a great experience working and learning in team.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a5e7d3e418542487f98e981",
+      "updatedAt":"2018-03-24T19:32:16.104Z",
+      "createdAt":"2018-01-16T22:31:26.223Z",
+      "name":"Huanzhi Zhu",
+      "email":"zhuh9@rpi.edu",
+      "__v":2,
+      "github":{
+        "login":"0hzz0",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "html",
+        "vue.js",
+        "node.js"
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/40cbd008252c4b024dbe9725390bf9d3?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-03-23T03:55:34.754Z"
+  },
+  {
+    "_id":"5ab5310f1785de4816bf7c0f",
+    "updatedAt":"2018-03-23T16:54:51.424Z",
+    "createdAt":"2018-03-23T16:53:35.723Z",
+    "title":"Useful things to know about Bootstrap 4",
+    "content":"Bootstrap is a front-end framework for web development that offers a library of HTML, CSS and JS components which can be used to easily create beautiful responsive layouts. The latest version, Bootstrap v4, incorporates new components, a faster stylesheet and many other features. These new components and utilities make Bootstrap more intuitive and responsive than ever before.\n\n**Flexbox**<br>\nBootstrap’s layout traditionally used to rely on float-based styles. Although flexbox has been an alternative in recent versions, it is now the default style for Bootstrap grids, and it offers greater flexibility than floats. For example, you can set the width of one column and have the sibling columns automatically resize around it. <br> <br>\n![flexbox example](https://lh5.googleusercontent.com/aCW4Khtn5pMBBRVSQpWPPErW1DI2GpZrfa8drTKf2EQ-rVV1NMSqaOtYLBhuImRI5TAqAaS7wdq2FwDMFNg7Xk-k9Kn2tqjJfQBIynd7_wNp4N2vGsgZUWOwI1YqlYqha_g3CsEF \"enter image title here\")\n<br><br>\n```\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col\">\n      1 of 3\n    </div>\n    <div class=\"col-6\">\n      2 of 3 (wider)\n    </div>\n    <div class=\"col\">\n      3 of 3\n    </div>\n  </div>\n  <div class=\"row\">\n    <div class=\"col\">\n      1 of 3\n    </div>\n    <div class=\"col-5\">\n      2 of 3 (wider)\n    </div>\n    <div class=\"col\">\n      3 of 3\n    </div>\n  </div>\n</div>\n```\n<br>\n**Spacing**<br>\nSpacing can be adjusted using class names that having the format<br>\n```\n                     {property}{sides}-{breakpoint}-{size}.\n  Possible values:   {p/m}{t/b/l/r/x/y}-{sm/md/lg/xl}-{0/1/2/3/4/5}\n```\nFor example, .mx-lg-2 will set the element’s left and right margins to $spacer-x * .5 and $spacer-y * .5. The breakpoint is based on minimum viewport widths, which allows elements to scale as the viewport changes. lg is designed for screens equal to or greater than 1200px wide.\n\nSimilarly, adding a class such as .py-sm-0 will eliminate the element’s top and bottom padding.\n\n**Borders**<br>\nBootstrap can easily style the border or border-radius of an element. Add borders to images, buttons, and other elements using the .border class. \n\nBorder color can easily be set adding .border-{color} to an element’s class, where color can be primary, secondary, success, danger, warning, info, light, dark, or white. \n\nBorder-radius can also be set to create rounded corners for elements, such as images.\n![border-radius example](https://lh5.googleusercontent.com/mFz3LMsEdcH1mgdH0JO9OOuYarC1UkGkkrnhP5xOJVry5N4cSzxSTEsTaQoW_msGpa8Vxa2DyCp5QgfopYJuTwIwwqJdAuPhFX-WsmuVg7YXxvYwBDUsClxi26LKvpD0CjR847RC \"enter image title here\")\n\n```\n .rounded, .rounded-top, .rounded-right, .rounded-left, .rounded-circle, .rounded-0.\n```\n<br>\n**Cards**<br>\nPanels, thumbnails, and wells were dropped and replaced with cards, which are flexible and extensible content containers that have a wide variety of options including header/footer, images, list groups, contextual backgrounds, and other display options. Cards are built on top of flexbox, so they can be easily aligned and mixed with other Bootstrap components. \n\nFor example, you can place an image at the top of a card with .card-img-top and add text to the card with .card-text as shown in the example below. <br>\n![card example](https://lh6.googleusercontent.com/qFAFGfS88XD44cGHmvcCqM3-6H_BmxQPt6avdkRz6I7PFQGq1pt9gedWlIN7-vv7ygOTxREe4K5-_dOHnMnvxqBChvV5Oel4whlSp3Xmu_HQp_q6yyE8CyKxVqfMZxY6sQ0IAHJV \"enter image title here\")\n```\n<div class=\"card\" style=\"width: 18rem;\">\n  <img class=\"card-img-top\" src=\"...\" alt=\"Card image cap\">\n  <div class=\"card-body\">\n    <p class=\"card-text\">Some quick example text to build on the card title and make up the bulk of the card's content.</p>\n  </div>\n</div>\n```\n<br>\nFor more changes, check out <a href=\"https://getbootstrap.com/docs/4.0/migration/\">Migrating to v4</a>.\n\n\n\n",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a5ebf90418542487f98e984",
+      "updatedAt":"2018-01-30T21:28:36.065Z",
+      "createdAt":"2018-01-17T03:14:24.304Z",
+      "name":"JoAnna Detweiler",
+      "email":"detwej@rpi.edu",
+      "__v":1,
+      "github":{
+        "login":"jell0s",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/77634be89799813bc41956e76336c2f5?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-03-23T16:53:35.722Z"
+  },
+  {
+    "_id":"5abaae90b6a3e14f2f2c9c76",
+    "updatedAt":"2018-03-27T20:50:24.794Z",
+    "createdAt":"2018-03-27T20:50:24.794Z",
+    "title":"Documentation generation with APIDoc",
+    "content":"[APIDoc.js](http://apidocjs.com/) is a really helpful tool that generates API documentation from annotations in your code. All you need to do to use it is add some snippets of code that describe methods and calls, and APIDoc does the work in making good-looking, formatted documentation. We're using APIDoc to generate all the documentation for Observatory.\n\n**How To Use It**\n\n\n\n1. Install using ```npm install apidoc -g```\n1. Put comments into your files that describe your functions. A list of useful params can be found [here](http://apidocjs.com/#params)\n1.  Use ```npm run apidoc ``` \n1. There will be an index.html file in a newly created /doc directory in your project directory. Open this and view your documentation!\n\nIt will also help to add an apidoc.json file to the folder, which looks something like \n```\n{\n  \"name\": \"example\",\n  \"version\": \"0.1.0\",\n  \"description\": \"example\"\n}\n```\nAdding this will allow you to put your project name, version, and description in the documentation.\n\n**Example**\n\nHere's an example of how we use APIDoc at Observatory.\n\nThis is a snippet of code from the smallgroup.controller.js file:\n\n```\n/**\n* @api {GET} /api/smallgroup Index\n* @APIname index\n* @APIgroup SmallGroup Controller\n* @apidescription Get list of smallgroups\n* @apiSuccess {Collection} index List of smallgroups\n* @apiError (Error) 500 Unable to get list\n*/\nexports.index = function(req, res) {\n    SmallGroup.find({}, function(err, smallgroups){\n        if (err) { return handleError(res, err); }\n        return res.status(200).json(smallgroups);\n    });\n};\n```\n\nAnd here's what it looks like in the documentation:\n![Smallgroup documentation](https://image.ibb.co/jiQRpn/Screenshot_from_2018_03_27_16_33_36.png \"\")\n\nYou can find more APIDoc examples [here](http://apidocjs.com/#examples)\n\n\n\nIf you're looking for an easy way to create some documentation for your project, you should definitely consider using APIDoc. \n\nThe documentation for Observatory can be found [here](https://rcos.github.io/observatory-docs/) and was generated using APIDoc.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a62623b411e301f4d3d83a9",
+      "updatedAt":"2018-01-30T21:23:59.175Z",
+      "createdAt":"2018-01-19T21:25:15.747Z",
+      "name":"Siddharth Rao",
+      "email":"raos13@rpi.edu",
+      "__v":3,
+      "github":{
+        "login":"ra0s",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/ee9cf7adc3a815f9869fd5b53508c2c6?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-03-27T20:50:24.793Z"
+  },
+  {
+    "_id":"5abac202b6a3e14f2f2c9cb8",
+    "updatedAt":"2018-03-27T22:13:22.600Z",
+    "createdAt":"2018-03-27T22:13:22.600Z",
+    "title":"Conditional rendering with VueJS, and running VueJS actions on page load",
+    "content":"While working on the attendance module, I got to work with two really cool features of Vue, the first being conditional rendering. Conditional rendering allows for a much greater control over the DOM than traditional HTML allows for, and it's very intuitive to boot.\n\nI specifically had a bit of practice with conditional rendering through ```exploreChild.vue``` and the ```attendance``` module. So, for instance, if we have a bonus session we'll want to display \"Bonus\" under the type of session. On the other hand, if we had a regular session that day, we'll want to display \"Regular\" as the type. Since we are only given one field for the type in the attendance JSON (which is the field bonusDay as shown below), we will conditionally render based on that field. We conditionally render with the ```v-if``` directive, like so:\n```\n<td v-if=\"attendElement.bonusDay\">Bonus</td>\n```\nIf this condition ends up being false, then we can supply an else condition, like so:\n```\n<td v-else>Regular</td>\n```\nNot only can we have conditional rendering, but there's also list-based rendering where we can render based on each element in an array. However, we can leave that for a future blog post :-). Below is the final result for a single attendance session:\n```\n<template>\n  <tr>\n    <td>{{ date }}</td>\n    <td v-if=\"attendElement.bonusDay\">Bonus</td>\n    <td v-else>Regular</td>\n    <td v-if=\"attendElement.smallgroup\">Small Group</td>\n    <td v-else>Large Group</td>\n    <td v-if=\"attendElement.verified\">Yes</td>\n    <td v-else>No</td>\n    <td v-if=\"attendElement.present\">Present</td>\n    <td v-else>Absent</td>\n  </tr>\n</template>\n```\nLastly, I want to talk about getting VueX actions to run when the page loads. This is pretty trivial, but super convenient for users so they don't have to trigger the action by pushing a button. That would be pretty poor UX design! Anyways, we can run an action with the created() function, so for instance:\n```\ncreated () {\n    this.fetchCollection()\n  }\n```",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a626232411e301f4d3d83a6",
+      "updatedAt":"2018-02-13T22:06:54.313Z",
+      "createdAt":"2018-01-19T21:25:06.137Z",
+      "name":"Charlie Schmitter",
+      "email":"schmic6@rpi.edu",
+      "__v":1,
+      "github":{
+        "login":"ratchet12340",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/d62eaf2b8753507df8389ed65524b9ae?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-03-27T22:13:22.599Z"
+  },
+  {
+    "_id":"5abc92b4b6a3e14f2f2c9cc6",
+    "updatedAt":"2018-03-29T07:17:44.285Z",
+    "createdAt":"2018-03-29T07:16:04.287Z",
+    "content":"Postman is an interactive program that produces an environment for API development. It provides pre-request scripts, tests, and code segments for debugging, as well as a runner that can execute saved tests and requests in an automated sequence. Also, the program has a documentation feature that makes putting tests, descriptions, and code segments on the web simple. Using Postman for Observatory, will make testing methods within our code simpler and more time efficient, since we will no longer need to create a separate front-end program to run them.\n\nInstructions for Installing and Using Postman:\n\n1. Download Postman from the company’s website \n[https://www.getpostman.com/apps](https://www.getpostman.com/apps)\n2. Create a new collection\n\n3. Import the JSON file containing response messages intended for web application\n\n4. Add GET, POST, PUT, PATCH, DELETE, etc.,  request definitions to the collection\n\n5. Save the changes and export the collection’s JSON file to its initial location in the project directory\n\nThe creation of request definitions is often a three-fold process: providing the directory path for the request, editing its content-type & authorization key in the header, and providing input data (optionally).\n\n\n![enter image description here](https://i.imgur.com/MNriR8K.png \"enter image title here\")\nHeader for POST Request\n\n\n![enter image description here](https://i.imgur.com/ZjL9bzc.png \"enter image title here\")\nBody of POST Request\n\n",
+    "title":"API Development with Postman",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a46abd6418542487f98e970",
+      "updatedAt":"2018-01-30T21:29:01.954Z",
+      "createdAt":"2017-12-29T20:55:50.119Z",
+      "name":"Andrew Mwakibinga",
+      "email":"mwakia@rpi.edu",
+      "__v":1,
+      "bio":"Selected and competed in 2014 American Computer Science League Competition in Colorado on behalf of Spackenkill High School. \nMe and my two teammates were able to place 9th nationally and 12th globally.\nApplied and participated in the summer 2014 engineering enrichment program “Operation Catapult” at Rose-Hulman Institute of Technology in Indiana; placed 3rd for Best Project out of 43 other group projects.\nAmidst the summer of 2015, I received the Advanced Placement Honors Scholars Award.\nWorked at JumpDrive, BrightLot NYC during that summer, assembling test boards by reading schematics and soldering/heat-shrinking wire connections, testing boards with software at end of assembly to make sure that connections were properly made, and contributing ideas to development of Collision Detection program.",
+      "github":{
+        "login":"andrewmwakibinga",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/a168de75e5f10433c792b05f5cfd5ecc?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-03-29T07:16:04.282Z"
+  },
+  {
+    "_id":"5ac3948eb6a3e14f2f2c9d4b",
+    "updatedAt":"2018-04-03T14:49:50.760Z",
+    "createdAt":"2018-04-03T14:49:50.760Z",
+    "title":"As a beginner.",
+    "content":"The most important thing for me, as a really beginner in web development, I think is that I begin to use Linux system. As a CSE student, Linux could benefit my study in future. The ease of running program and local host compared with windows, makes me finally understand why some of my friends recommended me about this system before. But still, I am not familiar with Linux system. I know I only see a small part of this tool. There is still a long way I need to walk.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a67bcbc411e301f4d3d8441",
+      "updatedAt":"2018-03-09T20:53:09.060Z",
+      "createdAt":"2018-01-23T22:52:44.291Z",
+      "name":"Zhentao Yang",
+      "email":"yangz9@rpi.edu",
+      "__v":1,
+      "github":{
+        "login":"tomyang",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/c831d65c2fa64c708f356edada4a542d?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-04-03T14:49:50.759Z"
+  },
+  {
+    "_id":"5acb73ca3a21c35750012195",
+    "updatedAt":"2018-04-09T14:08:10.202Z",
+    "createdAt":"2018-04-09T14:08:10.202Z",
+    "title":"Learning Mode",
+    "content":"I am new to RCOS this semester and I am still in the learning mode to get familiar with vue and javascript.\nMy task is to add update method in action.js. In order to complete this task, I started to look at the code in other files and I was also introduced vue workflow.\nThe graph is shown below:![enter image description here](https://vuex.vuejs.org/en/images/vuex.png \"enter image title here\")\n\nI also learned to use the vue extension in chrome which did help me a lot to get to know the workflow shown above\nIt has a useful feature called \"time travel\" ![enter image description here](https://raw.githubusercontent.com/chengstark/pics/master/Screen%20Shot%202018-04-03%20at%206.55.10%20PM.png \"enter image title here\")\n![enter image description here](https://raw.githubusercontent.com/chengstark/pics/master/Screen%20Shot%202018-04-09%20at%2010.05.22%20AM.png \"enter image title here\")\n\nwhich could allow me to travel back to the state in the past and check values of variables and see what has changed during the action.\n\nNow I can resolve some simple front end issues and I hope I could handle more complex problems in the future.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a5e71e8418542487f98e97a",
+      "updatedAt":"2018-01-30T21:24:21.684Z",
+      "createdAt":"2018-01-16T21:43:04.088Z",
+      "name":"Stark",
+      "email":"guoz6@rpi.edu",
+      "__v":6,
+      "github":{
+        "login":"chengstark",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+        "C++",
+        "Python",
+        "Raspberry Pi"
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/d28a18ca310fce4c6eb3a15a1bf6b76b?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-04-09T14:08:10.181Z"
+  },
+  {
+    "_id":"5acd22c53a21c357500121ea",
+    "updatedAt":"2018-04-10T20:47:01.305Z",
+    "createdAt":"2018-04-10T20:47:01.305Z",
+    "title":"Creating a VueX Store",
+    "content":"VueJS is a great library for hooking up the backend to the frontend. However, out of the box, there's no central storage system for the frontend. That's where VueX comes in. VueX provides a store where we can have a central storage of data accessible to all VueJS components.\n\nTo allow for clean code, we can divide this store up per module. So with the case of Observatory, we can divide up the store into components for all of RCOS's member's projects, their blog posts, and whatever else that can be considered as its own category. With a VueX store, the following files are used:\n\n`actions.js`: Holds the possible ways that the VueX state could be changed from user inputs.\n\n`constants.js`: Holds constant variables, such as API routes.\n\n`getters.js`: Holds functions that access variables available in the store.\n\n`mutations.js`: Holds functions that modify the variables available in the store\n\n`state.js`: Holds the variables of the store.\n\n`index.js`: Glues all of the aforementioned .js files together.\n\nI just finished setting up the store for 'classyear'. The classyear module holds data for each semester of RCOS (so all of the sessions of RCOS that semester, the URP form of that semester, and so forth). Aside from some of the default mix-ins, this module needed a variable in `state.js` to hold the daycode for a particular day, and naturally a getter and mutator in `getters.js` and `mutations.js` respectively in order to modify and access the daycode. There also needed to be an action to fetch the daycode from the database when an RCOS mentor desires, which is defined in `actions.js`.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a626232411e301f4d3d83a6",
+      "updatedAt":"2018-02-13T22:06:54.313Z",
+      "createdAt":"2018-01-19T21:25:06.137Z",
+      "name":"Charlie Schmitter",
+      "email":"schmic6@rpi.edu",
+      "__v":1,
+      "github":{
+        "login":"ratchet12340",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/d62eaf2b8753507df8389ed65524b9ae?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-04-10T20:47:01.304Z"
+  },
+  {
+    "_id":"5ad0b6ef3a21c35750012233",
+    "updatedAt":"2018-04-13T13:55:59.732Z",
+    "createdAt":"2018-04-13T13:55:59.732Z",
+    "title":"Code Quality",
+    "content":"Recently with the new update of Javascript, some new syntax options have called for some code quality updates. Changes to the code include:\n\n- replace all 'var' statements with either 'let' or 'const.\n- make whitespace consistent in file (i.e. 'if(err){ ...' should be 'if (err) { ...'\n- replace '\"' (double quote) with ''' (single quote)\n- replace 'function' keyword with => function syntax, i.e.:\n\n```\nClassYear.findOne({\"dayCodes.code\":code})\n    .exec(function(err, classYear){\n      ...\n    })\n```\nbecomes:\n```\nClassYear.findOne({\"dayCodes.code\":code})\n    .exec((err, classYear) => {\n      ...\n    })\n```\n\nIt's important to keep code quality; clean, consistent, and updated so that code stays readable and easy to edit for future commits. The updating of code quality is still being implemented.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a5e9c54418542487f98e982",
+      "updatedAt":"2018-01-30T21:40:16.899Z",
+      "createdAt":"2018-01-17T00:44:04.030Z",
+      "name":"Eric Tran",
+      "email":"trane2@rpi.edu",
+      "__v":2,
+      "github":{
+        "login":"trane2",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/2fedc17874b4c22d5577f9f104e76f93?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-04-13T13:55:59.731Z"
+  },
+  {
+    "_id":"5ad657c2d65b21283f015869",
+    "updatedAt":"2018-04-17T20:23:30.424Z",
+    "createdAt":"2018-04-17T20:23:30.424Z",
+    "title":"Setting Up Your Development Environment.",
+    "content":"In order to be as efficient and productive as possible it is important to have a good development environment. The most important part of a good environment is the text editor. My preferred Text Editor is Sublime Text, but there are other viable options such as Atom and Vim. Once you have chosen an editor the next step is to configure it with tools relevant to the project you will be using. For example, the Vue syntax highlight package helped improve the readability of \".vue\" files. Making standards for spacing and indentations also help improve the consistency and readability of code. It's also important to familiarize yourself with keyboard shortcuts. The one's I found most useful are \"ctrl + s\" for saving a file, \"ctrl + f\" for finding a file, and \"ctrl + h\" for finding and replacing a word or code segment. Additionally, you can make your development environment much more visually appealing with themes. The boxy theme and the boxy them addon - mono file icons are a great addition for sublime.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9c5fcb43309501978f368",
+      "updatedAt":"2018-02-13T21:08:59.704Z",
+      "createdAt":"2017-09-01T20:41:32.864Z",
+      "name":"Numfor Tiapo",
+      "email":"mbizin@rpi.edu",
+      "__v":1,
+      "github":{
+        "login":"nums11",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/f835bafee944d76db28bea01c212d890?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-04-17T20:23:30.423Z"
+  },
+  {
+    "_id":"5ad77f10d65b21283f0158e4",
+    "updatedAt":"2018-04-18T17:23:28.979Z",
+    "createdAt":"2018-04-18T17:23:28.979Z",
+    "content":"Markup languages are designed for the processing, definition and presentation of text. Markdown is a lightweight markup language with plain text formatting syntax that is used in the blog post and achievement sections of Observatory. To use, simply surround your text with the specified characters for whatever textual effect you are trying to produce - for example, to italicize text surround it with two stars '**'. Your text will then be converted into HTML with the new properties you have defined.\n\n\n![enter image description here](https://doc.qt.io/qt-5.10/images/markdowneditor-example.png \"enter image title here\")",
+    "title":"Markdown and Markup Languages",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"59a9c5fcb43309501978f368",
+      "updatedAt":"2018-02-13T21:08:59.704Z",
+      "createdAt":"2017-09-01T20:41:32.864Z",
+      "name":"Numfor Tiapo",
+      "email":"mbizin@rpi.edu",
+      "__v":1,
+      "github":{
+        "login":"nums11",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/f835bafee944d76db28bea01c212d890?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-04-18T17:23:28.954Z"
+  },
+  {
+    "_id":"5ada0788d65b21283f0158ef",
+    "updatedAt":"2018-04-20T15:30:16.729Z",
+    "createdAt":"2018-04-20T15:30:16.729Z",
+    "title":"git stash",
+    "content":"git stash command is really useful, it can put my changes aside and then drop the change or put it back whenever I want. It will be helpful for me to edit the code.",
+    "projectId":"55e5a093c47024f712047b06",
+    "author":{
+      "_id":"5a67bcbc411e301f4d3d8441",
+      "updatedAt":"2018-03-09T20:53:09.060Z",
+      "createdAt":"2018-01-23T22:52:44.291Z",
+      "name":"Zhentao Yang",
+      "email":"yangz9@rpi.edu",
+      "__v":1,
+      "github":{
+        "login":"tomyang",
+        "events":[
+
+        ]
+      },
+      "favoriteProjects":[
+
+      ],
+      "projects":[
+        "55e5a093c47024f712047b06"
+      ],
+      "tech":[
+
+      ],
+      "role":"user",
+      "active":true,
+      "avatar":"//www.gravatar.com/avatar/c831d65c2fa64c708f356edada4a542d?d=identicon"
+    },
+    "__v":0,
+    "date":"2018-04-20T15:30:16.713Z"
+  }
+]
