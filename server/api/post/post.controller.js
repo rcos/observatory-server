@@ -48,6 +48,8 @@ exports.index = (req, res) => {
 
   // Queries Posts and returns result
   Post.find(query)
+  .lean()
+  .exec()
   .then((posts) => {
     return res.json(200, posts)
   })
