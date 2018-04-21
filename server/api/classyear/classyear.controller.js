@@ -40,7 +40,7 @@ exports.index = function(req, res) {
 };
 
 /**
-* @api {get} /api/classyear GetClassYear
+* @api {get} /api/classyear/semester/:semester GetClassYear
 * @apiName getClassYear
 * @apiGroup ClassYear
 * @apiDescription Get current ClassYear
@@ -136,7 +136,7 @@ exports.create = function(req, res) {
 
 
 /**
-* @api {put} /api/classyear Update
+* @api {put} /api/classyear/semester/:semester Update
 * @apiName update
 * @apiGroup ClassYear
 * @apiDescription Update class year
@@ -163,7 +163,7 @@ exports.update = function(req, res) {
 
 
 /**
-* @api {delete} /api/classyear Destory
+* @api {delete} /api/classyear/semester/:semester Destory
 * @apiName destory
 * @apiGroup ClassYear
 * @apiDescription Deletes a class year from the DB.
@@ -181,7 +181,7 @@ exports.destroy = function(req, res) {
 
 
 /**
-* @api {post} /api/classyear Daycode
+* @api {post} /api/classyear/daycode Daycode
 * @apiName daycode
 * @apiGroup ClassYear
 * @apiDescription Generate a daycode or return the current day code for the current class year
@@ -220,7 +220,7 @@ exports.daycode = function(req, res){
 
 
 /**
-* @api {delete} /api/classyear DeleteDay
+* @api {delete} /api/classyear/day/:daycode DeleteDay
 * @apiName deleteDay
 * @apiGroup ClassYear
 * @apiDescription Delete a day code from a classyear and the corresponding daycode submission from attendance
@@ -247,7 +247,7 @@ exports.deleteDay = function(req, res){
 };
 
 /**
-* @api {put} /api/classyear DisplayURP
+* @api {put} /api/classyear/displayURP DisplayURP
 * @apiName displayURP
 * @apiGroup ClassYear
 * @apiDescription Toggles URP display
@@ -267,7 +267,7 @@ exports.displayURP = function(req, res) {
 
 
 /**
-* @api {get} /api/classyear GetDisplayURP
+* @api {get} /api/classyear/displayURP GetDisplayURP
 * @apiName getDisplayURP
 * @apiDescription Toggles URP display
 * @apiPermission public
