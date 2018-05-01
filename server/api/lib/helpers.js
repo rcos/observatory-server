@@ -5,18 +5,20 @@ import SmallGroup from '../smallgroup/smallgroup.model'
 // Generic error handling for API requests
 
 // Return a standard error
+
 export const handleError = (res, err) => {
-  return res.status(500).json(err).end()
+  return res.status(500).json({ error: err }).end()
 }
+
 
 // Return a validation error
 export const validationError = (res, err) => {
-    return res.status(422).json(err);
+    return res.status(422).json({ error: err}).end();
 }
 
 //Generating non ambigious length sized code.
 export const generateCode = (codeLength) => {
-  var characterOptions = "2346789ABCDEFGHJKMNPQRTUVWXYZ";
+  var characterOptions = '2346789ABCDEFGHJKMNPQRTUVWXYZ';
   //Non ambigious characters and numbers Remove Some if you think they are ambigious given your font.
 
   var code = ""; //Simple derivation based on previous code generation code.
@@ -30,16 +32,16 @@ export const generateCode = (codeLength) => {
 //Generating unique code.
 export const uniqueDayCode = (codeLength,callback) => {
   var code = generateCode(codeLength);
-  ClassYear.findOne({"dayCodes.code":code})
-    .exec(function(err, classYear){
-      if (err) return callback("error when getting dayCode",null);
+  ClassYear.findOne({'dayCodes.code':code})
+    .exec((err, classYear) => {
+      if (err) return callback('error when getting dayCode',null);
       if(classYear) {
         return uniqueDayCode(codeLength+1,callback);
       }
       else{
-        SmallGroup.findOne({"dayCodes.code":code})
-          .exec(function(err, smallgroup){
-            if (err) return callback("error when getting dayCode",null);
+        SmallGroup.findOne({'dayCodes.code':code})
+          .exec((err, smallgroup) => {
+            if (err) return callback('error when getting dayCode',null);
             if(smallgroup){
               return uniqueDayCode(codeLength+1,callback);
             }
@@ -48,3 +50,6 @@ export const uniqueDayCode = (codeLength,callback) => {
       }
   });
 }
+
+
+// Return a standard error
