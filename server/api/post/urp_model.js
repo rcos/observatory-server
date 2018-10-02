@@ -6,22 +6,21 @@ var mongoose = require('mongoose'),
 var URPFormSchema = new Schema({
   title: String,
   content: String,
-  userId: 
+  user_id: 
   {
     type : Schema.Types.ObjectId,
     ref: 'User',
     index: true
   },
-  semesterId: 
+  semester_id: 
   {
     type : Schema.Types.ObjectId,
     ref: 'ClassYear',
     index: true
   },
-  uploadURL: 
+  upload_url: 
   {
     type: String,
-    ref: '',
     index: true
   }
 },{ timestamps: true});
