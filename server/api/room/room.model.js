@@ -4,9 +4,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var RoomSchema = new Schema({
-    name: String,
-    loc: String,                        //location
-    capacity: int,
+    name: {
+       type: String,
+       required: true
+    }
+    capacity: Number,
     wheelchair_accessible: boolean
 },{ timestamps: true});
 
