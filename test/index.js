@@ -20,7 +20,7 @@ chai.use(require('sinon-chai'));
 chai.use(require('chai-as-promised'));
 chai.use(require('chai-things'))
 
-// API tests
+// Load API tests
 require('../server/api/attendance/attendance.spec');
 require('../server/api/attendance/attendance.integration');
 require('../server/api/classyear/classyear.spec');
