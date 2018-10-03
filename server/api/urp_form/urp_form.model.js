@@ -1,28 +1,21 @@
-'use strict';
+const mongoose, { Schema } = require('mongoose');
 
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
-
-var URPFormSchema = new Schema({
-  title: String,
-  content: String,
-  user_id: 
-  {
+const URPFormSchema = new Schema({
+  user_id: {
     type : Schema.Types.ObjectId,
     ref: 'User',
-    index: true
+    requred: true
   },
-  semester_id: 
-  {
+  semester_id: {
     type : Schema.Types.ObjectId,
     ref: 'ClassYear',
-    index: true
+    requred: true
   },
-  upload_url: 
-  {
+  upload_url: {
     type: String,
-    index: true
+    index: true,
+    required: true
   }
-},{ timestamps: true});
+},{ timestamps: true });
 
 module.exports = mongoose.model('URPForm', URPFormSchema);
