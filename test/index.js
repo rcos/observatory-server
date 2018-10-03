@@ -1,7 +1,9 @@
-'use strict';
 
 // Register the Babel require hook
 require('babel-core/register');
+
+// TODO - load TEST environment here
+process.env.NODE_ENV = 'test'
 
 var chai = require('chai');
 
@@ -17,3 +19,7 @@ global.sinon = require('sinon');
 chai.use(require('sinon-chai'));
 chai.use(require('chai-as-promised'));
 chai.use(require('chai-things'))
+
+// API tests
+require('../server/api/user/user.spec');
+// require('../server/api/user/user.controller.spec');
