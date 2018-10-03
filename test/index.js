@@ -1,11 +1,11 @@
+// Loads environment variables from .env.test
+const path = require('path');
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.test') });
 
 // Register the Babel require hook
 require('babel-core/register');
 
-// TODO - load TEST environment here
-process.env.NODE_ENV = 'test'
-
-var chai = require('chai');
+const chai = require('chai');
 
 // Load Chai assertions
 global.expect = chai.expect;
