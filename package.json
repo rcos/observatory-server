@@ -7,8 +7,7 @@
     "start": "node server",
     "dev": "nodemon -L server",
     "test": "grunt test",
-    "apidoc": "apidoc -i ./server/api -o doc/",
-    "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
+    "apidoc": "apidoc -i ./server/api -o doc/"
   },
   "dependencies": {
     "async": "^2.0.0-rc.3",
