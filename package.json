@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server",
     "dev": "nodemon -L server",
-    "test": "mocha",
+    "test": "nyc mocha --reporter spec",
     "apidoc": "apidoc -i ./server/api -o doc/"
   },
   "dependencies": {
@@ -54,6 +54,7 @@
     "jasmine-core": "^2.5.2",
     "jshint-stylish": "~2.1.0",
     "mocha": "^2.2.5",
+    "nyc": "^12.0.2",
     "open": "~0.0.4",
     "phantomjs-prebuilt": "^2.1.5",
     "proxyquire": "^1.0.1",
