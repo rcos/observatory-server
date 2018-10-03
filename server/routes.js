@@ -22,6 +22,7 @@ export default function(app) {
   app.use('/api/attendance', require('./api/attendance'));
   app.use('/api/excused_absences', require('./api/excused_absence'));
   app.use('/api/static', require('./api/static'));
+  app.use('/api/urp_forms', require('./api/urp_form'));
 
   app.use('/uploads', express.static(config.imageUploadPath));
 
