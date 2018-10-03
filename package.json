@@ -3,6 +3,13 @@
   "version": "0.3.2",
   "main": "server/app.js",
   "license": "MIT",
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon -L server",
+    "test": "grunt test",
+    "apidoc": "apidoc -i ./server/api -o doc/",
+    "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
+  },
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "babel-runtime": "^5.8.20",
@@ -63,13 +70,6 @@
   "engines": {
     "node": "^4.2.3",
     "npm": "^2.14.7"
-  },
-  "scripts": {
-    "start": "node server",
-    "dev": "nodemon -L server",
-    "test": "grunt test",
-    "apidoc": "apidoc -i ./server/api -o doc/",
-    "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   },
   "private": true
 }
