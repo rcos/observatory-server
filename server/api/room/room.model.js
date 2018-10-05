@@ -1,15 +1,17 @@
-'use strict';
+const mongoose, { Schema } = require('mongoose');
 
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
-
-var RoomSchema = new Schema({
-    name: {
-       type: String,
-       required: true
-    }
-    capacity: Number,
-    wheelchair_accessible: boolean
-},{ timestamps: true});
+const RoomSchema = new Schema({
+  name: {
+    type: String,
+    required: true
+  }
+  capacity: {
+    type: Number,
+    required: true
+  },
+  wheelchair_accessible: {
+    type: Boolean
+  }
+},{ timestamps: true });
 
 module.exports = mongoose.model('Room', RoomSchema);
