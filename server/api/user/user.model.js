@@ -9,8 +9,20 @@ var md5 = require('md5');
 var Project = require('../project/project.model');
 var util = require('../../components/utilities')
 
+// // // //
+
+// Crypto library variables
+const defaultIterations = 10000;
+const defaultKeyLength = 64;
+const defaultDigest = 'sha512';
+
+// // // //
+
 var UserSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
 
   email: {
     type: String,
@@ -87,18 +99,23 @@ var UserSchema = new Schema({
       url: String,
       date: Date
     }],
-    login: {type: String, lowercase: true, index: true},
+
+    login: {
+      type: String,
+      lowercase: true,
+      index: true
+    },
     profile: String,
-},
-  facebookLogin: {},
-  googleLogin: {},
+  },
+
   githubLogin: {}
 
-},{ timestamps: true});
+},{ timestamps: true });
+
 UserSchema.set('toJSON', {
   transform: function(doc, ret, options) {
-      ret.avatar = doc.avatar;
-      return ret;
+    ret.avatar = doc.avatar;
+    return ret;
   }
 });
 
@@ -214,25 +231,25 @@ UserSchema
     };
   });
 
- UserSchema
-   .virtual('privateProfile')
-   .get(function() {
-     return {
-       '_id':this._id.toString(),
-       'name': this.name,
-       'email': this.email,
-       'active': this.active,
-       'role': this.role,
-       'tech': this.tech,
-       'avatar': this.avatar,
-       'projects': this.projects,
-       'favoriteProjects': this.favoriteProjects,
-       'bio': this.bio,
-       'semesters': this.semesterCount,
-       'rcosStyle': this.rcosStyle,
-       'githubProfile': this.github.login
-     };
-   });
+UserSchema
+.virtual('privateProfile')
+.get(function() {
+  return {
+    '_id':this._id.toString(),
+    'name': this.name,
+    'email': this.email,
+    'active': this.active,
+    'role': this.role,
+    'tech': this.tech,
+    'avatar': this.avatar,
+    'projects': this.projects,
+    'favoriteProjects': this.favoriteProjects,
+    'bio': this.bio,
+    'semesters': this.semesterCount,
+    'rcosStyle': this.rcosStyle,
+    'githubProfile': this.github.login
+  };
+});
 
 UserSchema
   .virtual('stats')
@@ -474,7 +491,7 @@ UserSchema.methods = {
   encryptPasswordOld: function(password) {
     if (!password || !this.salt) return '';
     var salt = new Buffer(this.salt, 'base64');
-    return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+    return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength, defaultDigest).toString('base64');
   },
 
  /**
@@ -486,18 +503,16 @@ UserSchema.methods = {
   * @api public
   */
  encryptPassword: function(password, callback) {
-   if (!password || !this.salt) {
-     return null;
-   }
-    var defaultIterations = 10000;
-    var defaultKeyLength = 64;
+    if (!password || !this.salt) {
+      return null;
+    }
 
-   var salt = new Buffer(this.salt, 'base64');
-   if (!callback) {
-     return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength).toString('base64');
-   }
+    var salt = new Buffer(this.salt, 'base64');
+    if (!callback) {
+      return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength, defaultDigest).toString('base64');
+    }
 
-    return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, (err, key) => {
+    return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, defaultDigest, (err, key) => {
       if (err) {
         callback(err);
       } else {
