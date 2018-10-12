@@ -21,6 +21,7 @@ export default function(app) {
   app.use('/api/smallgroup', require('./api/smallgroup'));
   app.use('/api/attendance', require('./api/attendance'));
   app.use('/api/excused_absences', require('./api/excused_absence'));
+  app.use('/api/rooms', require('./api/room'));
   app.use('/api/static', require('./api/static'));
   app.use('/api/urp_forms', require('./api/urp_form'));
 
