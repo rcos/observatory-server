@@ -43,25 +43,6 @@ exports.admin = (req, res) => {
 }
 
 /**
-* @api {get} /api/excused_absences/:id Show
-* @apiName show
-* @apiGroup Excused Absence
-* @apiDescription Show an individual ExcusedAbsence
-* @apiPermission private
-* @apiSuccess {Model} root A single ExcusedAbsence model
-* @apiError (500) UnknownException Could not retrieve ExcusedAbsence model
-*/
-exports.show = (req, res) => {
-  return ExcusedAbsence.findById(req.params.id)
-  .then((model) => {
-    return res.json(200, model).end()
-  })
-  .catch((err) => {
-    return handleError(err)
-  })
-}
-
-/**
 * @api {post} /api/excused_absences/:id Create
 * @apiName create
 * @apiGroup Excused Absence
@@ -99,6 +80,8 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
   // TODO - isolate valid attributes depending on user role
   // Admin - update STATUS, REVIEWER_NOTE, REVIEWED_BY (automatic)
+  // TODO - perform check
+  // ExcusedAbsence.where({ _id: req.params.id, user_id: req.user._id }) is OWNED by the requesting user, IFF they're not an admin
   return ExcusedAbsence.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
   .then((response) => {
       return res.status(200).send(response).end()

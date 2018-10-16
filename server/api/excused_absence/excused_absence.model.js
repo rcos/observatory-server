@@ -4,15 +4,16 @@ import { STATUS_PENDING, STATUS_APPROVED, STATUS_DENIED } from './constants'
 
 // QUESTION - Semester attribute?
 // QUESTION - pick date from days with SmallGroup / LargeGroup attendance only
-// TODO - `status` attribute - enumerate STATUS_PENDING / STATUS_APPROVED / STATUS_DENIED
 const ExcusedAbsenceSchema = new Schema({
-  excuse: {
+  excuse: { // Really more of 'note'
     type: String,
     required: true
   },
   status: {
     type: String,
-    required: true
+    required: true,
+    enum: [STATUS_PENDING, STATUS_APPROVED, STATUS_DENIED]
+    // TODO - `status` attribute - enumerate STATUS_PENDING / STATUS_APPROVED / STATUS_DENIED
   },
   user: {
     type : Schema.Types.ObjectId,
