@@ -11,14 +11,13 @@ import Room from './room.model'
 * @apiSuccess {Collection} root Collection of all the user's Rooms.
 * @apiError (500) UnknownException Could not retrieve Room collection
 */
-exports.index = (req, res) => {
-  return Room.find()
-  .then((collection) => {
+exports.index = async (req, res) => {
+  try {
+    const collection = await Room.find()
     return res.json(200, collection).end()
-  })
-  .catch((err) => {
+  } catch (err) {
     return handleError(res, err)
-  })
+  }
 }
 
 /**
@@ -30,14 +29,13 @@ exports.index = (req, res) => {
 * @apiSuccess {Model} root A single Room model
 * @apiError (500) UnknownException Could not retrieve Room model
 */
-exports.show = (req, res) => {
-  return Room.findById(req.params.id)
-  .then((model) => {
+exports.show = async (req, res) => {
+  try {
+    const model = await Room.findById(req.params.id)
     return res.json(200, model).end()
-  })
-  .catch((err) => {
-    return handleError(err)
-  })
+  } catch(err) {
+    return handleError(res, err)
+  }
 }
 
 /**
@@ -49,15 +47,13 @@ exports.show = (req, res) => {
 * @apiSuccess {Model} root A single Room model
 * @apiError (500) UnknownException Could not create Room model
 */
-exports.create = (req, res) => {
-  return Room.create(req.body)
-  .then((model) => {
+exports.create = async (req, res) => {
+  try {
+    const model = await Room.create(req.body)
     return res.json(201, model)
-  })
-  .catch((err) => {
+  } catch(err) {
     return handleError(res, err)
-  })
-
+  }
 }
 
 /**
@@ -69,11 +65,11 @@ exports.create = (req, res) => {
 * @apiSuccess {Model} root The updated Room model
 * @apiError (500) UnknownException Could not update Room model
 */
-exports.update = (req, res) => {
-  return Room.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-  .then((response) => {
-      return res.status(200).send(response).end()
-  }).catch(next)
+exports.update = async (req, res) => {
+  try {
+    const response = await Room.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+    return res.status(200).send(response).end()
+  } catch (next) {}
 }
 
 /**
@@ -85,9 +81,9 @@ exports.update = (req, res) => {
 * @apiSuccess {Model} root The destroyed Room model
 * @apiError (500) UnknownException Could not destroy Room model
 */
-exports.destroy = (req, res, next) => {
-  return Room.remove({ _id: req.params.id })
-  .then((response) => {
-      return res.status(200).send(response).end()
-  }).catch(next)
+exports.destroy = async (req, res, next) => {
+  try {
+    const response = await Room.remove({ _id: req.params.id })
+    return res.status(200).send(response).end()
+  } catch (next) {}
 }
