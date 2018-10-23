@@ -4,8 +4,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var TeamSchema = new Schema({
-  title: String,
-  content: String,
+  description: String,
 
   title:
   {
@@ -15,11 +14,11 @@ var TeamSchema = new Schema({
 
 
   userId: 
-  {
+  [{
     type : Schema.Types.ObjectId,
     ref: 'User',
     index: true
-  },
+  }],
   semesterId: 
   {
     type : Schema.Types.ObjectId,
