@@ -180,31 +180,30 @@ exports.destroy = function(req, res) {
 * @apiSuccess {Model} returning day code for current day
 * @apiError (500) UnknownException Could not return a correct code.
 */
-exports.daycode = function(req, res){
-    ClassYear.getCurrentCodes((err, classYear) => {
-    if (err) return handleError(res, err);
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    for (let i = 0;i < classYear.dayCodes.length;i++){
-      if (today.getTime() === classYear.dayCodes[i].date.getTime()){
-        return res.status(200).json({ code: classYear.dayCodes[i].code }).end()
-      }
+exports.daycode = async function(req, res){
+  const classYear = await ClassYear.getCurrentCodes().catch((err) => handleError(res, err))
+  
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  for (let i = 0;i < classYear.dayCodes.length;i++){
+    if (today.getTime() === classYear.dayCodes[i].date.getTime()){
+      return res.status(200).json({ code: classYear.dayCodes[i].code }).end()
     }
-    //unique code generator, function at the bottom.
-	uniqueDayCode(6, (err,dayCode) => {
+  }
+  //unique code generator, function at the bottom.
+  uniqueDayCode(6, (err,dayCode) => {
+    if (err) return handleError(res, err);
+    const code = dayCode;
+
+    classYear.dayCodes.push({
+      date: today,
+      code: code,
+      bonusDay: req.body.bonusDay ? true : false
+    });
+
+    return classYear.save((err, classYear) => {
       if (err) return handleError(res, err);
-      const code = dayCode;
-
-      classYear.dayCodes.push({
-        date: today,
-        code: code,
-        bonusDay: req.body.bonusDay ? true : false
-      });
-
-	    return classYear.save((err, classYear) => {
-        if (err) return handleError(res, err);
-        return res.status(200).json({ code }).end()
-      });
+      return res.status(200).json({ code }).end()
     });
   });
 };

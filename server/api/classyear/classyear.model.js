@@ -68,13 +68,7 @@ ClassSchema.statics.getCurrent = function(cb) {
 };
 
 ClassSchema.statics.getCurrentCodes = function(cb) {
-	ClassYear.findOne({
-		"current": true
-	})
-  .select('+dayCodes.code')
-  .exec(function(err, classYear){
-		cb(err, classYear);
-	});
+	return ClassYear.findOne({ current: true }).select('+dayCodes.code')
 };
 
 ClassSchema
