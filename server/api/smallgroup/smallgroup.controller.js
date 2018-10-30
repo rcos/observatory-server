@@ -175,35 +175,32 @@ exports.daycode = async (req, res) => {
   const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
   const classYearId = classYear._id;
   
-  return SmallGroup.findOne({'students':userId, 'classYear':classYearId})
+  let smallgroup = await SmallGroup.findOne({'students':userId, 'classYear':classYearId})
   .select('+dayCodes.code')
-  .exec((err, smallgroup) => {
+  .catch((err) => handleError(res, err))
 
-    if (err) { return handleError(res, err); }
-
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    for (let i = 0;i < smallgroup.dayCodes.length;i++){
-      if (today.getTime() === smallgroup.dayCodes[i].date.getTime()){
-        return res.status(200).json(smallgroup.dayCodes[i].code)
-      }
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  for (let i = 0;i < smallgroup.dayCodes.length;i++){
+    if (today.getTime() === smallgroup.dayCodes[i].date.getTime()){
+      return res.status(200).json(smallgroup.dayCodes[i].code)
     }
+  }
 
-    //unique code generator, imported from api/lib/helpers.js
-    uniqueDayCode(6, (err, dayCode) => {
+  //unique code generator, imported from api/lib/helpers.js
+  uniqueDayCode(6, (err, dayCode) => {
+    if (err) { return handleError(res, err); }
+    const code = dayCode;
+
+    smallgroup.dayCodes.push({
+      date: today,
+      code: code,
+      bonusDay: req.body.bonusDay ? true : false
+    });
+
+      return smallgroup.save((err, classYear) => {
       if (err) { return handleError(res, err); }
-      const code = dayCode;
-
-      smallgroup.dayCodes.push({
-        date: today,
-        code: code,
-        bonusDay: req.body.bonusDay ? true : false
-      });
-
-        return smallgroup.save((err, classYear) => {
-        if (err) { return handleError(res, err); }
-        return res.status(200).json({ code: code })
-      });
+      return res.status(200).json({ code: code })
     });
   });
 };
