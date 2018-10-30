@@ -169,42 +169,41 @@ exports.getSmallGroup = async (req, res) => {
 * @apiSuccess {json} Model Returns the daycode
 * @apiError (Error) 500 Unable to find the daycode
 */
-exports.daycode = (req, res) => { // TODO refactor this function - and classYear.getCurrent
+exports.daycode = async (req, res) => {
   const userId = req.user.id;
 
-  return ClassYear.getCurrent((err, classYear) => {
-    const classYearId = classYear._id;
-      return SmallGroup.findOne({'students':userId, 'classYear':classYearId})
-    .select('+dayCodes.code')
-      .exec((err, smallgroup) => {
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
+  
+  return SmallGroup.findOne({'students':userId, 'classYear':classYearId})
+  .select('+dayCodes.code')
+  .exec((err, smallgroup) => {
 
-      if (err) { return handleError(res, err); }
+    if (err) { return handleError(res, err); }
 
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      for (let i = 0;i < smallgroup.dayCodes.length;i++){
-        if (today.getTime() === smallgroup.dayCodes[i].date.getTime()){
-          return res.status(200).json(smallgroup.dayCodes[i].code)
-        }
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    for (let i = 0;i < smallgroup.dayCodes.length;i++){
+      if (today.getTime() === smallgroup.dayCodes[i].date.getTime()){
+        return res.status(200).json(smallgroup.dayCodes[i].code)
       }
+    }
 
-      //unique code generator, imported from api/lib/helpers.js
-      uniqueDayCode(6, (err, dayCode) => {
-        if (err) { return handleError(res, err); }
-        const code = dayCode;
+    //unique code generator, imported from api/lib/helpers.js
+    uniqueDayCode(6, (err, dayCode) => {
+      if (err) { return handleError(res, err); }
+      const code = dayCode;
 
-        smallgroup.dayCodes.push({
-          date: today,
-          code: code,
-          bonusDay: req.body.bonusDay ? true : false
-        });
-
-          return smallgroup.save((err, classYear) => {
-          if (err) { return handleError(res, err); }
-          return res.status(200).json({ code: code })
-        });
+      smallgroup.dayCodes.push({
+        date: today,
+        code: code,
+        bonusDay: req.body.bonusDay ? true : false
       });
 
+        return smallgroup.save((err, classYear) => {
+        if (err) { return handleError(res, err); }
+        return res.status(200).json({ code: code })
+      });
     });
   });
 };
@@ -320,23 +319,18 @@ exports.getSmallGroupMembers = async (req, res) => {
 * @apiSuccess {HTTP} 200 Successfully added the member
 * @apiError (Error) 500 Unable to add the member
 */
-exports.addMember = (req, res) => { // TODO refactor this function - and classYear.getCurrent
-    const memberId = req.body.memberId;
-    const smallGroupId = req.params.id;
-    return ClassYear.getCurrent((err, classYear) => {
-        const classYearId = classYear._id;
-        return SmallGroup.findOneAndUpdate({'students': memberId, 'classYear':classYearId}, {
-            $pull: { students : memberId }
-        }, (err, smallgroup) => {
-            if (err) return handleError(res, err);
-            return SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
-                $addToSet: { students : memberId }
-            }, (err, smallgroup) => {
-                if (err) return handleError(res, err);
-                return res.sendStatus(200);
-            });
-        });
-    });
+exports.addMember = async (req, res) => {
+  const memberId = req.body.memberId;
+  const smallGroupId = req.params.id;
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
+  let smallgroup = await SmallGroup.findOneAndUpdate({ 'students': memberId, 'classYear': classYearId }, {
+    $pull: { students : memberId }
+  }).catch((err) => handleError(err))
+  smallgroup = await SmallGroup.findOneAndUpdate({_id: smallGroupId}, {
+    $addToSet: { students : memberId }
+  }).catch((err) => handleError(err))
+  return res.sendStatus(200);
 };
 
 // Delete a member from a smallgroup

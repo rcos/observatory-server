@@ -72,15 +72,13 @@ exports.getClassYear = function(req, res) {
 * @apiError (500) UnknownException Could not retrieve ClassYear collection
 */
 // NOTE - this controller function is not used
-exports.countBonusDays = function(req, res) {
-    ClassYear.getCurrent((err, classYear) => {
-    if (err) { return handleError(res, err); }
+exports.countBonusDays = async function(req, res) {
+    const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
     if (!classYear) return res.send(404);
-    const bonusDays  = classYear.dayCodes.reduce((previousValue, currentValue) => {
+    const bonusDays = classYear.dayCodes.reduce((previousValue, currentValue) => {
       return previousValue + (currentValue.bonusDay ? 1 : 0); // Add 1 to the count for each bonusday in classYear.dayCodes
     }, 0);
     res.json(bonusDays);
-  });
 };
 
 
@@ -93,45 +91,42 @@ exports.countBonusDays = function(req, res) {
 * @apiSuccess {Model} Sends 204 Success response
 * @apiError (500) UnknownException Could not retrieve creat ClassYear
 */
-exports.create = function(req, res) {
+exports.create = async function(req, res) {
   const semester = req.body.semester;
   if (!semester) return handleError(res, "No Semester Specified");
-  ClassYear.findOne({
+  let classYear = ClassYear.findOne({
     'semester': req.body.semester
-  }, (err, classYear) => {
-    if (classYear){
-      // Set existing class year as current class year and do not create
-      // a new class year
-      classYear.current = true;
-    } else {
-      // Create new class year and set as current
-      classYear = new ClassYear(req.body);
-      classYear.current = true;
+  }).catch((err) => handleError(err))
+  
+  if (classYear){
+    // Set existing class year as current class year and do not create
+    // a new class year
+    classYear.current = true;
+  } else {
+    // Create new class year and set as current
+    classYear = new ClassYear(req.body);
+    classYear.current = true;
+  }
+  classYear = await classYear.save().catch((err) => validationError(res, err));
+
+  // Make sure there are no other current class years
+  ClassYear.find({
+    'current': true,
+    'semester': {$ne : classYear.semester}
+  }, (err, otherClassYears) => {
+
+    for (let i = 0 ; i < otherClassYears.length ; i++){
+      let otherClassYear = otherClassYears[i];
+      if (classYear.semester !== otherClassYear.semester){
+        otherClassYear.current = false;
+        otherClassYear.save();
+      }
     }
-      classYear.save((err, classYear) => {
-      if (err) return validationError(res, err);
+  });
 
-      // Make sure there are no other current class years
-      ClassYear.find({
-        'current': true,
-        'semester': {$ne : classYear.semester}
-      }, (err, otherClassYears) => {
-
-        for (let i = 0 ; i < otherClassYears.length ; i++){
-          let otherClassYear = otherClassYears[i];
-          if (classYear.semester !== otherClassYear.semester){
-            otherClassYear.current = false;
-            otherClassYear.save();
-          }
-        }
-      });
-	  ClassYear.getCurrent((err, currentClassYear) => {
-          global.currentClassYear = currentClassYear;
-          res.send(204);
-      });
-    });
-
-  })
+  const currentClassYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  global.currentClassYear = currentClassYear;
+  res.send(204);
 };
 
 
@@ -144,21 +139,17 @@ exports.create = function(req, res) {
 * @apiSuccess {Model} Sends 204 Success response
 * @apiError (500) UnknownException Could not updata data.
 */
-exports.update = function(req, res) {
-  ClassYear.findOne({
+exports.update = async function(req, res) {
+  let classYear = await ClassYear.findOne({
     'semester': req.params.semester
-  }, (err, classYear) => {
-    if (err) { return handleError(res, err); }
-    classYear.update(req.body, function(err){
-      if (err) { return handleError(res, err); }
-	ClassYear.getCurrent((err, currentClassYear) => {
-          global.currentClassYear = currentClassYear;
-          res.send(204);
+  }).catch((err) => handleError(res, err)) 
 
-      });
-
-    });
-  });
+  await classYear.update(req.body).catch((err) => handleError(res, err)) 
+  
+  const currentClassYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+	
+  global.currentClassYear = currentClassYear;
+  res.send(204);
 };
 
 
@@ -255,13 +246,11 @@ exports.deleteDay = function(req, res){
 * @apiSuccess {Model} returing 200
 * @apiError (500) UnknownException Could not display URP.
 */
-exports.displayURP = function(req, res) {
-  return ClassYear.getCurrent((err, classYear) => {
+exports.displayURP = async function(req, res) {
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  return classYear.update(req.body, (err) => {
     if (err) { return handleError(res, err); }
-      return classYear.update(req.body, (err) => {
-      if (err) { return handleError(res, err); }
-      res.send(200);
-    });
+    res.send(200);
   });
 };
 
@@ -274,14 +263,12 @@ exports.displayURP = function(req, res) {
 * @apiSuccess {Model} display URP
 * @apiError (500) UnknownException Could not display URP.
 */
-exports.getDisplayURP = function(req, res) {
-  return ClassYear.getCurrent((err, classYear) => {
-    if (err) { return handleError(res, err); }
-    // if no class year is defined then don't show urp
-    if (!classYear) {
-      res.json({displayURP: false});
-    } else {
-      res.json({displayURP:classYear.displayURP});
-    }
-  })
+exports.getDisplayURP = async function(req, res) {
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  // if no class year is defined then don't show urp
+  if (!classYear) {
+    res.json({displayURP: false});
+  } else {
+    res.json({displayURP:classYear.displayURP});
+  }
 };

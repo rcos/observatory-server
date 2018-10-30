@@ -63,15 +63,11 @@ ClassSchema
 	});
 
 var ClassYear;
-ClassSchema.statics.getCurrent = function(cb){
-	ClassYear.findOne({
-		"current": true
-	}, function(err, classYear){
-		cb(err, classYear);
-	});
+ClassSchema.statics.getCurrent = function(cb) {
+  return ClassYear.findOne({ current: true })
 };
 
-ClassSchema.statics.getCurrentCodes = function(cb){
+ClassSchema.statics.getCurrentCodes = function(cb) {
 	ClassYear.findOne({
 		"current": true
 	})
@@ -139,6 +135,6 @@ ClassSchema
 ClassYear = mongoose.model('ClassYear', ClassSchema);
 module.exports = ClassYear;
 
-ClassYear.getCurrent(function(err, currentClassYear){
+ClassYear.getCurrent(function(err, currentClassYear) {
     global.currentClassYear = currentClassYear;
 });

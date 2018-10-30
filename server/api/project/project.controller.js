@@ -153,31 +153,30 @@ exports.myProjects = (req, res) => {
 * @apiSuccess {json} mentees list of mentees
 * @apiError (Error) 500 Error when finding mentees
 */
-exports.mentees = (req, res) => {
+exports.mentees = async (req, res) => {
   const userId = req.user._id;
 
-  return ClassYear.getCurrent((err, classYear) => {
-      if (err) { return handleError(res, err); }
-      const classYearId = classYear._id;
-      const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  
+  const classYearId = classYear._id;
+  const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
 
-      return query.select('students').exec((err, smallgroup) => {
+  return query.select('students').exec((err, smallgroup) => {
+    if (err) return handleError(res, err);
+    if (!smallgroup.students) return res.json([]);
+    const mentees_ids = smallgroup.students.map((s) => {
+      return mongoose.Types.ObjectId(s);
+    });
+    User.find({ '_id': { $in: mentees_ids }} )
+      .distinct('projects')
+      .exec((err, projectIds) => {
         if (err) return handleError(res, err);
-        if (!smallgroup.students) return res.json([]);
-        const mentees_ids = smallgroup.students.map((s) => {
-          return mongoose.Types.ObjectId(s);
+          Project.find({'_id': {$in: projectIds}}).exec((err, projects) => {
+          if (err) return handleError(res, err);
+          return res.json(projects);
         });
-        User.find({ '_id': { $in: mentees_ids }} )
-          .distinct('projects')
-          .exec((err, projectIds) => {
-            if (err) return handleError(res, err);
-              Project.find({'_id': {$in: projectIds}}).exec((err, projects) => {
-              if (err) return handleError(res, err);
-              return res.json(projects);
-            });
-        });
-      })
-  });
+    });
+  })
 
 }
 
