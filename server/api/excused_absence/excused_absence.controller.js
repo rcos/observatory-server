@@ -91,6 +91,15 @@ exports.update = (req, res) => {
 
 
 // TODO - document and implement
+/**
+* @api {approve} /api/excused_absences/:id Approve
+* @apiName approve
+* @apiGroup Excused Absence
+* @apiDescription Changes an ExcusedAbsence's status to STATUS_APPROVED
+* @apiPermission private
+* @apiSuccess {Model} root The approved ExcusedAbsence model
+* @apiError (500) UnknownException Could not approve ExcusedAbsence model
+*/
 exports.approve = (req, res) => {
   return ExcusedAbsence.findById(req.params.id)
   .then((excusedAbsence) => {
