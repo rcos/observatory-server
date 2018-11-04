@@ -3,6 +3,7 @@ import { handleError } from '../lib/helpers'
 import { STATUS_PENDING, STATUS_APPROVED, STATUS_DENIED } from './constants'
 import User from '../user/user.model'
 import ExcusedAbsence from './excused_absence.model'
+const auth = require('../../auth/auth.service')
 
 /**
 * @api {get} /api/excused_absences Index
@@ -112,9 +113,13 @@ exports.approve = (req, res) => {
 * @apiError (500) UnknownException Could not destroy ExcusedAbsence model
 */
 exports.destroy = (req, res, next) => {
-  // TODO - ensure this is only deletable by the user who created the record, or an admin
-  return ExcusedAbsence.remove({ _id: req.params.id })
-  .then((response) => {
-      return res.status(200).send(response).end()
-  }).catch(next)
-}
+    
+  if(auth.hasRole('admin') || (auth.isAuthenticated === ExcusedAbsence.findById(req.params.id).user )) {
+      return ExcusedAbsence.remove({ _id: req.params.id })
+      .then((response) => {
+          return res.status(200).send(response).end()
+      }).catch(next)}
+  
+  else {
+    return res.status(401).send(response).end()
+  }
