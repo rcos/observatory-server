@@ -27,11 +27,11 @@ const util = require('../../components/utilities')
 */
 exports.index = async (req, res) => {
   try {
-    const smallgroups = await SmallGroup.find({}) 
+    const smallgroups = await SmallGroup.find({})
     return res.status(200).json(smallgroups)
-  } catch (err) { 
+  } catch (err) {
     return handleError(res, err)
-  }  
+  }
 };
 
 // Create a new smallgroup for the current class year
@@ -153,7 +153,7 @@ exports.getSmallGroup = async (req, res) => {
     return res.status(200).json(responseObject)
   } catch (err) {
     return handleError(res, err)
-  } 
+  }
 };
 
 // Generate a daycode or return the current day code for the smallgroups
@@ -226,7 +226,7 @@ exports.deleteDay = async (req, res) => {
     let smallgroup = SmallGroup.findOneAndUpdate({ "_id":smallgroupId }, {
       $pull: { dayCodes: { code : dayCode }}
     }).select('+dayCodes.code')
-        
+
     await Attendance.remove({ code : dayCode })
     return res.status(200).json(smallgroup)
   } catch (err) {
@@ -276,7 +276,7 @@ async function getFullUserProfile(userId, mentor, callback){
 * @apiSuccess {Collection} root Returns list of smallgroup members
 * @apiError (Error) 500 Unable to find the smallgroup
 */
-exports.getSmallGroupMembers = async (req, res) => { 
+exports.getSmallGroupMembers = async (req, res) => {
   try {
     const id = req.params.id
     let smallgroup = await SmallGroup.findById(id)
@@ -378,14 +378,14 @@ exports.changeName = async (req,res) => {
     const id = req.params.id
     const newName = String(req.body.smallGroupName)
     let smallgroup = await SmallGroup.findById(id)
-    
+
     smallgroup.name = newName;
     try {
       await smallgroup.save()
       return res.status(200).json({ name: smallgroup.name });
     } catch (err) {
       return validationError(res, err);
-    }      
+    }
   } catch (err) {
     return handleError(res, err)
   }

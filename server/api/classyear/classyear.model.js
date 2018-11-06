@@ -32,35 +32,35 @@ var ClassSchema = new Schema({
 },{ timestamps: true, usePushEach: true });
 
 /*
-	Virtuals
+  Virtuals
 */
 ClassSchema
-	.virtual("dayCode")
-	.get(function(){
-		var today = new Date();
-		today.setHours(0,0,0,0);
-		for (var i = 0;i < this.dayCodes.length;i++){
+  .virtual("dayCode")
+  .get(function(){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    for (var i = 0;i < this.dayCodes.length;i++){
       if (this.dayCodes[i].date.getTime() === today.getTime() &&
           this.dayCodes[i].bonusDay === false){
-				return this.dayCodes[i].code;
-			}
-		}
-		return null;
-	});
+        return this.dayCodes[i].code;
+      }
+    }
+    return null;
+  });
 
 ClassSchema
-	.virtual("bonusDayCode")
-	.get(function(){
-		var today = new Date();
-		today.setHours(0,0,0,0);
-		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() === today.getTime() &&
+  .virtual("bonusDayCode")
+  .get(function(){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    for (var i = 0;i < this.dayCodes.length;i++){
+      if (this.dayCodes[i].date.getTime() === today.getTime() &&
           this.dayCodes[i].bonusDay === true){
-				return this.dayCodes[i].code;
-			}
-		}
-		return null;
-	});
+        return this.dayCodes[i].code;
+      }
+    }
+    return null;
+  });
 
 var ClassYear;
 ClassSchema.statics.getCurrent = function(cb) {
@@ -72,17 +72,17 @@ ClassSchema.statics.getCurrentCodes = function(cb) {
 };
 
 ClassSchema
-	.virtual("dayCodeInfo")
-	.get(function(){
-		var today = new Date();
-		today.setHours(0,0,0,0);
-		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() === today.getTime()){
-				return this.dayCodes[i];
-			}
-		}
-		return null;
-	});
+  .virtual("dayCodeInfo")
+  .get(function(){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    for (var i = 0;i < this.dayCodes.length;i++){
+      if (this.dayCodes[i].date.getTime() === today.getTime()){
+        return this.dayCodes[i];
+      }
+    }
+    return null;
+  });
 
 ClassSchema
 .virtual("days")

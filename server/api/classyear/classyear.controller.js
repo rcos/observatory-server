@@ -21,7 +21,7 @@ exports.index = function(req, res) {
       query.select('+dayCodes.code')
   }
     return query.exec((err, classYear) => {
-  	if (err) { return handleError(res, err); }
+    if (err) { return handleError(res, err); }
     const responseObject = classYear.toObject();
     // Admins should get a day code
     // Generate a day code if one does not already exist
@@ -35,7 +35,7 @@ exports.index = function(req, res) {
             responseObject.bonusDayCode = classYear.bonusDayCode;
         }
     }
-   	return res.status(200).json(responseObject);
+    return res.status(200).json(responseObject);
   });
 };
 
@@ -53,8 +53,8 @@ exports.getClassYear = function(req, res) {
   ClassYear.findOne({
       'semester': req.params.semester
   })
-	.select('+dayCodes.code')
-	.exec((err, classYear) => {
+  .select('+dayCodes.code')
+  .exec((err, classYear) => {
     if (err) { return handleError(res, err); }
     if (!classYear) return res.send(404);
     var responseObject = classYear.toObject();
@@ -226,7 +226,7 @@ exports.deleteDay = function(req, res){
         $pull: { dayCodes: {code : dayCode }}
     })
     .select('+dayCodes.code')
-	.exec((err, classYear) => {
+  .exec((err, classYear) => {
         if (err) return handleError(res, err);
 
             return Attendance.remove({code : dayCode}, (err) => {
