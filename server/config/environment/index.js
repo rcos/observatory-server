@@ -72,4 +72,5 @@ var all = {
 module.exports = _.merge(
   all,
   require('./shared'),
-  require('./' + process.env.NODE_ENV + '.js') || {});
+  require('./' + process.env.NODE_ENV + '.js') || {}
+);
