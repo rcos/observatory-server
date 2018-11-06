@@ -90,7 +90,6 @@ exports.update = (req, res) => {
 }
 
 
-// TODO - document and implement
 /**
 * @api {approve} /api/excused_absences/:id Approve
 * @apiName approve
@@ -132,3 +131,5 @@ exports.destroy = (req, res, next) => {
   else {
     return res.status(401).send(response).end()
   }
+}
+
