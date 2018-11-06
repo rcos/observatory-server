@@ -94,8 +94,8 @@ exports.countBonusDays = async function(req, res) {
 exports.create = async function(req, res) {
   const semester = req.body.semester;
   if (!semester) return handleError(res, "No Semester Specified");
-  let classYear = ClassYear.findOne({
-    'semester': req.body.semester
+  let classYear = await ClassYear.findOne({
+    'semester': semester
   }).catch((err) => handleError(err))
   
   if (classYear){
