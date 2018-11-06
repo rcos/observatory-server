@@ -82,15 +82,13 @@ const saveAttendance = (classYearId, userId, date, code, needsVerification, bonu
 * @apiSuccess {Collection} root Collection of all attendance submissions.
 * @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
 */
-exports.index = (req, res) => {
-    return ClassYear.getCurrent((err, classYear) => {
-      if (err) { return handleError(err) }
-      const classYearId = classYear._id;
+exports.index = async (req, res) => {
+    const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+    const classYearId = classYear._id;
 
-      return Attendance.find({classYear:classYearId}).exec((err, attendance) => {
+    return Attendance.find({classYear:classYearId}).exec((err, attendance) => {
         if (err) { return handleError(res, err); }
         return res.json(200, attendance);
-      });
     });
 };
 
@@ -258,15 +256,14 @@ const getAttendance = (userId, classYearId, cb) => {
 * @apiSuccess {json} root Returns user's attendance
 * @apiError (500) {json} handleError Could not retrieve attendance submissions and runs handleError function.
 */
-exports.getAttendance = (req, res) => {
+exports.getAttendance = async (req, res) => {
   const userId = req.params.user;
-  return ClassYear.getCurrent((err, classYear) => {
-    if (err) {return handleError(err)}
-    const classYearId = classYear._id;
-    getAttendance(userId, classYearId, (userAttendance) => {
-      if (err) { return handleError(err) }
-      return res.json(userAttendance);
-    });
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
+  
+  getAttendance(userId, classYearId, (userAttendance, err) => {
+    if (err) { return handleError(err) }
+    return res.json(userAttendance);
   });
 };
 
@@ -299,7 +296,7 @@ exports.getAttendanceMe = (req, res) => {
 //
 // router.get('/present/me/today', auth.isAuthenticated(), controller.presentMe);
 // router.get('/present/me/:date', auth.isAuthenticated(), controller.presentMe);
-exports.present = (req, res) => {
+exports.present = async (req, res) => {
   let date = req.params.date;
   if (req.params.date === 'today'){
     date = util.convertToMidnight(new Date());
@@ -308,13 +305,12 @@ exports.present = (req, res) => {
     date = util.convertToMidnight(req.params.date);
   }
   const userId = req.params.user;
-  return ClassYear.getCurrent((err, classYear) => {
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
+  
+  getPresent(userId, date, classYearId, (err,userAttendance) => {
     if (err) { return handleError(err) }
-    const classYearId = classYear._id;
-      getPresent(userId, date, classYearId, (err,userAttendance) => {
-      if (err) { return handleError(err) }
-      return res.json(userAttendance);
-    });
+    return res.json(userAttendance);
   });
 };
 
@@ -343,7 +339,7 @@ exports.presentMe = (req, res) => {
 */
 // Mark attendance as present, subject to verification
 // router.post('/attend', auth.isAuthenticated(), controller.attend);
-exports.attend = (req,res) => {
+exports.attend = async (req,res) => {
   const user = req.user;
   let code = req.body.dayCode;
   if (!code) { return res.status(400).json('No Code Submitted'); }
@@ -351,116 +347,115 @@ exports.attend = (req,res) => {
   // after the above check, otherwise toUpperCase() might not exist.
   code = code.toUpperCase();
   // Check code against current class year
-  return ClassYear.getCurrentCodes((err, classYear) => {
-    if (err) { return handleError(err) }
-    return checkAttendanceForDate(user,classYear,util.convertToMidnight(new Date()), (err, submitted) => {
-      if (err) { return handleError(err) }
-      // Check if the user needs to verify, with config.attendanceVerificationRatio chance
-      const needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
-      // Full group, not a bonus day
-      if (classYear.dayCode === code){
-        // Check if the user already submitted a full group, non bonus attendance
-        if (submitted.full){
-          // if it is already submitted, return
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
 
-          return res.status(409).json('Full group attendance already recorded: ' + submitted.full.verified);
+  return checkAttendanceForDate(user,classYear,util.convertToMidnight(new Date()), (err, submitted) => {
+    if (err) { return handleError(err) }
+    // Check if the user needs to verify, with config.attendanceVerificationRatio chance
+    const needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
+    // Full group, not a bonus day
+    if (classYear.dayCode === code){
+      // Check if the user already submitted a full group, non bonus attendance
+      if (submitted.full){
+        // if it is already submitted, return
+
+        return res.status(409).json('Full group attendance already recorded: ' + submitted.full.verified);
+      }
+      // if not, create the attendance object
+      return saveAttendance(
+        classYear._id,  // classYearId
+        user._id, // userId
+        util.convertToMidnight(new Date()), // date
+        code, // code
+        needsVerification, // needsVerification
+        false, // bonusDay
+        false, // smallgroup
+        (err,submission) => {
+        if (err) {return handleError(err)}
+        return res.status(200).json({'type':'Full group attendance', 'unverified': needsVerification});
+      });
+    }
+    // Full group & bonus day
+    else if (classYear.bonusDayCode === code){
+      // Check if the user already submitted a full group, bonus attendance
+      if (submitted.fullBonus){
+        // if it is already submitted, return
+        return res.status(409).json('Full group bonus attendance already recorded: ' + submitted.fullBonus.verified);
+      }
+      // if not, create the attendance object
+      return saveAttendance(
+        classYear._id,  // classYearId
+        user._id, // userId
+        util.convertToMidnight(new Date()), // date
+        code, // code
+        needsVerification, // needsVerification
+        true, // bonusDay
+        false, // smallgroup
+        (err,submission) => {
+        if (err) {return handleError(err)}
+        return res.status(200).json({'type':'Full group bonus attendance', 'unverified': needsVerification});
+      });
+    }
+    else {
+    // Classyear attendance code and bonus code was incorrect, try small group
+      return SmallGroup.findOne({'students':user._id, 'classYear':classYear._id})
+      .select('+dayCodes.code')
+      .exec((err, smallgroup) => {
+        if (err) {return handleError(err)}
+        //if the user has no smallgroup,try comparing the code submission with the lastest dayCodes
+        if (!smallgroup){
+          joinGroupAndSubmit(user,code,classYear,needsVerification, (err,ret) => {
+            if (err) {return res.status(400).json('Incorrect Day Code!')}
+            return res.status(200).json(ret);
+          })
         }
-        // if not, create the attendance object
-        return saveAttendance(
-          classYear._id,  // classYearId
-          user._id, // userId
-          util.convertToMidnight(new Date()), // date
-          code, // code
-          needsVerification, // needsVerification
-          false, // bonusDay
-          false, // smallgroup
-          (err,submission) => {
-          if (err) {return handleError(err)}
-          return res.status(200).json({'type':'Full group attendance', 'unverified': needsVerification});
-        });
-      }
-      // Full group & bonus day
-      else if (classYear.bonusDayCode === code){
-        // Check if the user already submitted a full group, bonus attendance
-        if (submitted.fullBonus){
-          // if it is already submitted, return
-          return res.status(409).json('Full group bonus attendance already recorded: ' + submitted.fullBonus.verified);
+        // Small group, and not a bonus day
+        else if (smallgroup.dayCode === code){
+          // Check if the user already submitted a small group, non-bonus attendance
+          if (submitted.small){
+            // if it is already submitted, return
+            return res.status(409).json('Small group attendance already recorded: ' + submitted.small.verified);
+          }
+          // if not, create the attendance object
+          return saveAttendance(
+            classYear._id,  // classYearId
+            user._id, // userId
+            util.convertToMidnight(new Date()), // date
+            code, // code
+            needsVerification, // needsVerification
+            false, // bonusDay
+            true, // smallgroup
+            (err,submission) => {
+            if (err) {return handleError(err)}
+            return res.status(200).json({'type':'Small group attendance', 'unverified': needsVerification});
+          });
         }
-        // if not, create the attendance object
-        return saveAttendance(
-          classYear._id,  // classYearId
-          user._id, // userId
-          util.convertToMidnight(new Date()), // date
-          code, // code
-          needsVerification, // needsVerification
-          true, // bonusDay
-          false, // smallgroup
-          (err,submission) => {
-          if (err) {return handleError(err)}
-          return res.status(200).json({'type':'Full group bonus attendance', 'unverified': needsVerification});
-        });
-      }
-      else {
-      // Classyear attendance code and bonus code was incorrect, try small group
-        return SmallGroup.findOne({'students':user._id, 'classYear':classYear._id})
-        .select('+dayCodes.code')
-        .exec((err, smallgroup) => {
-          if (err) {return handleError(err)}
-          //if the user has no smallgroup,try comparing the code submission with the lastest dayCodes
-          if (!smallgroup){
-            joinGroupAndSubmit(user,code,classYear,needsVerification, (err,ret) => {
-              if (err) {return res.status(400).json('Incorrect Day Code!')}
-              return res.status(200).json(ret);
-            })
+        // Small group & bonus day
+        else if (smallgroup.bonusDayCode === code){
+          // Check if the user already submitted a small group & bonus attendance
+          if (submitted.smallBonus){
+            // if it is already submitted, return
+            return res.status(409).json('Small group bonus attendance already recorded: ' + submitted.smallBonus.verified);
           }
-          // Small group, and not a bonus day
-          else if (smallgroup.dayCode === code){
-            // Check if the user already submitted a small group, non-bonus attendance
-            if (submitted.small){
-              // if it is already submitted, return
-              return res.status(409).json('Small group attendance already recorded: ' + submitted.small.verified);
-            }
-            // if not, create the attendance object
-            return saveAttendance(
-              classYear._id,  // classYearId
-              user._id, // userId
-              util.convertToMidnight(new Date()), // date
-              code, // code
-              needsVerification, // needsVerification
-              false, // bonusDay
-              true, // smallgroup
-              (err,submission) => {
-              if (err) {return handleError(err)}
-              return res.status(200).json({'type':'Small group attendance', 'unverified': needsVerification});
-            });
-          }
-          // Small group & bonus day
-          else if (smallgroup.bonusDayCode === code){
-            // Check if the user already submitted a small group & bonus attendance
-            if (submitted.smallBonus){
-              // if it is already submitted, return
-              return res.status(409).json('Small group bonus attendance already recorded: ' + submitted.smallBonus.verified);
-            }
-            // if not, create the attendance object
-            return saveAttendance(
-              classYear._id,  // classYearId
-              user._id, // userId
-              util.convertToMidnight(new Date()), // date
-              code, // code
-              needsVerification, // needsVerification
-              true, // bonusDay
-              true, // smallgroup
-              (err,submission) => {
-              if (err) {return handleError(err)}
-              return res.status(200).json({'type':'Small group bonus attendance', 'unverified': needsVerification});
-            });
-          }
-          else {
-            return res.status(400).json('Incorrect Day Code!');
-          }
-        });
-      }
-    });
+          // if not, create the attendance object
+          return saveAttendance(
+            classYear._id,  // classYearId
+            user._id, // userId
+            util.convertToMidnight(new Date()), // date
+            code, // code
+            needsVerification, // needsVerification
+            true, // bonusDay
+            true, // smallgroup
+            (err,submission) => {
+            if (err) {return handleError(err)}
+            return res.status(200).json({'type':'Small group bonus attendance', 'unverified': needsVerification});
+          });
+        }
+        else {
+          return res.status(400).json('Incorrect Day Code!');
+        }
+      });
+    }
   });
 };
 
@@ -518,24 +513,21 @@ function joinGroupAndSubmit(user,code,classYear,needsVerification,callback){
 // router.post('/attend/:user/smallBonus', auth.hasRole('mentor'), controller.setAttendanceSmallBonus);
 // router.post('/attend/:user/fullBonus', auth.hasRole('mentor'), controller.setAttendanceFullBonus);
 // Get data for submitting attendance, then pass it to saveAttendance
-const getUserAndDateParams = (req, cb) => {
-  const userId = req.params.user;
-  return User.findById(userId, (err, user) => {
-    if (err) { return cb(err) }
-    let date = req.params.date;
-    if (!req.params.date || req.params.date === 'today'){
-      date = util.convertToMidnight(new Date());
-    }
-    else{
-      date = util.convertToMidnight(req.params.date);
-    }
-    const userId = req.params.user;
-    return ClassYear.getCurrent((err, classYear) => {
-      if (err) { return cb(err) }
-      const classYearId = classYear._id;
-      return cb(err,user,classYear,date)
-    });
-  });
+const getUserAndDateParams = async (req, cb) => {
+  let userId = req.params.user;
+  let user = await User.findById(userId).catch((err) => cb(err))
+  let date = req.params.date;
+  if (!req.params.date || req.params.date === 'today'){
+    date = util.convertToMidnight(new Date());
+  }
+  else{
+    date = util.convertToMidnight(req.params.date);
+  }
+  userId = req.params.user;
+
+  const classYear = await ClassYear.getCurrent().catch((err) => cb(err))
+  const classYearId = classYear._id;
+  return cb(err,user,classYear,date)
 };
 
 /**
@@ -550,38 +542,32 @@ const getUserAndDateParams = (req, cb) => {
 // Adds an attendance entry with the given parameters
 // Restricted to admins
 // router.post('/attend/:user/manual', auth.hasRole('admin'), controller.attend);
-exports.addManualAttendance = (req, res) => {
+exports.addManualAttendance = async (req, res) => {
   const userId = req.params.user;
   const date = req.body.date;
 
   const smallgroup = req.body.smallgroup
   const bonusDay = req.body.bonusday;
 
-  return User.findById(userId, (err,user) => {
-    if (err) {
-      return handleError(err);
-    }
-      return ClassYear.getCurrent((err, classYear) => {
-      if (err) {
-        return handleError(err);
-      }
+  let user = await User.findById(userId).catch((err) => handleError(err))
 
-      return saveAttendance(
-        classYear._id,  // classYearId
-        user._id, // userId
-        util.setToZero(date), // date
-        'manual', // code
-        false, // needsVerification
-        bonusDay, // bonusDay
-        smallgroup, // smallgroup
-        (err,submission) => {
-          if (err) {
-            return handleError(err);
-          }
-          // saved
-          return res.status(200).json({saved: true});
-      });
-    });
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+    
+
+  return saveAttendance(
+      classYear._id,  // classYearId
+      user._id, // userId
+      util.setToZero(date), // date
+      'manual', // code
+      false, // needsVerification
+      bonusDay, // bonusDay
+      smallgroup, // smallgroup
+      (err,submission) => {
+        if (err) {
+          return handleError(err);
+        }
+        // saved
+        return res.status(200).json({saved: true});
   });
 }
 
@@ -597,7 +583,7 @@ exports.addManualAttendance = (req, res) => {
 // Gets all users with unverifed attendance for today
 // router.get('/unverified/:date', auth.hasRole('mentor'), controller.getUnverifiedAttendanceUsers);
 // router.get('/unverified/today', auth.hasRole('mentor'), controller.getUnverifiedAttendanceUsers);
-exports.getUnverifiedAttendanceUsers = (req,res) => {
+exports.getUnverifiedAttendanceUsers = async (req,res) => {
   let date = req.params.date;
   if (req.params.date === 'today'){
     date = util.convertToMidnight(new Date());
@@ -605,15 +591,14 @@ exports.getUnverifiedAttendanceUsers = (req,res) => {
   else{
     date = util.convertToMidnight(req.params.date);
   }
-  ClassYear.getCurrent((err, classYear) => {
-    if (err) {return handleError(err)}
-    const classYearId = classYear._id;
-    Attendance.find({verified:false, date: date, classYear:classYearId})
-    .populate('user')
-    .exec(function (err, attendance) {
-      if (err) { return handleError(res, err); }
-      return res.json(attendance);
-    });
+
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
+  Attendance.find({verified:false, date: date, classYear:classYearId})
+  .populate('user')
+  .exec(function (err, attendance) {
+    if (err) { return handleError(res, err); }
+    return res.json(attendance);
   });
 };
 
@@ -629,7 +614,7 @@ exports.getUnverifiedAttendanceUsers = (req,res) => {
 // Gets all users with full group unverifed attendance for today
 // router.get('/unverified/:date/full',  auth.hasRole('mentor'), controller.getUnverifiedFullAttendanceUsers);
 // router.get('/unverified/today/full',  auth.hasRole('mentor'), controller.getUnverifiedFullAttendanceUsers);
-exports.getUnverifiedFullAttendanceUsers = (req,res) => {
+exports.getUnverifiedFullAttendanceUsers = async (req,res) => {
   let date = req.params.date;
   if (req.params.date === 'today'){
     date = util.convertToMidnight(new Date());
@@ -637,17 +622,15 @@ exports.getUnverifiedFullAttendanceUsers = (req,res) => {
   else{
     date = util.convertToMidnight(req.params.date);
   }
-  ClassYear.getCurrent((err, classYear) => {
-    if (err) { return handleError(err) }
-    const classYearId = classYear._id;
 
-    Attendance.find({verified:false, smallgroup:false, date: date, classYear:classYearId})
-    .populate('user')
-    .exec((err, attendance) => {
-      if (err) { return handleError(res, err); }
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
 
-      return res.json(attendance);
-    });
+  Attendance.find({verified:false, smallgroup:false, date: date, classYear:classYearId})
+  .populate('user')
+  .exec((err, attendance) => {
+    if (err) { return handleError(res, err); }
+    return res.json(attendance);
   });
 };
 
@@ -663,7 +646,7 @@ exports.getUnverifiedFullAttendanceUsers = (req,res) => {
 // Gets all users with unverifed small group attendance for today
 // router.get('/unverified/today/small', auth.hasRole('mentor'), controller.getUnverifiedSmallAttendanceUsers);
 // router.get('/unverified/:date/small', auth.hasRole('mentor'), controller.getUnverifiedSmallAttendanceUsers);
-exports.getUnverifiedSmallAttendanceUsers = (req,res) => {
+exports.getUnverifiedSmallAttendanceUsers = async (req,res) => {
 
   let date = req.params.date;
   if (req.params.date === 'today'){
@@ -672,15 +655,15 @@ exports.getUnverifiedSmallAttendanceUsers = (req,res) => {
   else{
     date = util.convertToMidnight(req.params.date);
   }
-  ClassYear.getCurrent((err, classYear) => {
-    if (err) { return handleError(err) }
-    const classYearId = classYear._id;
-    Attendance.find({verified:false, smallgroup:true, date: date, classYear:classYearId})
-    .populate('user')
-    .exec((err, attendance) => {
-      if (err) { return handleError(res, err); }
-      return res.json(attendance);
-    });
+
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+
+  const classYearId = classYear._id;
+  Attendance.find({verified:false, smallgroup:true, date: date, classYear:classYearId})
+  .populate('user')
+  .exec((err, attendance) => {
+    if (err) { return handleError(res, err); }
+    return res.json(attendance);
   });
 };
 
