@@ -51,7 +51,7 @@ exports.publicStats = (req, res) => {
   async.parallel([
     // Count active users
       (callback) => {
-	  User.count({active:true}, (err, aCount) => {
+    User.count({active:true}, (err, aCount) => {
         if (err) return callback(err);
         callback(null, aCount);
       });
@@ -124,7 +124,7 @@ exports.search = (req, res) => {
 exports.stats = (req, res) => {
   // Only return users who are active and have a github login
   User.find({active: true, 'github.login': {$exists: true}})
-	.exec((err, users) => {
+  .exec((err, users) => {
     if (err) return res.send(500, err);
     const twoWeeks = new Date();
 
@@ -132,7 +132,7 @@ exports.stats = (req, res) => {
     const userInfo = [];
     let count = users.length;
 
-	    const getCommits = (user) => {
+      const getCommits = (user) => {
       Commit.find()
       .where('author.login').equals(String(user.github.login))
       .where('date').gt(twoWeeks)
@@ -214,7 +214,7 @@ exports.list = (req, res) => {
 exports.past = (req, res) => {
   User.find({active: false})
   .select('_id name role avatar email github.login')
-	.exec((err, users) => {
+  .exec((err, users) => {
     if(err) return res.send(500, err);
     res.status(200).json(users);
   });
@@ -889,7 +889,7 @@ exports.removeFavorite = (req,res) => {
   });
 };
 
-   
+
 /**
 * @api {get} /api/users DeleteUser
 * @apiName deleteUser

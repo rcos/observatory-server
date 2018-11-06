@@ -403,7 +403,7 @@ exports.attend = (req,res) => {
       else {
       // Classyear attendance code and bonus code was incorrect, try small group
         return SmallGroup.findOne({'students':user._id, 'classYear':classYear._id})
-    	  .select('+dayCodes.code')
+        .select('+dayCodes.code')
         .exec((err, smallgroup) => {
           if (err) {return handleError(err)}
           //if the user has no smallgroup,try comparing the code submission with the lastest dayCodes

@@ -33,78 +33,78 @@ var SmallGroupSchema = new Schema({
 }, { usePushEach: true });
 
 /*
-	Virtuals
+  Virtuals
 */
 
 SmallGroupSchema
-	.virtual('dayCode')
-	.get(function(){
-		var today = new Date();
-		today.setHours(0,0,0,0);
-		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() === today.getTime() &&
+  .virtual('dayCode')
+  .get(function(){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    for (var i = 0;i < this.dayCodes.length;i++){
+      if (this.dayCodes[i].date.getTime() === today.getTime() &&
           this.dayCodes[i].bonusDay === false){
-				return this.dayCodes[i].code;
-			}
-		}
-		return null;
-	});
+        return this.dayCodes[i].code;
+      }
+    }
+    return null;
+  });
 
 SmallGroupSchema
-	.virtual('bonusDayCode')
-	.get(function(){
-		var today = new Date();
-		today.setHours(0,0,0,0);
-		for (var i = 0;i < this.dayCodes.length;i++){
-			if (this.dayCodes[i].date.getTime() === today.getTime() &&
+  .virtual('bonusDayCode')
+  .get(function(){
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    for (var i = 0;i < this.dayCodes.length;i++){
+      if (this.dayCodes[i].date.getTime() === today.getTime() &&
           this.dayCodes[i].bonusDay === true){
-				return this.dayCodes[i].code;
-			}
-		}
-		return null;
-	});
+        return this.dayCodes[i].code;
+      }
+    }
+    return null;
+  });
 
 
 SmallGroupSchema
     .virtual('days')
-	.get(function(){
+  .get(function(){
         var total = this.dayCodes.reduce(function(previousValue, currentValue, index, array) {
             return previousValue + (currentValue.bonusDay? 0 : 1);
         }, 0) ;
-		return total;
-	});
+    return total;
+  });
 SmallGroupSchema
     .virtual('bonusDays')
-	.get(function(){
+  .get(function(){
         var total = this.dayCodes.reduce(function(previousValue, currentValue, index, array) {
             return previousValue + (currentValue.bonusDay? 1 : 0);
         }, 0) ;
-		return total;
-	});
+    return total;
+  });
 
 SmallGroupSchema
     .virtual('dates')
-	.get(function(){
+  .get(function(){
         var all = this.dayCodes.filter(function(value) {
             return !value.bonusDay;
         })
         .map(function(value) {
             return value.date;
         });
-		return all;
-	});
+    return all;
+  });
 
 SmallGroupSchema
     .virtual('bonusDates')
-	.get(function(){
+  .get(function(){
         var all = this.dayCodes.filter(function(value) {
             return value.bonusDay;
         })
         .map(function(value) {
             return value.date;
         });
-		return all;
-	});
+    return all;
+  });
 
 
 var SmallGroup = mongoose.model('SmallGroup', SmallGroupSchema);
