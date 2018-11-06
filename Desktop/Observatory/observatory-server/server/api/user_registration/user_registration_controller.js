@@ -31,7 +31,7 @@ exports.index = async (req, res) => {
 */
 exports.show = async (req, res) => {
   try {
-    const model = await UserRegistration.findByUserId(req.params.userid)
+    const model = await UserRegistration.findById(req.params.id)
     return res.json(200, model).end()
   } catch(err) {
     return handleError(res, err)
