@@ -54,7 +54,7 @@ export default function(app) {
   if ('test' !== env) {
     app.use(lusca({
       // csrf: {
-        // angular: true
+      //   angular: true
       // },
       xframe: 'SAMEORIGIN',
       hsts: {

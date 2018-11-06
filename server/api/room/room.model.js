@@ -1,10 +1,10 @@
-const mongoose, { Schema } = require('mongoose');
+const mongoose = require('mongoose');
 
-const RoomSchema = new Schema({
+const RoomSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
-  }
+  },
   capacity: {
     type: Number,
     required: true
