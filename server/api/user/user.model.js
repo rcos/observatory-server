@@ -17,7 +17,6 @@ const defaultKeyLength = 64;
 const defaultDigest = 'sha512';
 
 // // // //
-
 var UserSchema = new Schema({
   name: {
     type: String,
