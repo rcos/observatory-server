@@ -21,7 +21,7 @@ exports.index = function(req, res) {
       query.select('+dayCodes.code')
   }
     return query.exec((err, classYear) => {
-  	if (err) { return handleError(res, err); }
+    if (err) { return handleError(res, err); }
     const responseObject = classYear.toObject();
     // Admins should get a day code
     // Generate a day code if one does not already exist
@@ -35,7 +35,7 @@ exports.index = function(req, res) {
             responseObject.bonusDayCode = classYear.bonusDayCode;
         }
     }
-   	return res.status(200).json(responseObject);
+    return res.status(200).json(responseObject);
   });
 };
 
@@ -53,8 +53,8 @@ exports.getClassYear = function(req, res) {
   ClassYear.findOne({
       'semester': req.params.semester
   })
-	.select('+dayCodes.code')
-	.exec((err, classYear) => {
+  .select('+dayCodes.code')
+  .exec((err, classYear) => {
     if (err) { return handleError(res, err); }
     if (!classYear) return res.send(404);
     var responseObject = classYear.toObject();
@@ -125,7 +125,7 @@ exports.create = function(req, res) {
           }
         }
       });
-	  ClassYear.getCurrent((err, currentClassYear) => {
+    ClassYear.getCurrent((err, currentClassYear) => {
           global.currentClassYear = currentClassYear;
           res.send(204);
       });
@@ -151,7 +151,7 @@ exports.update = function(req, res) {
     if (err) { return handleError(res, err); }
     classYear.update(req.body, function(err){
       if (err) { return handleError(res, err); }
-	ClassYear.getCurrent((err, currentClassYear) => {
+  ClassYear.getCurrent((err, currentClassYear) => {
           global.currentClassYear = currentClassYear;
           res.send(204);
 
@@ -200,7 +200,7 @@ exports.daycode = function(req, res){
       }
     }
     //unique code generator, function at the bottom.
-	uniqueDayCode(6, (err,dayCode) => {
+  uniqueDayCode(6, (err,dayCode) => {
       if (err) return handleError(res, err);
       const code = dayCode;
 
@@ -210,7 +210,7 @@ exports.daycode = function(req, res){
         bonusDay: req.body.bonusDay ? true : false
       });
 
-	    return classYear.save((err, classYear) => {
+      return classYear.save((err, classYear) => {
         if (err) return handleError(res, err);
         return res.status(200).json({ code }).end()
       });
@@ -236,7 +236,7 @@ exports.deleteDay = function(req, res){
         $pull: { dayCodes: {code : dayCode }}
     })
     .select('+dayCodes.code')
-	.exec((err, classYear) => {
+  .exec((err, classYear) => {
         if (err) return handleError(res, err);
 
             return Attendance.remove({code : dayCode}, (err) => {
