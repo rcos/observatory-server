@@ -25,20 +25,4 @@ router.delete('/:id', auth.isAuthenticated(), controller.destroy)
 module.exports = router
 
 
-// User
-// [X] List their ExcusedAbsence (show all pending / approved / denied)
-// [ ] Create ExcusedAbsence (Request - pending approval)
-// [ ] Update ExcusedAbsence (Change note, date, date-range)
-// [ ] Delete ExcusedAbsence (It's not needed anymore)
 
-// [X] Admin
-// [ ] List ALL ExcusedAbsences
-// [ ] Update ExcusedAbsence (something changed - note or date ONLY)
-// [ ] Delete ExcusedAbsence (It's not needed anymore)
-
-// [ ] Approve Individual ExcusedAbsence (Approve + leave note)
-// [ ] Deny Individual ExcusedAbsence (Deny + leave note)
-
-// [ ] Common to both
-// [ ] Update
-// [ ] Delete

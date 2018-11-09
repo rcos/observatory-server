@@ -167,15 +167,14 @@ exports.stats = (req, res) => {
 * @apiSuccess {Collection} root Collection of Observatory User(s).
 * @apiError (500) UnknownException Could not retrieve User collection
 */
-exports.allStats = (req, res) => {
+exports.allStats = async (req, res) => {
   // Only return users who have a github login
-  ClassYear.getCurrent((err, classYear) => {
-    const classYearId = classYear._id;
-    User.find({})
-    .exec((err, users) => {
-      if (err) return res.status(500).json(err);
-      res.status(200).json(users);
-    });
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  //const classYearId = classYear._id;
+  User.find({})
+  .exec((err, users) => {
+    if (err) return res.status(500).json(err);
+    res.status(200).json(users);
   });
 };
 
@@ -317,38 +316,37 @@ exports.show = (req, res, next) => {
 * @apiSuccess {Collection} root Get a private profile
 * @apiError (500) UnknownException Could not get a private profile
 */
-exports.privateProfile = (req, res, next) => {
+exports.privateProfile = async (req, res, next) => {
   const userId = req.params.id;
-  User.findById(userId)
+  const user = await User.findById(userId)
   .populate('projects')
   .populate('favoriteProjects')
-  .exec((err, user) => {
+  .catch((err) => handleError(err))
+  
+  if (err) {return next(err);}
+  if (!user) {return res.send(404);}
+  const profile = user.privateProfile;
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
+  return SmallGroup.findOne({'students':userId, 'fclassYear':classYearId}, (err, smallgroup) => {
     if (err) {return next(err);}
-    if (!user) {return res.send(404);}
-    const profile = user.privateProfile;
-      return ClassYear.getCurrent((err, classYear) => {
-      const classYearId = classYear._id;
-      return SmallGroup.findOne({'students':userId, 'fclassYear':classYearId}, (err, smallgroup) => {
-        if (err) {return next(err);}
-        if (smallgroup) {
-          const responseObjectSmallgroup = smallgroup.toObject();
-          profile.smallgroup = responseObjectSmallgroup;
-        }
-        // Get how many total attendance days there have been
-        const data = user.getTotalDays(classYear, smallgroup);
-        profile.totalDates = data.totalDates;
-        profile.totalBonusDates = data.totalBonusDates;
-        profile.totalSmallDates = data.totalSmallDates;
-        profile.totalBonusSmallDates = data.totalBonusSmallDates;
+    if (smallgroup) {
+      const responseObjectSmallgroup = smallgroup.toObject();
+      profile.smallgroup = responseObjectSmallgroup;
+    }
+    // Get how many total attendance days there have been
+    const data = user.getTotalDays(classYear, smallgroup);
+    profile.totalDates = data.totalDates;
+    profile.totalBonusDates = data.totalBonusDates;
+    profile.totalSmallDates = data.totalSmallDates;
+    profile.totalBonusSmallDates = data.totalBonusSmallDates;
 
-        Attendance.find({classYear:classYearId, user: userId})
-        .exec((err, attendance) => {
-          if (err) { return handleError(res, err); }
-          profile.attendance = attendance;
+    Attendance.find({classYear:classYearId, user: userId})
+    .exec((err, attendance) => {
+      if (err) { return handleError(res, err); }
+      profile.attendance = attendance;
 
-          return res.json(profile);
-        });
-      });
+      return res.json(profile);
     });
   });
 };
@@ -384,31 +382,30 @@ exports.favoriteProjects = (req, res, next) => {
 * @apiSuccess {Collection} root Get a user's smallgroup
 * @apiError (500) UnknownException Could not get a user's smallgroup
 */
-exports.smallgroup = (req, res, next) => {
+exports.smallgroup = async (req, res, next) => {
   const userId = req.user.id;
-  return ClassYear.getCurrent((err, classYear) => {
-    const classYearId = classYear._id;
-    const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
-    if (req.user.isMentor) {
-      query.select('+dayCodes.code')
-    }
-    return query.exec((err, smallgroup) => {
-      if (err) return handleError(res, err);
-      if (!smallgroup) return res.json({});
-      const responseObject = smallgroup.toObject();
-      // If user is not a mentor or not authenticated, don't give dayCode
-      if (req.user.isMentor){
-        // Mentors should get a day code
-        // Generate a day code if one does not already exist
-        if (smallgroup.dayCode){
-          responseObject.dayCode = smallgroup.dayCode;
-        }
-        if (smallgroup.bonusDayCode){
-          responseObject.bonusDayCode = smallgroup.bonusDayCode;
-        }
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
+  const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
+  if (req.user.isMentor) {
+    query.select('+dayCodes.code')
+  }
+  return query.exec((err, smallgroup) => {
+    if (err) return handleError(res, err);
+    if (!smallgroup) return res.json({});
+    const responseObject = smallgroup.toObject();
+    // If user is not a mentor or not authenticated, don't give dayCode
+    if (req.user.isMentor){
+      // Mentors should get a day code
+      // Generate a day code if one does not already exist
+      if (smallgroup.dayCode){
+        responseObject.dayCode = smallgroup.dayCode;
       }
-      res.status(200).json(responseObject);
-    });
+      if (smallgroup.bonusDayCode){
+        responseObject.bonusDayCode = smallgroup.bonusDayCode;
+      }
+    }
+    res.status(200).json(responseObject);
   });
 };
 
@@ -422,29 +419,28 @@ exports.smallgroup = (req, res, next) => {
 * @apiSuccess {Collection} root Get a single user's smallgroup
 * @apiError (500) UnknownException Could not get a single user's smallgroup
 */
-exports.userSmallgroup = (req, res, next) => {
+exports.userSmallgroup = async (req, res, next) => {
   const userId = req.params.id;
-  return ClassYear.getCurrent((err, classYear) => {
-    const classYearId = classYear._id;
-    const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId})
-    if (req.user.isMentor){
-      query.select('+dayCodes.code')
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  const classYearId = classYear._id;
+  const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId})
+  if (req.user.isMentor){
+    query.select('+dayCodes.code')
+  }
+  return query.exec((err, smallgroup) => {
+    if (err) return handleError(res, err);
+    if (!smallgroup) return res.json({});
+    var responseObject = smallgroup.toObject();
+    // If user is not a mentor or not authenticated, don't give dayCode
+    // Mentors should get a day code
+    // Generate a day code if one does not already exist
+    if (smallgroup.dayCode){
+      responseObject.dayCode = smallgroup.dayCode;
     }
-    return query.exec((err, smallgroup) => {
-      if (err) return handleError(res, err);
-      if (!smallgroup) return res.json({});
-      var responseObject = smallgroup.toObject();
-      // If user is not a mentor or not authenticated, don't give dayCode
-      // Mentors should get a day code
-      // Generate a day code if one does not already exist
-      if (smallgroup.dayCode){
-        responseObject.dayCode = smallgroup.dayCode;
-      }
-      if (smallgroup.bonusDayCode) {
-        responseObject.bonusDayCode = smallgroup.bonusDayCode;
-      }
-      res.status(200).json(responseObject);
-    });
+    if (smallgroup.bonusDayCode) {
+      responseObject.bonusDayCode = smallgroup.bonusDayCode;
+    }
+    res.status(200).json(responseObject);
   });
 };
 

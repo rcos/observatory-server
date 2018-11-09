@@ -1,8 +1,9 @@
 import _ from 'lodash'
 import { handleError } from '../lib/helpers'
-import { STATUS_PENDING } from './constants'
+import { STATUS_PENDING, STATUS_APPROVED, STATUS_DENIED } from './constants'
 import User from '../user/user.model'
 import ExcusedAbsence from './excused_absence.model'
+const auth = require('../../auth/auth.service')
 
 /**
 * @api {get} /api/excused_absences Index
@@ -88,6 +89,28 @@ exports.update = (req, res) => {
   }).catch(next)
 }
 
+
+/**
+* @api {approve} /api/excused_absences/:id Approve
+* @apiName approve
+* @apiGroup Excused Absence
+* @apiDescription Changes an ExcusedAbsence's status to STATUS_APPROVED
+* @apiPermission private
+* @apiSuccess {Model} root The approved ExcusedAbsence model
+* @apiError (500) UnknownException Could not approve ExcusedAbsence model
+*/
+exports.approve = (req, res) => {
+  return ExcusedAbsence.findById(req.params.id)
+  .then((excusedAbsence) => {
+      excusedAbsence.status = STATUS_APPROVED
+      excusedAbsence.reviewed_by = req.user._id
+      excusedAbsence.reviewer_note = req.body.reviewer_note
+      excusedAbsence.save().then((response) => {
+        return res.status(200).send(response).end()
+      })
+  }).catch(next)
+}
+
 /**
 * @api {delete} /api/excused_absences/:id Delete
 * @apiName delete
@@ -98,9 +121,15 @@ exports.update = (req, res) => {
 * @apiError (500) UnknownException Could not destroy ExcusedAbsence model
 */
 exports.destroy = (req, res, next) => {
-  // TODO - ensure this is only deletable by the user who created the record, or an admin
-  return ExcusedAbsence.remove({ _id: req.params.id })
-  .then((response) => {
-      return res.status(200).send(response).end()
-  }).catch(next)
+    
+  if(auth.hasRole('admin') || (auth.isAuthenticated === ExcusedAbsence.findById(req.params.id).user )) {
+      return ExcusedAbsence.remove({ _id: req.params.id })
+      .then((response) => {
+          return res.status(200).send(response).end()
+      }).catch(next)}
+  
+  else {
+    return res.status(401).send(response).end()
+  }
 }
+
