@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { handleError } from '../lib/helpers'
-import UserRegistration from './user_registration_model'
+import UserRegistration from './user_registration.model'
 
 /**
 * @api {get} /api/user_registration Index

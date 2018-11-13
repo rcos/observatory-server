@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const UserRegistrationSchema = new mongoose.Schema({
-  
+const UserRegistrationSchema = new Schema({
   user_id: {
     type : Schema.Types.ObjectId,
     ref: 'User',
@@ -16,10 +16,6 @@ const UserRegistrationSchema = new mongoose.Schema({
     type : Schema.Types.ObjectId,
     ref: 'Semester',
     requred: true
-  },
-  rin: {
-    type: String,
-    required: true
   },
   credits: {
     type: String,
@@ -38,9 +34,9 @@ const UserRegistrationSchema = new mongoose.Schema({
   requires_wheelchair_accessible_room: {
     type: Boolean,
   },
-  mentor_preferences: {
+  mentor_preference_ids: {
     type: [Schema.Types.ObjectId],
-    ref: 'User'
+    ref: 'User',
     required: true
   }
 },{ timestamps: true });

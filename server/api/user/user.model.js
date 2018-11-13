@@ -18,7 +18,16 @@ const defaultDigest = 'sha512';
 
 // // // //
 var UserSchema = new Schema({
-  name: {
+  name: { // TODO - remove
+    type: String
+  },
+
+  first_name: {
+    type: String,
+    required: true
+  },
+
+  last_name: {
     type: String,
     required: true
   },
@@ -26,7 +35,8 @@ var UserSchema = new Schema({
   email: {
     type: String,
     lowercase: true,
-    index: true
+    index: true,
+    unique: true
   },
 
   active: {
