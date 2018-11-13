@@ -111,6 +111,18 @@ exports.approve = (req, res) => {
   }).catch(next)
 }
 
+exports.deny = (req, res) => {
+  return ExcusedAbsence.findById(req.params.id)
+  .then((excusedAbsence) => {
+    excusedAbsence.status = STATUS_DENIED
+    excusedAbsence.reviewed_by = req.user._id
+    excusedAbsence.reviewer_note = req.body.reviewer_note
+    excusedAbsence.save().then((response => {
+      return res.status(200).send(response).end()
+    })
+  }).catch(next)
+}
+
 /**
 * @api {delete} /api/excused_absences/:id Delete
 * @apiName delete
