@@ -111,6 +111,15 @@ exports.approve = (req, res) => {
   }).catch(next)
 }
 
+/**
+* @api {deny} /api/excused_absences/:id Deny
+* @apiName deny
+* @apiGroup Excused Absence
+* @apiDescription Changes an ExcusedAbsence's status to STATUS_DENIED
+* @apiPermission private
+* @apiSuccess {Model} root The denied ExcusedAbsence model
+* @apiError (500) UnknownException Could not deny ExcusedAbsence model
+*/
 exports.deny = (req, res) => {
   return ExcusedAbsence.findById(req.params.id)
   .then((excusedAbsence) => {
