@@ -83,10 +83,41 @@ exports.update = (req, res) => {
   // Admin - update STATUS, REVIEWER_NOTE, REVIEWED_BY (automatic)
   // TODO - perform check
   // ExcusedAbsence.where({ _id: req.params.id, user_id: req.user._id }) is OWNED by the requesting user, IFF they're not an admin
+
+
+  if(req.user.isAdmin) {
+  //if(auth.hasRole('admin')) {
+    return Excused.findById(req.params.id)
+    .then((excusedAbsence) => {
+        excusedAbsence.reviewer_note = req.body.reviewer_note || excusedAbsence.reviewer_note
+        excusedAbsence.date = req.body.date || excusedAbsence.date
+        excusedAbsence.save().then((response) => {
+            return res.status(200).send(response).end()
+        })
+    })
+
+  } else {//if(auth.isAuthenticated === ExcusedAbsence.findById(req.params.id).user ) { //if the user owns the excused absence
+    return Excused.findById(req.params.id)
+    .then((excusedAbsence) => {
+      if(req.user._id === excusedAbsence.user) {
+          excusedAbsence.excuse = req.body.excuse || excusedAbsence.excuse
+          excusedAbsence.date = req.body.date || excusedAbsence.date
+          excusedAbsence.save().then((response) => {
+            return res.status(200).send(response).end()
+        })
+      } else {
+        return res.status(401).json({error: 'you do not have permission to edit this excused absence'})
+      }
+    })
+  }
+}
+
+/*
   return ExcusedAbsence.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
   .then((response) => {
       return res.status(200).send(response).end()
   }).catch(next)
+*/
 }
 
 
@@ -104,7 +135,7 @@ exports.approve = (req, res) => {
   .then((excusedAbsence) => {
       excusedAbsence.status = STATUS_APPROVED
       excusedAbsence.reviewed_by = req.user._id
-      excusedAbsence.reviewer_note = req.body.reviewer_note
+      excusedAbsence.reviewer_note = req.body.reviewer_note || excusedAbsence.reviewer_note
       excusedAbsence.save().then((response) => {
         return res.status(200).send(response).end()
       })
@@ -125,7 +156,7 @@ exports.deny = (req, res) => {
   .then((excusedAbsence) => {
     excusedAbsence.status = STATUS_DENIED
     excusedAbsence.reviewed_by = req.user._id
-    excusedAbsence.reviewer_note = req.body.reviewer_note
+    excusedAbsence.reviewer_note = req.body.reviewer_note || excusedAbsence.reviewer_note
     excusedAbsence.save().then((response => {
       return res.status(200).send(response).end()
     })
