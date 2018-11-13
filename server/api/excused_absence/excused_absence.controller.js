@@ -118,7 +118,7 @@ exports.update = (req, res) => {
       return res.status(200).send(response).end()
   }).catch(next)
 */
-}
+
 
 
 /**
@@ -157,7 +157,7 @@ exports.deny = (req, res) => {
     excusedAbsence.status = STATUS_DENIED
     excusedAbsence.reviewed_by = req.user._id
     excusedAbsence.reviewer_note = req.body.reviewer_note || excusedAbsence.reviewer_note
-    excusedAbsence.save().then((response => {
+    excusedAbsence.save().then((response) => {
       return res.status(200).send(response).end()
     })
   }).catch(next)

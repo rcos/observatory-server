@@ -24,12 +24,10 @@ Key Features Include
 - [Node.js and npm](https://nodejs.org/) Node ^4.2.3, npm ^2.14.7  (nodejs-legacy for debian-based distributions)
 - [Docker](http://https://docs.docker.com/engine/installation/)
 - [Docker-Compose](https://docs.docker.com/compose/install/)
-- [Bower](https://bower.io/) (`npm install --g bower`)
-- [Grunt](http://gruntjs.com/) (`npm install --g grunt-cli`)
 - [APIDoc](http://apidocjs.com) (`npm install --g apidoc`)
 
 ```
-npm install -g grunt-cli grunt bower apidoc
+npm install -g apidoc
 ```
 
 ### Developing
@@ -46,16 +44,11 @@ npm install -g grunt-cli grunt bower apidoc
 
     This also starts a [Mongo-Express](https://github.com/mongo-express/mongo-express) admin interface available at [http://localhost:8081](http://localhost:8081).
 
-4. Run `grunt serve` to start the development server. It should automatically open the client in your browser when ready.
+4. Run `npm run dev` to start the development server - the server will now be running at [http://localhost:9000](http://localhost:9000).
 
-    Grunt will run the server and make the project available at [http://localhost:9000](http://localhost:9000).
-
-
-## Build & preview
-Run `grunt build` for building and `grunt serve` for preview.
 
 ## Seeding the Database
-Run `grunt seed` to seed (populate) your mongoDB with dummy data
+Running `docker-compose up` will populate your local MongoDB server with seed data
 
 ## Testing
 Running `npm test` will run the unit tests with karma.
@@ -63,6 +56,3 @@ Running `npm test` will run the unit tests with karma.
 ## Documentation
 Running `npm run apidoc` will run generate the `/docs` directory. See [APIDoc](http://apidocjs.com) for more information.
 The latest Observatory documentation is hosted at [rcos.github.io/observatory-docs](http://rcos.github.io/observatory-docs)
-
-Want to develop with us?
-This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 3.3.0.

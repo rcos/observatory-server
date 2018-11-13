@@ -56,7 +56,7 @@ exports.stats = (req, res) => {
           });
         },
       ],
-		 (err, results) => {
+     (err, results) => {
         if (err) {
           return res.sendStatus(400);
         }
@@ -153,31 +153,30 @@ exports.myProjects = (req, res) => {
 * @apiSuccess {json} mentees list of mentees
 * @apiError (Error) 500 Error when finding mentees
 */
-exports.mentees = (req, res) => {
+exports.mentees = async (req, res) => {
   const userId = req.user._id;
 
-  return ClassYear.getCurrent((err, classYear) => {
-      if (err) { return handleError(res, err); }
-      const classYearId = classYear._id;
-      const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
+  const classYear = await ClassYear.getCurrent().catch((err) => handleError(err))
+  
+  const classYearId = classYear._id;
+  const query = SmallGroup.findOne({'students':userId, 'classYear':classYearId});
 
-      return query.select('students').exec((err, smallgroup) => {
+  return query.select('students').exec((err, smallgroup) => {
+    if (err) return handleError(res, err);
+    if (!smallgroup.students) return res.json([]);
+    const mentees_ids = smallgroup.students.map((s) => {
+      return mongoose.Types.ObjectId(s);
+    });
+    User.find({ '_id': { $in: mentees_ids }} )
+      .distinct('projects')
+      .exec((err, projectIds) => {
         if (err) return handleError(res, err);
-        if (!smallgroup.students) return res.json([]);
-        const mentees_ids = smallgroup.students.map((s) => {
-          return mongoose.Types.ObjectId(s);
+          Project.find({'_id': {$in: projectIds}}).exec((err, projects) => {
+          if (err) return handleError(res, err);
+          return res.json(projects);
         });
-        User.find({ '_id': { $in: mentees_ids }} )
-          .distinct('projects')
-          .exec((err, projectIds) => {
-            if (err) return handleError(res, err);
-              Project.find({'_id': {$in: projectIds}}).exec((err, projects) => {
-              if (err) return handleError(res, err);
-              return res.json(projects);
-            });
-        });
-      })
-  });
+    });
+  })
 
 }
 
@@ -264,7 +263,7 @@ exports.update = (req, res) => {
 
     // Only mentors and project owners can update a project
     const userId = req.user._id;
-	User.findById(userId, (err, user) => {
+  User.findById(userId, (err, user) => {
       if (err) { return handleError(res, err); }
 
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
@@ -307,20 +306,20 @@ exports.update = (req, res) => {
 */
 //adds a tech bubble to the project
 exports.addTechBubble = (req, res) => {
-	const projectId = req.params.id;
-	const newTech = req.params.tech;
-	Project.findById(projectId, (err, project) => {
-		if (err){
-			res.status(500).send(err);
-		} else {
-			if (!project.tech) project.tech=[];
-			project.tech.push(newTech);
-			project.save((err) => {
-				if (err) return validationError(res, err);
-				res.sendStatus(200);
-			});
-		}
-	});
+  const projectId = req.params.id;
+  const newTech = req.params.tech;
+  Project.findById(projectId, (err, project) => {
+    if (err){
+      res.status(500).send(err);
+    } else {
+      if (!project.tech) project.tech=[];
+      project.tech.push(newTech);
+      project.save((err) => {
+        if (err) return validationError(res, err);
+        res.sendStatus(200);
+      });
+    }
+  });
 };
 
 /**
@@ -332,20 +331,20 @@ exports.addTechBubble = (req, res) => {
 * @apiError (Error) 500 Error finding project
 */
 exports.removeTech = (req, res) => {
-	const projectId = req.params.id;
-	const oldTech = req.params.tech;
+  const projectId = req.params.id;
+  const oldTech = req.params.tech;
     Project.findById(projectId, (err, project) => {
-		if (err){
-			res.status(500).send(err);
-		} else {
-			if (!project.tech) project.tech = [];
-			project.tech.splice(project.tech.indexOf(oldTech), 1);
-		    project.save((err) => {
-				if (err) return validationError(res, err);
-				res.sendStatus(200);
-			});
-		}
-	});
+    if (err){
+      res.status(500).send(err);
+    } else {
+      if (!project.tech) project.tech = [];
+      project.tech.splice(project.tech.indexOf(oldTech), 1);
+        project.save((err) => {
+        if (err) return validationError(res, err);
+        res.sendStatus(200);
+      });
+    }
+  });
 };
 
 /**
@@ -383,10 +382,10 @@ function handleError(res, err) {
 exports.markPast = (req,res) => {
 
   const userId = req.user._id;
-    Project.findById(req.params.id, (err,project) => { 
+    Project.findById(req.params.id, (err,project) => {
     if (err) { return handleError(res, err); }
     if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
-	User.findById(userId, (err, user) => {
+  User.findById(userId, (err, user) => {
       if (err) { return handleError(res, err); }
 
       if (user.projects.indexOf(project._id) >= 0 || user.role === 'mentor' || user.role === 'admin'){
@@ -496,7 +495,7 @@ exports.upload = (req, res) => {
     });
 
       Project.findOne({'githubUsername': req.params.username, 'githubProjectName': req.params.project }, (err, project) => {
-	  if (err) { return handleError(res, err); }
+    if (err) { return handleError(res, err); }
       if (!project) { return res.status(404).json({ error: 'Not Found' }).end(); }
       if(project.photos.length>=10){
         const temp = project.photos.shift();
@@ -504,7 +503,7 @@ exports.upload = (req, res) => {
         fs.unlinkSync(toRemove);
       }
       project.photos.push(name);
-	  project.save((err) => {
+    project.save((err) => {
           // TODO handle project saving error
           return res.json(201, name);
       });
