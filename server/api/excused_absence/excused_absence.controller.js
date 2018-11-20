@@ -97,7 +97,7 @@ exports.update = (req, res) => {
     })
 
   } else {//if(auth.isAuthenticated === ExcusedAbsence.findById(req.params.id).user ) { //if the user owns the excused absence
-    return Excused.findById(req.params.id)
+    return ExcusedAbsence.findById(req.params.id)
     .then((excusedAbsence) => {
       if(req.user._id === excusedAbsence.user) {
           excusedAbsence.excuse = req.body.excuse || excusedAbsence.excuse
@@ -174,14 +174,20 @@ exports.deny = (req, res) => {
 */
 exports.destroy = (req, res, next) => {
     
-  if(auth.hasRole('admin') || (auth.isAuthenticated === ExcusedAbsence.findById(req.params.id).user )) {
+  //if(auth.hasRole('admin') || (auth.isAuthenticated === ExcusedAbsence.findById(req.params.id).user )) {
+  if(req.user.isAdmin) {
       return ExcusedAbsence.remove({ _id: req.params.id })
       .then((response) => {
           return res.status(200).send(response).end()
       }).catch(next)}
-  
+  else if (req.params.id === req.user._id) {
+    return ExcusedAbsence.remove({ _id: req.params.id})
+    .then((response) => {
+      return res.status(200).send(response).end()
+    }).catch(next) 
+  }
   else {
-    return res.status(401).send(response).end()
+    return res.status(401).json({error: 'you do not have permission to delete this excused absence'})
   }
 }
 
