@@ -23,13 +23,11 @@ var UserSchema = new Schema({
   },
 
   first_name: {
-    type: String,
-    required: true
+    type: String
   },
 
   last_name: {
-    type: String,
-    required: true
+    type: String
   },
 
   email: {

@@ -218,13 +218,16 @@ exports.commits = async (req, res) => {
 * @apiSuccess {Collection} root Create a new user
 * @apiError (500) UnknownException Could not create a new user
 */
-exports.create = async (req, res, next) => {
+exports.create = (req, res, next) => {
   const newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
-  let user = await newUser.save().catch((err) => validationError(res, err))
-  const token = jwt.sign({ _id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-  res.status(201).json({ token: token });
+  newUser.save()
+  .then((user) => {
+    const token = jwt.sign({ _id: user._id }, config.secrets.session, { expiresIn : 60*60*5 });
+    res.status(201).json({ token: token });
+  })
+  .catch((err) => validationError(res, err))
 };
 
 /**
