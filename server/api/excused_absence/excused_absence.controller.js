@@ -178,15 +178,17 @@ exports.destroy = (req, res, next) => {
       return ExcusedAbsence.remove({ _id: req.params.id })
       .then((response) => {
           return res.status(200).send(response).end()
-      }).catch(next)}
-  else if (req.params.id === req.user._id) {
-    return ExcusedAbsence.remove({ _id: req.params.id})
-    .then((response) => {
-      return res.status(200).send(response).end()
-    }).catch(next) 
-  }
-  else {
-    return res.status(401).json({error: 'you do not have permission to delete this excused absence'})
+      })
+  } else {
+
+    ExcusedAbsence.findById(req.params.id).then((found) => {
+        if (found.user_id === req.user._id) {
+            return ExcusedAbsence.remove({ _id: req.params.id })
+            .then((response) => {
+                return res.status(200).send(response).end()
+            })
+        } else res.status(401).json({error: 'you do not have permission to delete this excused absence'})
+    }) 
   }
 }
 
