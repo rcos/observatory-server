@@ -3,7 +3,6 @@ import { handleError } from '../lib/helpers'
 import { STATUS_PENDING, STATUS_APPROVED, STATUS_DENIED } from './constants'
 import User from '../user/user.model'
 import ExcusedAbsence from './excused_absence.model'
-const auth = require('../../auth/auth.service')
 
 /**
 * @api {get} /api/excused_absences Index
