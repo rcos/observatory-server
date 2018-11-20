@@ -78,10 +78,6 @@ exports.create = (req, res) => {
 * @apiError (500) UnknownException Could not update ExcusedAbsence model
 */
 exports.update = (req, res) => {
-  // TODO - isolate valid attributes depending on user role
-  // Admin - update STATUS, REVIEWER_NOTE, REVIEWED_BY (automatic)
-  // TODO - perform check
-  // ExcusedAbsence.where({ _id: req.params.id, user_id: req.user._id }) is OWNED by the requesting user, IFF they're not an admin
 
 
   if(req.user.isAdmin) {
