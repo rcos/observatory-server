@@ -112,51 +112,6 @@ exports.search = (req, res) => {
   });
 };
 
-/**
-* @api {get} /api/users Stats
-* @apiName stats
-* @apiGroup User
-* @apiDescription Gets list of users with stats including last commits in previous two weeks
-* @apiPermission admin
-* @apiSuccess {Collection} root Collection of Observatory User(s).
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
-exports.stats = (req, res) => {
-  // Only return users who are active and have a github login
-  User.find({active: true, 'github.login': {$exists: true}})
-  .exec((err, users) => {
-    if (err) return res.send(500, err);
-    const twoWeeks = new Date();
-
-    twoWeeks.setDate(twoWeeks.getDate()-14);
-    const userInfo = [];
-    let count = users.length;
-
-      const getCommits = (user) => {
-      Commit.find()
-      .where('author.login').equals(String(user.github.login))
-      .where('date').gt(twoWeeks)
-      .exec((err, commits) => {
-        const commitList = [];
-        commits.forEach((c) => {
-          commitList.push(c.toObject());
-        }
-                       )
-                       user.commits = commitList ;
-                       count--;
-                       userInfo.push(user);
-                       if (count === 0){
-                         res.status(200).json(userInfo);
-                       }
-      });
-    }
-
-    for (let i = 0; i < users.length; i++){
-      const u = users[i].stats;
-      getCommits(u);
-    }
-  });
-};
 
 /**
 * @api {get} /api/users AllStats
