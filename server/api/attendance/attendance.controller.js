@@ -88,7 +88,7 @@ exports.index = async (req, res) => {
 
     return Attendance.find({classYear:classYearId}).exec((err, attendance) => {
         if (err) { return handleError(res, err); }
-        return res.json(200, attendance);
+        return res.status(200).json(attendance);
     });
 };
 
@@ -146,7 +146,7 @@ exports.verifyAttendanceById = (req, res) => {
     attendance.verified = true;
     attendance.save((err) => {
       if (err) { return handleError(res, err); }
-      return res.json(200, attendance);
+      return res.status(200).json(attendance);
     });
   });
 };
