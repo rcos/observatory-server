@@ -352,8 +352,16 @@ exports.attend = async (req,res) => {
   return checkAttendanceForDate(user,classYear,util.convertToMidnight(new Date()), (err, submitted) => {
     if (err) { return handleError(err) }
     // Check if the user needs to verify, with config.attendanceVerificationRatio chance
-    const needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
-    // Full group, not a bonus day
+    // if user is mentor, no need to verify themselves
+    let needsVerification; // should ideally be const, care not to modify
+    if (user.role === "mentor") { // "mentor" is magic string originating from the user model
+      needsVerification = false;
+    }
+    // if user is not mentor, may need to be verified by mentor
+    else {
+      needsVerification = Math.random() < config.attendanceVerificationRatio ? true : false;
+    }
+      // Full group, not a bonus day
     if (classYear.dayCode === code){
       // Check if the user already submitted a full group, non bonus attendance
       if (submitted.full){
