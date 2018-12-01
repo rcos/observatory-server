@@ -16,7 +16,7 @@ const Commit = require('./commit.model');
 exports.index = (req, res) => {
   Commit.find( (err, commits) => {
     if(err) { return handleError(res, err); }
-    return res.json(200, commits);
+    return res.status(200).json(commits);
   });
 };
 /**
@@ -41,7 +41,7 @@ exports.show = (req, res) => {
 exports.create = (req, res) => {
   Commit.create(req.body, (err, commit) => {
     if(err) { return handleError(res, err); }
-    return res.json(201, commit);
+    return res.status(201).json(commit);
   });
 };
 
@@ -55,7 +55,7 @@ exports.update = (req, res) => {
     let updated = _.merge(commit, req.body);
     updated.save( (err) => {
       if (err) { return handleError(res, err); }
-      return res.json(200, commit);
+      return res.status(200).json(commit);
     });
   });
 };

@@ -21,7 +21,7 @@ exports.showByProject = (req, res) => {
   .populate('author')
   .exec()
   .then((posts) => {
-    return res.json(200, posts)
+    return res.status(200).json(posts)
   })
   .catch((err) => {
     return handleError(res, err)
@@ -51,7 +51,7 @@ exports.index = (req, res) => {
   .lean()
   .exec()
   .then((posts) => {
-    return res.json(200, posts)
+    return res.status(200).json(posts)
   })
   .catch((err) => {
     return handleError(res, err)
@@ -112,7 +112,7 @@ exports.create = (req, res) => {
         // TODO - replace callback with Promise
         Post.create(req.body)
         .then((post) => {
-          return res.json(201, post)
+          return res.status(201).json(post)
         })
         .catch((err) => {
           res.status(403).send("User not part of project")
@@ -162,7 +162,7 @@ exports.update = (req, res) => {
         // Saves the updated post
         updated.save()
         .then(() => {
-          return res.json(200, post)
+          return res.status(200).json(post)
         })
         .catch((err) => {
           return handleError(res, err)
