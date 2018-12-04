@@ -38,49 +38,6 @@ exports.index = (req, res) => {
   });
 };
 
-/**
-* @api {get} /api/users PublicStats
-* @apiName publicStats
-* @apiGroup User
-* @apiDescription Get user stats (public)
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of all active Observervatory user stats.
-* @apiError (500) UnknownException Could not retrieve user stats
-*/
-exports.publicStats = (req, res) => {
-  async.parallel([
-    // Count active users
-      (callback) => {
-    User.count({active:true}, (err, aCount) => {
-        if (err) return callback(err);
-        callback(null, aCount);
-      });
-    },
-    // Count past users
-    (callback) => {
-      User.count({active:false}, (err, pCount) => {
-        if (err) return callback(err);
-        callback(null, pCount);
-      });
-    },
-  ],
-  (err, results) => {
-    if (err) {
-      return res.send(400);
-    }
-
-    if (results === null) {
-      return res.send(400);
-    }
-
-    //results contains [activeProjectCount, pastProjectCount]
-    const stats = {};
-    stats.activeUsers = results[0] || 0;
-    stats.pastUsers = results[1] || 0;
-
-    return res.status(200).send(stats);
-  });
-};
 
 /**
 * @api {get} /api/users Search

@@ -8,7 +8,7 @@ var router = new Router();
 router.get('/',  controller.list);
 router.post('/', controller.create);
 
-router.get('/stats',  controller.publicStats);
+//router.get('/stats',  controller.publicStats);
 router.get('/past', controller.past);
 router.get('/search', controller.search);
 router.get('/adminstats', auth.hasRole('admin'), controller.allStats);
