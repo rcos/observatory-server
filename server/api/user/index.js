@@ -23,7 +23,7 @@ router.put('/:id', auth.canEdit(), controller.update);
 router.delete('/me', auth.isAuthenticated(), controller.deleteUser);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 
-router.get('/:id/commits', controller.commits);
+//router.get('/:id/commits', controller.commits);
 router.get('/:id/avatar', controller.avatar);
 router.get('/:id/smallgroup', auth.isAuthenticated(), controller.userSmallgroup);
 router.get('/:id/private', auth.canEdit(), controller.privateProfile);
