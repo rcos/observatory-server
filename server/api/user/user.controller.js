@@ -717,26 +717,6 @@ exports.addProject = async (req,res) => {
   res.status(200).json({ success: true });
 };
 
-/**
-* @api {get} /api/users AddFavorite
-* @apiName addFavorite
-* @apiGroup User
-* @apiDescription Add an item to the favorites projects array for the user
-* @apiPermission public
-* @apiSuccess {Collection} root Adds an item to the favorties projects array for the user
-* @apiError (500) UnknownException Could not add an item to the favorites projects array for the user
-*/
-exports.addFavorite = async (req,res) => {
-  const userId = req.params.id;
-  const newFavorite = req.params.project;
-  let user = await User.findById(userId).catch((err) => res.send(500, err))
-  if (!user.favoriteProjects) user.favoriteProjects = [];
-  if (user.favoriteProjects.indexOf(newFavorite) !== -1) return;
-  user.favoriteProjects.push(newFavorite);
-  await user.save().catch((err) => validationError(res, err))
-  res.status(200).json({success: true});
-};
-
 
 /**
 * @api {get} /api/users RemoveProject
@@ -753,26 +733,6 @@ exports.removeProject = async (req,res) => {
   let user = await User.findById(userId).catch((err) => res.send(500, err))
   if (!user.projects) user.projects = [];
   user.projects.splice(user.projects.indexOf(project), 1);
-  await user.save().catch((err) => validationError(res, err))
-  res.status(200).json({success: true});
-};
-
-
-/**
-* @api {get} /api/users RemoveFavorite
-* @apiName removeFavorite
-* @apiGroup User
-* @apiDescription Remove an item from the favortie projects array for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Remove an item from the favorite array for a user
-* @apiError (500) UnknownException Could not remove an item from the favorite array for a user
-*/
-exports.removeFavorite = async (req,res) => {
-  const userId = req.params.id;
-  const project = req.params.project;
-  let user = await User.findById(userId).catch((err) => res.send(500, err))
-  if (!user.favoriteProjects) user.favoriteProjects = [];
-  user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
   await user.save().catch((err) => validationError(res, err))
   res.status(200).json({success: true});
 };
