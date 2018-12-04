@@ -131,23 +131,6 @@ exports.past = (req, res) => {
   });
 };
 
-/**
-* @api {get} /api/users Commits
-* @apiName commits
-* @apiGroup User
-* @apiDescription Gets list of all the recent RCOS commits for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of Observatory Users commits.
-* @apiError (500) UnknownException Could not retrieve User commits
-*/
-exports.commits = (req, res) => {
-  const userId = String(req.params.id);
-
-  Commit.find({ userId: userId}, (err, commits) => {
-    if (err) return res.send(500, err);
-    res.status(200).json(commits);
-  });
-};
 
 /**
 * @api {get} /api/users Create
