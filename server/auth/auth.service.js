@@ -70,7 +70,7 @@ export function canEdit() {
         next();
       }
       else {
-        res.send(403);
+        res.sendStatus(403);
       }
     });
 }

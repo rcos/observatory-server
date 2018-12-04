@@ -13,4 +13,5 @@ server/static/uploads/
 npm-debug.log
 coverage
 doc/
+.swp
 .nyc_output

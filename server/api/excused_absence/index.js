@@ -17,8 +17,8 @@ router.put('/:id', auth.isAuthenticated(), controller.update)
 
 // Admin-only PUTs
 // PUT /api/excused_absences/:id
-router.put('/:id/approve', auth.hasRole('admin'), controller.update)
-router.put('/:id/deny', auth.hasRole('admin'), controller.update)
+router.put('/:id/approve', auth.hasRole('admin'), controller.approve)
+router.put('/:id/deny', auth.hasRole('admin'), controller.deny)
 
 router.delete('/:id', auth.isAuthenticated(), controller.destroy)
 
