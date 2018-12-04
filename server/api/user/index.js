@@ -27,7 +27,6 @@ router.get('/:id/commits', controller.commits);
 router.get('/:id/avatar', controller.avatar);
 router.get('/:id/smallgroup', auth.isAuthenticated(), controller.userSmallgroup);
 router.get('/:id/private', auth.canEdit(), controller.privateProfile);
-router.get('/:id/favoriteProjects', auth.canEdit(), controller.favoriteProjects);
 
 router.post('/:id/role', auth.hasRole('admin'), controller.role);
 

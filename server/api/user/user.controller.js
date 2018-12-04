@@ -289,7 +289,6 @@ exports.privateProfile = async (req, res, next) => {
   const userId = req.params.id;
   const user = await User.findById(userId)
   .populate('projects')
-  .populate('favoriteProjects')
   .catch((err) => handleError(err))
   
   if (err) { return next(err); }
@@ -316,25 +315,6 @@ exports.privateProfile = async (req, res, next) => {
   return res.json(profile);
 };
 
-
-/**
-* @api {get} /api/users FavoriteProjects
-* @apiName favoriteProjects
-* @apiGroup User
-* @apiDescription Get a user's favorite projects
-* @apiPermission public
-* @apiSuccess {Collection} root Get a user's favorite projects
-* @apiError (500) UnknownException Could not get a user's favorite projects
-*/
-exports.favoriteProjects = async (req, res, next) => {
-  const userId = req.params.id;
-  let user = await User.findById(userId)
-  .populate('favoriteProjects')
-  .catch((err) => next(err))
-  
-  if (!user) { return res.send(404);}
-  return res.json(user.favoriteProjects);
-};
 
 /**
 * @api {get} /api/users Smallgroup
