@@ -26,7 +26,6 @@ chai.use(require('chai-things'))
 require('../server/api/attendance/attendance.spec');
 require('../server/api/attendance/attendance.integration');
 require('../server/api/classyear/classyear.spec');
-require('../server/api/commit/commit.spec');
 require('../server/api/post/post.spec');
 require('../server/api/project/project.spec');
 require('../server/api/smallgroup/smallgroup.spec');
