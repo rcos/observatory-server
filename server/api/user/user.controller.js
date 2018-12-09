@@ -198,7 +198,6 @@ exports.privateProfile = async (req, res, next) => {
   const userId = req.params.id;
   const user = await User.findById(userId)
   .populate('projects')
-  .populate('favoriteProjects')
   .catch((err) => handleError(err))
   
   if (err) { return next(err); }
@@ -225,25 +224,6 @@ exports.privateProfile = async (req, res, next) => {
   return res.json(profile);
 };
 
-
-/**
-* @api {get} /api/users FavoriteProjects
-* @apiName favoriteProjects
-* @apiGroup User
-* @apiDescription Get a user's favorite projects
-* @apiPermission public
-* @apiSuccess {Collection} root Get a user's favorite projects
-* @apiError (500) UnknownException Could not get a user's favorite projects
-*/
-exports.favoriteProjects = async (req, res, next) => {
-  const userId = req.params.id;
-  let user = await User.findById(userId)
-  .populate('favoriteProjects')
-  .catch((err) => next(err))
-  
-  if (!user) { return res.send(404);}
-  return res.json(user.favoriteProjects);
-};
 
 /**
 * @api {get} /api/users Smallgroup
@@ -626,26 +606,6 @@ exports.addProject = async (req,res) => {
   res.status(200).json({ success: true });
 };
 
-/**
-* @api {get} /api/users AddFavorite
-* @apiName addFavorite
-* @apiGroup User
-* @apiDescription Add an item to the favorites projects array for the user
-* @apiPermission public
-* @apiSuccess {Collection} root Adds an item to the favorties projects array for the user
-* @apiError (500) UnknownException Could not add an item to the favorites projects array for the user
-*/
-exports.addFavorite = async (req,res) => {
-  const userId = req.params.id;
-  const newFavorite = req.params.project;
-  let user = await User.findById(userId).catch((err) => res.send(500, err))
-  if (!user.favoriteProjects) user.favoriteProjects = [];
-  if (user.favoriteProjects.indexOf(newFavorite) !== -1) return;
-  user.favoriteProjects.push(newFavorite);
-  await user.save().catch((err) => validationError(res, err))
-  res.status(200).json({success: true});
-};
-
 
 /**
 * @api {get} /api/users RemoveProject
@@ -662,26 +622,6 @@ exports.removeProject = async (req,res) => {
   let user = await User.findById(userId).catch((err) => res.send(500, err))
   if (!user.projects) user.projects = [];
   user.projects.splice(user.projects.indexOf(project), 1);
-  await user.save().catch((err) => validationError(res, err))
-  res.status(200).json({success: true});
-};
-
-
-/**
-* @api {get} /api/users RemoveFavorite
-* @apiName removeFavorite
-* @apiGroup User
-* @apiDescription Remove an item from the favortie projects array for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Remove an item from the favorite array for a user
-* @apiError (500) UnknownException Could not remove an item from the favorite array for a user
-*/
-exports.removeFavorite = async (req,res) => {
-  const userId = req.params.id;
-  const project = req.params.project;
-  let user = await User.findById(userId).catch((err) => res.send(500, err))
-  if (!user.favoriteProjects) user.favoriteProjects = [];
-  user.favoriteProjects.splice(user.favoriteProjects.indexOf(project), 1);
   await user.save().catch((err) => validationError(res, err))
   res.status(200).json({success: true});
 };
