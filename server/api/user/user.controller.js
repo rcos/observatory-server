@@ -37,44 +37,6 @@ exports.index = async (req, res) => {
 };
 
 /**
-* @api {get} /api/users PublicStats
-* @apiName publicStats
-* @apiGroup User
-* @apiDescription Get user stats (public)
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of all active Observervatory user stats.
-* @apiError (500) UnknownException Could not retrieve user stats
-*/
-exports.publicStats = (req, res) => {
-  async.parallel([
-    // Count active users
-    (callback) => {
-      User.count({ active: true }, (err, aCount) => {
-        if (err) return callback(err);
-        callback(null, aCount);
-      });
-    },
-    // Count past users
-    (callback) => {
-      User.count({ active: false }, (err, pCount) => {
-        if (err) return callback(err);
-        callback(null, pCount);
-      });
-    },
-  ],
-  (err, results) => {
-    if (err || results === null) return res.send(400);
-    
-    //results contains [activeProjectCount, pastProjectCount]
-    const stats = {};
-    stats.activeUsers = results[0] || 0;
-    stats.pastUsers = results[1] || 0;
-
-    return res.status(200).send(stats);
-  });
-};
-
-/**
 * @api {get} /api/users Search
 * @apiName search
 * @apiGroup User
@@ -100,44 +62,6 @@ exports.search = async (req, res) => {
     return res.status(200).json(user.profile);
   } else {
     return res.status(200).json([user.profile]);
-  }
-};
-
-/**
-* @api {get} /api/users Stats
-* @apiName stats
-* @apiGroup User
-* @apiDescription Gets list of users with stats including last commits in previous two weeks
-* @apiPermission admin
-* @apiSuccess {Collection} root Collection of Observatory User(s).
-* @apiError (500) UnknownException Could not retrieve User collection
-*/
-exports.stats = async (req, res) => {
-  // Only return users who are active and have a github login
-  let users = await User.find({ active: true, 'github.login': { $exists: true } }).catch((err) => res.send(500, err))
-
-  const twoWeeks = new Date();
-
-  twoWeeks.setDate(twoWeeks.getDate() - 14);
-  const userInfo = [];
-  let count = users.length;
-
-  const getCommits = async (user) => {
-    let commits = await Commit.find().where('author.login').equals(String(user.github.login)).where('date').gt(twoWeeks)
-    
-    const commitList = [];
-    commits.forEach((c) => {
-      commitList.push(c.toObject());
-    })
-    user.commits = commitList;
-    count--;
-    userInfo.push(user);
-    if (count === 0) res.status(200).json(userInfo);
-  }
-
-  for (let i = 0; i < users.length; i++) {
-    const u = users[i].stats;
-    getCommits(u);
   }
 };
 
@@ -192,21 +116,6 @@ exports.past = async (req, res) => {
   .catch((err) => res.send(500, err))
   
   res.status(200).json(users);
-};
-
-/**
-* @api {get} /api/users Commits
-* @apiName commits
-* @apiGroup User
-* @apiDescription Gets list of all the recent RCOS commits for a user
-* @apiPermission public
-* @apiSuccess {Collection} root Collection of Observatory Users commits.
-* @apiError (500) UnknownException Could not retrieve User commits
-*/
-exports.commits = async (req, res) => {
-  const userId = String(req.params.id);
-  let commits = await Commit.find({ userId: userId }).catch((err) => res.send(500, err))
-  res.status(200).json(commits);
 };
 
 /**

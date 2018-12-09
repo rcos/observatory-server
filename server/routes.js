@@ -15,7 +15,6 @@ export default function(app) {
   app.use('/api/achievements', require('./api/achievement'));
   app.use('/api/posts', require('./api/post'));
   app.use('/api/projects', require('./api/project'));
-  app.use('/api/commits', require('./api/commit'));
   app.use('/api/users', require('./api/user'));
   app.use('/api/classyear', require('./api/classyear'));
   app.use('/api/smallgroup', require('./api/smallgroup'));

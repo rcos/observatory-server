@@ -8,7 +8,7 @@ var router = new Router();
 router.get('/',  controller.list);
 router.post('/', controller.create);
 
-router.get('/stats',  controller.publicStats);
+//router.get('/stats',  controller.publicStats);
 router.get('/past', controller.past);
 router.get('/search', controller.search);
 router.get('/adminstats', auth.hasRole('admin'), controller.allStats);
@@ -23,7 +23,7 @@ router.put('/:id', auth.canEdit(), controller.update);
 router.delete('/me', auth.isAuthenticated(), controller.deleteUser);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 
-router.get('/:id/commits', controller.commits);
+//router.get('/:id/commits', controller.commits);
 router.get('/:id/avatar', controller.avatar);
 router.get('/:id/smallgroup', auth.isAuthenticated(), controller.userSmallgroup);
 router.get('/:id/private', auth.canEdit(), controller.privateProfile);
